@@ -6,4 +6,9 @@ The node will also have a list of the other nodes nested within this node, to he
 
 ## After meeting 9/1 
 ### Discussions regarding the data structure design
-The group decided on implementing a data structure that consists of individual cut nodes and atom nodes, which represent a cut and atom respectively. The nested linking structure being stored via a list will still be followed. 
+The AEG Tree structure will be composed of CutNode and AtomNode, two separate classes. This will allow for easier translation between canvas representation and data structure being built in the background. 
+
+Both these will inherit from a generic Node class
+The former should contain coordinates for foci and a radius
+The latter should contain coordinates (topX, topY, bottomX, bottomY) for a collision box
+The boundaries of this collision box will determine what node it becomes a child of in the AEG Tree structure, when dragged and dropped
