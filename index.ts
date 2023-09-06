@@ -5,12 +5,12 @@
 
 /**
  * A type containing the X and Y position of a given point on a graph
- * positionX The x position of this point
- * positionY the y position of this point
+ * x The x position of this point
+ * y the y position of this point
  */
 interface Point {
-    positionX: number;
-    positionY: number;
+    x: number;
+    y: number;
 }
 
 /**
@@ -20,12 +20,12 @@ interface Point {
  */
 function drawEllipse(originalPoint : Point, currentPoint : Point){
     let center: Point = {
-        positionX: ((currentPoint.positionX-originalPoint.positionX)/2) + originalPoint.positionX,
-        positionY: ((currentPoint.positionY-originalPoint.positionY)/2) + originalPoint.positionY,
+        x: ((currentPoint.x-originalPoint.x)/2) + originalPoint.x,
+        y: ((currentPoint.y-originalPoint.y)/2) + originalPoint.y,
     };
     
-    let radiusX: number = currentPoint.positionY - center.positionY;
-    let radiusY: number = currentPoint.positionX - center.positionX;
+    let radiusX: number = currentPoint.y - center.y;
+    let radiusY: number = currentPoint.x - center.x;
 
     if(radiusX < 0){
         radiusX *= -1;
@@ -35,15 +35,15 @@ function drawEllipse(originalPoint : Point, currentPoint : Point){
     }
 
     ctx.beginPath();
-    ctx.ellipse(center.positionX, center.positionY, radiusX, radiusY, Math.PI / 2, 0, 2 * Math.PI); 
-    ctx.stroke();
+    ctx.ellipse(center.x, center.y, radiusX, radiusY, Math.PI / 2, 0, 2 * Math.PI); 
 }
 
 const canvas: any = document.getElementById("ellipses");
 const ctx = canvas.getContext("2d");
-let exampleStart: Point = {positionX: 20, positionY: 20};
-let exampleEnd: Point = {positionX: 170, positionY: 120};
+let exampleStart: Point = {x: 20, y: 20};
+let exampleEnd: Point = {x: 170, y: 120};
 drawEllipse(exampleStart,exampleEnd);
 
 //Test case to ensure negatives are taken care of
 drawEllipse(exampleEnd,exampleStart);
+ctx.stroke();
