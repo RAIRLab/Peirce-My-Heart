@@ -1,0 +1,26 @@
+name: Build and Deploy Peirce my Heart
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get TSC
+        run: npm install -g typescript
+
+      - name: compile
+        run: tsc index.ts
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+      
