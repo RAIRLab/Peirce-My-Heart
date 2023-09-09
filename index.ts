@@ -1,5 +1,5 @@
 /**
- * A quick canvas test to see if my math was correct for creating an ellipse from two points
+ * A program to draw ellipses using mouse clicks
  * @author Dawn Moore
  */
 
@@ -38,12 +38,48 @@ function drawEllipse(originalPoint : Point, currentPoint : Point){
     ctx.ellipse(center.x, center.y, radiusX, radiusY, Math.PI / 2, 0, 2 * Math.PI); 
 }
 
+/**
+ * A function to begin a mode to draw cuts. Currently no way to exit this once started.
+ */
+function ellipseMode(){
+    document.getElementById("ellipses")?.addEventListener("mousedown",mouseDown);
+}
+
+
+/**
+ * Logs the position where the mouse is first pressed down. Begins the event for moving the mouse, then ends it once mouseup occurs.
+ * @param event The even of holding down the mouse
+ */
+function mouseDown(event){
+    startingPoint = {x: event.clientX-xshift, y: event.clientY-yshift};
+    document.getElementById("ellipses")?.addEventListener("mousemove",mouseMoving);
+    document.getElementById("ellipses")?.addEventListener("mouseup",stopListening);
+}
+
+/**
+ * Follows the current mouse position, and draws the ellipse between the starting point and the current point.
+ * Clears the canvas with every movement.
+ * *When the tree is finished a redraw function will be made to draw all of the already created cuts and atoms.*
+ * @param event The even of a mouse moving
+ */
+function mouseMoving(event){
+    //As strange as this is, this is the only way to clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let currentPoint: Point = {x: event.clientX-xshift, y: event.clientY-yshift};
+    drawEllipse(startingPoint, currentPoint);
+    ctx.stroke();
+}
+
+/**
+ * Cancels the mouseMoving function after the mouse has been released.
+ */
+function stopListening(){
+    document.getElementById("ellipses")?.removeEventListener("mousemove",mouseMoving);
+}
+
+
 const canvas: any = document.getElementById("ellipses");
 const ctx = canvas.getContext("2d");
-let exampleStart: Point = {x: 20, y: 20};
-let exampleEnd: Point = {x: 170, y: 120};
-drawEllipse(exampleStart,exampleEnd);
-
-//Test case to ensure negatives are taken care of
-drawEllipse(exampleEnd,exampleStart);
-ctx.stroke();
+const xshift: number = canvas.getBoundingClientRect().x;
+const yshift: number = canvas.getBoundingClientRect().y;
+let startingPoint: Point;
