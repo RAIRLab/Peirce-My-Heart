@@ -1,8 +1,11 @@
 /**
  * A program to draw ellipses using mouse clicks
  * @author Dawn Moore
+ * @author James Oswald
  */
 
+const showRectElm: HTMLInputElement = <HTMLInputElement>document.getElementById("showRect");
+const modeElm: HTMLSelectElement = <HTMLSelectElement>document.getElementById("mode");
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("ellipses");
 const res: CanvasRenderingContext2D | null = canvas.getContext("2d");
 if (res === null) {
@@ -23,29 +26,49 @@ interface Point {
     y: number;
 }
 
+function distance(p1: Point, p2: Point): number {
+    const dx = p1.x - p2.x;
+    const dy = p1.y - p2.y;
+    return Math.sqrt(dx * dx + dy * dy);
+}
+
 /**
  * A function to draw an ellipse between two points designated by the user
- * @param originalPoint the point where the user originally clicked
- * @param currentPoint the point where the user's mouse is currently located
+ * @param original the point where the user originally clicked
+ * @param current the point where the user's mouse is currently located
  */
-function drawEllipse(originalPoint: Point, currentPoint: Point) {
+function drawEllipse(original: Point, current: Point) {
     const center: Point = {
-        x: (currentPoint.x - originalPoint.x) / 2 + originalPoint.x,
-        y: (currentPoint.y - originalPoint.y) / 2 + originalPoint.y,
+        x: (current.x - original.x) / 2 + original.x,
+        y: (current.y - original.y) / 2 + original.y,
     };
 
-    let radiusX: number = currentPoint.y - center.y;
-    let radiusY: number = currentPoint.x - center.x;
+    const sdx = original.x - current.x;
+    const sdy = original.y - current.y;
+    const dx = Math.abs(sdx);
+    const dy = Math.abs(sdy);
+    let rx, ry: number;
 
-    if (radiusX < 0) {
-        radiusX *= -1;
+    if (modeElm.value === "circumscribed") {
+        //This inscribed ellipse solution is inspired by the discussion of radius ratios in
+        //https://stackoverflow.com/a/433426/6342516
+        const rv: number = Math.floor(distance(center, current));
+        rx = Math.floor(rv * (dy / dx));
+        ry = Math.floor(rv * (dx / dy));
+    } else {
+        ry = dx / 2;
+        rx = dy / 2;
     }
-    if (radiusY < 0) {
-        radiusY *= -1;
+
+    if (showRectElm.checked) {
+        ctx.beginPath();
+        ctx.rect(original.x, original.y, -sdx, -sdy);
+        ctx.stroke();
     }
 
     ctx.beginPath();
-    ctx.ellipse(center.x, center.y, radiusX, radiusY, Math.PI / 2, 0, 2 * Math.PI);
+    ctx.ellipse(center.x, center.y, rx, ry, Math.PI / 2, 0, 2 * Math.PI);
+    ctx.stroke();
 }
 
 /**
@@ -82,7 +105,6 @@ function mouseMoving(event: MouseEvent) {
         y: event.clientY - yshift,
     };
     drawEllipse(startingPoint, currentPoint);
-    ctx.stroke();
 }
 
 /**

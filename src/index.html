@@ -2,10 +2,15 @@
 <html>
     <head>
         <title>Canvas Test</title>
-        <button type="button" onclick= "ellipseMode()"">Draw Cut</button>
     </head>
 
     <body>
+        <button type="button" onclick= "ellipseMode()">Draw Cut</button>
+        <input id="showRect" type="checkbox" title="Show Rect"/>
+        <select id="mode" name="">
+            <option value="inscribed">Inscribed</option>
+            <option value="circumscribed">Circumscribed</option>
+          </select>
         <p><u>Canvas test</u></p>
         <canvas id="ellipses" width="1000" height="1000"></canvas>
         <script src="index.js"></script>

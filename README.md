@@ -70,7 +70,23 @@ npm run buildDev
 
 ## Debugging
 
-NOTE that to debug you must build in development mode with `buildDev`. 
+Webpack comes bundled with some very powerful debugging tools, the first of which is live
+recompilation, during which any edits you make to the source file are immediately compiled 
+and changes in the application appear right away in a corresponding web browser window. To 
+open a browser window and start listening for changes you can use the following command:
+```bash
+npm run liveEdit
+```
+
+Live editing is very cool but if you want to debug you would have to set breakpoints in the browser debugger
+which can be annoying. In order to use VS Code debugger while the browser is open is a two step
+process. First, launch the webpack development server with:
+```bash
+npm run vscDebug
+```
+Then go to the VS Code debug window and select the "Debug Chrome" configuration and run it (Other browsers can be
+supported through the correct extensions). A new chrome window will open attached to the webpack
+development server, any vs code breakpoints triggered in chrome will be jumped to in VSC.
 
 
 ### Root Files and Folders Overview

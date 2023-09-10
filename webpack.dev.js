@@ -6,5 +6,6 @@ module.exports = merge(common, {
   devtool: 'inline-source-map',
   devServer: {
     static: './build',
+    //writeToDisk: true
   },
 });

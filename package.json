@@ -8,7 +8,8 @@
     "fix": "gts fix",
     "build": "webpack --config webpack.prod.js",
     "buildDev": "webpack --config webpack.dev.js",
-    "debug": "webpack serve --open --config webpack.dev.js --watch"
+    "liveEdit": "webpack serve --open --config webpack.dev.js",
+    "vscDebug": "webpack serve --config webpack.dev.js"
   },
   "repository": {
     "type": "git",
