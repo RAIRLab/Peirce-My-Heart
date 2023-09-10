@@ -15,7 +15,7 @@ jobs:
         run: npm install
 
       - name: use Webpack to compile the application
-        run: npm build
+        run: npm run build
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
