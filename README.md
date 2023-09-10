@@ -6,9 +6,11 @@ A web application for modeling Charles Peirce's Alpha Existential Graph System. 
 
 ## Development
 
+**All listed commands should be run in the project root**
+
 ### Installing Development Tools
 
-1. Install *Node.js* and *nmp*. [Follow the instructions here](https://nodejs.org/en/download)
+1. Install *Node.js* and *npm*. [Follow the instructions here](https://nodejs.org/en/download)
 
 2. Download all dev dependencies using npm. This command will read all dev
 dependencies from `package.json` and install them.
