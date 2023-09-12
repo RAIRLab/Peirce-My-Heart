@@ -1,6 +1,6 @@
 h1 {
     text-align: center;
-    color:#0b0b0b;
+    color:#c4598d;
     /* Text-Color */
     font-size: xx-large;
     border-style: dotted;
@@ -11,7 +11,7 @@ ul {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #9c489b;
+    background-color: #c4598d;
   }
   
   li {
@@ -27,7 +27,7 @@ ul {
   }
   
   li a:hover {
-    background-color: #e7e170;
+    background-color: #afe6e9;
   }
   body{
     margin: 0;
@@ -37,16 +37,39 @@ ul {
     text-align: center;
     margin-top: 360px;
   }
-  .btn{
-    border: 1px solid #6893af;
-    background: none;
-    padding: 10px 20px;
-    font-size: 20px;
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
+  body {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .button {
+    --button-offset: 0.48em;
+    --bg: 178, 60%, 48%;
+    float: left;
+
+
+    background-color: aquamarine;
+    
+    border: 0;
+    border-radius: 0.2em;
+    padding: 0.1em;
+    margin-left:-1200px;
+
+    font-size: 2rem;
+    font-weight: 300;
+    text-transform: uppercase;
+
+    box-shadow: 0 8px 0 0 hsla(182, 86%, 75%, 0.5);
     cursor: pointer;
-    margin: 10px;
 
+  }
 
+  .button:active,
+  .button:focus-visible{
+    transform: translateY(32px);
+    box-shadow: none;
+    
+  }
 
-
-}
+  
