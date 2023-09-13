@@ -1,5 +1,5 @@
 /**
- * A program to draw ellipses using mouse clicks
+ * A program to draw ellipses and atoms.
  * @author Dawn Moore
  * @author James Oswald
  */
@@ -15,6 +15,10 @@ const ctx: CanvasRenderingContext2D = res;
 const xshift: number = canvas.getBoundingClientRect().x;
 const yshift: number = canvas.getBoundingClientRect().y;
 let startingPoint: Point;
+let atom: string;
+ctx.font = "35pt arial";
+let inEllipseMode: Boolean = false;
+let inAtomMode: Boolean = false;
 
 /**
  * A type containing the X and Y position of a given point on a graph
@@ -33,7 +37,7 @@ function distance(p1: Point, p2: Point): number {
 }
 
 /**
- * A function to draw an ellipse between two points designated by the user
+ * A function to draw an ellipse between two points designated by the user.
  * @param original the point where the user originally clicked
  * @param current the point where the user's mouse is currently located
  */
@@ -72,12 +76,32 @@ function drawEllipse(original: Point, current: Point) {
 }
 
 /**
- * A function to begin a mode to draw cuts. Currently no way to exit this once started.
+ * A function to begin a mode to draw cuts.
+ * If atommMode was previously active, remove the listner.
  */
 function ellipseMode() {
-    document.getElementById("ellipses")?.addEventListener("mousedown", mouseDown);
+    inEllipseMode = true;
+    canvas.addEventListener("mousedown", mouseDown);
+    if (inAtomMode) {
+        canvas.removeEventListener("mousedown", atomLocation);
+        inAtomMode = false;
+    }
 }
-window.ellipseMode = ellipseMode;
+window["ellipseMode"] = ellipseMode;
+
+/**
+ * A function to begin atom creation.
+ * If ellipseMode was previously active, remove the listener.
+ */
+function atomMode() {
+    inAtomMode = true;
+    canvas.addEventListener("mousedown", atomLocation);
+    if (inEllipseMode) {
+        canvas.removeEventListener("mousedown", mouseDown);
+        inEllipseMode = false;
+    }
+}
+window["atomMode"] = atomMode;
 
 /**
  * Logs the position where the mouse is first pressed down. Begins the event for moving
@@ -86,8 +110,10 @@ window.ellipseMode = ellipseMode;
  */
 function mouseDown(event: MouseEvent) {
     startingPoint = {x: event.clientX - xshift, y: event.clientY - yshift};
-    document.getElementById("ellipses")?.addEventListener("mousemove", mouseMoving);
-    document.getElementById("ellipses")?.addEventListener("mouseup", stopListening);
+    canvas.addEventListener("mousemove", mouseMoving);
+    canvas.addEventListener("mouseup", () => {
+        canvas.removeEventListener("mousemove", mouseMoving);
+    });
 }
 
 /**
@@ -108,8 +134,42 @@ function mouseMoving(event: MouseEvent) {
 }
 
 /**
- * Cancels the mouseMoving function after the mouse has been released.
+ * Determines the original place of an atom with a mouse click.
+ * @param event The action of a user click
  */
-function stopListening() {
-    document.getElementById("ellipses")?.removeEventListener("mousemove", mouseMoving);
+function atomLocation(event: MouseEvent) {
+    startingPoint = {
+        x: event.clientX - xshift,
+        y: event.clientY - yshift,
+    };
+    document.addEventListener("keypress", drawAtom);
+}
+
+/**
+ * Determines what the atom will look like, and places it in the original location.
+ * When the mouse is clicked again it places the atom and it cannot be moved.
+ * @param event The action of selecting a letter
+ */
+function drawAtom(event: KeyboardEvent) {
+    atom = event.key;
+    ctx.fillText(atom, startingPoint.x, startingPoint.y);
+    ctx.stroke;
+    canvas.addEventListener("mousemove", atomMoving);
+    canvas.addEventListener("mousedown", () => {
+        canvas.removeEventListener("mousemove", atomMoving);
+    });
+}
+
+/**
+ * When the mouse is moved it places the atom directly under it until in the desired location.
+ * @param event The event of the mouse moving
+ */
+function atomMoving(event: MouseEvent) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const currentPoint: Point = {
+        x: event.clientX - xshift,
+        y: event.clientY - yshift,
+    };
+    ctx.fillText(atom, currentPoint.x, currentPoint.y);
+    ctx.stroke();
 }
