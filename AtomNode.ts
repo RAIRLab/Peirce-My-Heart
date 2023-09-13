@@ -8,12 +8,12 @@ export class AtomNode extends GenericNode {
     /**
      * The rectangle signifying the boundary box of this node.
      */
-    private rect: Rectangle;    
+    rect: Rectangle;    
 
     /**
      * The string value of the proposition represented by this node.
      */
-    private value: string;
+    value: string;
 
     /**
      * Construct an atom node with given boundary box and proposition.
