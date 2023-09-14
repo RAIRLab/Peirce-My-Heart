@@ -1,16 +1,15 @@
 import { Ellipse } from "./Ellipse";
 import { Point } from "./Point";
 
-//James - Ideally id prefer all the leters to the same size and only allow cuts to be resized
-
+/**
+ * Class that defines a Rectangle
+ */
 export class Rectangle {
 
     /**
      * The starting (top left) vertex of the rectangle.
      */
     startVertex: Point;
-
-    //bottom left
 
     /**
      * The width of the rectangle.
@@ -29,17 +28,17 @@ export class Rectangle {
      * @param w The width of the rectangle.
      * @param h The height of the rectangle.
      */
-    constructor(vertex?: Point, w?: number, h?: number) {
+    public constructor(vertex?: Point, w?: number, h?: number) {
         this.startVertex = vertex ?? new Point();
         this.width = w ?? 0;
         this.height = w ?? 0;
     }
 
     /**
-     * Returns a string representation of the rectangle
+     * Method that returns a string representation of the rectangle
      * @returns The coordinates and lengths for the rectangle
      */
-    toString(): string {
+    public toString(): string {
         return("A rectangle with\nTop Left Vertex at: " + this.startVertex.toString + ", \n" +
         "Width of: " + this.width + ", \n" + 
         "Height of: " + this.height);
@@ -50,20 +49,20 @@ export class Rectangle {
      * @returns The boudning box of the rectangle.
      */
     public getBoundingBox() : Point[] {
-        //top left vertex
+        //0 = top left vertex
         let vertices : Point[] = [this.startVertex];
-        //top right vertex
+        //1 = top right vertex
         vertices.push(new Point(this.startVertex.x + this.width, this.startVertex.y));
-        //bottom left vertex
+        //2 = bottom left vertex
         vertices.push(new Point(this.startVertex.x, this.startVertex.y + this.height));
-        //bottom right vertex
+        //3 = bottom right vertex
         vertices.push(new Point(this.startVertex.x + this.width, this.startVertex.y + this.height))
 
         return vertices;
     }
 
     /**
-     * Checks if another rectangle is within the horizontal boundaries of this rectangle.
+     * Method that checks if another rectangle is within the horizontal boundaries of this rectangle.
      * @param otherRect The other rectangle to be checked.
      * @returns True, if the other rectangle is within the horizontal boundaries of this rectangle. Else, false
      */
@@ -72,14 +71,18 @@ export class Rectangle {
          * The other rectangle is overlapping the horizontal boundaries of this rectangle if:
          * The other rectangle is on the right of this rectangle AND
          * The other rectangle's left edge is on the left of rectangle's right edge
-         * OR
-         * This other rectangle is on the left of this rectangle AND
-         * The other rectangle's right edge is on the left of rectangle's left edge
          */
         if((this.startVertex.x <= otherRect.startVertex.x) && (this.getBoundingBox()[1].x >= otherRect.getBoundingBox()[0].x)) {
             return true;
 
-        } else if((this.getBoundingBox()[1].x >= otherRect.getBoundingBox()[1].x) && (this.startVertex.x <= otherRect.getBoundingBox()[1].x)) {
+        } 
+        
+        /**
+         * OR
+         * This other rectangle is on the left of this rectangle AND
+         * The other rectangle's right edge is on the left of rectangle's left edge
+         */
+        else if((this.getBoundingBox()[1].x >= otherRect.getBoundingBox()[1].x) && (this.startVertex.x <= otherRect.getBoundingBox()[1].x)) {
             return true;
 
         } else {
@@ -87,10 +90,8 @@ export class Rectangle {
         }
     }
 
-
-
     /**
-     * Checks if another rectangle is within the vertical boundaries of this rectangle.
+     * Method that checks if another rectangle is within the vertical boundaries of this rectangle.
      * @param otherRect The other rectangle to be checked.
      * @returns True, if the other rectangle is within the vertical boundaries of this rectangle. Else, false.
      */
@@ -99,14 +100,20 @@ export class Rectangle {
          * The other rectangle is overlapping the vertical boundaries of this rectangle if:
          * The other rectangle is above this rectangle AND
          * The other rectangle's bottom edge is below this rectangle's top edge
+         */
+        if((this.getBoundingBox()[2].y >= otherRect.getBoundingBox()[2].y) && 
+        (this.getBoundingBox()[0].y <= otherRect.getBoundingBox()[2].y )){
+            return true;
+
+        }
+
+        /**
          * OR
          * The other rectangle is below this rectangle AND
          * The other rectangle's top edge is above this rectangles bottom edge
          */
-        if((this.getBoundingBox()[2].y >= otherRect.getBoundingBox()[2].y) && (this.getBoundingBox()[0].y <= otherRect.getBoundingBox()[2].y )){
-            return true;
-
-        } else if ((this.startVertex.y <= otherRect.startVertex.y) && (this.getBoundingBox()[2].y >= otherRect.getBoundingBox()[0].y)) {
+        else if ((this.startVertex.y <= otherRect.startVertex.y) && 
+        (this.getBoundingBox()[2].y >= otherRect.getBoundingBox()[0].y)) {
             return true;
 
         } else {
@@ -115,7 +122,7 @@ export class Rectangle {
     }
 
     /**
-     * Checks whether this rectangle is colliding with another rectangle.
+     * Method that checks whether this rectangle is colliding with another rectangle.
      * @param otherRect The other rectangle it might be colliding with.
      * @returns True, if the other rectagle is colliding with this rectangle. Else, false.
      */
@@ -124,7 +131,7 @@ export class Rectangle {
     }
 
     /**
-     * Checks whether this rectangle is colliding with an ellipse.
+     * Method that checks whether this rectangle is colliding with an ellipse.
      * @param otherEllipse The ellipse it might be colliding with.
      * @returns True, if the ellipse is colliding with this rectangle. Else, false.
      */
@@ -132,80 +139,44 @@ export class Rectangle {
         return(this.onRectOverlap(otherEllipse.boundingBox));
     }
 
-    public rectWithinThis(otherRect: Rectangle) : boolean {
-        /**
-         * The other rectangle is within this rectangle if
-         * It's left x coordinate is greater than this rectangle's left x coordinate AND
-         * It's right x coordinate is smaller than this rectangle's right x coordinate AND
-         * It's top y coordinate is greater than this rectangle's top y coordinate AND
-         * It's bottom y coordinate is lesser than this rectangle's bottom y coordinate
-         */
-        if((otherRect.getBoundingBox()[0].x >= this.getBoundingBox()[0].x) &&
-        (otherRect.getBoundingBox()[1].x <= this.getBoundingBox()[1].x) &&
-        (otherRect.getBoundingBox()[0].y >= this.getBoundingBox()[0].y) &&
-        (otherRect.getBoundingBox()[2].y <= this.getBoundingBox()[2].y)) {
+    /**
+     * Method that checks whether there is a point inside this rectangle.
+     * @param otherPoint The point that might be inside this rectangle.
+     * @returns True, if the point is completely inside the rectangle. Else, false.
+     */
+    public pointWithinThis(otherPoint: Point) : boolean {
+        if((this.getBoundingBox()[0].x <= otherPoint.x) && 
+        (this.getBoundingBox()[1].x >= otherPoint.x) &&
+        (this.getBoundingBox()[0].y <= otherPoint.y &&
+        (this.getBoundingBox()[2].y >= otherPoint.y))) {
             return true;
         }
 
-        else {
-            return false;
-        }
+        return false;
     }
 
+    /**
+     * Method that checks whether there is a rectangle inside this rectangle.
+     * @param otherRect The other rectanlge that might be inside this rectangle.
+     * @returns True, if the other rectangle is completely inside this rectangle. Else, false.
+     */
+    public rectWithinThis(otherRect: Rectangle) : boolean {
+        //Check if all the vertices of the other rectangle are within this rectangle
+        (otherRect.getBoundingBox()).forEach(vertex => {
+            if(!(this.pointWithinThis(vertex))) {
+                return false
+            }
+        });
+
+        return true;
+    }
+
+    /**
+     * Method that checks whether there is an ellipse inside this rectangle.
+     * @param otherEllipse The ellipse that might be inside this rectangle.
+     * @returns True, if the ellipse is completely inside this rectangle. Else, false.
+     */
     public ellipseWithinThis(otherEllipse: Ellipse) : boolean {
         return(this.rectWithinThis(otherEllipse.boundingBox));
     }
-
-    // /**
-    //  * Accessor to get the top left vertex of the rectangle.
-    //  * @returns The top left vertex of the rectangle.
-    //  */
-    // public getStartVertex(): Point {
-    //     return this.startVertex;
-    // }
-
-    // /**
-    //  * Modifier to set the top left vertex of the rectangle.
-    //  * @param vertex The point to be set as the top left vertex of the rectangle.
-    //  */
-    // public setStartVertex(vertex: Point) {
-    //     this.startVertex = vertex;
-    // }
-
-    // /**
-    //  * Accessor to get the width of the rectangle.
-    //  * @returns The width of the rectangle.
-    //  */
-    // public getWidth(): number {
-    //     return this.width;
-    // }
-
-    // /**
-    //  * Modifier to set the width of the rectangle.
-    //  * @param length The legnth to be set as the width of the rectangle.
-    //  */
-    // public setWidth(length: number) {
-    //     this.width = length;
-    // }
-
-    // /**
-    //  * Accessor to get the height of the rectangle.
-    //  * @returns The height of the rectangle.
-    //  */
-    // public getHeight(): number {
-    //     return this.height;
-    // }
-
-    // /**
-    //  * Modifier to set the height of the rectangle.
-    //  * @param length The length to be set as the height of the rectangle.
-    //  */
-    // public setHeight(length: number) {
-    //     this.height = length;
-    // }
-
-    /* public onRect(otherRect: Rectangle) : boolean {
-        let thisDiag : number = Math.sqrt(Math.pow(this.height, 2) + Math.pow(this.width, 2));
-        let otherDiag : number = Math.sqrt(Math.pow(otherRect.getHeight(), 2) + Math.pow(otherRect.getWidth(), 2));
-    } */
 }

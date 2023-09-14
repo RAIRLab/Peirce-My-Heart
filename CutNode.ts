@@ -1,8 +1,9 @@
 import { Ellipse } from "./Ellipse";
 import { GenericNode } from "./GenericNode";
 
-//Cut nodes consist of an elliptical bounding box and can contain zero or more child nodes.
-
+/**
+ * Class that defines a Cut
+ */
 export class CutNode extends GenericNode {
 
     /**
@@ -20,24 +21,24 @@ export class CutNode extends GenericNode {
      * @param ellipse The ellipse to be set as the boundary box of this node.
      * @param childList The list of children nodes nested within this node.
      */
-    constructor(ellipse?: Ellipse, childList? : GenericNode[]){
+    public constructor(ellipse?: Ellipse, childList? : GenericNode[]){
         super(new CutNode(ellipse));
         this.ellipse = ellipse ?? new Ellipse();
         this.children = childList ?? [];
     }
 
     /**
-     * Returns a string representation of a cut node
+     * Method that returns a string representation of a cut node
      * @returns The children and boundary box of this node
      */
-    toString(): string {
+    public toString(): string {
         let str : string;
 
         if(this.ellipse === undefined) {
             str = "Sheet of Assertion of the AEG Tree"
 
         } else {
-            str = "A cut node with boundary box of \n" + this.ellipse.toString
+            str = "A cut node with boundary box of \n" + this.ellipse.toString();
         }
 
         if(this.children.length > 0) {

@@ -1,8 +1,9 @@
 import { GenericNode } from "./GenericNode";
 import { Rectangle } from "./Rectangle";
 
-//Atom nodes are always leaves and consist of a character and a rectangular bounding box.
-
+/**
+ * Class that defines an Atom
+ */
 export class AtomNode extends GenericNode {
 
     /**
@@ -20,17 +21,17 @@ export class AtomNode extends GenericNode {
      * @param rect The rectangle to be set as the boundary box of this node.
      * @param val The value of the proposition represented by this node.
      */
-    constructor(val: string, rect?: Rectangle){
+    public constructor(val: string, rect?: Rectangle){
         super(new AtomNode(val, rect));
         this.rect = rect ?? new Rectangle();
         this.value = val;
     }
 
     /**
-     * A string representation of this node
-     * @returns The value and boundary box of this node
+     * Method that returns string representation of an atom node
+     * @returns The value and boundary box of an atom node
      */
-    toString(): string {
+    public toString(): string {
         return("An atom representing the propostion: " + this.value + " and \n" + 
         "Boundary box of: \n" + this.rect.toString);
     }
