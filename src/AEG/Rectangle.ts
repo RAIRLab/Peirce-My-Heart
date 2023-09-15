@@ -162,11 +162,11 @@ export class Rectangle {
      */
     public rectWithinThis(otherRect: Rectangle) : boolean {
         //Check if all the vertices of the other rectangle are within this rectangle
-        (otherRect.getBoundingBox()).forEach(vertex => {
-            if(!(this.pointWithinThis(vertex))) {
+        for(let i = 0; i < otherRect.getBoundingBox().length; i++) {
+            if(!(this.pointWithinThis(otherRect.getBoundingBox()[i]))) {
                 return false
             }
-        });
+        }
 
         return true;
     }
