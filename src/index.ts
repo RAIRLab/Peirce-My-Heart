@@ -4,9 +4,21 @@
  * @author James Oswald
  */
 
+import "./index.css";
+
+//Extend the window interface to export functions without TS complaining
+declare global {
+    interface Window {
+        ellipseMode: () => void;
+        atomMode: () => void;
+    }
+}
+
 const showRectElm: HTMLInputElement = <HTMLInputElement>document.getElementById("showRect");
 const modeElm: HTMLSelectElement = <HTMLSelectElement>document.getElementById("mode");
-const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("ellipses");
+const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 const res: CanvasRenderingContext2D | null = canvas.getContext("2d");
 if (res === null) {
     throw Error("2d rendering context not supported");
@@ -77,7 +89,7 @@ function drawEllipse(original: Point, current: Point) {
 
 /**
  * A function to begin a mode to draw cuts.
- * If atommMode was previously active, remove the listner.
+ * If atomMode was previously active, remove the listener.
  */
 function ellipseMode() {
     inEllipseMode = true;
@@ -87,7 +99,7 @@ function ellipseMode() {
         inAtomMode = false;
     }
 }
-window["ellipseMode"] = ellipseMode;
+window.ellipseMode = ellipseMode;
 
 /**
  * A function to begin atom creation.
@@ -101,7 +113,7 @@ function atomMode() {
         inEllipseMode = false;
     }
 }
-window["atomMode"] = atomMode;
+window.atomMode = atomMode;
 
 /**
  * Logs the position where the mouse is first pressed down. Begins the event for moving
