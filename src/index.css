@@ -50,6 +50,7 @@ p {
     float: right;
     height: 2vw;
     box-sizing: border-box;
+    background-color: white;
 }
 
 .toolSetting {
