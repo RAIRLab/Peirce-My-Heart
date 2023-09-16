@@ -1,11 +1,12 @@
-import { Point } from "./Point";
-import { Rectangle } from "./Rectangle";
+import {Point} from "./Point";
+import {Rectangle} from "./Rectangle";
 
 /**
- * Class that defines an Ellipse
+ * Class that defines an Ellipse.
+ * @author Anusha Tiwari
+ * @author Ryan Reilly
  */
 export class Ellipse {
-    
     /**
      * The center of the ellipse.
      */
@@ -38,36 +39,57 @@ export class Ellipse {
         this.radiusX = radX ?? 0;
         this.radiusY = radY ?? 0;
 
-        let boundingVertex : Point = new Point((this.center.x - this.radiusX), (this.center.y - this.radiusY));
-        this.boundingBox = new Rectangle(boundingVertex, (this.radiusX*2), (this.radiusY*2));
+        const boundingVertex: Point = new Point(
+            this.center.x - this.radiusX,
+            this.center.y - this.radiusY
+        );
+        this.boundingBox = new Rectangle(boundingVertex, this.radiusX * 2, this.radiusY * 2);
     }
 
     /**
-     * Method that returns the string representation of an ellipse
-     * @returns The coordinates and radii for the ellipse
+     * Method that returns the string representation of an ellipse.
+     * @returns The coordinates and radii for the ellipse.
      */
     public toString(): string {
-        return("An ellipse with\nCenter at: " + this.center.toString + ", \n" +
-        "Horizontal Radius of: " + this.radiusX +", \n" +
-        "Vertical Radius of: " + this.radiusY);
+        return (
+            "An ellipse with\nCenter at: " +
+            this.center.toString +
+            ", \n" +
+            "Horizontal Radius of: " +
+            this.radiusX +
+            ", \n" +
+            "Vertical Radius of: " +
+            this.radiusY
+        );
     }
 
     /**
-     * Method that checks whether this ellipse is colliding with a rectangle.
-     * @param otherRect The rectangle it might be colliding with.
-     * @returns True, if the rectagle is colliding with this ellipse. Else, false.
+     * Method that checks whether a point is within this ellipse.
+     * @param otherPoint The point that might be inside this ellipse.
+     * @returns True, if the point is inside this ellipse. Else, false
      */
-    public onRectOverlap(otherRect: Rectangle) : boolean {
-        return this.boundingBox.onRectOverlap(otherRect);
+    public containsPoint(otherPoint: Point): boolean {
+        //ELLIPSE TO BE IMPLEMENTED ACCURATELY
+        return this.boundingBox.containsPoint(otherPoint);
     }
 
     /**
-     * Method that checks whether this ellipse is colliding with another ellipse.
-     * @param otherEllipse The ellipse it might be colliding with.
-     * @returns True, if the other ellipse is colliding with this ellipse. Else, false.
+     * Method that checks whether there is an overlap between this ellipse and another shape.
+     * @param otherShape The other shape that might be overlapping this ellipse.
+     * @returns True, if there is an overlap. Else, false.
      */
-    public onEllipseOverlap(otherEllipse: Ellipse) : boolean {
-        return this.boundingBox.onEllipseOverlap(otherEllipse);
+    public overlaps(otherShape: Rectangle | Ellipse): boolean {
+        //ELLIPSE TO BE IMPLEMENTED ACCURATELY
+        return this.boundingBox.overlaps(otherShape);
     }
-    
+
+    /**
+     * Method that checks whether another shape is within this ellipse.
+     * @param otherShape The shape that might be within this ellipse.
+     * @returns True, if the shape is within this ellipse. Else, false.
+     */
+    public containsShape(otherShape: Rectangle | Ellipse): boolean {
+        //ELLIPSE TO BE IMPLEMENTED ACCURATELY
+        return this.boundingBox.containsShape(otherShape);
+    }
 }
