@@ -53,12 +53,12 @@ export class Rectangle {
     }
 
     /**
-     * The corners of the rectganle in clockwise order, starting from the top left.
+     * The corners of the rectangle in clockwise order, starting from the top left.
      * 0 = Top left vertex.
      * 1 = Top Right vertex.
      * 2 = Bottom Right vertex.
      * 3 = Bottom Left vertex.
-     * @returns The boudning box of the rectangle.
+     * @returns The bounding box of the rectangle.
      */
     public getCorners(): Point[] {
         //0 = top left vertex

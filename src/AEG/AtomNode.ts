@@ -1,6 +1,7 @@
 import {Rectangle} from "./Rectangle";
 import {CutNode} from "./CutNode";
 import {Ellipse} from "./Ellipse";
+import {Point} from "./Point";
 
 /**
  * Class that defines an Atom.
@@ -19,13 +20,19 @@ export class AtomNode {
     identifier: string;
 
     /**
+     * The point the atom is initially placed.
+     */
+    origin: Point;
+
+    /**
      * Construct an atom node with given boundary box and proposition.
      * @param rect The rectangle to be set as the boundary box of this node.
      * @param val The value of the proposition represented by this node.
      */
-    public constructor(val: string, rect?: Rectangle) {
+    public constructor(val: string, origin: Point, rect?: Rectangle) {
         this.rect = rect ?? new Rectangle();
         this.identifier = val;
+        this.origin = origin;
     }
 
     /**
@@ -34,7 +41,7 @@ export class AtomNode {
      */
     public toString(): string {
         return (
-            "An atom representing the propostion: " +
+            "An atom representing the proposition: " +
             this.identifier +
             " and \n" +
             "Boundary box of: \n" +

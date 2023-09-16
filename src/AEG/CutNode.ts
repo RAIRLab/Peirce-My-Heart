@@ -1,5 +1,6 @@
 import {AtomNode} from "./AtomNode";
 import {Ellipse} from "./Ellipse";
+import {Point} from "./Point";
 
 /**
  * Class that defines a Cut.
@@ -124,7 +125,7 @@ export class CutNode {
         //TO BE IMPLEMENTED??
 
         const isValid = true;
-        
+
         return isValid;
     }
 
@@ -134,13 +135,13 @@ export class CutNode {
      * @param insertionPoint The point at which the node should be inserted
      */
     public insert(incomingNode: AtomNode | CutNode, insertionPoint: Point): void {
-        //TO BE IMPLEMENTED??
+        this.children.push(incomingNode);
     }
 
     /**
      * Removes the node containing this coordinate
      * @param incomingPoint The point indicating the node that must be removed
-     * @returns True, if the node was sucessfully removed. Else, false
+     * @returns True, if the node was successfully removed. Else, false
      */
     public remove(incomingPoint: Point): boolean {
         if (this.containsPoint(incomingPoint)) {
