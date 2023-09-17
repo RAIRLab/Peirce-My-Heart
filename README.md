@@ -2,7 +2,8 @@
 
 [![Code Style: Google](https://img.shields.io/badge/code%20style-google-blueviolet.svg)](https://github.com/google/gts)
 
-A web application for modeling Charles Peirce's Alpha Existential Graph System. In development for UAlbany 499.
+A web application for modeling Charles Peirce's Alpha Existential Graph System. In development for UAlbany 499. Sponsored by James Oswald (RAIR Lab)
+
 
 ## Development
 
