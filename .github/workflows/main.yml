@@ -1,0 +1,18 @@
+name: Lint TS code
+
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install NPM deps
+        run: npm install
+
+      - name: Lint TS Code according to gts
+        run: npm run lint
