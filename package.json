@@ -23,8 +23,10 @@
   "homepage": "https://github.com/James-Oswald/PeirceMyHeart#readme",
   "devDependencies": {
     "@types/node": "20.4.6",
+    "css-loader": "^6.8.1",
     "gts": "^5.0.1",
     "html-webpack-plugin": "^5.5.3",
+    "style-loader": "^3.3.3",
     "ts-loader": "^9.4.4",
     "typescript": "~5.1.6",
     "webpack": "^5.88.2",
