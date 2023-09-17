@@ -1,19 +1,52 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>Canvas Test</title>
-    </head>
-
-    <body>
-        <button type="button" onclick= "ellipseMode()">Draw Cut</button>
-        <button type="button" onclick= "atomMode()">Draw Atom</button>
-        <input id="showRect" type="checkbox" title="Show Rect"/>
-        <select id="mode" name="">
+  <head>
+    <title>Peirce My &#128147;</title>
+    <!--Fork Awesome Icons-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css" integrity="sha256-XoaMnoYC5TH6/+ihMEnospgm0J1PM/nioxbOUdnM8HY=" crossorigin="anonymous">
+    <!-- Webpack will automatically import all of our styles and scripts -->
+  </head>
+  <body>
+    <header id="header">
+      <p>Peirce My Heart</p>
+    </header>
+    <div id="sidebar">
+      <div class="row">
+        <button type="button" title="Selection Mode" class="modeButton">
+          <i class="fa fa-mouse-pointer" aria-hidden="true"></i>
+        </button>
+        <button type="button" title="Move Mode" class="modeButton">
+          <i class="fa fa-arrows" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="row">
+        <button type="button" onclick= "atomMode()" title="Atom Mode" class="modeButton">
+            <i class="fa fa-font" aria-hidden="true"></i>
+        </button>
+        <button type="button" onclick= "ellipseMode()" title="Cut Mode" class="modeButton">
+            <i class="fa fa-circle-o" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+    <div id="toolbar">
+      <div id="cutTools">
+        <span class="toolSetting">
+          <p>Show Guidelines:</p>
+        </span>
+        <span class="toolSetting">
+          <input id="showRect" type="checkbox" title="Show Rect"/>
+        </span>
+        <span class="toolSetting">
+          <p>Cut Mode:</p>
+        </span>
+        <span class="toolSetting">
+          <select id="mode" name="">
             <option value="inscribed">Inscribed</option>
             <option value="circumscribed">Circumscribed</option>
           </select>
-        <p><u>Canvas test</u></p>
-        <canvas id="canvas" width="1000" height="1000"></canvas>
-        <script src="index.js"></script>
-    </body>
+        </span>
+      </div>
+    </div>
+    <canvas id="canvas"></canvas>
+  </body>
 </html>

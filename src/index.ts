@@ -10,9 +10,21 @@ import {AtomNode} from "./AEG/AtomNode";
  * @author James Oswald
  */
 
+import "./index.css";
+
+//Extend the window interface to export functions without TS complaining
+declare global {
+    interface Window {
+        ellipseMode: () => void;
+        atomMode: () => void;
+    }
+}
+
 const showRectElm: HTMLInputElement = <HTMLInputElement>document.getElementById("showRect");
 const modeElm: HTMLSelectElement = <HTMLSelectElement>document.getElementById("mode");
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 const res: CanvasRenderingContext2D | null = canvas.getContext("2d");
 if (res === null) {
     throw Error("2d rendering context not supported");
@@ -81,7 +93,6 @@ function drawEllipse(original: Point, current: Point) {
     ctx.ellipse(center.x, center.y, rx, ry, Math.PI / 2, 0, 2 * Math.PI);
     //I know this is stupid to constantly make a new ellipse but my brain hurts I'm sorry
     currentEllipse = new Ellipse(center, rx, ry);
-    ctx.moveTo(center.x + rx, center.y + ry);
     ctx.stroke();
 }
 
@@ -204,7 +215,7 @@ function redrawCut(incomingNode: CutNode) {
         }
     }
     if (incomingNode.ellipse instanceof Ellipse) {
-        ctx.moveTo(incomingNode.ellipse.radiusX, incomingNode.ellipse.radiusY);
+        ctx.beginPath();
         ctx.ellipse(
             incomingNode.ellipse.center.x,
             incomingNode.ellipse.center.y,
