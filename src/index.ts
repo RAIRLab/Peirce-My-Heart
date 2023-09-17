@@ -81,6 +81,7 @@ function drawEllipse(original: Point, current: Point) {
     ctx.ellipse(center.x, center.y, rx, ry, Math.PI / 2, 0, 2 * Math.PI);
     //I know this is stupid to constantly make a new ellipse but my brain hurts I'm sorry
     currentEllipse = new Ellipse(center, rx, ry);
+    ctx.moveTo(center.x + rx, center.y + ry);
     ctx.stroke();
 }
 
@@ -203,6 +204,7 @@ function redrawCut(incomingNode: CutNode) {
         }
     }
     if (incomingNode.ellipse instanceof Ellipse) {
+        ctx.moveTo(incomingNode.ellipse.radiusX, incomingNode.ellipse.radiusY);
         ctx.ellipse(
             incomingNode.ellipse.center.x,
             incomingNode.ellipse.center.y,
@@ -212,6 +214,7 @@ function redrawCut(incomingNode: CutNode) {
             0,
             2 * Math.PI
         );
+        ctx.stroke();
     }
 }
 
@@ -221,4 +224,5 @@ function redrawCut(incomingNode: CutNode) {
  */
 function redrawAtom(incomingNode: AtomNode) {
     ctx.fillText(incomingNode.identifier, incomingNode.origin.x, incomingNode.origin.y);
+    ctx.stroke();
 }
