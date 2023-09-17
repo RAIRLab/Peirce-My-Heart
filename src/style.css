@@ -53,7 +53,7 @@ body {
 .button {
     --button-offset: 0.48em;
     --bg: 178, 60%, 48%;
-    background-color: a5668b;
+    background-color:#a5668b;
     border: 0;
     border-radius: 0.2em;
     padding: 0.1em;
