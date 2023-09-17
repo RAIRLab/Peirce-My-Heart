@@ -122,6 +122,7 @@ function atomMode() {
     }
 }
 
+
 /**
  * Logs the position where the mouse is first pressed down. Begins the event for moving
  * the mouse, then ends it once mouseup occurs.
