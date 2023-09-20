@@ -14,5 +14,5 @@ jobs:
       - name: Install NPM deps
         run: npm install
 
-      - name: use Webpack to compile the application
+      - name: use Vite to compile the application
         run: npm run build
