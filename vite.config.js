@@ -3,7 +3,8 @@
  */
 
 import {resolve} from 'path';
-import {defineConfig} from 'vite'
+import {defineConfig} from 'vite';
+import {viteSingleFile} from "vite-plugin-singlefile";
 
 export default defineConfig(({command, mode}) => {
     let root = "src/app";
@@ -11,7 +12,8 @@ export default defineConfig(({command, mode}) => {
     if (mode === "electron") {
         return {
             root: root,
-            publicDir: "../public",
+            publicDir: "../electron",
+            plugins:[viteSingleFile()],
             build:{
                 outDir: outDir,
                 emptyOutDir: true,

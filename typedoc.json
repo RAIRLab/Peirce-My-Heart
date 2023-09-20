@@ -3,7 +3,7 @@
     "readme": "README.md",
     "includeVersion": true,
     "entryPointStrategy": "expand",
-    "entryPoints": ["src/AEG"], //This needs to be changed once more classes are added outside AEG
+    "entryPoints": ["src/app/AEG"], //This needs to be changed once more classes are added outside AEG
     "tsconfig": "tsconfig.json",
     "out": "build/docs"
 }
