@@ -6,7 +6,6 @@
     "declaration": false,
   },
   "include": [
-    "src/**/*.ts",
-    "test/**/*.ts"
+    "src/app/**/*.ts",
   ]
 }

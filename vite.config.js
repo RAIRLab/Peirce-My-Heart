@@ -1,23 +1,37 @@
+/**
+ * @author James Oswald
+ */
 
 import {resolve} from 'path';
 import {defineConfig} from 'vite'
 
 export default defineConfig(({command, mode}) => {
-    let root = "src"
-    return {
-        root: root,
-        base: "./",
-        build:{
-            //only minify if you're trying to debug in the chrome debugger, otherwise use vsc debug
-            //minify: mode === "production", 
-            outDir: "../build",
-            rollupOptions:{
-                input:{
-                    index: resolve(__dirname, root, "index.html"),
-                    about: resolve(__dirname, root, "about.html"),
-                    homepage: resolve(__dirname, root, "aeg.html")
+    let root = "src/app";
+    let outDir = "../../build";
+    if (mode === "electron") {
+        return {
+            root: root,
+            publicDir: "../public",
+            build:{
+                outDir: outDir,
+                emptyOutDir: true,
+            }
+        };
+    } else {
+        return {
+            root: root,
+            build:{
+                outDir: outDir,
+                emptyOutDir: true,
+                rollupOptions:{
+                    //Paths to the multiple input pages for our application
+                    input:{
+                        index: resolve(__dirname, root, "index.html"),
+                        about: resolve(__dirname, root, "about.html"),
+                        homepage: resolve(__dirname, root, "aeg.html")
+                    }
                 }
             }
-        }
-    };
+        };
+    }
 })

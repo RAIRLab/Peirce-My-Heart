@@ -2,14 +2,15 @@
   "name": "peircemyheart",
   "version": "0.0.2",
   "description": "A web application for modeling Charles Peirce's Alpha Existential Graph System. In development for UAlbany 499.",
-  "main": "index.js",
+  "main": "build/index.html",
   "scripts": {
     "lint": "gts lint",
     "fix": "gts fix",
     "build": "vite build --mode production",
     "build-dev": "vite build --mode development",
-    "live-edit": "vite serve --open",
     "build-docs": "typedoc",
+    "build-electron": "vite build --mode electron && electron-packager build peircemyheart",
+    "live-edit": "vite serve --open",
     "vsc-debug": "vite serve"
   },
   "repository": {
@@ -30,6 +31,8 @@
   "homepage": "https://github.com/James-Oswald/PeirceMyHeart#readme",
   "devDependencies": {
     "@types/node": "20.4.6",
+    "electron": "^26.2.1",
+    "electron-packager": "^17.1.2",
     "gts": "^5.0.1",
     "typedoc": "^0.25.1",
     "typescript": "~5.1.6",
