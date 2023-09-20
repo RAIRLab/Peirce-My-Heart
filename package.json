@@ -1,21 +1,23 @@
 {
   "name": "peircemyheart",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A web application for modeling Charles Peirce's Alpha Existential Graph System. In development for UAlbany 499.",
   "main": "index.js",
   "scripts": {
     "lint": "gts lint",
     "fix": "gts fix",
     "build": "webpack --config webpack.prod.js",
-    "buildDev": "webpack --config webpack.dev.js",
-    "liveEdit": "webpack serve --open --config webpack.dev.js",
-    "vscDebug": "webpack serve --config webpack.dev.js"
+    "build-dev": "webpack --config webpack.dev.js",
+    "live-edit": "webpack serve --open --config webpack.dev.js",
+    "build-docs": "typedoc",
+    "vsc-debug": "webpack serve --config webpack.dev.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/James-Oswald/PeirceMyHeart.git"
   },
-  "author": "",
+  "author": "James Oswald <oswalj@rpi.edu> (jamesoswald.dev)",
+  "contributors": ["Dawn Moore", "Anusha Tiwari", "Ryan Reilly", "Subrina Huda"],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/James-Oswald/PeirceMyHeart/issues"
@@ -28,6 +30,7 @@
     "html-webpack-plugin": "^5.5.3",
     "style-loader": "^3.3.3",
     "ts-loader": "^9.4.4",
+    "typedoc": "^0.25.1",
     "typescript": "~5.1.6",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4",

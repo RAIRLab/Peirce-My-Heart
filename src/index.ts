@@ -1,14 +1,14 @@
-import {AEGTree} from "./AEG/AEGTree";
-import {Point} from "./AEG/Point";
-import {CutNode} from "./AEG/CutNode";
-import {Ellipse} from "./AEG/Ellipse";
-import {AtomNode} from "./AEG/AtomNode";
-
 /**
  * A program to draw ellipses and atoms.
  * @author Dawn Moore
  * @author James Oswald
  */
+
+import {AEGTree} from "./AEG/AEGTree";
+import {Point} from "./AEG/Point";
+import {CutNode} from "./AEG/CutNode";
+import {Ellipse} from "./AEG/Ellipse";
+import {AtomNode} from "./AEG/AtomNode";
 
 import "./index.css";
 

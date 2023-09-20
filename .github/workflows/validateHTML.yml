@@ -6,7 +6,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  validate HTML:
     runs-on: ubuntu-latest
 
     steps:

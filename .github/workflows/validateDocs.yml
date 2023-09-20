@@ -1,11 +1,11 @@
-name: Lint TS code
+name: Validate Documentation Build
 
 on:
   pull_request:
     branches: [ master ]
 
 jobs:
-  lint:
+  buildDocs:
     runs-on: ubuntu-latest
 
     steps:
@@ -15,4 +15,4 @@ jobs:
         run: npm install
 
       - name: Lint TS Code according to gts
-        run: npm run lint
+        run: npm run build-docs
