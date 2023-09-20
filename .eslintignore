@@ -1,4 +1,3 @@
 build/
 dist/
 *.config.js
-src/public
