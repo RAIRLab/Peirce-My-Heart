@@ -1,4 +1,3 @@
 build/
 dist/
-webpack.*.js
 vite.config.js
