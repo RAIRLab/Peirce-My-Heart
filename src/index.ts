@@ -10,8 +10,6 @@ import {CutNode} from "./AEG/CutNode";
 import {Ellipse} from "./AEG/Ellipse";
 import {AtomNode} from "./AEG/AtomNode";
 
-import "./index.css";
-
 //Extend the window interface to export functions without TS complaining
 declare global {
     interface Window {
