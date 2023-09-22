@@ -10,6 +10,10 @@ Sponsored by James Oswald (RAIR Lab)
 
 **All listed commands should be run in the project root**
 
+### Documenentation
+
+The documentation is deployed with the application and can be accessed [here](https://rairlab.github.io/Peirce-My-Heart/docs/)
+
 ### Installing Development Tools
 
 1. Install *Node.js* and *npm*. [Follow the instructions here](https://nodejs.org/en/download)
