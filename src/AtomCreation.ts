@@ -30,7 +30,6 @@ function atomChoose(event: KeyboardEvent) {
 
 /**
  * Determines the starting point for an atom being placed, then listens for movement.
- * When the mouse is lifted up, removes the movement listener and adds it to the tree itself.
  * @param event The event of the mouse being clicked
  */
 function placeAtom(event: MouseEvent) {
@@ -41,11 +40,7 @@ function placeAtom(event: MouseEvent) {
     ctx.fillText(atom, startingPoint.x, startingPoint.y);
     ctx.stroke();
     canvas.addEventListener("mousemove", moveAtom);
-    canvas.addEventListener("mouseup", () => {
-        canvas.removeEventListener("mousemove", moveAtom);
-        const newAtom: AtomNode = new AtomNode(atom, currentPoint);
-        tree.insertAEG(newAtom, currentPoint);
-    });
+    canvas.addEventListener("mouseup", atomUp);
 }
 
 /**
@@ -61,6 +56,16 @@ function moveAtom(event: MouseEvent) {
     };
     ctx.fillText(atom, currentPoint.x, currentPoint.y);
     ctx.stroke();
+}
+
+/**
+ * When the mouse is lifted up, removes the movement listener and adds it to the tree itself.
+ */
+function atomUp() {
+    canvas.removeEventListener("mousemove", moveAtom);
+    const newAtom: AtomNode = new AtomNode(atom, currentPoint);
+    tree.insertAEG(newAtom, currentPoint);
+    canvas.removeEventListener("mouseup", atomUp);
 }
 
 /**

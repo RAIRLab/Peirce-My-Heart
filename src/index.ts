@@ -1,17 +1,15 @@
-import {AEGTree} from "./AEG/AEGTree";
-import {CutNode} from "./AEG/CutNode";
-import {Ellipse} from "./AEG/Ellipse";
-import {AtomNode} from "./AEG/AtomNode";
-import {ellipseCreation, removeCutListener} from "./EllipseCreation";
-import {atomCreation, removeAtomListener} from "./AtomCreation";
-
 /**
  * A program to draw ellipses and atoms.
  * @author Dawn Moore
  * @author James Oswald
  */
 
-import "./index.css";
+import {AEGTree} from "./AEG/AEGTree";
+import {CutNode} from "./AEG/CutNode";
+import {Ellipse} from "./AEG/Ellipse";
+import {AtomNode} from "./AEG/AtomNode";
+import {ellipseCreation, removeCutListener} from "./EllipseCreation";
+import {atomCreation, removeAtomListener} from "./AtomCreation";
 
 //Extend the window interface to export functions without TS complaining
 declare global {
@@ -48,6 +46,7 @@ declare global {
  * If atomMode was previously active, remove the listener.
  */
 function ellipseMode() {
+    console.log(tree.sheet);
     inEllipseMode = true;
     ellipseCreation();
     if (inAtomMode) {
@@ -61,6 +60,7 @@ function ellipseMode() {
  * If ellipseMode was previously active, remove the listener.
  */
 function atomMode() {
+    console.log(tree.sheet);
     inAtomMode = true;
     atomCreation();
     if (inEllipseMode) {

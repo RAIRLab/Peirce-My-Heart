@@ -79,13 +79,7 @@ export function ellipseCreation() {
 function mouseDown(event: MouseEvent) {
     startingPoint = {x: event.clientX, y: event.clientY};
     canvas.addEventListener("mousemove", mouseMoving);
-    canvas.addEventListener("mouseup", () => {
-        canvas.removeEventListener("mousemove", mouseMoving);
-        const newCut: CutNode = new CutNode(currentEllipse);
-        if (tree.canInsertAEG(newCut, currentEllipse.center)) {
-            tree.insertAEG(newCut, currentEllipse.center);
-        }
-    });
+    canvas.addEventListener("mouseup", mouseUp);
 }
 
 /**
@@ -104,6 +98,18 @@ function mouseMoving(event: MouseEvent) {
     };
     redrawCut(tree.sheet);
     currentEllipse = createEllipse(startingPoint, currentPoint);
+}
+
+/**
+ * When the mouse is lifted up, removes the movement listener and adds it to the tree itself.
+ */
+function mouseUp() {
+    canvas.removeEventListener("mousemove", mouseMoving);
+    const newCut: CutNode = new CutNode(currentEllipse);
+    if (tree.canInsertAEG(newCut, currentEllipse.center)) {
+        tree.insertAEG(newCut, currentEllipse.center);
+    }
+    canvas.removeEventListener("mouseup", mouseUp);
 }
 
 /**
