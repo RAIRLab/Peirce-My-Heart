@@ -46,7 +46,6 @@ declare global {
  * If atomMode was previously active, remove the listener.
  */
 function ellipseMode() {
-    console.log(tree.sheet);
     inEllipseMode = true;
     ellipseCreation();
     if (inAtomMode) {
@@ -60,7 +59,6 @@ function ellipseMode() {
  * If ellipseMode was previously active, remove the listener.
  */
 function atomMode() {
-    console.log(tree.sheet);
     inAtomMode = true;
     atomCreation();
     if (inEllipseMode) {
