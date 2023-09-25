@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "../../../../html"
+		},
+		{
+			"path": "../../../../canvastests"
+		},
+		{
+			"path": "../../.."
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "html"
+	}
+}
