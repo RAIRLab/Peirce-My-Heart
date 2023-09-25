@@ -115,60 +115,18 @@ export class CutNode {
     }
 
     /**
-     * Checks whether the incoming node can be inserted into this CutNode
-     * at a given point without overlapping any boundaries.
-     * @param incomingNode The node to be inserted.
-     * @returns True, if the node can be inserted. Else, false
+     * Checks how many layers deep the new node can be placed.
+     * @param newNode the new node
+     * @returns the deepest valid CutNode in which newNode can fit
      */
-    public canInsert(incomingNode: AtomNode | CutNode): boolean {
-        let isValid = true;
-        let childRect = null;
-        let childEllipse = null;
-        let childEllipse2 = null; //for incomingNode as a CutNode and a CutNode child
-
-        if (incomingNode instanceof AtomNode && this.ellipse !== null) {
-            //INCOMING Atom on THIS Cut collision checking
-            isValid = (incomingNode as AtomNode).rect.overlaps(this.ellipse);
-            for (let i = 0; isValid && i < this.children.length; i++) {
-                //INCOMING Atom on (THIS Cut's CHILDREN) collision checking
-                if (this.children[i] instanceof AtomNode) {
-                    childRect = (this.children[i] as AtomNode).rect;
-                    isValid = (incomingNode as AtomNode).rect.overlaps(childRect);
-                } else if ((childEllipse = (this.children[i] as CutNode).ellipse) !== null) {
-                    isValid = (incomingNode as AtomNode).rect.overlaps(childEllipse);
-                }
-            }
-        } else if (
-            (childEllipse = (incomingNode as CutNode).ellipse) !== null &&
-            this.ellipse !== null
-        ) {
-            //INCOMING Cut on THIS Cut collision checking
-            isValid = childEllipse.overlaps(this.ellipse);
-            for (let i = 0; isValid && i < this.children.length; i++) {
-                //INCOMING Cut on (THIS Cut's CHILDREN) collision checking
-                if (this.children[i] instanceof AtomNode) {
-                    childRect = (this.children[i] as AtomNode).rect;
-                    isValid = childEllipse.overlaps(childRect);
-                } else if ((childEllipse2 = (this.children[i] as CutNode).ellipse) !== null) {
-                    isValid = childEllipse.overlaps(childEllipse2);
-                }
+    public getCurrentCut(newNode: CutNode | AtomNode): CutNode {
+        for (let i = 0; i < this.children.length; i++) {
+            if (this.children[i] instanceof CutNode && this.children[i].containsNode(newNode)) {
+                //newNode can be placed at least one layer deeper
+                return this.getCurrentCut(this.children[i]);
             }
         }
-        //Note that both clauses require this.ellipse to be not null.
-        //It is assumed that something can be placed anywhere on the Sheet of Assertion,
-        //Which is the only valid CutNode that has this.ellipse = null.
-        return isValid;
-    }
-
-    /**
-     * Inserts a given node into this CutNode at the incoming Point, if canInsert() is true.
-     * @param incomingNode The incoming node to be inserted
-     */
-    public insert(incomingNode: AtomNode | CutNode): void {
-        if (!this.canInsert(incomingNode)) {
-            throw new Error("Insertion failed. " + incomingNode + " collided with " + this + ".");
-        }
-        this.children.push(incomingNode);
+        return this; //we are at the deepest valid level that newNode can be placed
     }
 
     /**
