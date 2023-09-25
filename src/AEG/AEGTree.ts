@@ -27,8 +27,8 @@ export class AEGTree {
      * @param insertionPoint The point at which the node must be inserted
      * @returns True, if the node can be inserted. Else, false
      */
-    public canInsertAEG(incomingNode: AtomNode | CutNode, insertionPoint: Point): boolean {
-        return this.sheet.canInsert(incomingNode, insertionPoint);
+    public canInsertAEG(incomingNode: AtomNode | CutNode): boolean {
+        return this.sheet.canInsert(incomingNode);
     }
 
     /**
@@ -36,10 +36,8 @@ export class AEGTree {
      * @param incomingNode The node to be inserted
      * @param insertionPoint The point at which the node should be inserted
      */
-    public insertAEG(incomingNode: AtomNode | CutNode, insertionPoint: Point): void {
-        if (this.canInsertAEG(incomingNode, insertionPoint)) {
-            this.sheet.insert(incomingNode, insertionPoint);
-        }
+    public insertAEG(incomingNode: AtomNode | CutNode): void {
+        this.sheet.insert(incomingNode);
     }
 
     /**
