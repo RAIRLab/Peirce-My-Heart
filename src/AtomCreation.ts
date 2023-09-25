@@ -64,7 +64,7 @@ function moveAtom(event: MouseEvent) {
 function atomUp() {
     canvas.removeEventListener("mousemove", moveAtom);
     const newAtom: AtomNode = new AtomNode(atom, currentPoint);
-    tree.insertAEG(newAtom);
+    tree.insert(newAtom);
     canvas.removeEventListener("mouseup", atomUp);
 }
 
