@@ -1,17 +1,19 @@
-import {AEGTree} from "./AEG/AEGTree";
 import {Point} from "./AEG/Point";
+import {CutNode} from "./AEG/CutNode";
+import {Ellipse} from "./AEG/Ellipse";
+import {redrawCut} from "./index";
+import {tree} from "./index";
 
-const showRectElm: HTMLInputElement = <HTMLInputElement>document.getElementById("showRect");
-const modeElm: HTMLSelectElement = <HTMLSelectElement>document.getElementById("mode");
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
 const res: CanvasRenderingContext2D | null = canvas.getContext("2d");
+const showRectElm: HTMLInputElement = <HTMLInputElement>document.getElementById("showRect");
+const modeElm: HTMLSelectElement = <HTMLSelectElement>document.getElementById("mode");
 if (res === null) {
     throw Error("2d rendering context not supported");
 }
 const ctx: CanvasRenderingContext2D = res;
-const xshift: number = canvas.getBoundingClientRect().x;
-const yshift: number = canvas.getBoundingClientRect().y;
 let startingPoint: Point;
+let currentEllipse: Ellipse;
 
 function distance(p1: Point, p2: Point): number {
     const dx = p1.x - p2.x;
@@ -24,7 +26,7 @@ function distance(p1: Point, p2: Point): number {
  * @param original the point where the user originally clicked
  * @param current the point where the user's mouse is currently located
  */
-function drawEllipse(original: Point, current: Point) {
+export function createEllipse(original: Point, current: Point): Ellipse {
     const center: Point = {
         x: (current.x - original.x) / 2 + original.x,
         y: (current.y - original.y) / 2 + original.y,
@@ -55,17 +57,19 @@ function drawEllipse(original: Point, current: Point) {
 
     ctx.beginPath();
     ctx.ellipse(center.x, center.y, rx, ry, Math.PI / 2, 0, 2 * Math.PI);
+    //I know this is stupid to constantly make a new ellipse but my brain hurts I'm sorry
     ctx.stroke();
+    currentEllipse = new Ellipse(center, rx, ry);
+    return currentEllipse;
 }
 
 /**
  * A function to begin a mode to draw cuts.
  * If atomMode was previously active, remove the listener.
  */
-function ellipseMode() {
+export function ellipseCreation() {
     canvas.addEventListener("mousedown", mouseDown);
 }
-(window as any).ellipseMode = ellipseMode;
 
 /**
  * Logs the position where the mouse is first pressed down. Begins the event for moving
@@ -73,11 +77,9 @@ function ellipseMode() {
  * @param event The even of holding down the mouse
  */
 function mouseDown(event: MouseEvent) {
-    startingPoint = {x: event.clientX - xshift, y: event.clientY - yshift};
+    startingPoint = {x: event.clientX, y: event.clientY};
     canvas.addEventListener("mousemove", mouseMoving);
-    canvas.addEventListener("mouseup", () => {
-        canvas.removeEventListener("mousemove", mouseMoving);
-    });
+    canvas.addEventListener("mouseup", mouseUp);
 }
 
 /**
@@ -85,14 +87,34 @@ function mouseDown(event: MouseEvent) {
  * point and the current point.Clears the canvas with every movement. When the
  * tree is finished a redraw function will be made to draw all of the already
  * created cuts and atoms.
- * @param event The even of a mouse moving
+ * @param event The event of a mouse moving
  */
 function mouseMoving(event: MouseEvent) {
     //As strange as this is, this is the only way to clear the canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const currentPoint: Point = {
-        x: event.clientX - xshift,
-        y: event.clientY - yshift,
+        x: event.clientX,
+        y: event.clientY,
     };
-    drawEllipse(startingPoint, currentPoint);
+    redrawCut(tree.sheet);
+    currentEllipse = createEllipse(startingPoint, currentPoint);
+}
+
+/**
+ * When the mouse is lifted up, removes the movement listener and adds it to the tree itself.
+ */
+function mouseUp() {
+    canvas.removeEventListener("mousemove", mouseMoving);
+    canvas.removeEventListener("mouseup", mouseUp);
+    const newCut: CutNode = new CutNode(currentEllipse);
+    if (tree.canInsertAEG(newCut, currentEllipse.center)) {
+        tree.insertAEG(newCut, currentEllipse.center);
+    }
+}
+
+/**
+ * Removes the listener once the user is done placing cuts.
+ */
+export function removeCutListener() {
+    canvas.removeEventListener("mousedown", mouseDown);
 }

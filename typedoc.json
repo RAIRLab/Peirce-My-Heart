@@ -3,7 +3,12 @@
     "readme": "README.md",
     "includeVersion": true,
     "entryPointStrategy": "expand",
-    "entryPoints": ["src/AEG"], //This needs to be changed once more classes are added outside AEG
+    //Update this with all Library Classes used
+    "entryPoints": [
+        "src/AEG",
+        "src/AtomCreation.ts",
+        "src/EllipseCreation.ts"
+    ], 
     "tsconfig": "tsconfig.json",
-    "out": "build/docs"
+    "out": "public/docs"
 }

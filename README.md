@@ -10,7 +10,7 @@ Sponsored by James Oswald (RAIR Lab)
 
 **All listed commands should be run in the project root**
 
-### Documenentation
+### Documentation
 
 The documentation is deployed with the application and can be accessed [here](https://rairlab.github.io/Peirce-My-Heart/docs/)
 

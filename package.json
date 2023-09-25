@@ -2,12 +2,12 @@
   "name": "peircemyheart",
   "version": "0.0.2",
   "description": "A web application for modeling Charles Peirce's Alpha Existential Graph System. In development for UAlbany 499.",
-  "main": "index.js",
   "scripts": {
     "lint": "gts lint",
     "fix": "gts fix",
     "build": "vite build --mode production",
     "build-dev": "vite build --mode development",
+    "preview": "vite preview --open",
     "live-edit": "vite serve --open",
     "build-docs": "typedoc",
     "vsc-debug": "vite serve"
