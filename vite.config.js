@@ -7,10 +7,12 @@ export default defineConfig(({command, mode}) => {
     return {
         root: root,
         base: "./",
+        publicDir: "../public/", 
         build:{
             //only minify if you're trying to debug in the chrome debugger, otherwise use vsc debug
             //minify: mode === "production", 
             outDir: "../build",
+            emptyOutDir: true,
             rollupOptions:{
                 input:{
                     index: resolve(__dirname, root, "index.html"),
