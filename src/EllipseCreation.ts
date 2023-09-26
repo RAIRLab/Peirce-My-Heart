@@ -107,8 +107,8 @@ function mouseUp() {
     canvas.removeEventListener("mousemove", mouseMoving);
     canvas.removeEventListener("mouseup", mouseUp);
     const newCut: CutNode = new CutNode(currentEllipse);
-    if (tree.canInsertAEG(newCut, currentEllipse.center)) {
-        tree.insertAEG(newCut, currentEllipse.center);
+    if (tree.canInsert(newCut)) {
+        tree.insert(newCut);
     }
 }
 
