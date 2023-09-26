@@ -115,7 +115,7 @@ export class CutNode {
     }
 
     /**
-     * Checks how many layers deep the new node can be placed.
+     * Determines the deepest CutNode in which newNode can fit.
      * @param newNode the new node
      * @returns the deepest valid CutNode in which newNode can fit
      */

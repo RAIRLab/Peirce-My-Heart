@@ -75,7 +75,7 @@ export class AEGTree {
      * @param otherNode the other node
      * @returns the result of each shape's respective overlaps() methods.
      */
-    public overlaps(incomingNode: AtomNode | CutNode, otherNode: AtomNode | CutNode): boolean {
+    private overlaps(incomingNode: AtomNode | CutNode, otherNode: AtomNode | CutNode): boolean {
         let ellipse1: Ellipse;
         let ellipse2: Ellipse;
 
