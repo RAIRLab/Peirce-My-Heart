@@ -6,7 +6,7 @@ export default defineConfig(({command, mode}) => {
     let root = "src"
     return {
         root: root,
-        base: "./",
+        base: "/Peirce-My-Heart/",
         publicDir: "../public/", 
         build:{
             //only minify if you're trying to debug in the chrome debugger, otherwise use vsc debug
