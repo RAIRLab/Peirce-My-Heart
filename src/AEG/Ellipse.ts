@@ -70,7 +70,7 @@ export class Ellipse {
      */
     public containsPoint(otherPoint: Point): boolean {
         //ELLIPSE TO BE IMPLEMENTED ACCURATELY
-        return this.boundingBox.containsPoint(otherPoint);
+        return false;
     }
 
     /**
@@ -80,7 +80,7 @@ export class Ellipse {
      */
     public overlaps(otherShape: Rectangle | Ellipse): boolean {
         //ELLIPSE TO BE IMPLEMENTED ACCURATELY
-        return this.boundingBox.overlaps(otherShape);
+        return false;
     }
 
     /**
@@ -90,6 +90,6 @@ export class Ellipse {
      */
     public containsShape(otherShape: Rectangle | Ellipse): boolean {
         //ELLIPSE TO BE IMPLEMENTED ACCURATELY
-        return this.boundingBox.containsShape(otherShape);
+        return false;
     }
 }
