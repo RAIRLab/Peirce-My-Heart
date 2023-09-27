@@ -17,7 +17,7 @@
 <li><a href="AEG_CutNode.CutNode.html">CutNode</a></li></ul>
 <h1>Class CutNode</h1></div>
 <section class="tsd-panel tsd-comment">
-<div class="tsd-comment tsd-typography"><p>Class that defines a Cut.</p>
+<div class="tsd-comment tsd-typography"><p>Class that defines a Cut in AEGTree.</p>
 </div>
 <div class="tsd-comment tsd-typography">
 <h4>Author</h4><p>Anusha Tiwari</p>
@@ -29,7 +29,7 @@
 <ul class="tsd-hierarchy">
 <li><span class="target">CutNode</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/46e8e24/src/AEG/CutNode.ts#L10">AEG/CutNode.ts:10</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d6d21ce/src/AEG/CutNode.ts#L10">AEG/CutNode.ts:10</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -46,10 +46,9 @@
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Methods</h3>
-<div class="tsd-index-list"><a href="AEG_CutNode.CutNode.html#canInsert" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>can<wbr/>Insert</span></a>
-<a href="AEG_CutNode.CutNode.html#containsNode" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>contains<wbr/>Node</span></a>
+<div class="tsd-index-list"><a href="AEG_CutNode.CutNode.html#containsNode" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>contains<wbr/>Node</span></a>
 <a href="AEG_CutNode.CutNode.html#containsPoint" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>contains<wbr/>Point</span></a>
-<a href="AEG_CutNode.CutNode.html#insert" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>insert</span></a>
+<a href="AEG_CutNode.CutNode.html#getCurrentCut" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Current<wbr/>Cut</span></a>
 <a href="AEG_CutNode.CutNode.html#remove" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>remove</span></a>
 <a href="AEG_CutNode.CutNode.html#toString" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>to<wbr/>String</span></a>
 <a href="AEG_CutNode.CutNode.html#verifyCut" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>verify<wbr/>Cut</span></a>
@@ -61,7 +60,7 @@
 <ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="constructor.new_CutNode"><span class="tsd-kind-constructor-signature">new <wbr/>Cut<wbr/>Node</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">ellipse</span><span class="tsd-signature-symbol">?</span>, <span class="tsd-kind-parameter">childList</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a><a href="#constructor.new_CutNode" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Construct a cut node with given boundary box.</p>
+<div class="tsd-comment tsd-typography"><p>Constructs a CutNode with the incoming Ellipse as its boundary box.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -79,79 +78,53 @@
 <h4 class="tsd-returns-title">Returns <a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/46e8e24/src/AEG/CutNode.ts#L26">AEG/CutNode.ts:26</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d6d21ce/src/AEG/CutNode.ts#L26">AEG/CutNode.ts:26</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member"><a id="children" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>children</span><a href="#children" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">children</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a><span class="tsd-signature-symbol"> | </span><a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></div>
-<div class="tsd-comment tsd-typography"><p>Member which contains the list of children nodes nested within this node.</p>
+<div class="tsd-comment tsd-typography"><p>Contains the list of child nodes nested within this node.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/46e8e24/src/AEG/CutNode.ts#L19">AEG/CutNode.ts:19</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d6d21ce/src/AEG/CutNode.ts#L19">AEG/CutNode.ts:19</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="ellipse" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>ellipse</span><a href="#ellipse" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">ellipse</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="AEG_Ellipse.Ellipse.html" class="tsd-signature-type tsd-kind-class">Ellipse</a></div>
-<div class="tsd-comment tsd-typography"><p>The ellipse signifying the boundary box of this node.</p>
+<div class="tsd-comment tsd-typography"><p>The boundary of this node.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/46e8e24/src/AEG/CutNode.ts#L14">AEG/CutNode.ts:14</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d6d21ce/src/AEG/CutNode.ts#L14">AEG/CutNode.ts:14</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
-<section class="tsd-panel tsd-member"><a id="canInsert" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>can<wbr/>Insert</span><a href="#canInsert" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
-<ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="canInsert.canInsert-1"><span class="tsd-kind-call-signature">can<wbr/>Insert</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">incomingNode</span>, <span class="tsd-kind-parameter">insertionPoint</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><a href="#canInsert.canInsert-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Method that checks whether the given node can be inserted into this cut
-at a given point without overlapping any bounding boxes.</p>
-</div>
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5><span class="tsd-kind-parameter">incomingNode</span>: <a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a><span class="tsd-signature-symbol"> | </span><a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a></h5>
-<div class="tsd-comment tsd-typography"><p>The node to be inserted.</p>
-</div>
-<div class="tsd-comment tsd-typography"></div></li>
-<li>
-<h5><span class="tsd-kind-parameter">insertionPoint</span>: <a href="AEG_Point.Point.html" class="tsd-signature-type tsd-kind-class">Point</a></h5>
-<div class="tsd-comment tsd-typography"><p>The point at which the node must be inserted</p>
-</div>
-<div class="tsd-comment tsd-typography"></div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><p>True, if the node can be inserted. Else, false</p>
-
-<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/46e8e24/src/AEG/CutNode.ts#L124">AEG/CutNode.ts:124</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="containsNode" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>contains<wbr/>Node</span><a href="#containsNode" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="containsNode.containsNode-1"><span class="tsd-kind-call-signature">contains<wbr/>Node</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">otherNode</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><a href="#containsNode.containsNode-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Method that checks whether a node is within this cut node.</p>
+<div class="tsd-comment tsd-typography"><p>Checks whether another node is within this CutNode.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5><span class="tsd-kind-parameter">otherNode</span>: <a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a><span class="tsd-signature-symbol"> | </span><a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a></h5>
-<div class="tsd-comment tsd-typography"><p>The node that might be within this cut node.</p>
+<div class="tsd-comment tsd-typography"><p>The node that might be within this CutNode.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><p>True, if it is within this cut node. Else, false.</p>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><p>True, otherNode it is within this CutNode. Else, false.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/46e8e24/src/AEG/CutNode.ts#L70">AEG/CutNode.ts:70</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d6d21ce/src/AEG/CutNode.ts#L85">AEG/CutNode.ts:85</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="containsPoint" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>contains<wbr/>Point</span><a href="#containsPoint" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="containsPoint.containsPoint-1"><span class="tsd-kind-call-signature">contains<wbr/>Point</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">otherPoint</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><a href="#containsPoint.containsPoint-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Method that checks whether a point is contained within this node.</p>
+<div class="tsd-comment tsd-typography"><p>Checks whether the incoming Point is contained within this CutNode.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -165,75 +138,71 @@ at a given point without overlapping any bounding boxes.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/46e8e24/src/AEG/CutNode.ts#L55">AEG/CutNode.ts:55</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member"><a id="insert" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>insert</span><a href="#insert" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d6d21ce/src/AEG/CutNode.ts#L70">AEG/CutNode.ts:70</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="getCurrentCut" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>get<wbr/>Current<wbr/>Cut</span><a href="#getCurrentCut" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="insert.insert-1"><span class="tsd-kind-call-signature">insert</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">incomingNode</span>, <span class="tsd-kind-parameter">insertionPoint</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#insert.insert-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="getCurrentCut.getCurrentCut-1"><span class="tsd-kind-call-signature">get<wbr/>Current<wbr/>Cut</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">newNode</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a><a href="#getCurrentCut.getCurrentCut-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Method that inserts a given node into this cut at a given point.</p>
+<div class="tsd-comment tsd-typography"><p>Determines the deepest CutNode in which newNode can fit.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">incomingNode</span>: <a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a><span class="tsd-signature-symbol"> | </span><a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a></h5>
-<div class="tsd-comment tsd-typography"><p>The node to be inserted</p>
-</div>
-<div class="tsd-comment tsd-typography"></div></li>
-<li>
-<h5><span class="tsd-kind-parameter">insertionPoint</span>: <a href="AEG_Point.Point.html" class="tsd-signature-type tsd-kind-class">Point</a></h5>
-<div class="tsd-comment tsd-typography"><p>The point at which the node should be inserted</p>
+<h5><span class="tsd-kind-parameter">newNode</span>: <a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a><span class="tsd-signature-symbol"> | </span><a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a></h5>
+<div class="tsd-comment tsd-typography"><p>the new node</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+<h4 class="tsd-returns-title">Returns <a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a></h4><p>the deepest valid CutNode in which newNode can fit</p>
+
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/46e8e24/src/AEG/CutNode.ts#L137">AEG/CutNode.ts:137</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d6d21ce/src/AEG/CutNode.ts#L36">AEG/CutNode.ts:36</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="remove" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>remove</span><a href="#remove" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="remove.remove-1"><span class="tsd-kind-call-signature">remove</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">incomingPoint</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><a href="#remove.remove-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Removes the node containing this coordinate</p>
+<div class="tsd-comment tsd-typography"><p>Removes the node lowest on the tree containing the incoming Point.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5><span class="tsd-kind-parameter">incomingPoint</span>: <a href="AEG_Point.Point.html" class="tsd-signature-type tsd-kind-class">Point</a></h5>
-<div class="tsd-comment tsd-typography"><p>The point indicating the node that must be removed</p>
+<div class="tsd-comment tsd-typography"><p>The incoming Point</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><p>True, if the node was successfully removed. Else, false</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/46e8e24/src/AEG/CutNode.ts#L146">AEG/CutNode.ts:146</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d6d21ce/src/AEG/CutNode.ts#L137">AEG/CutNode.ts:137</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toString" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>String</span><a href="#toString" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="toString.toString-1"><span class="tsd-kind-call-signature">to<wbr/>String</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><a href="#toString.toString-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Method that returns a string representation of a cut node</p>
+<div class="tsd-comment tsd-typography"><p>Returns a string representation of this CutNode.</p>
 </div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><p>The children and boundary box of this node</p>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><p>The children and boundary box of this CutNode.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/46e8e24/src/AEG/CutNode.ts#L35">AEG/CutNode.ts:35</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d6d21ce/src/AEG/CutNode.ts#L50">AEG/CutNode.ts:50</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="verifyCut" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>verify<wbr/>Cut</span><a href="#verifyCut" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="verifyCut.verifyCut-1"><span class="tsd-kind-call-signature">verify<wbr/>Cut</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><a href="#verifyCut.verifyCut-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Method that recursively verifies whether all the children of this cut are within it</p>
+<div class="tsd-comment tsd-typography"><p>Recursively verifies whether all the children of this CutNode are contained within.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><p>True, if all the children are within. Else, false</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/46e8e24/src/AEG/CutNode.ts#L89">AEG/CutNode.ts:89</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d6d21ce/src/AEG/CutNode.ts#L104">AEG/CutNode.ts:104</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -256,10 +225,9 @@ at a given point without overlapping any bounding boxes.</p>
 <li><a href="#constructor" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-512"></use></svg><span>constructor</span></a></li>
 <li><a href="#children" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>children</span></a></li>
 <li><a href="#ellipse" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>ellipse</span></a></li>
-<li><a href="#canInsert" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>can<wbr/>Insert</span></a></li>
 <li><a href="#containsNode" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>contains<wbr/>Node</span></a></li>
 <li><a href="#containsPoint" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>contains<wbr/>Point</span></a></li>
-<li><a href="#insert" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>insert</span></a></li>
+<li><a href="#getCurrentCut" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Current<wbr/>Cut</span></a></li>
 <li><a href="#remove" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>remove</span></a></li>
 <li><a href="#toString" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>to<wbr/>String</span></a></li>
 <li><a href="#verifyCut" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>verify<wbr/>Cut</span></a></li></ul></div></details></div>
