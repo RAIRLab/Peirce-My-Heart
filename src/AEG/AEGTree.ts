@@ -12,7 +12,7 @@ export class AEGTree {
     }
 
     /**
-     * Method that recursively ensures the bounding box structure of this AEG is consistent with
+     * Recursively ensures the bounding box structure of this AEG is consistent with
      * the hierarchy. It is consistent if bounding boxes of children nodes are within the bounding
      * box of the parent node.
      * @returns True, if the structure is consistent. Else, false.
@@ -22,7 +22,7 @@ export class AEGTree {
     }
 
     /**
-     * Method that checks whether the given node can be inserted into this tree
+     * Checks whether the given node can be inserted into this tree
      * without overlapping any bounding boxes.
      * @param incomingNode The node to be inserted.
      * @returns True, if the node can be inserted. Else, false
@@ -38,7 +38,8 @@ export class AEGTree {
     }
 
     /**
-     * Method that inserts a given node into this tree, if possible.
+     * Inserts a given node into this tree, if possible.
+     * Throws an error otherwise.
      * @param incomingNode The node to be inserted
      */
     public insert(incomingNode: AtomNode | CutNode): void {

@@ -111,8 +111,9 @@ export class Rectangle {
             return false;
         } else {
             //ELLIPSE TO BE IMPLEMENTED ACCURATELY
-            const ellipseBoundary = (otherShape as Ellipse).boundingBox;
-            return this.overlaps(ellipseBoundary);
+            //const ellipseBoundary = (otherShape as Ellipse).boundingBox;
+            //return this.overlaps(ellipseBoundary);
+            return false;
         }
     }
 
@@ -129,8 +130,9 @@ export class Rectangle {
             return this.containsPoint(otherCorners[0]) && this.containsPoint(otherCorners[2]);
         } else {
             //ELLIPSE TO BE IMPLEMENTED ACCURATELY
-            const ellipseBoundary = (otherShape as Ellipse).boundingBox;
-            return this.containsShape(ellipseBoundary);
+            //const ellipseBoundary = (otherShape as Ellipse).boundingBox;
+            //return this.containsShape(ellipseBoundary);
+            return true;
         }
     }
 }

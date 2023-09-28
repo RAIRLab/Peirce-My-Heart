@@ -14,5 +14,5 @@ jobs:
       - name: Install NPM deps
         run: npm install
 
-      - name: Lint TS Code according to gts
+      - name: Build Docs
         run: npm run build-docs

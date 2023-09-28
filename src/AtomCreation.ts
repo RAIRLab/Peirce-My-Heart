@@ -37,6 +37,7 @@ function placeAtom(event: MouseEvent) {
         x: event.clientX,
         y: event.clientY,
     };
+    currentPoint = startingPoint;
     ctx.fillText(atom, startingPoint.x, startingPoint.y);
     ctx.stroke();
     canvas.addEventListener("mousemove", moveAtom);

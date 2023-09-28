@@ -3,15 +3,15 @@ import {Ellipse} from "./Ellipse";
 import {Point} from "./Point";
 
 /**
- * Class that defines a cut on the AEGTree.
+ * Class that defines a Cut in AEGTree.
  * @author Anusha Tiwari
  * @author Ryan Reilly
  */
 export class CutNode {
     /**
-     * Signifies the boundary box of this node.
+     * The boundary of this node.
      */
-    ellipse: Ellipse | null; //The Sheet of Assertion will have infinite boundaries.
+    ellipse: Ellipse | null; //Null for sheet
 
     /**
      * Contains the list of child nodes nested within this node.
@@ -20,7 +20,7 @@ export class CutNode {
 
     /**
      * Constructs a CutNode with the incoming Ellipse as its boundary box.
-     * @param ellipse The Ellipse to be set as the boundary box of this node.
+     * @param ellipse The ellipse to be set as the boundary box of this node.
      * @param childList The list of children nodes nested within this node.
      */
     public constructor(ellipse?: Ellipse, childList?: (AtomNode | CutNode)[]) {
@@ -29,8 +29,23 @@ export class CutNode {
     }
 
     /**
+     * Determines the deepest CutNode in which newNode can fit.
+     * @param newNode the new node
+     * @returns the deepest valid CutNode in which newNode can fit
+     */
+    public getCurrentCut(newNode: CutNode | AtomNode): CutNode {
+        for (let i = 0; i < this.children.length; i++) {
+            if (this.children[i] instanceof CutNode && this.children[i].containsNode(newNode)) {
+                //newNode can be placed at least one layer deeper
+                return this.getCurrentCut(this.children[i]);
+            }
+        }
+        return this; //we are at the deepest valid level that newNode can be placed
+    }
+
+    /**
      * Returns a string representation of this CutNode.
-     * @returns The children and boundary box of this node
+     * @returns The children and boundary box of this CutNode.
      */
     public toString(): string {
         let str: string;
@@ -49,8 +64,8 @@ export class CutNode {
 
     /**
      * Checks whether the incoming Point is contained within this CutNode.
-     * @param otherPoint The Point that might be within this node.
-     * @returns True, if the Point is within this node. Else, false.
+     * @param otherPoint The point that might be within this node.
+     * @returns True, if the point is within this node. Else, false.
      */
     public containsPoint(otherPoint: Point): boolean {
         if (this.ellipse === null) {
@@ -63,9 +78,9 @@ export class CutNode {
     }
 
     /**
-     * Checks whether the incoming node is within this CutNode.
-     * @param otherNode The incoming node that might be within this CutNode.
-     * @returns True, if the incoming node is within this CutNode. Else, false.
+     * Checks whether another node is within this CutNode.
+     * @param otherNode The node that might be within this CutNode.
+     * @returns True, otherNode it is within this CutNode. Else, false.
      */
     public containsNode(otherNode: AtomNode | CutNode): boolean {
         if (this.ellipse === null) {
@@ -83,8 +98,8 @@ export class CutNode {
     }
 
     /**
-     * Recursively verifies whether all the child nodes of this CutNode are contained within.
-     * @returns True, if all the child nodes are contained within. Else, false
+     * Recursively verifies whether all the children of this CutNode are contained within.
+     * @returns True, if all the children are within. Else, false
      */
     public verifyCut(): boolean {
         let isValid = true;
@@ -115,23 +130,8 @@ export class CutNode {
     }
 
     /**
-     * Determines the deepest CutNode in which newNode can fit.
-     * @param newNode the new node
-     * @returns the deepest valid CutNode in which newNode can fit
-     */
-    public getCurrentCut(newNode: CutNode | AtomNode): CutNode {
-        for (let i = 0; i < this.children.length; i++) {
-            if (this.children[i] instanceof CutNode && this.children[i].containsNode(newNode)) {
-                //newNode can be placed at least one layer deeper
-                return this.getCurrentCut(this.children[i]);
-            }
-        }
-        return this; //we are at the deepest valid level that newNode can be placed
-    }
-
-    /**
      * Removes the node lowest on the tree containing the incoming Point.
-     * @param incomingPoint The incoming point
+     * @param incomingPoint The incoming Point
      * @returns True, if the node was successfully removed. Else, false
      */
     public remove(incomingPoint: Point): boolean {
