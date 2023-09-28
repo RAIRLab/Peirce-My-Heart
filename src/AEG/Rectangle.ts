@@ -42,7 +42,7 @@ export class Rectangle {
     public toString(): string {
         return (
             "A rectangle with\nTop Left Vertex at: " +
-            this.startVertex.toString +
+            this.startVertex.toString() +
             ", \n" +
             "Width of: " +
             this.width +

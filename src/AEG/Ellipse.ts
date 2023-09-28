@@ -53,7 +53,7 @@ export class Ellipse {
     public toString(): string {
         return (
             "An ellipse with\nCenter at: " +
-            this.center.toString +
+            this.center.toString() +
             ", \n" +
             "Horizontal Radius of: " +
             this.radiusX +
