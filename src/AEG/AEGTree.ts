@@ -35,19 +35,20 @@ export class AEGTree {
                 return false;
             }
 
-            //Check one level deeper if the child is a CutNode
+            //Check for overlaps on the same level
+            for (let j = i + 1; j < currentCut.children.length; j++) {
+                if (this.overlaps(currentCut.children[i], currentCut.children[j])) {
+                    return false;
+                }
+            }
+        }
+        for (let i = 0; i < currentCut.children.length; i++) {
+            //Check one level deeper if the child is a CutNode. Recursive case
             if (
                 currentCut.children[i] instanceof CutNode &&
                 !this.verifyAEG(currentCut.children[i] as CutNode)
             ) {
                 return false;
-            }
-
-            //Check for overlaps on the same level
-            for (let j = 0; j < currentCut.children.length; j++) {
-                if (this.overlaps(currentCut.children[i], currentCut.children[j])) {
-                    return false;
-                }
             }
         }
         return true;
