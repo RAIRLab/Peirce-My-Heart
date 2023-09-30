@@ -44,25 +44,6 @@ export class CutNode {
     }
 
     /**
-     * Returns a string representation of this CutNode.
-     * @returns The children and boundary box of this CutNode.
-     */
-    public toString(): string {
-        let str: string;
-
-        if (this.ellipse === null) {
-            str = "Sheet of Assertion of the AEG Tree";
-        } else {
-            str = "A cut node with boundary box of \n" + this.ellipse.toString();
-        }
-
-        if (this.children.length > 0) {
-            str += ", \n" + "With nested nodes: " + this.children.toString();
-        }
-        return str;
-    }
-
-    /**
      * Checks whether the incoming Point is contained within this CutNode.
      * @param otherPoint The point that might be within this node.
      * @returns True, if the point is within this node. Else, false.
@@ -98,38 +79,6 @@ export class CutNode {
     }
 
     /**
-     * Recursively verifies whether all the children of this CutNode are contained within.
-     * @returns True, if all the children are within. Else, false
-     */
-    public verifyCut(): boolean {
-        let isValid = true;
-
-        for (let i = 0; i < this.children.length; i++) {
-            if (!isValid) {
-                return false;
-            }
-
-            if (this.ellipse === null) {
-                //This CutNode represents the sheet.
-                //Everything is within the sheet.
-                //Check the children of the sheet
-                if (this.children[i] instanceof CutNode) {
-                    isValid = (this.children[i] as CutNode).verifyCut();
-                }
-            }
-
-            isValid = this.containsNode(this.children[i]);
-
-            //If the node is a cut node, check it's children
-            if (isValid && this.children[i] instanceof CutNode) {
-                isValid = (this.children[i] as CutNode).verifyCut();
-            }
-        }
-
-        return isValid;
-    }
-
-    /**
      * Removes the node lowest on the tree containing the incoming Point.
      * @param incomingPoint The incoming Point
      * @returns True, if the node was successfully removed. Else, false
@@ -161,5 +110,24 @@ export class CutNode {
         }
 
         return false;
+    }
+
+    /**
+     * Returns a string representation of this CutNode.
+     * @returns The children and boundary box of this CutNode.
+     */
+    public toString(): string {
+        let str: string;
+
+        if (this.ellipse === null) {
+            str = "Sheet of Assertion of the AEG Tree";
+        } else {
+            str = "A cut node with boundary box of \n" + this.ellipse.toString();
+        }
+
+        if (this.children.length > 0) {
+            str += ", \n" + "With nested nodes: " + this.children.toString();
+        }
+        return str;
     }
 }

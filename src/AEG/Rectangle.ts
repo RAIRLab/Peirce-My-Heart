@@ -36,23 +36,6 @@ export class Rectangle {
     }
 
     /**
-     * Method that returns a string representation of the rectangle.
-     * @returns The coordinates and lengths for the rectangle.
-     */
-    public toString(): string {
-        return (
-            "A rectangle with\nTop Left Vertex at: " +
-            this.startVertex.toString() +
-            ", \n" +
-            "Width of: " +
-            this.width +
-            ", \n" +
-            "Height of: " +
-            this.height
-        );
-    }
-
-    /**
      * The corners of the rectangle in clockwise order, starting from the top left.
      * 0 = Top left vertex.
      * 1 = Top Right vertex.
@@ -134,5 +117,22 @@ export class Rectangle {
             //return this.containsShape(ellipseBoundary);
             return true;
         }
+    }
+
+    /**
+     * Method that returns a string representation of the rectangle.
+     * @returns The coordinates and lengths for the rectangle.
+     */
+    public toString(): string {
+        return (
+            "A rectangle with\nTop Left Vertex at: " +
+            this.startVertex.toString() +
+            ", " +
+            "Width: " +
+            this.width +
+            ", " +
+            "Height: " +
+            this.height
+        );
     }
 }

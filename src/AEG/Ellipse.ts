@@ -47,23 +47,6 @@ export class Ellipse {
     }
 
     /**
-     * Method that returns the string representation of an ellipse.
-     * @returns The coordinates and radii for the ellipse.
-     */
-    public toString(): string {
-        return (
-            "An ellipse with\nCenter at: " +
-            this.center.toString +
-            ", \n" +
-            "Horizontal Radius of: " +
-            this.radiusX +
-            ", \n" +
-            "Vertical Radius of: " +
-            this.radiusY
-        );
-    }
-
-    /**
      * Method that checks whether a point is within this ellipse.
      * @param otherPoint The point that might be inside this ellipse.
      * @returns True, if the point is inside this ellipse. Else, false
@@ -94,5 +77,22 @@ export class Ellipse {
         //ELLIPSE TO BE IMPLEMENTED ACCURATELY
         //this.boundingBox.containsShape(otherShape);
         return false;
+    }
+
+    /**
+     * Method that returns the string representation of an ellipse.
+     * @returns The coordinates and radii for the ellipse.
+     */
+    public toString(): string {
+        return (
+            "An ellipse with Center at: " +
+            this.center.toString() +
+            ", " +
+            "Horizontal Radius of: " +
+            this.radiusX +
+            ", " +
+            "Vertical Radius of: " +
+            this.radiusY
+        );
     }
 }
