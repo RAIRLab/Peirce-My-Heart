@@ -29,8 +29,8 @@ export class AtomNode {
      * @param rect The rectangle to be set as the boundary box of this node.
      * @param val The value of the proposition represented by this node.
      */
-    public constructor(val: string, origin: Point, rect?: Rectangle) {
-        this.rect = rect ?? new Rectangle();
+    public constructor(val: string, origin: Point, rect: Rectangle) {
+        this.rect = rect;
         this.identifier = val;
         this.origin = origin;
     }
