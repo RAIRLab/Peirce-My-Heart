@@ -70,11 +70,12 @@ function moveAtom(event: MouseEvent) {
  * When the mouse is lifted up, removes the movement listener and adds it to the tree itself.
  */
 function atomUp() {
-    let atomMetrics: TextMetrics = ctx.measureText(atom);
-    let newRect: Rectangle = new Rectangle(
+    const atomMetrics: TextMetrics = ctx.measureText(atom);
+    const newRect: Rectangle = new Rectangle(
         new Point(currentPoint.x, currentPoint.y + atomMetrics.actualBoundingBoxAscent),
         atomMetrics.width,
-        atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent);
+        atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
+    );
     const newAtom: AtomNode = new AtomNode(atom, currentPoint, newRect);
     tree.insert(newAtom);
     canvas.removeEventListener("mousemove", moveAtom);
