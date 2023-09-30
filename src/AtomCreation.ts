@@ -6,6 +6,7 @@
 import {Point} from "./AEG/Point";
 import {AtomNode} from "./AEG/AtomNode";
 import {redrawCut, tree} from "./index";
+import {Rectangle} from "./AEG/Rectangle";
 
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
 const res: CanvasRenderingContext2D | null = canvas.getContext("2d");
@@ -69,7 +70,12 @@ function moveAtom(event: MouseEvent) {
  * When the mouse is lifted up, removes the movement listener and adds it to the tree itself.
  */
 function atomUp() {
-    const newAtom: AtomNode = new AtomNode(atom, currentPoint);
+    let atomMetrics: TextMetrics = ctx.measureText(atom);
+    let newRect: Rectangle = new Rectangle(
+        new Point(currentPoint.x, currentPoint.y + atomMetrics.actualBoundingBoxAscent),
+        atomMetrics.width,
+        atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent);
+    const newAtom: AtomNode = new AtomNode(atom, currentPoint, newRect);
     tree.insert(newAtom);
     canvas.removeEventListener("mousemove", moveAtom);
     canvas.removeEventListener("mouseup", atomUp);
