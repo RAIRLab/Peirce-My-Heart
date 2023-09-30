@@ -1,3 +1,8 @@
+/**
+ * Ellipse Event Handler
+ * @author Dawn Moore
+ */
+
 import {Point} from "./AEG/Point";
 import {CutNode} from "./AEG/CutNode";
 import {Ellipse} from "./AEG/Ellipse";
@@ -80,6 +85,7 @@ function mouseDown(event: MouseEvent) {
     startingPoint = {x: event.clientX, y: event.clientY};
     canvas.addEventListener("mousemove", mouseMoving);
     canvas.addEventListener("mouseup", mouseUp);
+    canvas.addEventListener("mouseout", mouseOut);
 }
 
 /**
@@ -90,12 +96,11 @@ function mouseDown(event: MouseEvent) {
  * @param event The event of a mouse moving
  */
 function mouseMoving(event: MouseEvent) {
-    //As strange as this is, this is the only way to clear the canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
     const currentPoint: Point = {
         x: event.clientX,
         y: event.clientY,
     };
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     redrawCut(tree.sheet);
     currentEllipse = createEllipse(startingPoint, currentPoint);
 }
@@ -104,12 +109,24 @@ function mouseMoving(event: MouseEvent) {
  * When the mouse is lifted up, removes the movement listener and adds it to the tree itself.
  */
 function mouseUp() {
+    const newCut: CutNode = new CutNode(currentEllipse);
+    if (tree.canInsertAEG(newCut, currentEllipse.center)) {
+        tree.insertAEG(newCut, currentEllipse.center);
+    }
     canvas.removeEventListener("mousemove", mouseMoving);
     canvas.removeEventListener("mouseup", mouseUp);
-    const newCut: CutNode = new CutNode(currentEllipse);
-    if (tree.canInsert(newCut)) {
-        tree.insert(newCut);
-    }
+    canvas.removeEventListener("mouseout", mouseOut);
+}
+
+/**
+ * A temporary function to cancel the current ellipse if the mouse exits the canvas area.
+ */
+function mouseOut() {
+    canvas.removeEventListener("mousemove", mouseMoving);
+    canvas.removeEventListener("mouseup", mouseUp);
+    canvas.removeEventListener("mouseout", mouseOut);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    redrawCut(tree.sheet);
 }
 
 /**
