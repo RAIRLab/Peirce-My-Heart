@@ -1,5 +1,6 @@
 import {Point} from "./Point";
 import {Rectangle} from "./Rectangle";
+import {Polynomial, polynomialRoots} from "nomial";
 
 /**
  * Class that defines an Ellipse.
@@ -53,7 +54,7 @@ export class Ellipse {
     public toString(): string {
         return (
             "An ellipse with\nCenter at: " +
-            this.center.toString +
+            this.center.toString() +
             ", \n" +
             "Horizontal Radius of: " +
             this.radiusX +
@@ -82,7 +83,12 @@ export class Ellipse {
     public overlaps(otherShape: Rectangle | Ellipse): boolean {
         //ELLIPSE TO BE IMPLEMENTED ACCURATELY
         //return this.boundingBox.overlaps(otherShape);
-        return false;
+
+        if (otherShape instanceof Ellipse) {
+            return this.overlapsEllipse(otherShape as Ellipse);
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -94,5 +100,66 @@ export class Ellipse {
         //ELLIPSE TO BE IMPLEMENTED ACCURATELY
         //this.boundingBox.containsShape(otherShape);
         return false;
+    }
+
+    public overlapsEllipse(otherEllipse: Ellipse): boolean {
+        const roots: number[] = this.getQuarticEquation(otherEllipse);
+
+        //Overlap happens if roots are real
+        if (roots.length > 0) {
+            //real roots exist - there is overlap
+            return true;
+        }
+
+        return false;
+    }
+
+    private getQuarticEquation(otherEllipse: Ellipse): number[] {
+        const a1: number =
+            (1 / Math.pow(this.radiusX, 2)) *
+                (Math.pow(this.radiusY, 2) / Math.pow(otherEllipse.radiusY, 2)) -
+            1 / Math.pow(otherEllipse.radiusX, 2);
+
+        const b1: number =
+            -((2 * this.center.x) / Math.pow(this.radiusX, 2)) *
+                (Math.pow(this.radiusY, 2) / Math.pow(otherEllipse.radiusY, 2)) +
+            (2 * otherEllipse.center.x) / Math.pow(otherEllipse.radiusX, 2);
+
+        const c1: number =
+            -(Math.pow(this.radiusY, 2) / Math.pow(otherEllipse.radiusY, 2)) +
+            (1 / Math.pow(this.radiusX, 2)) *
+                (Math.pow(this.radiusY, 2) / Math.pow(otherEllipse.radiusY, 2)) *
+                Math.pow(this.center.x, 2) -
+            Math.pow(this.center.y - otherEllipse.center.y, 2) / Math.pow(otherEllipse.radiusY, 2) -
+            Math.pow(otherEllipse.center.x, 2) / Math.pow(otherEllipse.radiusX, 2) +
+            1;
+
+        const c2: number =
+            (4 * Math.pow(this.radiusY, 2) * Math.pow(this.center.y - otherEllipse.center.y, 2)) /
+            Math.pow(otherEllipse.radiusY, 4);
+
+        const a3: number = -(c2 / Math.pow(this.radiusX, 2));
+
+        const b3: number = (2 * c2 * this.center.x) / Math.pow(this.radiusX, 2);
+
+        const c3: number = -((c2 / Math.pow(this.radiusX, 2)) * Math.pow(this.center.x, 2)) + c2;
+
+        const x4 = Math.pow(a1, 2);
+
+        const x3 = 2 * b1 * a1;
+
+        const x2 = 2 * a1 * c1 + Math.pow(b1, 2) - a3;
+
+        const x = 2 * b1 * c1 - b3;
+
+        const x0 = Math.pow(c1, 2) - c3;
+
+        const f = new Polynomial([x0, x, x2, x3, x4]);
+
+        //Find the real roots of the polynomial f
+        //This polynomial shows the intersection of this ellipse with the other ellipse
+        //Therefore, the start of the interval this root could be in is the leftmost x coordinate
+        //of this ellipse. Similarly, the end of the interval is the rightmost x coordinate.
+        return polynomialRoots(f, this.center.x - this.radiusX, this.center.x + this.radiusX);
     }
 }

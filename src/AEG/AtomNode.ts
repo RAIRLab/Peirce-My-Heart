@@ -45,7 +45,7 @@ export class AtomNode {
             this.identifier +
             " and \n" +
             "Boundary box of: \n" +
-            this.rect.toString
+            this.rect.toString()
         );
     }
 
