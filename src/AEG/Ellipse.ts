@@ -161,6 +161,7 @@ export class Ellipse {
         //This polynomial shows the intersection of this ellipse with the other ellipse
         //Therefore, the start of the interval this root could be in is the leftmost x coordinate
         //of this ellipse. Similarly, the end of the interval is the rightmost x coordinate.
-        return polynomialRoots(f, this.center.x - this.radiusX, this.center.x + this.radiusX);
+        //return polynomialRoots(f, this.center.x - this.radiusX, this.center.x + this.radiusX);
+        return polynomialRoots(f);
     }
 }
