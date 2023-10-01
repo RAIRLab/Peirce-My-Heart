@@ -29,27 +29,10 @@ export class Rectangle {
      * @param w The width of the rectangle.
      * @param h The height of the rectangle.
      */
-    public constructor(vertex?: Point, w?: number, h?: number) {
-        this.startVertex = vertex ?? new Point();
-        this.width = w ?? 0;
-        this.height = h ?? 0;
-    }
-
-    /**
-     * Method that returns a string representation of the rectangle.
-     * @returns The coordinates and lengths for the rectangle.
-     */
-    public toString(): string {
-        return (
-            "A rectangle with\nTop Left Vertex at: " +
-            this.startVertex.toString() +
-            ", \n" +
-            "Width of: " +
-            this.width +
-            ", \n" +
-            "Height of: " +
-            this.height
-        );
+    public constructor(vertex: Point, w: number, h: number) {
+        this.startVertex = vertex;
+        this.width = w;
+        this.height = h;
     }
 
     /**
@@ -134,5 +117,22 @@ export class Rectangle {
             //return this.containsShape(ellipseBoundary);
             return true;
         }
+    }
+
+    /**
+     * Method that returns a string representation of the rectangle.
+     * @returns The coordinates and lengths for the rectangle.
+     */
+    public toString(): string {
+        return (
+            "A rectangle with\nTop Left Vertex at: " +
+            this.startVertex.toString() +
+            ", " +
+            "Width: " +
+            this.width +
+            ", " +
+            "Height: " +
+            this.height
+        );
     }
 }

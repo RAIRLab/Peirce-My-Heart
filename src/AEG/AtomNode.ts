@@ -29,24 +29,10 @@ export class AtomNode {
      * @param rect The rectangle to be set as the boundary box of this node.
      * @param val The value of the proposition represented by this node.
      */
-    public constructor(val: string, origin: Point, rect?: Rectangle) {
-        this.rect = rect ?? new Rectangle();
+    public constructor(val: string, origin: Point, rect: Rectangle) {
+        this.rect = rect;
         this.identifier = val;
         this.origin = origin;
-    }
-
-    /**
-     * Method that returns string representation of an atom node.
-     * @returns The value and boundary box of an atom node.
-     */
-    public toString(): string {
-        return (
-            "An atom representing the proposition: " +
-            this.identifier +
-            " and \n" +
-            "Boundary box of: \n" +
-            this.rect.toString()
-        );
     }
 
     /**
@@ -70,5 +56,19 @@ export class AtomNode {
             //ELLIPSE TO BE IMPLEMENTED ACCURATELY
             return this.rect.containsShape((otherNode as CutNode).ellipse as Ellipse);
         }
+    }
+
+    /**
+     * Method that returns string representation of an atom node.
+     * @returns The value and boundary box of an atom node.
+     */
+    public toString(): string {
+        return (
+            "An atom representing the proposition: " +
+            this.identifier +
+            " and " +
+            "Boundary box of: " +
+            this.rect.toString()
+        );
     }
 }

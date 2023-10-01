@@ -1,6 +1,12 @@
+/**
+ * Atom Event Handler
+ * @author Dawn Moore
+ */
+
 import {Point} from "./AEG/Point";
 import {AtomNode} from "./AEG/AtomNode";
 import {redrawCut, tree} from "./index";
+import {Rectangle} from "./AEG/Rectangle";
 
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
 const res: CanvasRenderingContext2D | null = canvas.getContext("2d");
@@ -42,6 +48,7 @@ function placeAtom(event: MouseEvent) {
     ctx.stroke();
     canvas.addEventListener("mousemove", moveAtom);
     canvas.addEventListener("mouseup", atomUp);
+    canvas.addEventListener("mouseout", mouseOut);
 }
 
 /**
@@ -49,12 +56,12 @@ function placeAtom(event: MouseEvent) {
  * @param event The event of the mouse moving
  */
 function moveAtom(event: MouseEvent) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    redrawCut(tree.sheet);
     currentPoint = {
         x: event.clientX,
         y: event.clientY,
     };
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    redrawCut(tree.sheet);
     ctx.fillText(atom, currentPoint.x, currentPoint.y);
     ctx.stroke();
 }
@@ -63,10 +70,28 @@ function moveAtom(event: MouseEvent) {
  * When the mouse is lifted up, removes the movement listener and adds it to the tree itself.
  */
 function atomUp() {
-    canvas.removeEventListener("mousemove", moveAtom);
-    const newAtom: AtomNode = new AtomNode(atom, currentPoint);
+    const atomMetrics: TextMetrics = ctx.measureText(atom);
+    const newRect: Rectangle = new Rectangle(
+        new Point(currentPoint.x, currentPoint.y + atomMetrics.actualBoundingBoxAscent),
+        atomMetrics.width,
+        atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
+    );
+    const newAtom: AtomNode = new AtomNode(atom, currentPoint, newRect);
     tree.insert(newAtom);
+    canvas.removeEventListener("mousemove", moveAtom);
     canvas.removeEventListener("mouseup", atomUp);
+    canvas.removeEventListener("mouseOut", mouseOut);
+}
+
+/**
+ * A temporary function to cancel the current atom if the mouse exits the canvas area.
+ */
+function mouseOut() {
+    canvas.removeEventListener("mousemove", moveAtom);
+    canvas.removeEventListener("mouseup", atomUp);
+    canvas.removeEventListener("mouseOut", mouseOut);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    redrawCut(tree.sheet);
 }
 
 /**
@@ -74,4 +99,5 @@ function atomUp() {
  */
 export function removeAtomListener() {
     canvas.removeEventListener("mousedown", placeAtom);
+    window.removeEventListener("keydown", atomChoose);
 }

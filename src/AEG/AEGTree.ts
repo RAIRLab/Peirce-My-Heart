@@ -12,13 +12,46 @@ export class AEGTree {
     }
 
     /**
-     * Recursively ensures the bounding box structure of this AEG is consistent with
-     * the hierarchy. It is consistent if bounding boxes of children nodes are within the bounding
-     * box of the parent node.
-     * @returns True, if the structure is consistent. Else, false.
+     * Calls verifyAEG() with the sheet of assertion as its argument.
+     * @returns the result of verifyAEG() called with the sheet of assertion
      */
-    public verifyAEG(): boolean {
-        return this.sheet.verifyCut();
+    public verify(): boolean {
+        return this.verifyAEG(this.sheet);
+    }
+
+    /**
+     * Checks for consistency in the tree's structure.
+     * Structural consistency is achieved when:
+     * All bounding boxes of currentCut's child nodes are within the bounding box of currentCut,
+     * The same is true for each CutNode within currentCut,
+     * And the children of each cut level do not overlap with each other.
+     * @param currentCut: The cut for which we are checking consistency.
+     * @returns True, if the structure is structurally consistent. Else, false.
+     */
+    private verifyAEG(currentCut: CutNode): boolean {
+        for (let i = 0; i < currentCut.children.length; i++) {
+            //Check that all children, in this level, are in currentCut
+            if (!currentCut.containsNode(currentCut.children[i])) {
+                return false;
+            }
+
+            //Check for overlaps on the same level
+            for (let j = i + 1; j < currentCut.children.length; j++) {
+                if (this.overlaps(currentCut.children[i], currentCut.children[j])) {
+                    return false;
+                }
+            }
+        }
+        for (let i = 0; i < currentCut.children.length; i++) {
+            //Check one level deeper if the child is a CutNode. Recursive case
+            if (
+                currentCut.children[i] instanceof CutNode &&
+                !this.verifyAEG(currentCut.children[i] as CutNode)
+            ) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

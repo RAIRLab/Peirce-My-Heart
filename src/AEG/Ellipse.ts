@@ -108,9 +108,11 @@ export class Ellipse {
         //Overlap happens if roots are real
         if (roots.length > 0) {
             //real roots exist - there is overlap
+            console.log("has overlap");
             return true;
         }
 
+        console.log("no overlap");
         return false;
     }
 
@@ -155,7 +157,6 @@ export class Ellipse {
         const x0 = Math.pow(c1, 2) - c3;
 
         const f = new Polynomial([x0, x, x2, x3, x4]);
-
         //Find the real roots of the polynomial f
         //This polynomial shows the intersection of this ellipse with the other ellipse
         //Therefore, the start of the interval this root could be in is the leftmost x coordinate
