@@ -1,8 +1,18 @@
 h1 {
     text-align: center;
-    color: #a5668b;
+    color: #77697f;
     font-size: xx-large;
     border-style: dotted;
+}
+h2 {
+    text-align: left;
+    color: #77697f;
+    font-size: xx-large;
+    border-style: dotted;
+}
+p1 {
+    color: #77697f;
+    font-size: x-large;
 }
 
 ul {
@@ -10,7 +20,7 @@ ul {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #69306d;
+    background-color: #668586;
 }
 
 li {
@@ -26,7 +36,7 @@ li a {
 }
 
 li a:hover {
-    background-color: #f2d7ee;
+    background-color: #82aeb1;
 }
 
 body {
@@ -38,7 +48,7 @@ body {
 }
 
 .sidebar-header {
-    background-color: rgb(241, 192, 255);
+    background-color: #c6dbdf;
     padding: 50px 20px;
     float: left; 
     margin-right: 1000px;
@@ -51,16 +61,16 @@ body {
 }
 
 .button {
-    --button-offset: 0.48em;
+    --button-offset: 0.28em;
     --bg: 178, 60%, 48%;
-    background-color:#a5668b;
+    background-color: a5668b;
     border: 0;
     border-radius: 0.2em;
     padding: 0.1em;
     font-size: 2rem;
     font-weight: 300;
     text-transform: uppercase;
-    box-shadow: 0 8px 0 0 hsla(180, 13%, 12%, 0.5);
+    box-shadow: 0 8px 0 0 #5BB0BA;
     cursor: pointer;
     display: block; 
     margin-bottom: 10px; 
@@ -68,6 +78,6 @@ body {
 
 .button:active,
 .button:focus-visible {
-    transform: translateY(16px);
+    transform: translateY(4px);
     box-shadow: none;
 }
