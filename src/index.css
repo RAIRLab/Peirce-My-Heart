@@ -5,6 +5,7 @@ body, html{
     height: 100vh;
     overflow: hidden;
     display:contents;
+    user-select: none;
 }
 
 p {
