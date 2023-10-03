@@ -109,7 +109,6 @@ export class Ellipse {
                 //if there is an overlap, check if points along the ellipse curve overlap
                 //this can be done by checking if points along the curve of the other ellipse
                 //are within this ellipse
-                console.log("Ellipse may overlap");
                 return this.checkQuadrantOverlap(otherShape);
             }
             return false;
@@ -123,7 +122,43 @@ export class Ellipse {
      */
     public containsShape(otherShape: Rectangle | Ellipse): boolean {
         //ELLIPSE TO BE IMPLEMENTED ACCURATELY
-        return this.boundingBox.containsShape(otherShape);
+        if (otherShape instanceof Rectangle) {
+            for (let i = 0; i < 4; i++) {
+                if (!this.containsPoint(otherShape.getCorners()[i])) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            for (let i = 0; i < 4; i++) {
+                const points = (otherShape as Ellipse).getQuadrantPoints(i);
+                for (let j = 0; j < 6; j++) {
+                    if (!this.containsPoint(points[j])) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+    }
+
+    /**
+     * An array containing the widest coordinates of the ellipse, i.e. the coordinates along the
+     * x-axis and y-axis of the ellipse.
+     * The coordinates are in clockwise order such that:
+     * 0 - Top most coordinate (Top along y-axis).
+     * 1 - Right most coordinate (Right along x-axis).
+     * 2 - Bottom most coordinate (Bottom along y-axis).
+     * 3 - Left most coordinate (Left along x-axis).
+     * @returns
+     */
+    public getWidestCoordinates(): Point[] {
+        return [
+            new Point(this.center.x, this.center.y - this.radiusY),
+            new Point(this.center.x + this.radiusX, this.center.y),
+            new Point(this.center.x, this.center.y + this.radiusY),
+            new Point(this.center.x - this.radiusX, this.center.y),
+        ];
     }
 
     /**
@@ -168,27 +203,27 @@ export class Ellipse {
 
         if (quadrant === 0) {
             //top left quadrant
-            points[0] = new Point(this.center.x - this.radiusX, this.center.y);
-            points[1] = new Point(this.center.x, this.center.y - this.radiusY);
+            points[0] = this.getWidestCoordinates()[3];
+            points[1] = this.getWidestCoordinates()[0];
 
             quadDistance = Math.abs(points[0].x - points[1].x);
         } else if (quadrant === 1) {
             //top right quadrant
-            points[0] = new Point(this.center.x, this.center.y - this.radiusY);
-            points[1] = new Point(this.center.x + this.radiusX, this.center.y);
+            points[0] = this.getWidestCoordinates()[0];
+            points[1] = this.getWidestCoordinates()[1];
 
             quadDistance = Math.abs(points[0].x - points[1].x);
         } else if (quadrant === 2) {
             //bottom right quadrant
-            points[0] = new Point(this.center.x + this.radiusX, this.center.y);
-            points[1] = new Point(this.center.x, this.center.y + this.radiusY);
+            points[0] = this.getWidestCoordinates()[1];
+            points[1] = this.getWidestCoordinates()[2];
 
             quadDistance = Math.abs(points[0].x - points[1].x);
             curve = -1;
         } else if (quadrant === 3) {
             //bottom left quadrant
-            points[0] = new Point(this.center.x, this.center.y + this.radiusY);
-            points[1] = new Point(this.center.x - this.radiusX, this.center.y);
+            points[0] = this.getWidestCoordinates()[2];
+            points[1] = this.getWidestCoordinates()[3];
 
             quadDistance = Math.abs(points[0].x - points[1].x);
             curve = -1;
