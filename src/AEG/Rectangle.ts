@@ -93,9 +93,13 @@ export class Rectangle {
             }
             return false;
         } else {
-            //ELLIPSE TO BE IMPLEMENTED ACCURATELY
             //const ellipseBoundary = (otherShape as Ellipse).boundingBox;
             //return this.overlaps(ellipseBoundary);
+            for (let i = 0; i < 4; i++) {
+                if ((otherShape as Ellipse).containsPoint(this.getCorners()[i])) {
+                    return true;
+                }
+            }
             return false;
         }
     }
@@ -115,7 +119,7 @@ export class Rectangle {
             //ELLIPSE TO BE IMPLEMENTED ACCURATELY
             //const ellipseBoundary = (otherShape as Ellipse).boundingBox;
             //return this.containsShape(ellipseBoundary);
-            return true;
+            return false;
         }
     }
 

@@ -1,6 +1,6 @@
 import {Point} from "./Point";
 import {Rectangle} from "./Rectangle";
-import {Polynomial, polynomialRoots} from "nomial";
+//import {Polynomial, polynomialRoots} from "nomial";
 
 /**
  * Class that defines an Ellipse.
@@ -53,7 +53,7 @@ export class Ellipse {
      */
     public toString(): string {
         return (
-            "An ellipse with\nCenter at: " +
+            "An ellipse with Center at: " +
             this.center.toString() +
             ", \n" +
             "Horizontal Radius of: " +
@@ -70,9 +70,22 @@ export class Ellipse {
      * @returns True, if the point is inside this ellipse. Else, false
      */
     public containsPoint(otherPoint: Point): boolean {
-        //ELLIPSE TO BE IMPLEMENTED ACCURATELY
-        //return this.boundingBox.containsPoint(otherPoint);
-        return false;
+        //(x-h)^2/rx^2 + (y-k)^2/ry^2 <= 1
+        //(x, y) = new point
+        //(h, k) = center
+
+        const p: number =
+            Math.pow(otherPoint.x - this.center.x, 2) / Math.pow(this.radiusX, 2) +
+            Math.pow(otherPoint.y - this.center.y, 2) / Math.pow(this.radiusY, 2);
+
+        return p <= 1;
+
+        //Method 2: scaling eclipse to check for containment
+        /* const scale_y = this.radiusX / this.radiusY;
+        const dx = otherPoint.x - this.center.x;
+        const dy = (otherPoint.y - this.center.y) * scale_y;
+
+        return Math.pow(dx, 2) + Math.pow(dy, 2) <= Math.pow(this.radiusX, 2); */
     }
 
     /**
@@ -81,12 +94,24 @@ export class Ellipse {
      * @returns True, if there is an overlap. Else, false.
      */
     public overlaps(otherShape: Rectangle | Ellipse): boolean {
-        //ELLIPSE TO BE IMPLEMENTED ACCURATELY
         //return this.boundingBox.overlaps(otherShape);
+        if (otherShape instanceof Rectangle) {
+            for (let i = 0; i < 4; i++) {
+                if (this.containsPoint(otherShape.getCorners()[i])) {
+                    return true;
+                }
+            }
 
-        if (otherShape instanceof Ellipse) {
-            return this.overlapsEllipse(otherShape as Ellipse);
+            return false;
         } else {
+            //check if the rectangular bounding boxes of the ellipse overlap
+            if (this.boundingBox.overlaps((otherShape as Ellipse).boundingBox)) {
+                //if there is an overlap, check if points along the ellipse curve overlap
+                //this can be done by checking if points along the curve of the other ellipse
+                //are within this ellipse
+                console.log("Ellipse may overlap");
+                return this.checkQuadrantOverlap(otherShape);
+            }
             return false;
         }
     }
@@ -98,70 +123,99 @@ export class Ellipse {
      */
     public containsShape(otherShape: Rectangle | Ellipse): boolean {
         //ELLIPSE TO BE IMPLEMENTED ACCURATELY
-        //this.boundingBox.containsShape(otherShape);
+        return this.boundingBox.containsShape(otherShape);
+    }
+
+    /**
+     * Method that checks if any quadrant of another ellipse overlaps with this ellipse.
+     * This can be done by checking if a point on the curve of the ellipse is within this ellipse.
+     * @param otherEllipse The other ellipse that might be overlapping with this ellipse
+     * @returns True, if there is an overlap. Else, false
+     */
+    private checkQuadrantOverlap(otherEllipse: Ellipse): boolean {
+        //Get the quadrant which might be overlapping with this ellipse.
+        //To do so, check which corner of the rectangular bounding box of the other ellipse
+        //is within this ellipse.
+
+        for (let i = 0; i < 4; i++) {
+            if (this.containsPoint(otherEllipse.boundingBox.getCorners()[i])) {
+                //Get the points on the curve of the ellipse in that quadrant
+                const points: Point[] = otherEllipse.getQuadrantPoints(i);
+
+                console.log("has corner " + i);
+                //If any points along the curve are within this ellipse, the other ellipse overlaps
+                //with this ellipse. Return true.
+                for (let j = 0; j < 6; j++) {
+                    if (this.containsPoint(points[j])) {
+                        console.log("Has overlap");
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
 
-    public overlapsEllipse(otherEllipse: Ellipse): boolean {
-        const roots: number[] = this.getQuarticEquation(otherEllipse);
+    /**
+     * Method that returns the points on the curve of the ellipse in a specific quadrant
+     * @param quadrant The quadrant which we want the points in
+     * @returns An array of points along the curve of the ellipse
+     */
+    private getQuadrantPoints(quadrant: number): Point[] {
+        const points: Point[] = [];
+        let quadDistance = 0;
+        let curve = 1;
 
-        //Overlap happens if roots are real
-        if (roots.length > 0) {
-            //real roots exist - there is overlap
-            console.log("has overlap");
-            return true;
+        if (quadrant === 0) {
+            //top left quadrant
+            points[0] = new Point(this.center.x - this.radiusX, this.center.y);
+            points[1] = new Point(this.center.x, this.center.y - this.radiusY);
+
+            quadDistance = Math.abs(points[0].x - points[1].x);
+        } else if (quadrant === 1) {
+            //top right quadrant
+            points[0] = new Point(this.center.x, this.center.y - this.radiusY);
+            points[1] = new Point(this.center.x + this.radiusX, this.center.y);
+
+            quadDistance = Math.abs(points[0].x - points[1].x);
+        } else if (quadrant === 2) {
+            //bottom right quadrant
+            points[0] = new Point(this.center.x + this.radiusX, this.center.y);
+            points[1] = new Point(this.center.x, this.center.y + this.radiusY);
+
+            quadDistance = Math.abs(points[0].x - points[1].x);
+            curve = -1;
+        } else if (quadrant === 3) {
+            //bottom left quadrant
+            points[0] = new Point(this.center.x, this.center.y + this.radiusY);
+            points[1] = new Point(this.center.x - this.radiusX, this.center.y);
+
+            quadDistance = Math.abs(points[0].x - points[1].x);
+            curve = -1;
         }
 
-        console.log("no overlap");
-        return false;
+        for (let i = 2; i < 6; i++) {
+            const x = points[0].x + (i - 1) * (quadDistance / 5);
+            const y = this.getCurvePoint(x, curve);
+            points[i] = new Point(x, y);
+        }
+
+        return points;
     }
 
-    private getQuarticEquation(otherEllipse: Ellipse): number[] {
-        const a1: number =
-            (1 / Math.pow(this.radiusX, 2)) *
-                (Math.pow(this.radiusY, 2) / Math.pow(otherEllipse.radiusY, 2)) -
-            1 / Math.pow(otherEllipse.radiusX, 2);
-
-        const b1: number =
-            -((2 * this.center.x) / Math.pow(this.radiusX, 2)) *
-                (Math.pow(this.radiusY, 2) / Math.pow(otherEllipse.radiusY, 2)) +
-            (2 * otherEllipse.center.x) / Math.pow(otherEllipse.radiusX, 2);
-
-        const c1: number =
-            -(Math.pow(this.radiusY, 2) / Math.pow(otherEllipse.radiusY, 2)) +
-            (1 / Math.pow(this.radiusX, 2)) *
-                (Math.pow(this.radiusY, 2) / Math.pow(otherEllipse.radiusY, 2)) *
-                Math.pow(this.center.x, 2) -
-            Math.pow(this.center.y - otherEllipse.center.y, 2) / Math.pow(otherEllipse.radiusY, 2) -
-            Math.pow(otherEllipse.center.x, 2) / Math.pow(otherEllipse.radiusX, 2) +
-            1;
-
-        const c2: number =
-            (4 * Math.pow(this.radiusY, 2) * Math.pow(this.center.y - otherEllipse.center.y, 2)) /
-            Math.pow(otherEllipse.radiusY, 4);
-
-        const a3: number = -(c2 / Math.pow(this.radiusX, 2));
-
-        const b3: number = (2 * c2 * this.center.x) / Math.pow(this.radiusX, 2);
-
-        const c3: number = -((c2 / Math.pow(this.radiusX, 2)) * Math.pow(this.center.x, 2)) + c2;
-
-        const x4 = Math.pow(a1, 2);
-
-        const x3 = 2 * b1 * a1;
-
-        const x2 = 2 * a1 * c1 + Math.pow(b1, 2) - a3;
-
-        const x = 2 * b1 * c1 - b3;
-
-        const x0 = Math.pow(c1, 2) - c3;
-
-        const f = new Polynomial([x0, x, x2, x3, x4]);
-        //Find the real roots of the polynomial f
-        //This polynomial shows the intersection of this ellipse with the other ellipse
-        //Therefore, the start of the interval this root could be in is the leftmost x coordinate
-        //of this ellipse. Similarly, the end of the interval is the rightmost x coordinate.
-        //return polynomialRoots(f, this.center.x - this.radiusX, this.center.x + this.radiusX);
-        return polynomialRoots(f);
+    /**
+     * Method that returns a point on the curve of the ellipse for a given x coordinate
+     * @param x The x coordinate of the point
+     * @param curveHalf Flag signifying the curve of the ellipse.
+     * 1 for top curve, -1 for bottom curve
+     * @returns A point along the curve
+     */
+    private getCurvePoint(x: number, curveHalf: number): number {
+        return (
+            curveHalf *
+                this.radiusY *
+                Math.sqrt(1 - Math.pow((x - this.center.x) / this.radiusX, 2)) +
+            this.center.y
+        );
     }
 }
