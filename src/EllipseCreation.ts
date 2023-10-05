@@ -32,10 +32,10 @@ function distance(p1: Point, p2: Point): number {
  * @param current the point where the user's mouse is currently located
  */
 export function createEllipse(original: Point, current: Point): Ellipse {
-    const center: Point = {
-        x: (current.x - original.x) / 2 + original.x,
-        y: (current.y - original.y) / 2 + original.y,
-    };
+    const center: Point = new Point(
+        (current.x - original.x) / 2 + original.x,
+        (current.y - original.y) / 2 + original.y
+    );
 
     const sdx = original.x - current.x;
     const sdy = original.y - current.y;
@@ -82,7 +82,7 @@ export function ellipseCreation() {
  * @param event The even of holding down the mouse
  */
 function mouseDown(event: MouseEvent) {
-    startingPoint = {x: event.clientX, y: event.clientY};
+    startingPoint = new Point(event.clientX, event.clientY);
     canvas.addEventListener("mousemove", mouseMoving);
     canvas.addEventListener("mouseup", mouseUp);
     canvas.addEventListener("mouseout", mouseOut);
@@ -96,10 +96,7 @@ function mouseDown(event: MouseEvent) {
  * @param event The event of a mouse moving
  */
 function mouseMoving(event: MouseEvent) {
-    const currentPoint: Point = {
-        x: event.clientX,
-        y: event.clientY,
-    };
+    const currentPoint: Point = new Point(event.clientX, event.clientY);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     redrawCut(tree.sheet);
     currentEllipse = createEllipse(startingPoint, currentPoint);
