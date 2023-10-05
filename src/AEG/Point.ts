@@ -25,6 +25,11 @@ export class Point {
         this.y = coordY ?? 0;
     }
 
+    public set(coordX: number, coordY: number) {
+        this.x = coordX;
+        this.y = coordY;
+    }
+
     /**
      * Method that returns a string representation of the point.
      * @returns The coordinates of the point.
