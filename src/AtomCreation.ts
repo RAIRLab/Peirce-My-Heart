@@ -39,10 +39,7 @@ function atomChoose(event: KeyboardEvent) {
  * @param event The event of the mouse being clicked
  */
 function placeAtom(event: MouseEvent) {
-    const startingPoint: Point = {
-        x: event.clientX,
-        y: event.clientY,
-    };
+    const startingPoint: Point = new Point(event.clientX, event.clientY);
     currentPoint = startingPoint;
     ctx.fillText(atom, startingPoint.x, startingPoint.y);
     ctx.stroke();
@@ -56,10 +53,7 @@ function placeAtom(event: MouseEvent) {
  * @param event The event of the mouse moving
  */
 function moveAtom(event: MouseEvent) {
-    currentPoint = {
-        x: event.clientX,
-        y: event.clientY,
-    };
+    currentPoint = new Point(event.clientX, event.clientY);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     redrawCut(tree.sheet);
     ctx.fillText(atom, currentPoint.x, currentPoint.y);
