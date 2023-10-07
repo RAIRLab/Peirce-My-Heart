@@ -35,6 +35,7 @@ We also use it to invoke all core development tools via `npm run`.
 2. [**Vite**](https://vitejs.dev/) : Vite is an asset bundler and build system for large web projects with 
 many types of resources such as typescript. Additionally, it provides excellent debugging features.
 We use it as a build system for Typescript, Asset Compressor, and Live Debugger.
+    * **Vitest** : a testing framework native to Vite with support for TypeScript. It allows for github workflow compatibility and running numerous tests with one command.
  
 3. [**gts**](https://github.com/google/gts) : gts (Google TypeScript Style) is a set of style guidelines and tools for typescript
 consistent and readable formatting. It provides defaults for the following tools we use:
@@ -97,11 +98,22 @@ open attached to the Vite server, any vs code breakpoints triggered in chrome
 will be jumped to in VSC.
 
 
+## Testing
+
+Test your changes! Vitest will help here by looking for all test.ts files in /src/ (as of 10/7/2023) and running them.
+To perform this locally in a terminal, run the following from THE ROOT DIRECTORY (Peirce-My-Heart):
+```bash
+npm run test
+```
+
+
 ### Root Files and Folders Overview
 ```
 /.github/ : The code for github workflows this project uses, used for automatically deploying.
 
 /src/ : source code for the application 
+
+/tests/ : vitest compatible .test.ts files that are run and must be passed before all pushes to main
 
 /.eslintignore : list of .js and .ts files the linter shouldn't look at
 
