@@ -1,6 +1,9 @@
 {
   "extends": "./node_modules/gts/",
   "rules": {
-    "quotes": ["error", "double"]
+    "quotes": ["error", "double"],
+    "node/no-unpublished-import": ["error", {
+      "allowModules": ["vitest"]
+    }]
   }
 }
