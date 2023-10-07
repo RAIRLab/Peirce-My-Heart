@@ -22,7 +22,7 @@ let atom: string;
  * If ellipseMode was previously active, remove the listener.
  */
 export function atomCreation() {
-    window.addEventListener("keydown", atomChoose);
+    window.addEventListener("keypress", atomChoose);
 }
 
 /**
@@ -30,8 +30,10 @@ export function atomCreation() {
  * @param event the event of a keyboard press
  */
 function atomChoose(event: KeyboardEvent) {
-    atom = event.key;
-    canvas.addEventListener("mousedown", placeAtom);
+    if (isLetter(event.key)) {
+        canvas.addEventListener("mousedown", placeAtom);
+        atom = event.key;
+    }
 }
 
 /**
@@ -94,4 +96,17 @@ function mouseOut() {
 export function removeAtomListener() {
     canvas.removeEventListener("mousedown", placeAtom);
     window.removeEventListener("keydown", atomChoose);
+}
+
+/**
+ * Checks to see if the letter just pressed by the user is a letter that can be used for an atom.
+ * @param letter The letter to be checked in the RegExp
+ * @returns whether or not the selected character is a letter
+ */
+function isLetter(letter: string): boolean {
+    const regex = new RegExp(/^[A-Za-z]$/);
+    if (regex.test(letter)) {
+        return true;
+    }
+    return false;
 }
