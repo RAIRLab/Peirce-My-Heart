@@ -1,7 +1,7 @@
 import {expect, test} from "vitest";
 
-import {Rectangle} from "../AEG/Rectangle";
-import {Point} from "../AEG/Point";
+import {Rectangle} from "../src/AEG/Rectangle";
+import {Point} from "../src/AEG/Point";
 
 const rect = new Rectangle(new Point(), 0, 0);
 
