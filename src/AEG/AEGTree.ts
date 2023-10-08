@@ -61,6 +61,7 @@ export class AEGTree {
      * @returns True, if the node can be inserted. Else, false
      */
     public canInsert(incomingNode: AtomNode | CutNode): boolean {
+        console.log("checking can insert");
         const currentCut: CutNode = this.sheet.getCurrentCut(incomingNode);
         for (let i = 0; i < currentCut.children.length; i++) {
             if (this.overlaps(incomingNode, currentCut.children[i])) {

@@ -36,6 +36,7 @@ export class CutNode {
     public getCurrentCut(newNode: CutNode | AtomNode): CutNode {
         for (let i = 0; i < this.children.length; i++) {
             if (this.children[i] instanceof CutNode && this.children[i].containsNode(newNode)) {
+                console.log("current cut: " + this.children[i]);
                 //newNode can be placed at least one layer deeper
                 return this.getCurrentCut(this.children[i]);
             }
