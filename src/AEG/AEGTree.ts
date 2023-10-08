@@ -139,6 +139,6 @@ export class AEGTree {
     }
 
     public toString(): string {
-        return this.sheet.toFormulaString()
+        return this.sheet.toFormulaString();
     }
 }

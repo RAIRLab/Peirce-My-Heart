@@ -145,7 +145,7 @@ export class Ellipse {
             }
             return true;
         }
-        throw Error("Invalid Shape passed to containsShape, must be a Rectangle | Ellipse")
+        throw Error("Invalid Shape passed to containsShape, must be a Rectangle | Ellipse");
     }
 
     /**

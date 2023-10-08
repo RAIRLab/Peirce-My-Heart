@@ -36,7 +36,7 @@ export class CutNode {
      */
     public getCurrentCut(newNode: CutNode | AtomNode): CutNode {
         for (let i = 0; i < this.children.length; i++) {
-            let child : CutNode | AtomNode = this.children[i];
+            const child: CutNode | AtomNode = this.children[i];
             if (child instanceof CutNode && this.children[i].containsNode(newNode)) {
                 //======DEBUGGG=======
                 console.log("current cut: " + this.children[i]);
@@ -76,12 +76,11 @@ export class CutNode {
 
         if (otherNode instanceof AtomNode) {
             return this.ellipse.containsShape(otherNode.rect);
-        } else if(otherNode instanceof CutNode) {
+        } else if (otherNode instanceof CutNode) {
             //ELLIPSE TO BE IMPLEMENTED ACCURATELY
             return this.ellipse.containsShape(otherNode.ellipse as Ellipse);
-        }
-        else {
-            throw Error("containsNode expected AtomNode or CutNode")
+        } else {
+            throw Error("containsNode expected AtomNode or CutNode");
         }
     }
 
@@ -139,19 +138,19 @@ export class CutNode {
     }
 
     public toFormulaString(): string {
-        let formulaString = ""
-        for(let child of this.children){
-            if (child instanceof AtomNode){
+        let formulaString = "";
+        for (const child of this.children) {
+            if (child instanceof AtomNode) {
                 formulaString += child.identifier;
-            } else if(child instanceof CutNode){
+            } else if (child instanceof CutNode) {
                 formulaString += child.toFormulaString();
             }
-            formulaString += " "
+            formulaString += " ";
         }
         formulaString = formulaString.slice(0, -1);
-        if(this.ellipse == null){
+        if (this.ellipse === null) {
             formulaString = "[" + formulaString + "]";
-        }else{
+        } else {
             formulaString = "(" + formulaString + ")";
         }
         return formulaString;
