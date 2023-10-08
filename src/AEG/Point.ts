@@ -31,10 +31,21 @@ export class Point {
     }
 
     /**
+     * Returns the distance between this Point and the other.
+     * @param otherPoint the other Point
+     * @returns the distance between the two
+     */
+    public distance(otherPoint: Point): number {
+        const dx = this.x - otherPoint.x;
+        const dy = this.y - otherPoint.y;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    /**
      * Returns a string representation of the point.
      * @returns The coordinates of the point in string form.
      */
     public toString(): string {
-        return "X: " + this.x + ", Y: " + this.y;
+        return "(" + this.x + ", " + this.y + ")";
     }
 }

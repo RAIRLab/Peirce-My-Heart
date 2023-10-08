@@ -20,12 +20,6 @@ const ctx: CanvasRenderingContext2D = res;
 let startingPoint: Point;
 let currentEllipse: Ellipse;
 
-function distance(p1: Point, p2: Point): number {
-    const dx = p1.x - p2.x;
-    const dy = p1.y - p2.y;
-    return Math.sqrt(dx * dx + dy * dy);
-}
-
 /**
  * A function to draw an ellipse between two points designated by the user.
  * @param original the point where the user originally clicked
@@ -46,7 +40,7 @@ export function createEllipse(original: Point, current: Point): Ellipse {
     if (modeElm.value === "circumscribed") {
         //This inscribed ellipse solution is inspired by the discussion of radius ratios in
         //https://stackoverflow.com/a/433426/6342516
-        const rv: number = Math.floor(distance(center, current));
+        const rv: number = Math.floor(center.distance(current));
         ry = Math.floor(rv * (dy / dx));
         rx = Math.floor(rv * (dx / dy));
     } else {
