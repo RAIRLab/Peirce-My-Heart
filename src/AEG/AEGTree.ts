@@ -82,6 +82,8 @@ export class AEGTree {
         }
 
         const currentCut: CutNode = this.sheet.getCurrentCut(incomingNode);
+        //const originalChildren: (AtomNode | CutNode)[] = currentCut.children;
+        //==============CHANGEDDDD=========
         const originalChildren: (AtomNode | CutNode)[] = structuredClone(currentCut.children);
         currentCut.children.push(incomingNode);
 

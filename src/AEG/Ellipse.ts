@@ -126,7 +126,6 @@ export class Ellipse {
      * @returns True, if the shape is within this ellipse. Else, false.
      */
     public containsShape(otherShape: Rectangle | Ellipse): boolean {
-        //ELLIPSE TO BE IMPLEMENTED ACCURATELY
         if (otherShape instanceof Rectangle) {
             for (let i = 0; i < 4; i++) {
                 if (!this.containsPoint(otherShape.getCorners()[i])) {
@@ -135,12 +134,12 @@ export class Ellipse {
             }
             return true;
         } else {
-            for (let i = 0; i < 4; i++) {
-                const points = (otherShape as Ellipse).getQuadrantPoints(i);
-                for (let j = 0; j < 6; j++) {
-                    if (!this.containsPoint(points[j])) {
-                        return false;
-                    }
+            //If all the widest coordinates of the other ellipse are within this ellipse,
+            //This ellipse contains the other ellipse
+            const points = (otherShape as Ellipse).getWidestCoordinates();
+            for (let j = 0; j < 4; j++) {
+                if (!this.containsPoint(points[j])) {
+                    return false;
                 }
             }
             return true;
