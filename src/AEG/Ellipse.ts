@@ -111,10 +111,11 @@ export class Ellipse {
             //check if the rectangular bounding boxes of the ellipse overlap
             if (this.boundingBox.overlaps((otherShape as Ellipse).boundingBox)) {
                 console.log("ellipse boxes overlap");
+                return true;
                 //if there is an overlap, check if points along the ellipse curve overlap
                 //this can be done by checking if points along the curve of the other ellipse
                 //are within this ellipse
-                return this.checkQuadrantOverlap(otherShape);
+                //return this.checkQuadrantOverlap(otherShape);
             }
             return false;
         }
