@@ -47,11 +47,11 @@ export function createEllipse(original: Point, current: Point): Ellipse {
         //This inscribed ellipse solution is inspired by the discussion of radius ratios in
         //https://stackoverflow.com/a/433426/6342516
         const rv: number = Math.floor(distance(center, current));
-        rx = Math.floor(rv * (dy / dx));
-        ry = Math.floor(rv * (dx / dy));
+        ry = Math.floor(rv * (dy / dx));
+        rx = Math.floor(rv * (dx / dy));
     } else {
-        ry = dx / 2;
-        rx = dy / 2;
+        rx = dx / 2;
+        ry = dy / 2;
     }
 
     if (showRectElm.checked) {
@@ -61,7 +61,7 @@ export function createEllipse(original: Point, current: Point): Ellipse {
     }
 
     ctx.beginPath();
-    ctx.ellipse(center.x, center.y, rx, ry, Math.PI / 2, 0, 2 * Math.PI);
+    ctx.ellipse(center.x, center.y, rx, ry, 0, 0, 2 * Math.PI);
     //I know this is stupid to constantly make a new ellipse but my brain hurts I'm sorry
     ctx.stroke();
     currentEllipse = new Ellipse(center, rx, ry);
