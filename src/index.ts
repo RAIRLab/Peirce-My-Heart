@@ -87,7 +87,7 @@ export function redrawCut(incomingNode: CutNode) {
             incomingNode.ellipse.center.y,
             incomingNode.ellipse.radiusX,
             incomingNode.ellipse.radiusY,
-            Math.PI / 2,
+            0,
             0,
             2 * Math.PI
         );
