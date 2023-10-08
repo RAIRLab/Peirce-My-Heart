@@ -134,14 +134,12 @@ export class Ellipse {
             }
             return true;
         } else {
-            for (let i = 0; i < 4; i++) {
-                //If all the widest coordinates of the other ellipse are within this ellipse,
-                //This ellipse contains the other ellipse
-                const points = (otherShape as Ellipse).getWidestCoordinates();
-                for (let j = 0; j < 4; j++) {
-                    if (!this.containsPoint(points[j])) {
-                        return false;
-                    }
+            //If all the widest coordinates of the other ellipse are within this ellipse,
+            //This ellipse contains the other ellipse
+            const points = (otherShape as Ellipse).getWidestCoordinates();
+            for (let j = 0; j < 4; j++) {
+                if (!this.containsPoint(points[j])) {
+                    return false;
                 }
             }
             return true;
