@@ -54,11 +54,17 @@ export function createEllipse(original: Point, current: Point): Ellipse {
         ctx.stroke();
     }
 
+    const currentEllipse = new Ellipse(center, rx, ry);
+    if (tree.canInsert(new CutNode(currentEllipse))) {
+        ctx.strokeStyle = "#00FF00";
+    } else {
+        ctx.strokeStyle = "#FF0000";
+    }
     ctx.beginPath();
     ctx.ellipse(center.x, center.y, rx, ry, 0, 0, 2 * Math.PI);
     //I know this is stupid to constantly make a new ellipse but my brain hurts I'm sorry
     ctx.stroke();
-    currentEllipse = new Ellipse(center, rx, ry);
+
     return currentEllipse;
 }
 
@@ -104,9 +110,12 @@ function mouseUp() {
     if (tree.canInsert(newCut)) {
         tree.insert(newCut);
     }
+    console.log(tree.toString());
     canvas.removeEventListener("mousemove", mouseMoving);
     canvas.removeEventListener("mouseup", mouseUp);
     canvas.removeEventListener("mouseout", mouseOut);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    redrawCut(tree.sheet);
 }
 
 /**
