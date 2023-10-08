@@ -81,6 +81,7 @@ export function redrawCut(incomingNode: CutNode) {
         }
     }
     if (incomingNode.ellipse instanceof Ellipse) {
+        ctx.strokeStyle = "#000000";
         ctx.beginPath();
         ctx.ellipse(
             incomingNode.ellipse.center.x,

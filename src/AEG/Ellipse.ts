@@ -133,10 +133,10 @@ export class Ellipse {
                 }
             }
             return true;
-        } else {
+        } else if (otherShape instanceof Ellipse) {
             //If all the widest coordinates of the other ellipse are within this ellipse,
             //This ellipse contains the other ellipse
-            const points = (otherShape as Ellipse).getWidestCoordinates();
+            const points = otherShape.getWidestCoordinates();
             for (let j = 0; j < 4; j++) {
                 if (!this.containsPoint(points[j])) {
                     return false;
@@ -144,6 +144,7 @@ export class Ellipse {
             }
             return true;
         }
+        throw Error("Invalid Shape passed to containsShape, must be a Rectangle | Ellipse")
     }
 
     /**

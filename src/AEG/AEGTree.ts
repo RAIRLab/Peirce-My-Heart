@@ -84,7 +84,7 @@ export class AEGTree {
         const currentCut: CutNode = this.sheet.getCurrentCut(incomingNode);
         //const originalChildren: (AtomNode | CutNode)[] = currentCut.children;
         //==============CHANGEDDDD=========
-        const originalChildren: (AtomNode | CutNode)[] = structuredClone(currentCut.children);
+        const originalChildren: (AtomNode | CutNode)[] = [...currentCut.children];
         currentCut.children.push(incomingNode);
 
         if (incomingNode instanceof CutNode) {
@@ -136,5 +136,9 @@ export class AEGTree {
                 return ellipse1.overlaps(ellipse2);
             }
         }
+    }
+
+    public toString(): string {
+        return this.sheet.toFormulaString()
     }
 }
