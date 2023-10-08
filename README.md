@@ -100,7 +100,7 @@ will be jumped to in VSC.
 
 ## Testing
 
-Test your changes! Vitest will help here by looking for all test.ts files in /src/ (as of 10/7/2023) and running them.
+Test your changes! Vitest will help here by looking for all .test.ts files in /tests/ and running them.
 To perform this locally in a terminal, run the following from THE ROOT DIRECTORY (Peirce-My-Heart):
 ```bash
 npm run test

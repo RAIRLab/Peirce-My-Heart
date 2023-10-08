@@ -1,5 +1,5 @@
 /**
- * Class that defines a Point.
+ * Defines a Point.
  * @author Anusha Tiwari
  * @author Ryan Reilly
  */
@@ -15,8 +15,8 @@ export class Point {
     y: number;
 
     /**
-     * Construct a new point at the given coordinates.
-     * If no coordinates specified, default them to 0.
+     * Constructs a new point at the given coordinates.
+     * If no coordinates are specified, default them to 0.
      * @param coordX The specified x coordinate.
      * @param coordY The specified y coordinate.
      */
@@ -31,8 +31,8 @@ export class Point {
     }
 
     /**
-     * Method that returns a string representation of the point.
-     * @returns The coordinates of the point.
+     * Returns a string representation of the point.
+     * @returns The coordinates of the point in string form.
      */
     public toString(): string {
         return "X: " + this.x + ", Y: " + this.y;

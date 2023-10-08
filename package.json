@@ -11,7 +11,8 @@
     "live-edit": "vite serve --open",
     "build-docs": "typedoc",
     "vsc-debug": "vite serve",
-    "test": "vitest"
+    "live-test": "vitest",
+    "test" : "vitest run"
   },
   "repository": {
     "type": "git",
