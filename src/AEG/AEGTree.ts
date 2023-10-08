@@ -3,6 +3,11 @@ import {CutNode} from "./CutNode";
 import {Point} from "./Point";
 import {Ellipse} from "./Ellipse";
 
+/**
+ * Represents the background AEG tree structure.
+ * @author Ryan Reilly
+ * @author Anusha Tiwari
+ */
 export class AEGTree {
     sheet: CutNode;
 
@@ -55,7 +60,7 @@ export class AEGTree {
     }
 
     /**
-     * Method that checks whether the given node can be inserted into this tree
+     * Checks whether the given node can be inserted into this tree
      * at a given point without overlapping any bounding boxes.
      * @param incomingNode The node to be inserted.
      * @returns True, if the node can be inserted. Else, false

@@ -4,7 +4,7 @@ import {Ellipse} from "./Ellipse";
 import {Point} from "./Point";
 
 /**
- * Class that defines an Atom.
+ * Defines an Atom.
  * @author Anusha Tiwari
  * @author Ryan Reilly
  */
