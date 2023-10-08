@@ -93,9 +93,13 @@ export class Rectangle {
             }
             return false;
         } else {
-            //ELLIPSE TO BE IMPLEMENTED ACCURATELY
             //const ellipseBoundary = (otherShape as Ellipse).boundingBox;
             //return this.overlaps(ellipseBoundary);
+            for (let i = 0; i < 4; i++) {
+                if ((otherShape as Ellipse).containsPoint(this.getCorners()[i])) {
+                    return true;
+                }
+            }
             return false;
         }
     }
@@ -112,9 +116,14 @@ export class Rectangle {
             //Other rectangle is within this rectangle if its opposite corners are within
             return this.containsPoint(otherCorners[0]) && this.containsPoint(otherCorners[2]);
         } else {
-            //ELLIPSE TO BE IMPLEMENTED ACCURATELY
-            //const ellipseBoundary = (otherShape as Ellipse).boundingBox;
-            //return this.containsShape(ellipseBoundary);
+            //Check if the coordinates of the ellipse along the axes are within the rectangle.
+            //If they are within, it means that all other points along the curve of the ellipse
+            //are also within the rectangle.
+            for (let i = 0; i < 4; i++) {
+                if (!this.containsPoint((otherShape as Ellipse).getWidestCoordinates()[i])) {
+                    return false;
+                }
+            }
             return true;
         }
     }

@@ -74,6 +74,7 @@ function atomUp() {
     );
     const newAtom: AtomNode = new AtomNode(atom, currentPoint, newRect);
     tree.insert(newAtom);
+    console.log(tree.toString());
     canvas.removeEventListener("mousemove", moveAtom);
     canvas.removeEventListener("mouseup", atomUp);
     canvas.removeEventListener("mouseOut", mouseOut);
