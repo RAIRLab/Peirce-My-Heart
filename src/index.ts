@@ -19,6 +19,7 @@ declare global {
     }
 }
 
+//Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -28,12 +29,16 @@ if (res === null) {
 }
 const ctx: CanvasRenderingContext2D = res;
 ctx.font = "35pt arial";
+
+//Global State
+const cutDisplay = <HTMLParagraphElement>document.getElementById("graphString");
 let inEllipseMode: Boolean = false;
 let inAtomMode: Boolean = false;
 export const tree: AEGTree = new AEGTree();
+
+//Window Exports
 window.atomMode = atomMode;
 window.ellipseMode = ellipseMode;
-
 declare global {
     interface Window {
         ellipseMode: () => void;
@@ -73,6 +78,7 @@ function atomMode() {
  * @param incomingNode The CutNode to be iterated through
  */
 export function redrawCut(incomingNode: CutNode) {
+    cutDisplay.innerHTML = tree.toString();
     for (let i = 0; incomingNode.children.length > i; i++) {
         if (incomingNode.children[i] instanceof AtomNode) {
             redrawAtom(<AtomNode>incomingNode.children[i]);
