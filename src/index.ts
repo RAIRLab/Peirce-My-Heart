@@ -138,7 +138,6 @@ function redrawAtom(incomingNode: AtomNode) {
     ctx.strokeStyle = "#000000";
     ctx.fillStyle = "#000000";
     ctx.beginPath();
-    console.log(ctx.strokeStyle, ctx.fillStyle);
     ctx.rect(
         displayBox.startVertex.x,
         displayBox.startVertex.y,
