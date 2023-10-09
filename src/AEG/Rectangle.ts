@@ -79,19 +79,7 @@ export class Rectangle {
      */
     public overlaps(otherShape: Rectangle | Ellipse): boolean {
         if (otherShape instanceof Rectangle) {
-            if (
-                this.checkHorizontalEdgeOverlap(otherShape) &&
-                otherShape.checkVerticalEdgeOverlap(this)
-            ) {
-                return true;
-            } else if (
-                this.checkVerticalEdgeOverlap(otherShape) &&
-                otherShape.checkHorizontalEdgeOverlap(this)
-            ) {
-                return true;
-            }
-
-            return false;
+            return this.edgesOverlap(otherShape);
         } else {
             for (let i = 0; i < 4; i++) {
                 if ((otherShape as Ellipse).containsPoint(this.getCorners()[i])) {
@@ -103,38 +91,138 @@ export class Rectangle {
     }
 
     /**
-     * Checks if any of the horizontal edges of the other rectangle lie within the horizontal
-     * boundaries of this rectangle
-     * @param otherRect The other rectangle
-     * @returns True, if the other edges lie within this boundary. Else, false
+     * Method that checks if any edges of this rectangle overlap with the other rectangle.
+     * @param otherRect The other rectangle to be checked.
+     * @returns True, if edges overlap. Else, false.
      */
-    private checkHorizontalEdgeOverlap(otherRect: Rectangle): boolean {
+    private edgesOverlap(otherRect: Rectangle): boolean {
         const thisCorners = this.getCorners();
         const otherCorners = otherRect.getCorners();
 
         if (thisCorners[0].y <= otherCorners[0].y && thisCorners[2].y >= otherCorners[0].y) {
-            return true;
+            //The top edge of the other rectangle is within the horizontal boundaries
+            //of this rectangle
+            if (thisCorners[0].x <= otherCorners[0].x && thisCorners[1].x >= otherCorners[0].x) {
+                //The left edge of the other rectangle is within the vertical boundaries
+                //of this rectangle
+                return true;
+            } else if (
+                //The left edge of this rectangle is within the vertical boundaries
+                //of the other rectangle
+                otherCorners[0].x <= thisCorners[0].x &&
+                otherCorners[1].x >= thisCorners[0].x
+            ) {
+                return true;
+            } else if (
+                //The right edge of the other rectangle is within the vertical boundaries
+                //of this rectangle
+                thisCorners[0].x <= otherCorners[1].x &&
+                thisCorners[1].x >= otherCorners[1].x
+            ) {
+                return true;
+            } else if (
+                //The right edge of this rectangle is within the vertical boundaries
+                //of the other rectangle
+                otherCorners[0].x <= thisCorners[1].x &&
+                otherCorners[1].x >= thisCorners[1].x
+            ) {
+                return true;
+            }
+
+            return false;
+        } else if (otherCorners[0].y <= thisCorners[0].y && otherCorners[2].y >= thisCorners[0].y) {
+            //The top edge of this rectangle is within the horizontal boundaries
+            //of the other rectangle
+            if (thisCorners[0].x <= otherCorners[0].x && thisCorners[1].x >= otherCorners[0].x) {
+                //The left edge of the other rectangle is within the vertical boundaries
+                //of this rectangle
+                return true;
+            } else if (
+                //The left edge of this rectangle is within the vertical boundaries
+                //of the other rectangle
+                otherCorners[0].x <= thisCorners[0].x &&
+                otherCorners[1].x >= thisCorners[0].x
+            ) {
+                return true;
+            } else if (
+                //The right edge of the other rectangle is within the vertical boundaries
+                //of this rectangle
+                thisCorners[0].x <= otherCorners[1].x &&
+                thisCorners[1].x >= otherCorners[1].x
+            ) {
+                return true;
+            } else if (
+                //The right edge of this rectangle is within the vertical boundaries
+                //of the other rectangle
+                otherCorners[0].x <= thisCorners[1].x &&
+                otherCorners[1].x >= thisCorners[1].x
+            ) {
+                return true;
+            }
+
+            return false;
         } else if (thisCorners[0].y <= otherCorners[2].y && thisCorners[2].y >= otherCorners[2].y) {
-            return true;
-        }
+            //The bottom edge of the other rectangle is within the horizontal boundaries
+            //of this rectangle
+            if (thisCorners[0].x <= otherCorners[0].x && thisCorners[1].x >= otherCorners[0].x) {
+                //The left edge of the other rectangle is within the vertical boundaries
+                //of this rectangle
+                return true;
+            } else if (
+                //The left edge of this rectangle is within the vertical boundaries
+                //of the other rectangle
+                otherCorners[0].x <= thisCorners[0].x &&
+                otherCorners[1].x >= thisCorners[0].x
+            ) {
+                return true;
+            } else if (
+                //The right edge of the other rectangle is within the vertical boundaries
+                //of this rectangle
+                thisCorners[0].x <= otherCorners[1].x &&
+                thisCorners[1].x >= otherCorners[1].x
+            ) {
+                return true;
+            } else if (
+                //The right edge of this rectangle is within the vertical boundaries
+                //of the other rectangle
+                otherCorners[0].x <= thisCorners[1].x &&
+                otherCorners[1].x >= thisCorners[1].x
+            ) {
+                return true;
+            }
 
-        return false;
-    }
+            return false;
+        } else if (otherCorners[0].y <= thisCorners[2].y && otherCorners[2].y >= thisCorners[2].y) {
+            //The bottom edge of this rectangle is within the horizontal boundaries
+            //of the other rectangle
+            if (thisCorners[0].x <= otherCorners[0].x && thisCorners[1].x >= otherCorners[0].x) {
+                //The left edge of the other rectangle is within the vertical boundaries
+                //of this rectangle
+                return true;
+            } else if (
+                //The left edge of this rectangle is within the vertical boundaries
+                //of the other rectangle
+                otherCorners[0].x <= thisCorners[0].x &&
+                otherCorners[1].x >= thisCorners[0].x
+            ) {
+                return true;
+            } else if (
+                //The right edge of the other rectangle is within the vertical boundaries
+                //of this rectangle
+                thisCorners[0].x <= otherCorners[1].x &&
+                thisCorners[1].x >= otherCorners[1].x
+            ) {
+                return true;
+            } else if (
+                //The right edge of this rectangle is within the vertical boundaries
+                //of the other rectangle
+                otherCorners[0].x <= thisCorners[1].x &&
+                otherCorners[1].x >= thisCorners[1].x
+            ) {
+                return true;
+            }
 
-    /**
-     * Checks if any of the vertical edges of the other rectangle lie within the vertical
-     * boundaries of this rectangle
-     * @param otherRect The other rectangle
-     * @returns True, if the other edges lie within this boundary. Else, false
-     */
-    private checkVerticalEdgeOverlap(otherRect: Rectangle): boolean {
-        const thisCorners = this.getCorners();
-        const otherCorners = otherRect.getCorners();
-
-        if (thisCorners[0].x <= otherCorners[0].x && thisCorners[1].x >= otherCorners[0].x) {
-            return true;
-        } else if (thisCorners[0].x <= otherCorners[1].x && thisCorners[1].x >= otherCorners[1].x) {
-            return true;
+            return false;
         }
 
         return false;
