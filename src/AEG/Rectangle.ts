@@ -29,19 +29,19 @@ export class Rectangle {
      * @param w The width of the rectangle.
      * @param h The height of the rectangle.
      */
-    public constructor(vertex: Point | null, w: number, h: number) {
+    public constructor(vertex?: Point, w?: number, h?: number) {
         if (!Number.isFinite(w) || !Number.isFinite(h)) {
             throw new Error(
                 "Infinity/NaN passed in for width/height while constructing a Rectangle."
             );
-        } else if (w <= 0) {
-            throw new Error("Nonpositive value passed for width while constructing a Rectangle.");
-        } else if (h <= 0) {
-            throw new Error("Nonpositive value passed for height while constructing a Rectangle.");
+        } else if (w !== undefined && w < 0) {
+            throw new Error("Negative value passed for width while constructing a Rectangle.");
+        } else if (h !== undefined && h < 0) {
+            throw new Error("Negative value passed for height while constructing a Rectangle.");
         }
         this.startVertex = vertex ?? new Point(0, 0);
-        this.width = w;
-        this.height = h;
+        this.width = w ?? 0;
+        this.height = h ?? 0;
     }
 
     /**

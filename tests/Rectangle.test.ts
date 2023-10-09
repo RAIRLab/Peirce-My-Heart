@@ -10,7 +10,7 @@ import {Point} from "../src/AEG/Point";
 describe("Rectangle constructor soliloquy:", () => {
     const expectedVertex = new Point(0, 0);
     test.each([
-        [new Rectangle(null, 1, 1), expectedVertex],
+        [new Rectangle(new Point(0, 0), 1, 1), expectedVertex],
         [new Rectangle(new Point(0, 0), 5, 5), expectedVertex],
     ])("These constructors should produce a startingVertex of (0, 0).", (r, expectedVertex) => {
         expect(r.startVertex).toStrictEqual(expectedVertex);
@@ -19,14 +19,12 @@ describe("Rectangle constructor soliloquy:", () => {
     test.fails.each([
         [-1, 1],
         [1, -1],
-        [0, 1],
-        [1, 0],
         [NaN, NaN],
         [Infinity, Infinity],
         [-Infinity, Infinity],
         [Infinity, -Infinity],
         [-Infinity, -Infinity],
     ])("Rectangle constructions of vertex (0, 0), w: %i, h: %i throw errors.", (w, h) => {
-        new Rectangle(null, w, h);
+        new Rectangle(new Point(0, 0), w, h);
     });
 });
