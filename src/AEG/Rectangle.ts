@@ -76,17 +76,24 @@ export class Rectangle {
      * Method that checks whether there is an overlap between this rectangle and another shape.
      * @param otherShape The other shape that might be overlapping this rectangle.
      * @returns True, if there is an overlap. Else, false.
+     * @todo This method is wrong, the ellipse overlap portion functions as a contains or overlaps 
+     *       it should be replaced to just handle overlaps and not return true on contains. -James
+     * @todo this is basically the exact same method that needs to be implemented for 
+     *       Ellipse.overlaps, the implementations should be merged into a single helper function,
+     *       which is called by both methods. -James
      */
     public overlaps(otherShape: Rectangle | Ellipse): boolean {
         if (otherShape instanceof Rectangle) {
             return this.edgesOverlap(otherShape);
-        } else {
+        } else if (otherShape instanceof Ellipse) {
             for (let i = 0; i < 4; i++) {
-                if ((otherShape as Ellipse).containsPoint(this.getCorners()[i])) {
+                if (otherShape.containsPoint(this.getCorners()[i])) {
                     return true;
                 }
             }
             return false;
+        } else {
+            throw Error("Invalid Shape passed to overlaps, must be a Rectangle | Ellipse");
         }
     }
 
@@ -94,6 +101,7 @@ export class Rectangle {
      * Method that checks if any edges of this rectangle overlap with the other rectangle.
      * @param otherRect The other rectangle to be checked.
      * @returns True, if edges overlap. Else, false.
+     * @todo This algo can and should be simplified to be less than 10 lines of code. -James-Oswald
      */
     private edgesOverlap(otherRect: Rectangle): boolean {
         const thisCorners = this.getCorners();
