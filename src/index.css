@@ -74,3 +74,9 @@ p {
     left: 0px;
     z-index: -1;
 }
+.no-highlight{
+    user-select: none; 
+    -moz-user-select: none; 
+    -webkit-text-select: none;
+    -webkit-user-select: none; 
+ }
