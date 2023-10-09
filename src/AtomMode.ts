@@ -28,7 +28,7 @@ export function atomHandler(event: Event) {
         atomMetrics = ctx.measureText(currentAtom.identifier);
         const startVertex: Point = new Point(
             thisEvent.clientX,
-            thisEvent.clientY + atomMetrics.actualBoundingBoxAscent
+            thisEvent.clientY - atomMetrics.actualBoundingBoxAscent
         );
         currentAtom.rect = new Rectangle(
             startVertex,
