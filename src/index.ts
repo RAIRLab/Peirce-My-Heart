@@ -8,8 +8,8 @@ import {AEGTree} from "./AEG/AEGTree";
 import {CutNode} from "./AEG/CutNode";
 import {Ellipse} from "./AEG/Ellipse";
 import {AtomNode} from "./AEG/AtomNode";
-import {cutHandler} from "./CutMode";
-import {atomHandler} from "./AtomMode";
+import {cutMouseDown, cutMouseMove, cutMouseOut, cutMouseUp} from "./CutMode";
+import {atomKeyPress, atomMouseDown, atomMouseMove, atomMouseUp, atomMouseOut} from "./AtomMode";
 
 //Extend the window interface to export functions without TS complaining
 declare global {
@@ -32,7 +32,8 @@ ctx.font = "35pt arial";
 
 //Global State
 const cutDisplay = <HTMLParagraphElement>document.getElementById("graphString");
-let modeState: string;
+let modeState = "";
+let hasMouseDown = false;
 export const tree: AEGTree = new AEGTree();
 
 //Window Exports
@@ -46,51 +47,122 @@ declare global {
 }
 
 /**
- * A function to begin a mode to draw cuts.
- * If atomMode was previously active, remove the listener.
+ * If there is no current mode creates the listeners.
+ * Sets the current mode to cut mode.
  */
 function ellipseMode() {
-    if (modeState !== "ellipseMode") {
-        removeListeners();
-        modeState = "ellipseMode";
+    if (modeState === "") {
+        window.addEventListener("keypress", keyPressHandler);
+        canvas.addEventListener("mousedown", mouseDownHandler);
+        canvas.addEventListener("mousemove", mouseMoveHandler);
+        canvas.addEventListener("mouseup", mouseUpHandler);
+        canvas.addEventListener("mouseout", mouseOutHandler);
     }
-    canvas.addEventListener("mousedown", cutHandler);
-    canvas.addEventListener("mousemove", cutHandler);
-    canvas.addEventListener("mouseup", cutHandler);
-    canvas.addEventListener("mouseout", cutHandler);
+    modeState = "cutMode";
 }
 
 /**
- * A function to begin atom creation.
- * If ellipseMode was previously active, remove the listener.
+ * If there is no current mode creates the listeners.
+ * Sets the current mode to atom mode.
  */
 function atomMode() {
-    if (modeState !== "atomMode") {
-        removeListeners();
-        modeState = "atomMode";
+    if (modeState === "") {
+        window.addEventListener("keypress", keyPressHandler);
+        canvas.addEventListener("mousedown", mouseDownHandler);
+        canvas.addEventListener("mousemove", mouseMoveHandler);
+        canvas.addEventListener("mouseup", mouseUpHandler);
+        canvas.addEventListener("mouseout", mouseOutHandler);
     }
-    window.addEventListener("keypress", atomHandler);
-    canvas.addEventListener("mousedown", atomHandler);
-    canvas.addEventListener("mousemove", atomHandler);
-    canvas.addEventListener("mouseup", atomHandler);
-    canvas.addEventListener("mouseout", atomHandler);
+    modeState = "atomMode";
 }
 
 /**
- * Removes all listeners added in a certain mode.
+ * Calls the respective keypress function depending on current mode.
+ * @param event The event of a keypress
  */
-function removeListeners() {
-    if (modeState === "ellipseMode") {
-        canvas.removeEventListener("mousedown", cutHandler);
-        canvas.removeEventListener("mousemove", cutHandler);
-        canvas.removeEventListener("mouseup", cutHandler);
-        canvas.removeEventListener("mouseout", cutHandler);
-    } else if (modeState === "atomMode") {
-        window.removeEventListener("keypress", atomHandler);
-        canvas.removeEventListener("mousedown", atomHandler);
-        canvas.removeEventListener("mousemove", atomHandler);
-        canvas.removeEventListener("mouseup", atomHandler);
-        canvas.removeEventListener("mouseout", atomHandler);
+function keyPressHandler(event: KeyboardEvent) {
+    switch (modeState) {
+        case "atomMode":
+            atomKeyPress(event);
+            break;
+    }
+}
+
+/**
+ * Calls the respective mouse down function depending on current mode.
+ * @param event The mouse down event
+ */
+function mouseDownHandler(event: MouseEvent) {
+    switch (modeState) {
+        case "cutMode":
+            cutMouseDown(event);
+            hasMouseDown = true;
+            break;
+        case "atomMode":
+            hasMouseDown = atomMouseDown(event);
+            break;
+    }
+}
+
+/**
+ * If mouse down has been used calls the respective mousedown function based on mode.
+ * @param event the mouse move event
+ */
+function mouseMoveHandler(event: MouseEvent) {
+    switch (modeState) {
+        case "cutMode":
+            if (hasMouseDown) {
+                cutMouseMove(event);
+            }
+            break;
+        case "atomMode":
+            if (hasMouseDown) {
+                atomMouseMove(event);
+            }
+            break;
+    }
+}
+
+/**
+ * If mouse down has been used calls the respective mouse up function based on mode.
+ * Resets mouse down after use.
+ * @param event The mouse up event
+ */
+function mouseUpHandler(event: MouseEvent) {
+    switch (modeState) {
+        case "cutMode":
+            if (hasMouseDown) {
+                cutMouseUp(event);
+            }
+            hasMouseDown = false;
+            break;
+        case "atomMode":
+            if (hasMouseDown) {
+                atomMouseUp(event);
+            }
+            hasMouseDown = false;
+            break;
+    }
+}
+
+/**
+ * If mouse down has been used calls the respective mouse out function based on mode.
+ * Resets mouse down after use.
+ */
+function mouseOutHandler() {
+    switch (modeState) {
+        case "cutMode":
+            if (hasMouseDown) {
+                cutMouseOut();
+            }
+            hasMouseDown = false;
+            break;
+        case "atomMode":
+            if (hasMouseDown) {
+                atomMouseOut();
+            }
+            hasMouseDown = false;
+            break;
     }
 }
 

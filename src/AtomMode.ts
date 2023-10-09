@@ -11,29 +11,30 @@ if (res === null) {
 const ctx: CanvasRenderingContext2D = res;
 let atomMetrics: TextMetrics;
 
-let hasMouseDown: Boolean = false;
-let hasAtom: Boolean = false;
 let currentAtom: AtomNode = new AtomNode();
+let hasKeyPress = false;
 
 /**
- * Will compare the event given with all possible events it could be.
- * keypress checks to see if the key was a letter and if yes sets it to that letter.
- * mousedown sets the atom down, calculates the bounding box, and checks for what color.
- * mousemove will alter the origin position and the starting vertex of the bounding box.
- * mouseup will add the atom to the tree if it is in a valid location.
- * mosueout will end drawing early.
- * @param event The event that will be used
- * @param event the event that will be used
+ * Checks to see if the pressed key is a valid letter, if yes sets it to the atom node.
+ * @param event The keypress event
  */
-export function atomHandler(event: Event) {
-    if (event.type === "keypress") {
-        const thisEvent: KeyboardEvent = <KeyboardEvent>event;
-        const regex = new RegExp(/^[A-Za-z]$/);
-        if (regex.test(thisEvent.key)) {
-            currentAtom.identifier = thisEvent.key;
-            hasAtom = true;
-        }
-    } else if (event.type === "mousedown" && hasAtom) {
+export function atomKeyPress(event: KeyboardEvent) {
+    const thisEvent: KeyboardEvent = <KeyboardEvent>event;
+    const regex = new RegExp(/^[A-Za-z]$/);
+    if (regex.test(thisEvent.key)) {
+        currentAtom.identifier = thisEvent.key;
+        hasKeyPress = true;
+    }
+}
+
+/**
+ * If a legal letter has been chosen places it on the canvas.
+ * Color is based on whether the atom is in a valid place, determines the atom bounding box.
+ * @param event The mouse down event
+ * @returns Whether or not the mouse event took place
+ */
+export function atomMouseDown(event: MouseEvent): boolean {
+    if (hasKeyPress) {
         const thisEvent: MouseEvent = <MouseEvent>event;
         atomMetrics = ctx.measureText(currentAtom.identifier);
         const startVertex: Point = new Point(
@@ -54,42 +55,58 @@ export function atomHandler(event: Event) {
         } else {
             drawAtom(currentAtom, "#6600ff");
         }
-        hasMouseDown = true;
-    } else if (event.type === "mousemove" && hasMouseDown) {
-        const thisEvent: MouseEvent = <MouseEvent>event;
-        currentAtom.origin = new Point(thisEvent.clientX, thisEvent.clientY);
-        currentAtom.rect.startVertex = new Point(
-            thisEvent.clientX,
-            thisEvent.clientY - atomMetrics.actualBoundingBoxAscent
-        );
+        return true;
+    }
+    return false;
+}
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        redrawCut(tree.sheet);
-        if (tree.canInsert(currentAtom)) {
-            drawAtom(currentAtom, "#00FF00");
-        } else {
-            drawAtom(currentAtom, "#FF0000");
-        }
-    } else if (event.type === "mouseup" && hasMouseDown) {
-        if (tree.canInsert(currentAtom)) {
-            tree.insert(currentAtom);
-        }
-        currentAtom = new AtomNode(currentAtom.identifier);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        redrawCut(tree.sheet);
-        hasMouseDown = false;
-        console.log(tree.toString());
-    } else if (event.type === "mouseout" && hasMouseDown) {
-        hasMouseDown = false;
-        currentAtom = new AtomNode(currentAtom.identifier);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        redrawCut(tree.sheet);
+/**
+ * Moves the current atom to the current mouse position, redraws the canvas and redraws the atom.
+ * @param event The mouse move event
+ */
+export function atomMouseMove(event: MouseEvent) {
+    const thisEvent: MouseEvent = <MouseEvent>event;
+    currentAtom.origin = new Point(thisEvent.clientX, thisEvent.clientY);
+    currentAtom.rect.startVertex = new Point(
+        thisEvent.clientX,
+        thisEvent.clientY - atomMetrics.actualBoundingBoxAscent
+    );
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    redrawCut(tree.sheet);
+    if (tree.canInsert(currentAtom)) {
+        drawAtom(currentAtom, "#00FF00");
+    } else {
+        drawAtom(currentAtom, "#FF0000");
     }
 }
 
 /**
+ * If the atom is in a valid place, adds it to the tree. Redraws the canvas and resets currentAtom.
+ * @param event The mouse up event
+ */
+export function atomMouseUp(event: MouseEvent) {
+    if (tree.canInsert(currentAtom)) {
+        tree.insert(currentAtom);
+    }
+    currentAtom = new AtomNode(currentAtom.identifier);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    redrawCut(tree.sheet);
+    console.log(tree.toString());
+}
+
+/**
+ * If the mouse leaves the canvas resets the current atom.
+ */
+export function atomMouseOut() {
+    currentAtom = new AtomNode(currentAtom.identifier);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    redrawCut(tree.sheet);
+}
+
+/**
  * Draws the given atomNode with the given color.
- * @param thisAtom the atomnode to be drawn.
+ * @param thisAtom the atomMode to be drawn.
  * @param color the color of the atom.
  */
 function drawAtom(thisAtom: AtomNode, color: string) {
