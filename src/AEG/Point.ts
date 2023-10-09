@@ -33,7 +33,7 @@ export class Point {
      * Sets this Point's coordinates according to the incoming numbers.
      * @param coordX the incoming value for x
      * @param coordY the incoming value for y
-     * @throws Error on receiving NaN or Infinity values as new coordinates.
+     * @throws Error on receiving NaN or Infinity values as coordinates.
      */
     public set(coordX: number, coordY: number) {
         if (!Number.isFinite(coordX) || !Number.isFinite(coordY)) {
