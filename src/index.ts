@@ -32,6 +32,11 @@ ctx.font = "35pt arial";
 
 //Global State
 const cutDisplay = <HTMLParagraphElement>document.getElementById("graphString");
+window.addEventListener("keypress", keyPressHandler);
+canvas.addEventListener("mousedown", mouseDownHandler);
+canvas.addEventListener("mousemove", mouseMoveHandler);
+canvas.addEventListener("mouseup", mouseUpHandler);
+canvas.addEventListener("mouseout", mouseOutHandler);
 let modeState = "";
 let hasMouseDown = false;
 export const tree: AEGTree = new AEGTree();
@@ -51,13 +56,6 @@ declare global {
  * Sets the current mode to cut mode.
  */
 function ellipseMode() {
-    if (modeState === "") {
-        window.addEventListener("keypress", keyPressHandler);
-        canvas.addEventListener("mousedown", mouseDownHandler);
-        canvas.addEventListener("mousemove", mouseMoveHandler);
-        canvas.addEventListener("mouseup", mouseUpHandler);
-        canvas.addEventListener("mouseout", mouseOutHandler);
-    }
     modeState = "cutMode";
 }
 
@@ -66,13 +64,6 @@ function ellipseMode() {
  * Sets the current mode to atom mode.
  */
 function atomMode() {
-    if (modeState === "") {
-        window.addEventListener("keypress", keyPressHandler);
-        canvas.addEventListener("mousedown", mouseDownHandler);
-        canvas.addEventListener("mousemove", mouseMoveHandler);
-        canvas.addEventListener("mouseup", mouseUpHandler);
-        canvas.addEventListener("mouseout", mouseOutHandler);
-    }
     modeState = "atomMode";
 }
 
@@ -131,18 +122,13 @@ function mouseMoveHandler(event: MouseEvent) {
 function mouseUpHandler(event: MouseEvent) {
     switch (modeState) {
         case "cutMode":
-            if (hasMouseDown) {
-                cutMouseUp(event);
-            }
-            hasMouseDown = false;
+            cutMouseUp(event);
             break;
         case "atomMode":
-            if (hasMouseDown) {
-                atomMouseUp(event);
-            }
-            hasMouseDown = false;
+            atomMouseUp(event);
             break;
     }
+    hasMouseDown = false;
 }
 
 /**
