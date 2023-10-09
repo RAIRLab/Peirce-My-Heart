@@ -33,7 +33,7 @@
     "gts": "^5.0.1",
     "typedoc": "^0.25.2",
     "typescript": "~5.2.2",
-    "vite": "^4.4.9"
+    "vite": "^4.4.11"
   },
   "dependencies": {
     "nomial": "^1.0.11"
