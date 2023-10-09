@@ -166,14 +166,14 @@ export class Ellipse {
 
     private getEllipsePoints(): Point[] {
         const points: Point[] = [];
-        const pointDist = this.radiusX / 9;
+        const pointDist = this.radiusX / 15;
 
         points[0] = this.getWidestCoordinates()[3];
         let x: number;
         let y: number;
 
-        for (let i = 1; i < 40; i++) {
-            if (i < 20) {
+        for (let i = 1; i < 64; i++) {
+            if (i < 33) {
                 x = points[i - 1].x + pointDist;
                 y = this.getCurvePoint(x, 1);
             } else {
