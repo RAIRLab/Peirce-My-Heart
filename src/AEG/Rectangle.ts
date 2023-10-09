@@ -93,8 +93,6 @@ export class Rectangle {
             }
             return false;
         } else {
-            //const ellipseBoundary = (otherShape as Ellipse).boundingBox;
-            //return this.overlaps(ellipseBoundary);
             for (let i = 0; i < 4; i++) {
                 if ((otherShape as Ellipse).containsPoint(this.getCorners()[i])) {
                     return true;

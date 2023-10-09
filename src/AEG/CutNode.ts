@@ -38,8 +38,6 @@ export class CutNode {
         for (let i = 0; i < this.children.length; i++) {
             const child: CutNode | AtomNode = this.children[i];
             if (child instanceof CutNode && this.children[i].containsNode(newNode)) {
-                //======DEBUGGG=======
-                console.log("current cut: " + this.children[i]);
                 //newNode can be placed at least one layer deeper
                 return child.getCurrentCut(newNode);
             }
@@ -77,7 +75,6 @@ export class CutNode {
         if (otherNode instanceof AtomNode) {
             return this.ellipse.containsShape(otherNode.rect);
         } else if (otherNode instanceof CutNode) {
-            //ELLIPSE TO BE IMPLEMENTED ACCURATELY
             return this.ellipse.containsShape(otherNode.ellipse as Ellipse);
         } else {
             throw Error("containsNode expected AtomNode or CutNode");
