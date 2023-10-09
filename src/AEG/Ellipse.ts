@@ -83,13 +83,6 @@ export class Ellipse {
         );
 
         return p <= 1;
-
-        //Method 2: scaling eclipse to check for containment
-        /* const scale_y = this.radiusX / this.radiusY;
-        const dx = otherPoint.x - this.center.x;
-        const dy = (otherPoint.y - this.center.y) * scale_y;
-
-        return Math.pow(dx, 2) + Math.pow(dy, 2) <= Math.pow(this.radiusX, 2); */
     }
 
     /**
@@ -98,7 +91,6 @@ export class Ellipse {
      * @returns True, if there is an overlap. Else, false.
      */
     public overlaps(otherShape: Rectangle | Ellipse): boolean {
-        //return this.boundingBox.overlaps(otherShape);
         if (otherShape instanceof Rectangle) {
             for (let i = 0; i < 4; i++) {
                 if (this.containsPoint(otherShape.getCorners()[i])) {
@@ -133,19 +125,12 @@ export class Ellipse {
      */
     public containsShape(otherShape: Rectangle | Ellipse): boolean {
         if (otherShape instanceof Rectangle) {
-            /* for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 4; i++) {
                 if (!this.containsPoint(otherShape.getCorners()[i])) {
                     return false;
                 }
             }
-            return true; */
-
-            //If the 2 opposite corners of the rectangle are within this ellipse,
-            //The rectangle is contained within this ellipse
-            return (
-                this.containsPoint(otherShape.getCorners()[0]) &&
-                this.containsPoint(otherShape.getCorners()[2])
-            );
+            return true;
         } else if (otherShape instanceof Ellipse) {
             //If all the widest coordinates of the other ellipse are within this ellipse,
             //This ellipse contains the other ellipse
@@ -182,10 +167,6 @@ export class Ellipse {
     private getEllipsePoints(): Point[] {
         const points: Point[] = [];
         const pointDist = this.radiusX / 9;
-        //get widestCoord(3)
-        //pointDistance = radx/6
-        //Get 5 points btwn each widest
-        //from 0 - 12, + pointDist
 
         points[0] = this.getWidestCoordinates()[3];
         let x: number;
