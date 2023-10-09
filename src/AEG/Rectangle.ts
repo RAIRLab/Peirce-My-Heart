@@ -76,9 +76,9 @@ export class Rectangle {
      * Method that checks whether there is an overlap between this rectangle and another shape.
      * @param otherShape The other shape that might be overlapping this rectangle.
      * @returns True, if there is an overlap. Else, false.
-     * @todo This method is wrong, the ellipse overlap portion functions as a contains or overlaps 
+     * @todo This method is wrong, the ellipse overlap portion functions as a contains or overlaps
      *       it should be replaced to just handle overlaps and not return true on contains. -James
-     * @todo this is basically the exact same method that needs to be implemented for 
+     * @todo this is basically the exact same method that needs to be implemented for
      *       Ellipse.overlaps, the implementations should be merged into a single helper function,
      *       which is called by both methods. -James
      */
