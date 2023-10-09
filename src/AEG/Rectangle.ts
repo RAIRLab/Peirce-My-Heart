@@ -2,64 +2,70 @@ import {Ellipse} from "./Ellipse";
 import {Point} from "./Point";
 
 /**
- * Class that defines a Rectangle.
+ * Defines a rectangle.
  * @author Anusha Tiwari
  * @author Ryan Reilly
  */
 export class Rectangle {
     /**
-     * The starting (top left) vertex of the rectangle.
+     * The starting (top left) vertex of this Rectangle.
      */
     startVertex: Point;
 
     /**
-     * The width of the rectangle.
+     * The width of this Rectangle.
      */
     width: number;
 
     /**
-     * The height of the rectangle.
+     * The height of this Rectangle.
      */
     height: number;
 
     /**
-     * Construct a rectangle using the given points and lengths.
-     * If no values specified, default them to 0.
+     * Constructs a rectangle using the given points and lengths.
+     * If no Point specified, default startVertex to (0, 0).
      * @param vertex The starting point of the rectangle.
      * @param w The width of the rectangle.
      * @param h The height of the rectangle.
      */
-    public constructor(vertex: Point, w: number, h: number) {
-        this.startVertex = vertex;
+    public constructor(vertex: Point | null, w: number, h: number) {
+        if (!Number.isFinite(w) || !Number.isFinite(h)) {
+            throw new Error(
+                "Infinity/NaN passed in for width/height while constructing a Rectangle."
+            );
+        } else if (w <= 0) {
+            throw new Error("Nonpositive value passed for width while constructing a Rectangle.");
+        } else if (h <= 0) {
+            throw new Error("Nonpositive value passed for height while constructing a Rectangle.");
+        }
+        this.startVertex = vertex ?? new Point(0, 0);
         this.width = w;
         this.height = h;
     }
 
     /**
-     * The corners of the rectangle in clockwise order, starting from the top left.
-     * 0 = Top left vertex.
-     * 1 = Top Right vertex.
-     * 2 = Bottom Right vertex.
-     * 3 = Bottom Left vertex.
-     * @returns The bounding box of the rectangle.
+     * Creates a Point array of
+     * the corners of the rectangle in clockwise order, starting from the top left.
+     * vertices[0] = Top left vertex.
+     * vertices[1] = Top Right vertex.
+     * vertices[2] = Bottom Right vertex.
+     * vertices[3] = Bottom Left vertex.
+     * @returns The bounding box of the rectangle in Point array form.
      */
     public getCorners(): Point[] {
-        //0 = top left vertex
         const vertices: Point[] = [this.startVertex];
-        //1 = top right vertex
         vertices.push(new Point(this.startVertex.x + this.width, this.startVertex.y));
-        //2 = bottom right vertex
         vertices.push(new Point(this.startVertex.x + this.width, this.startVertex.y + this.height));
-        //3 = bottom left vertex
         vertices.push(new Point(this.startVertex.x, this.startVertex.y + this.height));
 
         return vertices;
     }
 
     /**
-     * Method that checks whether there is a point inside this rectangle.
-     * @param otherPoint The point that might be inside this rectangle.
-     * @returns True, if the point is completely inside the rectangle. Else, false.
+     * Checks whether the incoming Point is inside this Rectangle.
+     * @param otherPoint Point that may be inside this Rectangle.
+     * @returns True, if the Point is contained within this Rectangle.
      */
     public containsPoint(otherPoint: Point): boolean {
         const thisCorners = this.getCorners();
@@ -73,9 +79,9 @@ export class Rectangle {
     }
 
     /**
-     * Method that checks whether there is an overlap between this rectangle and another shape.
-     * @param otherShape The other shape that might be overlapping this rectangle.
-     * @returns True, if there is an overlap. Else, false.
+     * Checks whether there is an overlap between this Rectangle and another shape.
+     * @param otherShape The other shape that may overlap this Rectangle.
+     * @returns True, if there is an overlap.
      */
     public overlaps(otherShape: Rectangle | Ellipse): boolean {
         if (otherShape instanceof Rectangle) {
@@ -105,9 +111,9 @@ export class Rectangle {
     }
 
     /**
-     * Method that checks whether another shape is within this rectangle.
-     * @param otherShape The shape that might be within this rectangle.
-     * @returns True, if the shape is within this rectangle. Else, false.
+     * Checks whether another shape is contained within this Rectangle.
+     * @param otherShape The shape that may be within this Rectangle.
+     * @returns True, if the shape is within this Rectangle.
      */
     public containsShape(otherShape: Rectangle | Ellipse): boolean {
         if (otherShape instanceof Rectangle) {
@@ -129,18 +135,16 @@ export class Rectangle {
     }
 
     /**
-     * Method that returns a string representation of the rectangle.
-     * @returns The coordinates and lengths for the rectangle.
+     * Returns a string representation of this Rectangle.
+     * @returns This Rectangle in string form.
      */
     public toString(): string {
         return (
-            "A rectangle with\nTop Left Vertex at: " +
+            "Rectangle with top left vertex at: " +
             this.startVertex.toString() +
-            ", " +
-            "Width: " +
+            ", w: " +
             this.width +
-            ", " +
-            "Height: " +
+            ", h: " +
             this.height
         );
     }
