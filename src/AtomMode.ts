@@ -35,6 +35,7 @@ export function atomHandler(event: Event) {
             atomMetrics.width,
             atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
         );
+        currentAtom.origin = new Point(thisEvent.clientX, thisEvent.clientY);
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         redrawCut(tree.sheet);
