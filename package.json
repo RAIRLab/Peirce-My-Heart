@@ -29,11 +29,11 @@
   },
   "homepage": "https://github.com/James-Oswald/PeirceMyHeart#readme",
   "devDependencies": {
-    "@types/node": "20.8.0",
-    "gts": "^5.0.1",
-    "typedoc": "^0.25.1",
+    "@types/node": "20.8.3",
+    "gts": "^5.2.0",
+    "typedoc": "^0.25.2",
     "typescript": "~5.2.2",
-    "vite": "^4.4.9"
+    "vite": "^4.4.11"
   },
   "dependencies": {
     "nomial": "^1.0.11"
