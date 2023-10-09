@@ -77,7 +77,7 @@ export class Ellipse {
         //(x, y) = new point
         //(h, k) = center
 
-        const p: number = Math.round(
+        const p: number = Math.ceil(
             Math.pow(otherPoint.x - this.center.x, 2) / Math.pow(this.radiusX, 2) +
                 Math.pow(otherPoint.y - this.center.y, 2) / Math.pow(this.radiusY, 2)
         );
