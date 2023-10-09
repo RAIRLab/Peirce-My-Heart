@@ -12,21 +12,56 @@ export class CutNode {
     /**
      * The boundary of this node.
      */
-    ellipse: Ellipse | null; //Null for sheet of assertion
+    private ellipse: Ellipse | null; //Null for sheet of assertion
 
     /**
      * Contains the list of child nodes nested within this node.
      */
-    children: (AtomNode | CutNode)[];
+    private children: (AtomNode | CutNode)[];
 
     /**
      * Constructs a CutNode with the incoming Ellipse as its boundary box.
-     * @param ellipse The ellipse to be set as the boundary box of this node.
+     * @param ellipse (Required) The ellipse to be set as the boundary box of this node.
+     * For Sheet of Assertion, this should be passed as null.
      * @param childList The list of children nodes nested within this node.
+     * If not passed, defaults to an empty array.
      */
-    public constructor(ellipse?: Ellipse, childList?: (AtomNode | CutNode)[]) {
-        this.ellipse = ellipse ?? new Ellipse();
+    public constructor(ellipse: Ellipse | null, childList?: (AtomNode | CutNode)[]) {
+        this.ellipse = ellipse;
         this.children = childList ?? [];
+    }
+
+    /**
+     * Accessor to get the bounding ellipse of the Cut Node.
+     * @returns The bounding ellipse of this Cut Node
+     * Returns null for Sheet of Assertion
+     */
+    public get Ellipse(): Ellipse | null {
+        return this.ellipse;
+    }
+
+    /**
+     * Accessor to get the children (array of nodes nested within) of the Cut Node.
+     * @returns The children of the Cut Node
+     */
+    public get Children(): (AtomNode | CutNode)[] {
+        return this.children;
+    }
+
+    /**
+     * Modifier that sets the children of the Cut Node.
+     * @param list The list of nodes to be added as the children of the Cut Node
+     */
+    public set Children(list: (AtomNode | CutNode)[]) {
+        this.children = list;
+    }
+
+    /**
+     * Modifier that adds a child to the Cut Node.
+     * @param child The node to be added as a child of the Cut Node
+     */
+    public set Child(child: AtomNode | CutNode) {
+        this.children.push(child);
     }
 
     /**
@@ -73,9 +108,9 @@ export class CutNode {
         }
 
         if (otherNode instanceof AtomNode) {
-            return this.ellipse.containsShape(otherNode.rect);
+            return this.ellipse.containsShape(otherNode.Rectangle);
         } else if (otherNode instanceof CutNode) {
-            return this.ellipse.containsShape(otherNode.ellipse as Ellipse);
+            return this.ellipse.containsShape(otherNode.Ellipse as Ellipse);
         } else {
             throw Error("containsNode expected AtomNode or CutNode");
         }
@@ -138,7 +173,7 @@ export class CutNode {
         let formulaString = "";
         for (const child of this.children) {
             if (child instanceof AtomNode) {
-                formulaString += child.identifier;
+                formulaString += child.Identifier;
             } else if (child instanceof CutNode) {
                 formulaString += child.toFormulaString();
             }

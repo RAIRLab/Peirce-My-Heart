@@ -102,10 +102,8 @@ export class Ellipse {
             //check if the rectangular bounding boxes of the ellipse overlap
             if (
                 this.boundingBox.overlaps((otherShape as Ellipse).boundingBox) ||
-                //this.boundingBox.containsShape((otherShape as Ellipse).boundingBox) ||
                 (otherShape as Ellipse).boundingBox.containsShape(this.boundingBox)
             ) {
-                //return true;
                 //if there is an overlap, check if points along the ellipse curve overlap
                 //this can be done by checking if points along the curve of this ellipse
                 //are within the other ellipse

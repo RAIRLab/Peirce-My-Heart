@@ -12,27 +12,51 @@ export class AtomNode {
     /**
      * The rectangle signifying the boundary box of this node.
      */
-    rect: Rectangle;
+    private rect: Rectangle;
 
     /**
      * The string value of the proposition represented by this node.
      */
-    identifier: string;
+    private identifier: string;
 
     /**
      * The point the atom is initially placed.
      */
-    origin: Point;
+    private origin: Point;
 
     /**
      * Construct an atom node with given boundary box and proposition.
-     * @param rect The rectangle to be set as the boundary box of this node.
-     * @param val The value of the proposition represented by this node.
+     * @param rect (Required) The rectangle to be set as the boundary box of this node.
+     * @param val (Required) The value of the proposition represented by this node.
      */
-    public constructor(val?: string, origin?: Point, rect?: Rectangle) {
-        this.rect = rect ?? new Rectangle();
-        this.identifier = val ?? "";
-        this.origin = origin ?? new Point();
+    public constructor(val: string, origin: Point, rect: Rectangle) {
+        this.rect = rect;
+        this.identifier = val;
+        this.origin = origin;
+    }
+
+    /**
+     * Accessor to get the bounding rectangle of the Atom Node.
+     * @returns The bounding rectangle of this Atom Node
+     */
+    public get Rectangle(): Rectangle {
+        return this.rect;
+    }
+
+    /**
+     * Accessor to get the identifier of the Atom Node.
+     * @returns The identifier of this Atom Node
+     */
+    public get Identifier(): string {
+        return this.identifier;
+    }
+
+    /**
+     * Accessor to get the origin (top left) vertex of the bounding rectangle of the Atom Node.
+     * @returns The origin of the bounding rectangle
+     */
+    public get Origin(): Point {
+        return this.origin;
     }
 
     /**
@@ -51,10 +75,10 @@ export class AtomNode {
      */
     public containsNode(otherNode: AtomNode | CutNode): boolean {
         if (otherNode instanceof AtomNode) {
-            return this.rect.containsShape((otherNode as AtomNode).rect);
+            return this.rect.containsShape((otherNode as AtomNode).Rectangle);
         } else {
             //ELLIPSE TO BE IMPLEMENTED ACCURATELY
-            return this.rect.containsShape((otherNode as CutNode).ellipse as Ellipse);
+            return this.rect.containsShape((otherNode as CutNode).Ellipse as Ellipse);
         }
     }
 
