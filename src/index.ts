@@ -10,7 +10,6 @@ import {Ellipse} from "./AEG/Ellipse";
 import {AtomNode} from "./AEG/AtomNode";
 import {cutHandler} from "./CutMode";
 import {atomHandler} from "./AtomMode";
-import {Rectangle} from "./AEG/Rectangle";
 
 //Extend the window interface to export functions without TS complaining
 declare global {
@@ -77,6 +76,9 @@ function atomMode() {
     canvas.addEventListener("mouseout", atomHandler);
 }
 
+/**
+ * Removes all listeners added in a certain mode.
+ */
 function removeListeners() {
     if (modeState === "ellipseMode") {
         canvas.removeEventListener("mousedown", cutHandler);
@@ -108,7 +110,6 @@ export function redrawCut(incomingNode: CutNode) {
     }
     if (incomingNode.ellipse instanceof Ellipse) {
         ctx.strokeStyle = "#000000";
-        const displayBox: Rectangle = incomingNode.ellipse.boundingBox;
         ctx.beginPath();
         ctx.ellipse(
             incomingNode.ellipse.center.x,
@@ -119,18 +120,12 @@ export function redrawCut(incomingNode: CutNode) {
             0,
             2 * Math.PI
         );
-        ctx.rect(
-            displayBox.startVertex.x,
-            displayBox.startVertex.y,
-            displayBox.width,
-            displayBox.height
-        );
         ctx.stroke();
     }
 }
 
 /**
- * Redraws the given atom.
+ * Redraws the given atom. Also redraws the the bounding box.
  * @param incomingNode The Atom Node to be redrawn
  */
 function redrawAtom(incomingNode: AtomNode) {

@@ -15,6 +15,16 @@ let hasMouseDown: Boolean = false;
 let hasAtom: Boolean = false;
 let currentAtom: AtomNode = new AtomNode();
 
+/**
+ * Will compare the event given with all possible events it could be.
+ * keypress checks to see if the key was a letter and if yes sets it to that letter.
+ * mousedown sets the atom down, calculates the bounding box, and checks for what color.
+ * mousemove will alter the origin position and the starting vertex of the bounding box.
+ * mouseup will add the atom to the tree if it is in a valid location.
+ * mosueout will end drawing early.
+ * @param event The event that will be used
+ * @param event the event that will be used
+ */
 export function atomHandler(event: Event) {
     if (event.type === "keypress") {
         const thisEvent: KeyboardEvent = <KeyboardEvent>event;
@@ -77,6 +87,11 @@ export function atomHandler(event: Event) {
     }
 }
 
+/**
+ * Draws the given atomNode with the given color.
+ * @param thisAtom the atomnode to be drawn.
+ * @param color the color of the atom.
+ */
 function drawAtom(thisAtom: AtomNode, color: string) {
     ctx.fillStyle = color;
     ctx.strokeStyle = color;
