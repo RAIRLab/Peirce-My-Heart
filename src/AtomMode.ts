@@ -89,6 +89,4 @@ function drawAtom(thisAtom: AtomNode, color: string) {
         displayBox.height
     );
     ctx.stroke();
-    ctx.fillStyle = "#000000";
-    ctx.strokeStyle = "000000";
 }

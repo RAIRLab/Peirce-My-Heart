@@ -106,6 +106,8 @@ function drawEllipse(thisCut: CutNode, color: string) {
         displayBox.width,
         displayBox.height
     );
+    ctx.stroke();
+    ctx.beginPath();
     ctx.ellipse(center.x, center.y, ellipse.radiusX, ellipse.radiusY, 0, 0, 2 * Math.PI);
     ctx.stroke();
 }

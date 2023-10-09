@@ -135,7 +135,10 @@ export function redrawCut(incomingNode: CutNode) {
  */
 function redrawAtom(incomingNode: AtomNode) {
     const displayBox = incomingNode.rect;
+    ctx.strokeStyle = "#000000";
+    ctx.fillStyle = "#000000";
     ctx.beginPath();
+    console.log(ctx.strokeStyle, ctx.fillStyle);
     ctx.rect(
         displayBox.startVertex.x,
         displayBox.startVertex.y,
