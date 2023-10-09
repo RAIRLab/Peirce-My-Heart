@@ -100,15 +100,18 @@ export class Ellipse {
             return false;
         } else {
             //check if the rectangular bounding boxes of the ellipse overlap
-            if (this.boundingBox.overlaps((otherShape as Ellipse).boundingBox)) {
+            if (
+                this.boundingBox.overlaps((otherShape as Ellipse).boundingBox) ||
+                //this.boundingBox.containsShape((otherShape as Ellipse).boundingBox) ||
+                (otherShape as Ellipse).boundingBox.containsShape(this.boundingBox)
+            ) {
                 //return true;
                 //if there is an overlap, check if points along the ellipse curve overlap
-                //this can be done by checking if points along the curve of the other ellipse
-                //are within this ellipse
-
-                const otherPoints: Point[] = otherShape.getEllipsePoints();
-                for (let i = 0; i < otherPoints.length; i++) {
-                    if (this.containsPoint(otherPoints[i])) {
+                //this can be done by checking if points along the curve of this ellipse
+                //are within the other ellipse
+                const points: Point[] = this.getEllipsePoints();
+                for (let i = 0; i < points.length; i++) {
+                    if (otherShape.containsPoint(points[i])) {
                         return true;
                     }
                 }
