@@ -79,18 +79,18 @@ export class Rectangle {
      */
     public overlaps(otherShape: Rectangle | Ellipse): boolean {
         if (otherShape instanceof Rectangle) {
-            const thisCorners = this.getCorners();
-            const otherCorners = otherShape.getCorners();
-
-            //Overlap occurs if either of the corners of either shape are within the other
-            for (let i = 0; i < 4; i++) {
-                if (
-                    this.containsPoint(otherCorners[i]) ||
-                    otherShape.containsPoint(thisCorners[i])
-                ) {
-                    return true;
-                }
+            if (
+                this.checkHorizontalEdgeOverlap(otherShape) &&
+                otherShape.checkVerticalEdgeOverlap(this)
+            ) {
+                return true;
+            } else if (
+                this.checkVerticalEdgeOverlap(otherShape) &&
+                otherShape.checkHorizontalEdgeOverlap(this)
+            ) {
+                return true;
             }
+
             return false;
         } else {
             for (let i = 0; i < 4; i++) {
@@ -100,6 +100,44 @@ export class Rectangle {
             }
             return false;
         }
+    }
+
+    /**
+     * Checks if any of the horizontal edges of the other rectangle lie within the horizontal
+     * boundaries of this rectangle
+     * @param otherRect The other rectangle
+     * @returns True, if the other edges lie within this boundary. Else, false
+     */
+    private checkHorizontalEdgeOverlap(otherRect: Rectangle): boolean {
+        const thisCorners = this.getCorners();
+        const otherCorners = otherRect.getCorners();
+
+        if (thisCorners[0].y <= otherCorners[0].y && thisCorners[2].y >= otherCorners[0].y) {
+            return true;
+        } else if (thisCorners[0].y <= otherCorners[2].y && thisCorners[2].y >= otherCorners[2].y) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if any of the vertical edges of the other rectangle lie within the vertical
+     * boundaries of this rectangle
+     * @param otherRect The other rectangle
+     * @returns True, if the other edges lie within this boundary. Else, false
+     */
+    private checkVerticalEdgeOverlap(otherRect: Rectangle): boolean {
+        const thisCorners = this.getCorners();
+        const otherCorners = otherRect.getCorners();
+
+        if (thisCorners[0].x <= otherCorners[0].x && thisCorners[1].x >= otherCorners[0].x) {
+            return true;
+        } else if (thisCorners[0].x <= otherCorners[1].x && thisCorners[1].x >= otherCorners[1].x) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

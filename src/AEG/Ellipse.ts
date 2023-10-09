@@ -1,6 +1,5 @@
 import {Point} from "./Point";
 import {Rectangle} from "./Rectangle";
-//import {Polynomial, polynomialRoots} from "nomial";
 
 /**
  * Class that defines an Ellipse.
