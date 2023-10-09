@@ -68,7 +68,7 @@ function moveAtom(event: MouseEvent) {
 function atomUp() {
     const atomMetrics: TextMetrics = ctx.measureText(atom);
     const newRect: Rectangle = new Rectangle(
-        new Point(currentPoint.x, currentPoint.y + atomMetrics.actualBoundingBoxAscent),
+        new Point(currentPoint.x, currentPoint.y - atomMetrics.actualBoundingBoxAscent),
         atomMetrics.width,
         atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
     );
