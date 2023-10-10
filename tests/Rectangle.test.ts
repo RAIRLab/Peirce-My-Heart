@@ -100,18 +100,18 @@ describe("Rectangle containsPoint soliloquy:", () => {
     });
 });
 
-describe("Rectangle overlaps soliloquy:", () => {
+describe("Rectangle-on-Rectangle overlaps soliloquy:", () => {
     const rect: Rectangle = new Rectangle(new Point(0, 0), 10, 10);
     test("Rectangle of TL vertex (0, 0) and {w, h} = 10 should not overlap Rectangle of TL vertex (11, 11) and {w, h} = 10.", () => {
         expect(rect.overlaps(new Rectangle(new Point(11, 11), 10, 10))).toBeFalsy();
     });
 
     test.each([
-        [0, 0, 10, 10], //rectangle with the same measurements
-        [10, 10, 10, 10], //rectangle sharing one point in common
-        [0, 0, 0, 10], //rectangle sharing one edge in common
-        [5, 5, 5, 5], //rectangle starting inside of and crossing through the existing one
-        [-5, -5, 5, 5], //rectangle starting outside and crossing through the existing one
+        [0, 0, 10, 10], //Rectangle with the same measurements
+        [10, 10, 10, 10], //Rectangle sharing one point in common
+        [0, 0, 0, 10], //Rectangle sharing one edge in common
+        [5, 5, 5, 5], //Rectangle starting inside of and crossing through the existing one
+        [-5, -5, 5, 5], //Rectangle starting outside and crossing through the existing one
     ])(
         "Rectangle of TL vertex(0, 0) and {w, h} = 10 should overlap with Rectangle of TL vertex (%f, %f) and w = %f, h %f.",
         (x, y, w, h) => {
@@ -120,7 +120,11 @@ describe("Rectangle overlaps soliloquy:", () => {
     );
 });
 
-describe("Rectangle contains soliloquy:", () => {
+describe.skip("Rectangle-on-Ellipse overlaps soliloquy:", () => {
+    const rect: Rectangle = new Rectangle(new Point(0, 0), 10, 10);
+});
+
+describe("Rectangle-on-Rectangle contains soliloquy:", () => {
     const rect: Rectangle = new Rectangle(new Point(0, 0), 10, 10);
 
     test("A Rectangle of TL vertex (0, 0) and {w, h} = 10 should not contain a Rectangle with the same measurements.", () => {
@@ -137,7 +141,7 @@ describe("Rectangle contains soliloquy:", () => {
     ])(
         "Rectangle of TL vertex (0, 0) and {w, h} = 10 should not contain Rectangle of TL vertex (%f, %f) and w = %f, h = %f.",
         (x, y, w, h) => {
-            expect(rect.contains(new Rectangle(new Point(0, 0), w, h))).toBeFalsy();
+            expect(rect.contains(new Rectangle(new Point(x, y), w, h))).toBeFalsy();
         }
     );
 
@@ -152,6 +156,10 @@ describe("Rectangle contains soliloquy:", () => {
             expect(rect.contains(new Rectangle(new Point(x, y), w, h))).toBeTruthy();
         }
     );
+});
+
+describe.skip("Rectangle-on-Ellipse contains soliloquy:", () => {
+    const rect: Rectangle = new Rectangle(new Point(0, 0), 10, 10);
 });
 
 describe("Rectangle toString soliloquy:", () => {
