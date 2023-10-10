@@ -1,5 +1,6 @@
 import {Ellipse} from "./Ellipse";
 import {Point} from "./Point";
+import {shapesOverlaps, shapeContains, pointInRect} from "./AEGUtils";
 
 /**
  * Defines a rectangle.
@@ -65,181 +66,18 @@ export class Rectangle {
     /**
      * Checks whether the incoming Point is inside this Rectangle.
      * @param otherPoint Point that may be inside this Rectangle.
-     * @returns True, if the Point is contained within this Rectangle.
      */
-    public containsPoint(otherPoint: Point): boolean {
-        const thisCorners = this.getCorners();
-
-        return (
-            thisCorners[0].x <= otherPoint.x &&
-            thisCorners[1].x >= otherPoint.x &&
-            thisCorners[1].y <= otherPoint.y &&
-            thisCorners[2].y >= otherPoint.y
-        );
+    public containsPoint(point: Point): boolean {
+        return pointInRect(this, point);
     }
 
     /**
      * Checks whether there is an overlap between this rectangle and another shape.
      * @param otherShape The other shape that might be overlapping this rectangle.
      * @returns True, if there is an overlap. Else, false.
-     * @todo This method is wrong, the ellipse overlap portion functions as a contains or overlaps
-     *       it should be replaced to just handle overlaps and not return true on contains. -James
-     * @todo this is basically the exact same method that needs to be implemented for
-     *       Ellipse.overlaps, the implementations should be merged into a single helper function,
-     *       which is called by both methods. -James
      */
     public overlaps(otherShape: Rectangle | Ellipse): boolean {
-        if (otherShape instanceof Rectangle) {
-            return this.edgesOverlap(otherShape);
-        } else if (otherShape instanceof Ellipse) {
-            for (let i = 0; i < 4; i++) {
-                if (otherShape.containsPoint(this.getCorners()[i])) {
-                    return true;
-                }
-            }
-            return false;
-        } else {
-            throw Error("Invalid Shape passed to overlaps, must be a Rectangle | Ellipse");
-        }
-    }
-
-    /**
-     * Method that checks if any edges of this rectangle overlap with the other rectangle.
-     * @param otherRect The other rectangle to be checked.
-     * @returns True, if edges overlap. Else, false.
-     * @todo This algo can and should be simplified to be less than 10 lines of code. -James-Oswald
-     */
-    private edgesOverlap(otherRect: Rectangle): boolean {
-        const thisCorners = this.getCorners();
-        const otherCorners = otherRect.getCorners();
-
-        if (thisCorners[0].y <= otherCorners[0].y && thisCorners[2].y >= otherCorners[0].y) {
-            //The top edge of the other rectangle is within the horizontal boundaries
-            //of this rectangle
-            if (thisCorners[0].x <= otherCorners[0].x && thisCorners[1].x >= otherCorners[0].x) {
-                //The left edge of the other rectangle is within the vertical boundaries
-                //of this rectangle
-                return true;
-            } else if (
-                //The left edge of this rectangle is within the vertical boundaries
-                //of the other rectangle
-                otherCorners[0].x <= thisCorners[0].x &&
-                otherCorners[1].x >= thisCorners[0].x
-            ) {
-                return true;
-            } else if (
-                //The right edge of the other rectangle is within the vertical boundaries
-                //of this rectangle
-                thisCorners[0].x <= otherCorners[1].x &&
-                thisCorners[1].x >= otherCorners[1].x
-            ) {
-                return true;
-            } else if (
-                //The right edge of this rectangle is within the vertical boundaries
-                //of the other rectangle
-                otherCorners[0].x <= thisCorners[1].x &&
-                otherCorners[1].x >= thisCorners[1].x
-            ) {
-                return true;
-            }
-
-            return false;
-        } else if (otherCorners[0].y <= thisCorners[0].y && otherCorners[2].y >= thisCorners[0].y) {
-            //The top edge of this rectangle is within the horizontal boundaries
-            //of the other rectangle
-            if (thisCorners[0].x <= otherCorners[0].x && thisCorners[1].x >= otherCorners[0].x) {
-                //The left edge of the other rectangle is within the vertical boundaries
-                //of this rectangle
-                return true;
-            } else if (
-                //The left edge of this rectangle is within the vertical boundaries
-                //of the other rectangle
-                otherCorners[0].x <= thisCorners[0].x &&
-                otherCorners[1].x >= thisCorners[0].x
-            ) {
-                return true;
-            } else if (
-                //The right edge of the other rectangle is within the vertical boundaries
-                //of this rectangle
-                thisCorners[0].x <= otherCorners[1].x &&
-                thisCorners[1].x >= otherCorners[1].x
-            ) {
-                return true;
-            } else if (
-                //The right edge of this rectangle is within the vertical boundaries
-                //of the other rectangle
-                otherCorners[0].x <= thisCorners[1].x &&
-                otherCorners[1].x >= thisCorners[1].x
-            ) {
-                return true;
-            }
-
-            return false;
-        } else if (thisCorners[0].y <= otherCorners[2].y && thisCorners[2].y >= otherCorners[2].y) {
-            //The bottom edge of the other rectangle is within the horizontal boundaries
-            //of this rectangle
-            if (thisCorners[0].x <= otherCorners[0].x && thisCorners[1].x >= otherCorners[0].x) {
-                //The left edge of the other rectangle is within the vertical boundaries
-                //of this rectangle
-                return true;
-            } else if (
-                //The left edge of this rectangle is within the vertical boundaries
-                //of the other rectangle
-                otherCorners[0].x <= thisCorners[0].x &&
-                otherCorners[1].x >= thisCorners[0].x
-            ) {
-                return true;
-            } else if (
-                //The right edge of the other rectangle is within the vertical boundaries
-                //of this rectangle
-                thisCorners[0].x <= otherCorners[1].x &&
-                thisCorners[1].x >= otherCorners[1].x
-            ) {
-                return true;
-            } else if (
-                //The right edge of this rectangle is within the vertical boundaries
-                //of the other rectangle
-                otherCorners[0].x <= thisCorners[1].x &&
-                otherCorners[1].x >= thisCorners[1].x
-            ) {
-                return true;
-            }
-
-            return false;
-        } else if (otherCorners[0].y <= thisCorners[2].y && otherCorners[2].y >= thisCorners[2].y) {
-            //The bottom edge of this rectangle is within the horizontal boundaries
-            //of the other rectangle
-            if (thisCorners[0].x <= otherCorners[0].x && thisCorners[1].x >= otherCorners[0].x) {
-                //The left edge of the other rectangle is within the vertical boundaries
-                //of this rectangle
-                return true;
-            } else if (
-                //The left edge of this rectangle is within the vertical boundaries
-                //of the other rectangle
-                otherCorners[0].x <= thisCorners[0].x &&
-                otherCorners[1].x >= thisCorners[0].x
-            ) {
-                return true;
-            } else if (
-                //The right edge of the other rectangle is within the vertical boundaries
-                //of this rectangle
-                thisCorners[0].x <= otherCorners[1].x &&
-                thisCorners[1].x >= otherCorners[1].x
-            ) {
-                return true;
-            } else if (
-                //The right edge of this rectangle is within the vertical boundaries
-                //of the other rectangle
-                otherCorners[0].x <= thisCorners[1].x &&
-                otherCorners[1].x >= thisCorners[1].x
-            ) {
-                return true;
-            }
-
-            return false;
-        }
-
-        return false;
+        return shapesOverlaps(this, otherShape);
     }
 
     /**
@@ -247,23 +85,8 @@ export class Rectangle {
      * @param otherShape The shape that may be within this Rectangle.
      * @returns True, if the shape is within this Rectangle.
      */
-    public containsShape(otherShape: Rectangle | Ellipse): boolean {
-        if (otherShape instanceof Rectangle) {
-            const otherCorners = otherShape.getCorners();
-
-            //Other rectangle is within this rectangle if its opposite corners are within
-            return this.containsPoint(otherCorners[0]) && this.containsPoint(otherCorners[2]);
-        } else {
-            //Check if the coordinates of the ellipse along the axes are within the rectangle.
-            //If they are within, it means that all other points along the curve of the ellipse
-            //are also within the rectangle.
-            for (let i = 0; i < 4; i++) {
-                if (!this.containsPoint((otherShape as Ellipse).getWidestCoordinates()[i])) {
-                    return false;
-                }
-            }
-            return true;
-        }
+    public contains(otherShape: Rectangle | Ellipse): boolean {
+        return shapeContains(this, otherShape);
     }
 
     /**
