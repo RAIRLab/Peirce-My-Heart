@@ -100,8 +100,12 @@ describe("Ellipse-on-Rectangle overlaps soliloquy:", () => {
     );
 });
 
-describe.skip("Ellipse-on-Ellipse overlaps soliloquy:", () => {
+describe("Ellipse-on-Ellipse overlaps soliloquy:", () => {
     const ell: Ellipse = new Ellipse(new Point(5, 5), 5, 5); //diameters of 10
+
+    test("Any Ellipse should overlap an Ellipse with the same measurements.", () => {
+        expect(ell.overlaps(ell)).toBeTruthy();
+    });
 });
 
 describe("Ellipse-on-Rectangle contains soliloquy:", () => {
@@ -121,7 +125,7 @@ describe("Ellipse-on-Rectangle contains soliloquy:", () => {
 describe("Ellipse-on-Ellipse contains soliloquy:", () => {
     const ell: Ellipse = new Ellipse(new Point(5, 5), 5, 5); //diameters of 10
 
-    test("An Ellipse of center (0, 0) and {radX, radY} = 5 should not contain an Ellipse with the same measurements.", () => {
+    test("Any Ellipse should not contain an Ellipse with the same measurements.", () => {
         expect(ell.contains(new Rectangle(new Point(0, 0), 5, 5))).toBeFalsy();
     });
 });

@@ -8,7 +8,7 @@ Sponsored by James Oswald (RAIR Lab)
 
 ## Development
 
-**All listed commands should be run in the project root**
+**All listed commands should be run in the project root (Peirce-My-Heart)**
 
 ### Documentation
 
@@ -101,7 +101,7 @@ will be jumped to in VSC.
 ## Testing
 
 Test your changes! Vitest will help here by looking for all .test.ts files in /tests/ and running them.
-To perform this locally in a terminal, run the following from THE ROOT DIRECTORY (Peirce-My-Heart):
+To perform this locally in a terminal, run the following:
 ```bash
 npm run test
 ```
@@ -113,13 +113,15 @@ npm run test
 
 /src/ : source code for the application 
 
-/tests/ : vitest compatible .test.ts files that are run and must be passed before all pushes to main
+/tests/ : vitest compatible .test.ts files that are run on commits and must be passed before all merges to master
 
 /.eslintignore : list of .js and .ts files the linter shouldn't look at
 
 /.eslintrc.json : config for the linter, which catches semantic errors in your typescript code.
 
 /.gitignore : list of files and folders shouldn't be uploaded with git version control
+
+/.npmignore : list of the files NPM shouldn't peep
 
 /.prettierrc.js : config for prettier, which catches syntactic errors in your typescript code.
 

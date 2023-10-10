@@ -1,6 +1,7 @@
 import {describe, expect, test} from "vitest";
 
 import {Rectangle} from "../src/AEG/Rectangle";
+import {Ellipse} from "../src/AEG/Ellipse";
 import {Point} from "../src/AEG/Point";
 
 /**
@@ -120,8 +121,45 @@ describe("Rectangle-on-Rectangle overlaps soliloquy:", () => {
     );
 });
 
+//skipping until the code determining this is hammered out
 describe.skip("Rectangle-on-Ellipse overlaps soliloquy:", () => {
     const rect: Rectangle = new Rectangle(new Point(0, 0), 10, 10);
+
+    //same logic with Rectangle's overlaps(), touching points along the edge should be overlap
+    //set to skip until Ellipse's overlaps, at least from a design choice perspective, are
+    //hammered out
+    test.skip.each([
+        [15, 0, 5, 5], //Ellipse touching the top right vertex of this Rectangle
+        [-5, 0, 5, 5], //Ellipse touching the top left vertex of this Rectangle
+        [-5, 10, 5, 5], //Ellipse touching the bottom left vertex of this Rectangle
+        [15, 10, 5, 5], //Ellipse touching the bottom right vertex of this Rectangle
+    ])(
+        "Rectangle of TL vertex (0, 0) and {w, h} = 10 should overlap with Ellipse of center (%f, %f) and radX = %f, radY = %f.",
+        (x, y, radX, radY) => {
+            expect(rect.overlaps(new Ellipse(new Point(x, y), radX, radY))).toBeTruthy();
+        }
+    );
+
+    //this block should be combined with the above block when design decisions are hammered out
+    test.skip.each([
+        [5, 5, 20, 20], //begins inside the Rectangle but touches the Rectangle's bounds from inside
+        [-5, 0, 20, 20], //begins outside the Rectangle but touches the Rectangle's bounds from outside
+    ])(
+        "Rectangle of TL vertex (0, 0) and {w, h} = 10 should overlap with Ellipse of center (%f, %f) and radX = %f, radY = %f.",
+        (x, y, radX, radY) => {
+            expect(rect.overlaps(new Ellipse(new Point(x, y), radX, radY))).toBeTruthy();
+        }
+    );
+
+    test.each([
+        [5, 5, 1, 1], //tiny guy
+        [5, 5, 20, 20], //huge guy
+    ])(
+        "Ellipse of center (5, 5) and {radX, radY} = 5 should not overlap with Rectangle of TL vertex (%f, %f) and w = %f, h = %f.",
+        (x, y, radX, radY) => {
+            expect(rect.overlaps(new Rectangle(new Point(x, y), radX, radY))).toBeFalsy();
+        }
+    );
 });
 
 describe("Rectangle-on-Rectangle contains soliloquy:", () => {
@@ -158,8 +196,46 @@ describe("Rectangle-on-Rectangle contains soliloquy:", () => {
     );
 });
 
-describe.skip("Rectangle-on-Ellipse contains soliloquy:", () => {
+describe("Rectangle-on-Ellipse contains soliloquy:", () => {
     const rect: Rectangle = new Rectangle(new Point(0, 0), 10, 10);
+
+    test.each([
+        [0, 0, 5, 5], //should not contain Ellipses whose centers are on corners or edges
+        [10, 0, 5, 5],
+        [0, 10, 5, 5],
+        [10, 10, 5, 5],
+        [0, 5, 5, 5],
+        [5, 0, 5, 5],
+        [10, 5, 5, 5],
+        [5, 10, 5, 5],
+        //should not contain Ellipses whose farthest points touch corners or edges
+        [15, 10, 5, 5], //touches (10, 10) on the Rectangle
+        [15, 5, 5, 5], //touches (10, 5) on the Rectangle
+        [15, 0, 5, 5], //touches (10, 0) on the Rectangle
+        [5, -5, 5, 5], //touches (5, 0) on the Rectangle
+        [-5, 0, 5, 5], //touches (0, 0) on the Rectangle
+        [-5, 5, 5, 5], //touches (0, 5) on the Rectangle
+        [-5, 10, 5, 5], //touches (0, 10) on the Rectangle
+        [5, 15, 5, 5], //touches (5, 10) on the Rectangle
+    ])(
+        "Rectangle of TL vertex (0, 0) and {w, h} = 10 should not contain Ellipse of center (%f, %f) and radX = %f, radY = %f.",
+        (x, y, rx, ry) => {
+            expect(rect.contains(new Ellipse(new Point(x, y), rx, ry))).toBeFalsy();
+        }
+    );
+
+    test.each([
+        [5, 5, 2, 2], //arbitrary Ellipses that should be contained within the Rectangle
+        [9.9, 9.9, 0, 0],
+        [0.1, 0.1, 0.01, 0.01],
+        [9.9, 0.1, 0.001, 0.001],
+        [0.1, 9.9, 0.0001, 0.0001],
+    ])(
+        "Rectangle of TL vertex (0, 0) and {w, h} = 10 should not contain Ellipse of center (%f, %f) and radX = %f, radY = %f.",
+        (x, y, rx, ry) => {
+            expect(rect.contains(new Ellipse(new Point(x, y), rx, ry))).toBeTruthy();
+        }
+    );
 });
 
 describe("Rectangle toString soliloquy:", () => {
