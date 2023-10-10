@@ -22,7 +22,7 @@ let atom: string;
  * If ellipseMode was previously active, remove the listener.
  */
 export function atomCreation() {
-    window.addEventListener("keydown", atomChoose);
+    window.addEventListener("keypress", atomChoose);
 }
 
 /**
@@ -30,8 +30,10 @@ export function atomCreation() {
  * @param event the event of a keyboard press
  */
 function atomChoose(event: KeyboardEvent) {
-    atom = event.key;
-    canvas.addEventListener("mousedown", placeAtom);
+    if (isLetter(event.key)) {
+        canvas.addEventListener("mousedown", placeAtom);
+        atom = event.key;
+    }
 }
 
 /**
@@ -39,10 +41,7 @@ function atomChoose(event: KeyboardEvent) {
  * @param event The event of the mouse being clicked
  */
 function placeAtom(event: MouseEvent) {
-    const startingPoint: Point = {
-        x: event.clientX,
-        y: event.clientY,
-    };
+    const startingPoint: Point = new Point(event.clientX, event.clientY);
     currentPoint = startingPoint;
     ctx.fillText(atom, startingPoint.x, startingPoint.y);
     ctx.stroke();
@@ -56,10 +55,7 @@ function placeAtom(event: MouseEvent) {
  * @param event The event of the mouse moving
  */
 function moveAtom(event: MouseEvent) {
-    currentPoint = {
-        x: event.clientX,
-        y: event.clientY,
-    };
+    currentPoint = new Point(event.clientX, event.clientY);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     redrawCut(tree.sheet);
     ctx.fillText(atom, currentPoint.x, currentPoint.y);
@@ -72,12 +68,13 @@ function moveAtom(event: MouseEvent) {
 function atomUp() {
     const atomMetrics: TextMetrics = ctx.measureText(atom);
     const newRect: Rectangle = new Rectangle(
-        new Point(currentPoint.x, currentPoint.y + atomMetrics.actualBoundingBoxAscent),
+        new Point(currentPoint.x, currentPoint.y - atomMetrics.actualBoundingBoxAscent),
         atomMetrics.width,
         atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
     );
     const newAtom: AtomNode = new AtomNode(atom, currentPoint, newRect);
     tree.insert(newAtom);
+    console.log(tree.toString());
     canvas.removeEventListener("mousemove", moveAtom);
     canvas.removeEventListener("mouseup", atomUp);
     canvas.removeEventListener("mouseOut", mouseOut);
@@ -100,4 +97,17 @@ function mouseOut() {
 export function removeAtomListener() {
     canvas.removeEventListener("mousedown", placeAtom);
     window.removeEventListener("keydown", atomChoose);
+}
+
+/**
+ * Checks to see if the letter just pressed by the user is a letter that can be used for an atom.
+ * @param letter The letter to be checked in the RegExp
+ * @returns whether or not the selected character is a letter
+ */
+function isLetter(letter: string): boolean {
+    const regex = new RegExp(/^[A-Za-z]$/);
+    if (regex.test(letter)) {
+        return true;
+    }
+    return false;
 }

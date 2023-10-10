@@ -55,8 +55,8 @@ export class AEGTree {
     }
 
     /**
-     * Checks whether the given node can be inserted into this tree
-     * without overlapping any bounding boxes.
+     * Method that checks whether the given node can be inserted into this tree
+     * at a given point without overlapping any bounding boxes.
      * @param incomingNode The node to be inserted.
      * @returns True, if the node can be inserted. Else, false
      */
@@ -81,7 +81,7 @@ export class AEGTree {
         }
 
         const currentCut: CutNode = this.sheet.getCurrentCut(incomingNode);
-        const originalChildren: (AtomNode | CutNode)[] = currentCut.children;
+        const originalChildren: (AtomNode | CutNode)[] = [...currentCut.children];
         currentCut.children.push(incomingNode);
 
         if (incomingNode instanceof CutNode) {
@@ -133,5 +133,9 @@ export class AEGTree {
                 return ellipse1.overlaps(ellipse2);
             }
         }
+    }
+
+    public toString(): string {
+        return this.sheet.toFormulaString();
     }
 }

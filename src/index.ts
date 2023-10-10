@@ -8,8 +8,8 @@ import {AEGTree} from "./AEG/AEGTree";
 import {CutNode} from "./AEG/CutNode";
 import {Ellipse} from "./AEG/Ellipse";
 import {AtomNode} from "./AEG/AtomNode";
-import {ellipseCreation, removeCutListener} from "./EllipseCreation";
-import {atomCreation, removeAtomListener} from "./AtomCreation";
+import {cutHandler} from "./CutMode";
+import {atomHandler} from "./AtomMode";
 
 //Extend the window interface to export functions without TS complaining
 declare global {
@@ -19,6 +19,7 @@ declare global {
     }
 }
 
+//Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -28,12 +29,15 @@ if (res === null) {
 }
 const ctx: CanvasRenderingContext2D = res;
 ctx.font = "35pt arial";
-let inEllipseMode: Boolean = false;
-let inAtomMode: Boolean = false;
+
+//Global State
+const cutDisplay = <HTMLParagraphElement>document.getElementById("graphString");
+let modeState: string;
 export const tree: AEGTree = new AEGTree();
+
+//Window Exports
 window.atomMode = atomMode;
 window.ellipseMode = ellipseMode;
-
 declare global {
     interface Window {
         ellipseMode: () => void;
@@ -46,12 +50,14 @@ declare global {
  * If atomMode was previously active, remove the listener.
  */
 function ellipseMode() {
-    inEllipseMode = true;
-    ellipseCreation();
-    if (inAtomMode) {
-        removeAtomListener();
-        inAtomMode = false;
+    if (modeState !== "ellipseMode") {
+        removeListeners();
+        modeState = "ellipseMode";
     }
+    canvas.addEventListener("mousedown", cutHandler);
+    canvas.addEventListener("mousemove", cutHandler);
+    canvas.addEventListener("mouseup", cutHandler);
+    canvas.addEventListener("mouseout", cutHandler);
 }
 
 /**
@@ -59,11 +65,32 @@ function ellipseMode() {
  * If ellipseMode was previously active, remove the listener.
  */
 function atomMode() {
-    inAtomMode = true;
-    atomCreation();
-    if (inEllipseMode) {
-        removeCutListener();
-        inEllipseMode = false;
+    if (modeState !== "atomMode") {
+        removeListeners();
+        modeState = "atomMode";
+    }
+    window.addEventListener("keypress", atomHandler);
+    canvas.addEventListener("mousedown", atomHandler);
+    canvas.addEventListener("mousemove", atomHandler);
+    canvas.addEventListener("mouseup", atomHandler);
+    canvas.addEventListener("mouseout", atomHandler);
+}
+
+/**
+ * Removes all listeners added in a certain mode.
+ */
+function removeListeners() {
+    if (modeState === "ellipseMode") {
+        canvas.removeEventListener("mousedown", cutHandler);
+        canvas.removeEventListener("mousemove", cutHandler);
+        canvas.removeEventListener("mouseup", cutHandler);
+        canvas.removeEventListener("mouseout", cutHandler);
+    } else if (modeState === "atomMode") {
+        window.removeEventListener("keypress", atomHandler);
+        canvas.removeEventListener("mousedown", atomHandler);
+        canvas.removeEventListener("mousemove", atomHandler);
+        canvas.removeEventListener("mouseup", atomHandler);
+        canvas.removeEventListener("mouseout", atomHandler);
     }
 }
 
@@ -73,6 +100,7 @@ function atomMode() {
  * @param incomingNode The CutNode to be iterated through
  */
 export function redrawCut(incomingNode: CutNode) {
+    cutDisplay.innerHTML = tree.toString();
     for (let i = 0; incomingNode.children.length > i; i++) {
         if (incomingNode.children[i] instanceof AtomNode) {
             redrawAtom(<AtomNode>incomingNode.children[i]);
@@ -81,13 +109,14 @@ export function redrawCut(incomingNode: CutNode) {
         }
     }
     if (incomingNode.ellipse instanceof Ellipse) {
+        ctx.strokeStyle = "#000000";
         ctx.beginPath();
         ctx.ellipse(
             incomingNode.ellipse.center.x,
             incomingNode.ellipse.center.y,
             incomingNode.ellipse.radiusX,
             incomingNode.ellipse.radiusY,
-            Math.PI / 2,
+            0,
             0,
             2 * Math.PI
         );
@@ -96,10 +125,20 @@ export function redrawCut(incomingNode: CutNode) {
 }
 
 /**
- * Redraws the given atom.
+ * Redraws the given atom. Also redraws the the bounding box.
  * @param incomingNode The Atom Node to be redrawn
  */
 function redrawAtom(incomingNode: AtomNode) {
+    const displayBox = incomingNode.rect;
+    ctx.strokeStyle = "#000000";
+    ctx.fillStyle = "#000000";
+    ctx.beginPath();
+    ctx.rect(
+        displayBox.startVertex.x,
+        displayBox.startVertex.y,
+        displayBox.width,
+        displayBox.height
+    );
     ctx.fillText(incomingNode.identifier, incomingNode.origin.x, incomingNode.origin.y);
     ctx.stroke();
 }

@@ -32,10 +32,10 @@ function distance(p1: Point, p2: Point): number {
  * @param current the point where the user's mouse is currently located
  */
 export function createEllipse(original: Point, current: Point): Ellipse {
-    const center: Point = {
-        x: (current.x - original.x) / 2 + original.x,
-        y: (current.y - original.y) / 2 + original.y,
-    };
+    const center: Point = new Point(
+        (current.x - original.x) / 2 + original.x,
+        (current.y - original.y) / 2 + original.y
+    );
 
     const sdx = original.x - current.x;
     const sdy = original.y - current.y;
@@ -47,11 +47,11 @@ export function createEllipse(original: Point, current: Point): Ellipse {
         //This inscribed ellipse solution is inspired by the discussion of radius ratios in
         //https://stackoverflow.com/a/433426/6342516
         const rv: number = Math.floor(distance(center, current));
-        rx = Math.floor(rv * (dy / dx));
-        ry = Math.floor(rv * (dx / dy));
+        ry = Math.floor(rv * (dy / dx));
+        rx = Math.floor(rv * (dx / dy));
     } else {
-        ry = dx / 2;
-        rx = dy / 2;
+        rx = dx / 2;
+        ry = dy / 2;
     }
 
     if (showRectElm.checked) {
@@ -60,11 +60,17 @@ export function createEllipse(original: Point, current: Point): Ellipse {
         ctx.stroke();
     }
 
+    const currentEllipse = new Ellipse(center, rx, ry);
+    if (tree.canInsert(new CutNode(currentEllipse))) {
+        ctx.strokeStyle = "#00FF00";
+    } else {
+        ctx.strokeStyle = "#FF0000";
+    }
     ctx.beginPath();
-    ctx.ellipse(center.x, center.y, rx, ry, Math.PI / 2, 0, 2 * Math.PI);
+    ctx.ellipse(center.x, center.y, rx, ry, 0, 0, 2 * Math.PI);
     //I know this is stupid to constantly make a new ellipse but my brain hurts I'm sorry
     ctx.stroke();
-    currentEllipse = new Ellipse(center, rx, ry);
+
     return currentEllipse;
 }
 
@@ -82,7 +88,7 @@ export function ellipseCreation() {
  * @param event The even of holding down the mouse
  */
 function mouseDown(event: MouseEvent) {
-    startingPoint = {x: event.clientX, y: event.clientY};
+    startingPoint = new Point(event.clientX, event.clientY);
     canvas.addEventListener("mousemove", mouseMoving);
     canvas.addEventListener("mouseup", mouseUp);
     canvas.addEventListener("mouseout", mouseOut);
@@ -96,10 +102,7 @@ function mouseDown(event: MouseEvent) {
  * @param event The event of a mouse moving
  */
 function mouseMoving(event: MouseEvent) {
-    const currentPoint: Point = {
-        x: event.clientX,
-        y: event.clientY,
-    };
+    const currentPoint: Point = new Point(event.clientX, event.clientY);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     redrawCut(tree.sheet);
     currentEllipse = createEllipse(startingPoint, currentPoint);
@@ -113,9 +116,12 @@ function mouseUp() {
     if (tree.canInsert(newCut)) {
         tree.insert(newCut);
     }
+    console.log(tree.toString());
     canvas.removeEventListener("mousemove", mouseMoving);
     canvas.removeEventListener("mouseup", mouseUp);
     canvas.removeEventListener("mouseout", mouseOut);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    redrawCut(tree.sheet);
 }
 
 /**

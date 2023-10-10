@@ -6,12 +6,13 @@ import {Point} from "./Point";
  * Class that defines a Cut in AEGTree.
  * @author Anusha Tiwari
  * @author Ryan Reilly
+ * @author James Oswald
  */
 export class CutNode {
     /**
      * The boundary of this node.
      */
-    ellipse: Ellipse | null; //Null for sheet
+    ellipse: Ellipse | null; //Null for sheet of assertion
 
     /**
      * Contains the list of child nodes nested within this node.
@@ -35,9 +36,10 @@ export class CutNode {
      */
     public getCurrentCut(newNode: CutNode | AtomNode): CutNode {
         for (let i = 0; i < this.children.length; i++) {
-            if (this.children[i] instanceof CutNode && this.children[i].containsNode(newNode)) {
+            const child: CutNode | AtomNode = this.children[i];
+            if (child instanceof CutNode && this.children[i].containsNode(newNode)) {
                 //newNode can be placed at least one layer deeper
-                return this.getCurrentCut(this.children[i]);
+                return child.getCurrentCut(newNode);
             }
         }
         return this; //we are at the deepest valid level that newNode can be placed
@@ -71,10 +73,11 @@ export class CutNode {
         }
 
         if (otherNode instanceof AtomNode) {
-            return this.ellipse.containsShape((otherNode as AtomNode).rect);
+            return this.ellipse.containsShape(otherNode.rect);
+        } else if (otherNode instanceof CutNode) {
+            return this.ellipse.containsShape(otherNode.ellipse as Ellipse);
         } else {
-            //ELLIPSE TO BE IMPLEMENTED ACCURATELY
-            return this.ellipse.containsShape((otherNode as CutNode).ellipse as Ellipse);
+            throw Error("containsNode expected AtomNode or CutNode");
         }
     }
 
@@ -129,5 +132,24 @@ export class CutNode {
             str += ", \n" + "With nested nodes: " + this.children.toString();
         }
         return str;
+    }
+
+    public toFormulaString(): string {
+        let formulaString = "";
+        for (const child of this.children) {
+            if (child instanceof AtomNode) {
+                formulaString += child.identifier;
+            } else if (child instanceof CutNode) {
+                formulaString += child.toFormulaString();
+            }
+            formulaString += " ";
+        }
+        formulaString = formulaString.slice(0, -1);
+        if (this.ellipse === null) {
+            formulaString = "[" + formulaString + "]";
+        } else {
+            formulaString = "(" + formulaString + ")";
+        }
+        return formulaString;
     }
 }
