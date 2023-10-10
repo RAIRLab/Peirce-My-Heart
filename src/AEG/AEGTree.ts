@@ -88,7 +88,7 @@ export class AEGTree {
                 if (incomingNode.containsNode(originalChildren[i])) {
                     //incomingNode.children.push(originalChildren[i]);
                     incomingNode.Child = originalChildren[i];
-                    currentCut.Children = currentCut.Children.splice(i, 1);
+                    currentCut.Children.splice(i, 1);
                 }
             }
         }

@@ -1,5 +1,6 @@
 import {Point} from "./Point";
 import {Rectangle} from "./Rectangle";
+import {shapesOverlaps, shapeContains, pointInELlipse} from "./AEGUtils";
 
 /**
  * Class that defines an Ellipse.
@@ -67,21 +68,12 @@ export class Ellipse {
     }
 
     /**
-     * Method that checks whether a point is within this ellipse.
+     * Method that checks whether a point is within the given ellipse.
      * @param otherPoint The point that might be inside this ellipse.
      * @returns True, if the point is inside this ellipse. Else, false
      */
-    public containsPoint(otherPoint: Point): boolean {
-        //(x-h)^2/rx^2 + (y-k)^2/ry^2 <= 1
-        //(x, y) = new point
-        //(h, k) = center
-
-        const p: number = Math.ceil(
-            Math.pow(otherPoint.x - this.center.x, 2) / Math.pow(this.radiusX, 2) +
-                Math.pow(otherPoint.y - this.center.y, 2) / Math.pow(this.radiusY, 2)
-        );
-
-        return p <= 1;
+    public containsPoint(point: Point): boolean {
+        return pointInELlipse(this, point);
     }
 
     /**
@@ -90,32 +82,7 @@ export class Ellipse {
      * @returns True, if there is an overlap. Else, false.
      */
     public overlaps(otherShape: Rectangle | Ellipse): boolean {
-        if (otherShape instanceof Rectangle) {
-            for (let i = 0; i < 4; i++) {
-                if (this.containsPoint(otherShape.getCorners()[i])) {
-                    return true;
-                }
-            }
-
-            return false;
-        } else {
-            //check if the rectangular bounding boxes of the ellipse overlap
-            if (
-                this.boundingBox.overlaps((otherShape as Ellipse).boundingBox) ||
-                (otherShape as Ellipse).boundingBox.containsShape(this.boundingBox)
-            ) {
-                //if there is an overlap, check if points along the ellipse curve overlap
-                //this can be done by checking if points along the curve of this ellipse
-                //are within the other ellipse
-                const points: Point[] = this.getEllipsePoints();
-                for (let i = 0; i < points.length; i++) {
-                    if (otherShape.containsPoint(points[i])) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
+        return shapesOverlaps(this, otherShape);
     }
 
     /**
@@ -123,82 +90,7 @@ export class Ellipse {
      * @param otherShape The shape that might be within this ellipse.
      * @returns True, if the shape is within this ellipse. Else, false.
      */
-    public containsShape(otherShape: Rectangle | Ellipse): boolean {
-        if (otherShape instanceof Rectangle) {
-            for (let i = 0; i < 4; i++) {
-                if (!this.containsPoint(otherShape.getCorners()[i])) {
-                    return false;
-                }
-            }
-            return true;
-        } else if (otherShape instanceof Ellipse) {
-            //If all the widest coordinates of the other ellipse are within this ellipse,
-            //This ellipse contains the other ellipse
-            const points = otherShape.getWidestCoordinates();
-            for (let j = 0; j < 4; j++) {
-                if (!this.containsPoint(points[j])) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        throw Error("Invalid Shape passed to containsShape, must be a Rectangle | Ellipse");
-    }
-
-    /**
-     * An array containing the widest coordinates of the ellipse, i.e. the coordinates along the
-     * x-axis and y-axis of the ellipse.
-     * The coordinates are in clockwise order such that:
-     * 0 - Top most coordinate (Top along y-axis).
-     * 1 - Right most coordinate (Right along x-axis).
-     * 2 - Bottom most coordinate (Bottom along y-axis).
-     * 3 - Left most coordinate (Left along x-axis).
-     * @returns
-     */
-    public getWidestCoordinates(): Point[] {
-        return [
-            new Point(this.center.x, this.center.y - this.radiusY),
-            new Point(this.center.x + this.radiusX, this.center.y),
-            new Point(this.center.x, this.center.y + this.radiusY),
-            new Point(this.center.x - this.radiusX, this.center.y),
-        ];
-    }
-
-    private getEllipsePoints(): Point[] {
-        const points: Point[] = [];
-        const pointDist = this.radiusX / 15;
-
-        points[0] = this.getWidestCoordinates()[3];
-        let x: number;
-        let y: number;
-
-        for (let i = 1; i < 64; i++) {
-            if (i < 33) {
-                x = points[i - 1].x + pointDist;
-                y = this.getCurvePoint(x, 1);
-            } else {
-                x = points[i - 1].x - pointDist;
-                y = this.getCurvePoint(x, -1);
-            }
-            points[i] = new Point(x, y);
-        }
-
-        return points;
-    }
-
-    /**
-     * Method that returns a point on the curve of the ellipse for a given x coordinate
-     * @param x The x coordinate of the point
-     * @param curveHalf Flag signifying the curve of the ellipse.
-     * 1 for top curve, -1 for bottom curve
-     * @returns A point along the curve
-     */
-    private getCurvePoint(x: number, curveHalf: number): number {
-        return (
-            curveHalf *
-                this.radiusY *
-                Math.sqrt(1 - Math.pow((x - this.center.x) / this.radiusX, 2)) +
-            this.center.y
-        );
+    public contains(otherShape: Rectangle | Ellipse): boolean {
+        return shapeContains(this, otherShape);
     }
 }

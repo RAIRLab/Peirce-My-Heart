@@ -29,10 +29,10 @@ export class AtomNode {
      * @param rect (Required) The rectangle to be set as the boundary box of this node.
      * @param val (Required) The value of the proposition represented by this node.
      */
-    public constructor(val: string, origin: Point, rect: Rectangle) {
-        this.rect = rect;
+    public constructor(val: string, origin?: Point, rect?: Rectangle) {
+        this.rect = rect ?? new Rectangle();
         this.identifier = val;
-        this.origin = origin;
+        this.origin = origin ?? new Point();
     }
 
     /**
@@ -44,6 +44,13 @@ export class AtomNode {
     }
 
     /**
+     * Modifier to set the bounding rectangle of the Atom Node.
+     */
+    public set Rectangle(rect: Rectangle) {
+        this.rect = rect;
+    }
+
+    /**
      * Accessor to get the identifier of the Atom Node.
      * @returns The identifier of this Atom Node
      */
@@ -52,11 +59,25 @@ export class AtomNode {
     }
 
     /**
+     * Modifier to set the identifier of the Atom Node
+     */
+    public set Identifier(identifier: string) {
+        this.identifier = identifier;
+    }
+
+    /**
      * Accessor to get the origin (top left) vertex of the bounding rectangle of the Atom Node.
      * @returns The origin of the bounding rectangle
      */
     public get Origin(): Point {
         return this.origin;
+    }
+
+    /**
+     * Modifier to set the origin (top left) vertex of the bounding rectangle of the Atom Node.
+     */
+    public set Origin(point: Point) {
+        this.origin = point;
     }
 
     /**
@@ -75,10 +96,9 @@ export class AtomNode {
      */
     public containsNode(otherNode: AtomNode | CutNode): boolean {
         if (otherNode instanceof AtomNode) {
-            return this.rect.containsShape((otherNode as AtomNode).Rectangle);
+            return this.rect.contains((otherNode as AtomNode).Rectangle);
         } else {
-            //ELLIPSE TO BE IMPLEMENTED ACCURATELY
-            return this.rect.containsShape((otherNode as CutNode).Ellipse as Ellipse);
+            return this.rect.contains((otherNode as CutNode).Ellipse as Ellipse);
         }
     }
 

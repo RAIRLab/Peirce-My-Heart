@@ -26,7 +26,7 @@ let startingPoint: Point = new Point();
  * @param event The event that will be used
  */
 export function cutHandler(event: MouseEvent) {
-    let newCut: CutNode = new CutNode();
+    let newCut: CutNode = new CutNode(new Ellipse());
     const currentPoint: Point = new Point();
 
     if (event.type === "mousedown") {
@@ -39,7 +39,7 @@ export function cutHandler(event: MouseEvent) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         redrawCut(tree.sheet);
         currentEllipse = createEllipse(startingPoint, currentPoint);
-        newCut.ellipse = currentEllipse;
+        newCut.Ellipse = currentEllipse;
 
         if (tree.canInsert(newCut) && currentEllipse.radiusX > 15 && currentEllipse.radiusY > 15) {
             drawEllipse(newCut, "#00FF00");
@@ -108,7 +108,7 @@ export function createEllipse(original: Point, current: Point): Ellipse {
  */
 function drawEllipse(thisCut: CutNode, color: string) {
     ctx.strokeStyle = color;
-    const ellipse: Ellipse = <Ellipse>thisCut.ellipse;
+    const ellipse: Ellipse = <Ellipse>thisCut.Ellipse;
     const center: Point = ellipse.center;
     ctx.beginPath();
     ctx.ellipse(center.x, center.y, ellipse.radiusX, ellipse.radiusY, 0, 0, 2 * Math.PI);

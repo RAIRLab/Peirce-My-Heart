@@ -41,6 +41,13 @@ export class CutNode {
     }
 
     /**
+     * Modifier to set the bounding ellipse of this Cut Node
+     */
+    public set Ellipse(ellipse: Ellipse) {
+        this.ellipse = ellipse;
+    }
+
+    /**
      * Accessor to get the children (array of nodes nested within) of the Cut Node.
      * @returns The children of the Cut Node
      */
@@ -72,7 +79,7 @@ export class CutNode {
     public getCurrentCut(newNode: CutNode | AtomNode): CutNode {
         for (let i = 0; i < this.children.length; i++) {
             const child: CutNode | AtomNode = this.children[i];
-            if (child instanceof CutNode && this.children[i].containsNode(newNode)) {
+            if (child instanceof CutNode && child.containsNode(newNode)) {
                 //newNode can be placed at least one layer deeper
                 return child.getCurrentCut(newNode);
             }
@@ -108,11 +115,9 @@ export class CutNode {
         }
 
         if (otherNode instanceof AtomNode) {
-            return this.ellipse.containsShape(otherNode.Rectangle);
-        } else if (otherNode instanceof CutNode) {
-            return this.ellipse.containsShape(otherNode.Ellipse as Ellipse);
+            return this.ellipse.contains(otherNode.Rectangle);
         } else {
-            throw Error("containsNode expected AtomNode or CutNode");
+            return this.ellipse.contains(otherNode.Ellipse as Ellipse);
         }
     }
 
