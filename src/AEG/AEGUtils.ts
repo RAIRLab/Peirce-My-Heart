@@ -56,7 +56,7 @@ export function shapesOverlaps(
                 //are within the other ellipse
                 const points: Point[] = getEllipsePoints(newShape, 64);
                 for (let i = 0; i < points.length; i++) {
-                    if (pointInELlipse(existingShape as Ellipse, points[i])) {
+                    if (pointInEllipse(existingShape as Ellipse, points[i])) {
                         return true;
                     }
                 }
@@ -104,7 +104,7 @@ export function shapeContains(
             //the ellipse
             const innerCorners = (innerShape as Rectangle).getCorners();
             for (let i = 0; i < 4; i++) {
-                if (!pointInELlipse(outerShape as Ellipse, innerCorners[i])) {
+                if (!pointInEllipse(outerShape as Ellipse, innerCorners[i])) {
                     return false;
                 }
             }
@@ -115,7 +115,7 @@ export function shapeContains(
             const innerCoords: Point[] = getEllipsePoints(innerShape as Ellipse, 64);
             //= getWidestCoordinates(innerShape as Ellipse);
             for (let i = 0; i < innerCoords.length; i++) {
-                if (!pointInELlipse(outerShape as Ellipse, innerCoords[i])) {
+                if (!pointInEllipse(outerShape as Ellipse, innerCoords[i])) {
                     return false;
                 }
             }
@@ -286,7 +286,7 @@ export function pointInRect(rect: Rectangle, point: Point): boolean {
  * @param otherPoint The point that might be inside the given ellipse.
  * @returns True, if the point is inside the given ellipse. Else, false
  */
-export function pointInELlipse(ellipse: Ellipse, point: Point): boolean {
+export function pointInEllipse(ellipse: Ellipse, point: Point): boolean {
     //(x-h)^2/rx^2 + (y-k)^2/ry^2 <= 1
     //(x, y) = new point
     //(h, k) = center

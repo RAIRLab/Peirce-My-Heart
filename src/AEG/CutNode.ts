@@ -174,6 +174,14 @@ export class CutNode {
         return str;
     }
 
+    /**
+     * Constructs a string representation of an AEGTree or a subtree.
+     * () - cut
+     * char - atom
+     * (char char ()) - valid nesting of two chars and a cut inside another cut
+     * @returns an accurate string representation of the AEGTree or a subtree
+     * @author James Oswald
+     */
     public toFormulaString(): string {
         let formulaString = "";
         for (const child of this.children) {

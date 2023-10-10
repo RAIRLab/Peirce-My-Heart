@@ -55,14 +55,6 @@ describe("Rectangle containsPoint() soliloquy:", () => {
     const rect: Rectangle = new Rectangle(new Point(0, 0), 10, 10);
 
     test.each([
-        [0, 0],
-        [0, 10],
-        [10, 0],
-        [10, 10],
-        [0, 5],
-        [5, 0],
-        [10, 5],
-        [5, 10],
         [2.5, 5],
         [5, 2.5],
         [7.561231231231213, 4.12783918264],
@@ -71,6 +63,14 @@ describe("Rectangle containsPoint() soliloquy:", () => {
     });
 
     test.each([
+        [0, 0],
+        [0, 10],
+        [10, 0],
+        [10, 10],
+        [0, 5],
+        [5, 0],
+        [10, 5],
+        [5, 10],
         [-1, 0],
         [0, -1],
         [0, 11],
