@@ -29,7 +29,7 @@
 <ul class="tsd-hierarchy">
 <li><span class="target">AtomNode</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d2e1cdb/src/AEG/AtomNode.ts#L11">AEG/AtomNode.ts:11</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/AtomNode.ts#L11">AEG/AtomNode.ts:11</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -41,9 +41,15 @@
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Properties</h3>
-<div class="tsd-index-list"><a href="AEG_AtomNode.AtomNode.html#identifier" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>identifier</span></a>
-<a href="AEG_AtomNode.AtomNode.html#origin" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>origin</span></a>
-<a href="AEG_AtomNode.AtomNode.html#rect" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>rect</span></a>
+<div class="tsd-index-list"><a href="AEG_AtomNode.AtomNode.html#identifier" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>identifier</span></a>
+<a href="AEG_AtomNode.AtomNode.html#origin" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>origin</span></a>
+<a href="AEG_AtomNode.AtomNode.html#rect" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>rect</span></a>
+</div></section>
+<section class="tsd-index-section">
+<h3 class="tsd-index-heading">Accessors</h3>
+<div class="tsd-index-list"><a href="AEG_AtomNode.AtomNode.html#Identifier-1" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-262144"></use></svg><span>Identifier</span></a>
+<a href="AEG_AtomNode.AtomNode.html#Origin-1" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-262144"></use></svg><span>Origin</span></a>
+<a href="AEG_AtomNode.AtomNode.html#Rectangle" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-262144"></use></svg><span>Rectangle</span></a>
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Methods</h3>
@@ -56,7 +62,7 @@
 <section class="tsd-panel tsd-member"><a id="constructor" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>constructor</span><a href="#constructor" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="constructor.new_AtomNode"><span class="tsd-kind-constructor-signature">new <wbr/>Atom<wbr/>Node</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">val</span><span class="tsd-signature-symbol">?</span>, <span class="tsd-kind-parameter">origin</span><span class="tsd-signature-symbol">?</span>, <span class="tsd-kind-parameter">rect</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a><a href="#constructor.new_AtomNode" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="constructor.new_AtomNode"><span class="tsd-kind-constructor-signature">new <wbr/>Atom<wbr/>Node</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">val</span>, <span class="tsd-kind-parameter">origin</span><span class="tsd-signature-symbol">?</span>, <span class="tsd-kind-parameter">rect</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a><a href="#constructor.new_AtomNode" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Construct an atom node with given boundary box and proposition.</p>
 </div>
@@ -64,47 +70,124 @@
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">val</span>: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The value of the proposition represented by this node.</p>
+<h5><span class="tsd-kind-parameter">val</span>: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>(Required) The value of the proposition represented by this node.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">origin</span>: <a href="AEG_Point.Point.html" class="tsd-signature-type tsd-kind-class">Point</a></h5></li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">rect</span>: <a href="AEG_Rectangle.Rectangle.html" class="tsd-signature-type tsd-kind-class">Rectangle</a></h5>
-<div class="tsd-comment tsd-typography"><p>The rectangle to be set as the boundary box of this node.</p>
+<div class="tsd-comment tsd-typography"><p>(Required) The rectangle to be set as the boundary box of this node.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d2e1cdb/src/AEG/AtomNode.ts#L32">AEG/AtomNode.ts:32</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/AtomNode.ts#L32">AEG/AtomNode.ts:32</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
-<section class="tsd-panel tsd-member"><a id="identifier" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>identifier</span><a href="#identifier" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<section class="tsd-panel tsd-member tsd-is-private"><a id="identifier" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>identifier</span><a href="#identifier" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">identifier</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 <div class="tsd-comment tsd-typography"><p>The string value of the proposition represented by this node.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d2e1cdb/src/AEG/AtomNode.ts#L20">AEG/AtomNode.ts:20</a></li></ul></aside></section>
-<section class="tsd-panel tsd-member"><a id="origin" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>origin</span><a href="#origin" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/AtomNode.ts#L20">AEG/AtomNode.ts:20</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-private"><a id="origin" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>origin</span><a href="#origin" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">origin</span><span class="tsd-signature-symbol">:</span> <a href="AEG_Point.Point.html" class="tsd-signature-type tsd-kind-class">Point</a></div>
 <div class="tsd-comment tsd-typography"><p>The point the atom is initially placed.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d2e1cdb/src/AEG/AtomNode.ts#L25">AEG/AtomNode.ts:25</a></li></ul></aside></section>
-<section class="tsd-panel tsd-member"><a id="rect" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>rect</span><a href="#rect" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/AtomNode.ts#L25">AEG/AtomNode.ts:25</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-private"><a id="rect" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>rect</span><a href="#rect" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">rect</span><span class="tsd-signature-symbol">:</span> <a href="AEG_Rectangle.Rectangle.html" class="tsd-signature-type tsd-kind-class">Rectangle</a></div>
 <div class="tsd-comment tsd-typography"><p>The rectangle signifying the boundary box of this node.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d2e1cdb/src/AEG/AtomNode.ts#L15">AEG/AtomNode.ts:15</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/AtomNode.ts#L15">AEG/AtomNode.ts:15</a></li></ul></aside></section></section>
+<section class="tsd-panel-group tsd-member-group">
+<h2>Accessors</h2>
+<section class="tsd-panel tsd-member"><a id="Identifier-1" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>Identifier</span><a href="#Identifier-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature" id="Identifier-1.Identifier-2"><span class="tsd-signature-symbol">get</span> Identifier<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Accessor to get the identifier of the Atom Node.</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><p>The identifier of this Atom Node</p>
+
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/AtomNode.ts#L57">AEG/AtomNode.ts:57</a></li></ul></aside></li>
+<li class="tsd-signature" id="Identifier-1.Identifier-3"><span class="tsd-signature-symbol">set</span> Identifier<span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">identifier</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Modifier to set the identifier of the Atom Node</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">identifier</span>: <span class="tsd-signature-type">string</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/AtomNode.ts#L64">AEG/AtomNode.ts:64</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="Origin-1" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>Origin</span><a href="#Origin-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature" id="Origin-1.Origin-2"><span class="tsd-signature-symbol">get</span> Origin<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="AEG_Point.Point.html" class="tsd-signature-type tsd-kind-class">Point</a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Accessor to get the origin (top left) vertex of the bounding rectangle of the Atom Node.</p>
+</div>
+<h4 class="tsd-returns-title">Returns <a href="AEG_Point.Point.html" class="tsd-signature-type tsd-kind-class">Point</a></h4><p>The origin of the bounding rectangle</p>
+
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/AtomNode.ts#L72">AEG/AtomNode.ts:72</a></li></ul></aside></li>
+<li class="tsd-signature" id="Origin-1.Origin-3"><span class="tsd-signature-symbol">set</span> Origin<span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">point</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Modifier to set the origin (top left) vertex of the bounding rectangle of the Atom Node.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">point</span>: <a href="AEG_Point.Point.html" class="tsd-signature-type tsd-kind-class">Point</a></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/AtomNode.ts#L79">AEG/AtomNode.ts:79</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="Rectangle" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>Rectangle</span><a href="#Rectangle" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature" id="Rectangle.Rectangle-1"><span class="tsd-signature-symbol">get</span> Rectangle<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="AEG_Rectangle.Rectangle.html" class="tsd-signature-type tsd-kind-class">Rectangle</a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Accessor to get the bounding rectangle of the Atom Node.</p>
+</div>
+<h4 class="tsd-returns-title">Returns <a href="AEG_Rectangle.Rectangle.html" class="tsd-signature-type tsd-kind-class">Rectangle</a></h4><p>The bounding rectangle of this Atom Node</p>
+
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/AtomNode.ts#L42">AEG/AtomNode.ts:42</a></li></ul></aside></li>
+<li class="tsd-signature" id="Rectangle.Rectangle-2"><span class="tsd-signature-symbol">set</span> Rectangle<span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">rect</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Modifier to set the bounding rectangle of the Atom Node.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">rect</span>: <a href="AEG_Rectangle.Rectangle.html" class="tsd-signature-type tsd-kind-class">Rectangle</a></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/AtomNode.ts#L49">AEG/AtomNode.ts:49</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member"><a id="containsNode" class="tsd-anchor"></a>
@@ -126,7 +209,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d2e1cdb/src/AEG/AtomNode.ts#L52">AEG/AtomNode.ts:52</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/AtomNode.ts#L97">AEG/AtomNode.ts:97</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="containsPoint" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>contains<wbr/>Point</span><a href="#containsPoint" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -146,7 +229,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d2e1cdb/src/AEG/AtomNode.ts#L43">AEG/AtomNode.ts:43</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/AtomNode.ts#L88">AEG/AtomNode.ts:88</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toString" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>String</span><a href="#toString" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -158,7 +241,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d2e1cdb/src/AEG/AtomNode.ts#L65">AEG/AtomNode.ts:65</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/AtomNode.ts#L109">AEG/AtomNode.ts:109</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -179,9 +262,12 @@
 <div class="tsd-accordion-details">
 <ul>
 <li><a href="#constructor" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-512"></use></svg><span>constructor</span></a></li>
-<li><a href="#identifier" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>identifier</span></a></li>
-<li><a href="#origin" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>origin</span></a></li>
-<li><a href="#rect" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>rect</span></a></li>
+<li><a href="#identifier" class="tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>identifier</span></a></li>
+<li><a href="#origin" class="tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>origin</span></a></li>
+<li><a href="#rect" class="tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>rect</span></a></li>
+<li><a href="#Identifier-1" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-262144"></use></svg><span>Identifier</span></a></li>
+<li><a href="#Origin-1" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-262144"></use></svg><span>Origin</span></a></li>
+<li><a href="#Rectangle" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-262144"></use></svg><span>Rectangle</span></a></li>
 <li><a href="#containsNode" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>contains<wbr/>Node</span></a></li>
 <li><a href="#containsPoint" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>contains<wbr/>Point</span></a></li>
 <li><a href="#toString" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>to<wbr/>String</span></a></li></ul></div></details></div>
@@ -189,6 +275,7 @@
 <nav class="tsd-navigation"><a href="../index.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1"></use></svg><span>peircemyheart - v0.0.2</span></a>
 <ul class="tsd-small-nested-navigation" id="tsd-nav-container" data-base="..">
 <li><a href="../modules/AEG_AEGTree.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>AEG/AEGTree</a></li>
+<li><a href="../modules/AEG_AEGUtils.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>AEG/AEGUtils</a></li>
 <li><a href="../modules/AEG_AtomNode.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>AEG/AtomNode</a></li>
 <li><a href="../modules/AEG_CutNode.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>AEG/CutNode</a></li>
 <li><a href="../modules/AEG_Ellipse.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>AEG/Ellipse</a></li>

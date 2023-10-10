@@ -31,7 +31,7 @@
 <ul class="tsd-hierarchy">
 <li><span class="target">CutNode</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d2e1cdb/src/AEG/CutNode.ts#L11">AEG/CutNode.ts:11</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/CutNode.ts#L11">AEG/CutNode.ts:11</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -43,8 +43,14 @@
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Properties</h3>
-<div class="tsd-index-list"><a href="AEG_CutNode.CutNode.html#children" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>children</span></a>
-<a href="AEG_CutNode.CutNode.html#ellipse" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>ellipse</span></a>
+<div class="tsd-index-list"><a href="AEG_CutNode.CutNode.html#children" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>children</span></a>
+<a href="AEG_CutNode.CutNode.html#ellipse" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>ellipse</span></a>
+</div></section>
+<section class="tsd-index-section">
+<h3 class="tsd-index-heading">Accessors</h3>
+<div class="tsd-index-list"><a href="AEG_CutNode.CutNode.html#Child" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-262144"></use></svg><span>Child</span></a>
+<a href="AEG_CutNode.CutNode.html#Children-1" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-262144"></use></svg><span>Children</span></a>
+<a href="AEG_CutNode.CutNode.html#Ellipse-1" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-262144"></use></svg><span>Ellipse</span></a>
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Methods</h3>
@@ -60,7 +66,7 @@
 <section class="tsd-panel tsd-member"><a id="constructor" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>constructor</span><a href="#constructor" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="constructor.new_CutNode"><span class="tsd-kind-constructor-signature">new <wbr/>Cut<wbr/>Node</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">ellipse</span><span class="tsd-signature-symbol">?</span>, <span class="tsd-kind-parameter">childList</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a><a href="#constructor.new_CutNode" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="constructor.new_CutNode"><span class="tsd-kind-constructor-signature">new <wbr/>Cut<wbr/>Node</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">ellipse</span>, <span class="tsd-kind-parameter">childList</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a><a href="#constructor.new_CutNode" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Constructs a CutNode with the incoming Ellipse as its boundary box.</p>
 </div>
@@ -68,37 +74,114 @@
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">ellipse</span>: <a href="AEG_Ellipse.Ellipse.html" class="tsd-signature-type tsd-kind-class">Ellipse</a></h5>
-<div class="tsd-comment tsd-typography"><p>The ellipse to be set as the boundary box of this node.</p>
+<h5><span class="tsd-kind-parameter">ellipse</span>: <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="AEG_Ellipse.Ellipse.html" class="tsd-signature-type tsd-kind-class">Ellipse</a></h5>
+<div class="tsd-comment tsd-typography"><p>(Required) The ellipse to be set as the boundary box of this node.
+For Sheet of Assertion, this should be passed as null.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">childList</span>: <span class="tsd-signature-symbol">(</span><a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a><span class="tsd-signature-symbol"> | </span><a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></h5>
-<div class="tsd-comment tsd-typography"><p>The list of children nodes nested within this node.</p>
+<div class="tsd-comment tsd-typography"><p>The list of children nodes nested within this node.
+If not passed, defaults to an empty array.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d2e1cdb/src/AEG/CutNode.ts#L27">AEG/CutNode.ts:27</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/CutNode.ts#L29">AEG/CutNode.ts:29</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
-<section class="tsd-panel tsd-member"><a id="children" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>children</span><a href="#children" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<section class="tsd-panel tsd-member tsd-is-private"><a id="children" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>children</span><a href="#children" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">children</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a><span class="tsd-signature-symbol"> | </span><a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></div>
 <div class="tsd-comment tsd-typography"><p>Contains the list of child nodes nested within this node.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d2e1cdb/src/AEG/CutNode.ts#L20">AEG/CutNode.ts:20</a></li></ul></aside></section>
-<section class="tsd-panel tsd-member"><a id="ellipse" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>ellipse</span><a href="#ellipse" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/CutNode.ts#L20">AEG/CutNode.ts:20</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-private"><a id="ellipse" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>ellipse</span><a href="#ellipse" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">ellipse</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="AEG_Ellipse.Ellipse.html" class="tsd-signature-type tsd-kind-class">Ellipse</a></div>
 <div class="tsd-comment tsd-typography"><p>The boundary of this node.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d2e1cdb/src/AEG/CutNode.ts#L15">AEG/CutNode.ts:15</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/CutNode.ts#L15">AEG/CutNode.ts:15</a></li></ul></aside></section></section>
+<section class="tsd-panel-group tsd-member-group">
+<h2>Accessors</h2>
+<section class="tsd-panel tsd-member"><a id="Child" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>Child</span><a href="#Child" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature" id="Child.Child-1"><span class="tsd-signature-symbol">set</span> Child<span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">child</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Modifier that adds a child to the Cut Node.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">child</span>: <a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a><span class="tsd-signature-symbol"> | </span><a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a></h5>
+<div class="tsd-comment tsd-typography"><p>The node to be added as a child of the Cut Node</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/CutNode.ts#L70">AEG/CutNode.ts:70</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="Children-1" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>Children</span><a href="#Children-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature" id="Children-1.Children-2"><span class="tsd-signature-symbol">get</span> Children<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a><span class="tsd-signature-symbol"> | </span><a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Accessor to get the children (array of nodes nested within) of the Cut Node.</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a><span class="tsd-signature-symbol"> | </span><a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></h4><p>The children of the Cut Node</p>
+
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/CutNode.ts#L54">AEG/CutNode.ts:54</a></li></ul></aside></li>
+<li class="tsd-signature" id="Children-1.Children-3"><span class="tsd-signature-symbol">set</span> Children<span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">list</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Modifier that sets the children of the Cut Node.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">list</span>: <span class="tsd-signature-symbol">(</span><a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a><span class="tsd-signature-symbol"> | </span><a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></h5>
+<div class="tsd-comment tsd-typography"><p>The list of nodes to be added as the children of the Cut Node</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/CutNode.ts#L62">AEG/CutNode.ts:62</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="Ellipse-1" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>Ellipse</span><a href="#Ellipse-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature" id="Ellipse-1.Ellipse-2"><span class="tsd-signature-symbol">get</span> Ellipse<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="AEG_Ellipse.Ellipse.html" class="tsd-signature-type tsd-kind-class">Ellipse</a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Accessor to get the bounding ellipse of the Cut Node.</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="AEG_Ellipse.Ellipse.html" class="tsd-signature-type tsd-kind-class">Ellipse</a></h4><p>The bounding ellipse of this Cut Node
+Returns null for Sheet of Assertion</p>
+
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/CutNode.ts#L39">AEG/CutNode.ts:39</a></li></ul></aside></li>
+<li class="tsd-signature" id="Ellipse-1.Ellipse-3"><span class="tsd-signature-symbol">set</span> Ellipse<span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">ellipse</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Modifier to set the bounding ellipse of this Cut Node</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">ellipse</span>: <a href="AEG_Ellipse.Ellipse.html" class="tsd-signature-type tsd-kind-class">Ellipse</a></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/CutNode.ts#L46">AEG/CutNode.ts:46</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member"><a id="containsNode" class="tsd-anchor"></a>
@@ -120,7 +203,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d2e1cdb/src/AEG/CutNode.ts#L68">AEG/CutNode.ts:68</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/CutNode.ts#L110">AEG/CutNode.ts:110</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="containsPoint" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>contains<wbr/>Point</span><a href="#containsPoint" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -140,7 +223,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d2e1cdb/src/AEG/CutNode.ts#L53">AEG/CutNode.ts:53</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/CutNode.ts#L95">AEG/CutNode.ts:95</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getCurrentCut" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Current<wbr/>Cut</span><a href="#getCurrentCut" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -160,7 +243,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d2e1cdb/src/AEG/CutNode.ts#L37">AEG/CutNode.ts:37</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/CutNode.ts#L79">AEG/CutNode.ts:79</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="remove" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>remove</span><a href="#remove" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -180,7 +263,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d2e1cdb/src/AEG/CutNode.ts#L89">AEG/CutNode.ts:89</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/CutNode.ts#L129">AEG/CutNode.ts:129</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toFormulaString" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>Formula<wbr/>String</span><a href="#toFormulaString" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -188,7 +271,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d2e1cdb/src/AEG/CutNode.ts#L137">AEG/CutNode.ts:137</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/CutNode.ts#L177">AEG/CutNode.ts:177</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toString" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>String</span><a href="#toString" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -200,7 +283,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/d2e1cdb/src/AEG/CutNode.ts#L122">AEG/CutNode.ts:122</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/c9e9e49/src/AEG/CutNode.ts#L162">AEG/CutNode.ts:162</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -221,8 +304,11 @@
 <div class="tsd-accordion-details">
 <ul>
 <li><a href="#constructor" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-512"></use></svg><span>constructor</span></a></li>
-<li><a href="#children" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>children</span></a></li>
-<li><a href="#ellipse" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>ellipse</span></a></li>
+<li><a href="#children" class="tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>children</span></a></li>
+<li><a href="#ellipse" class="tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>ellipse</span></a></li>
+<li><a href="#Child" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-262144"></use></svg><span>Child</span></a></li>
+<li><a href="#Children-1" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-262144"></use></svg><span>Children</span></a></li>
+<li><a href="#Ellipse-1" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-262144"></use></svg><span>Ellipse</span></a></li>
 <li><a href="#containsNode" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>contains<wbr/>Node</span></a></li>
 <li><a href="#containsPoint" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>contains<wbr/>Point</span></a></li>
 <li><a href="#getCurrentCut" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Current<wbr/>Cut</span></a></li>
@@ -233,6 +319,7 @@
 <nav class="tsd-navigation"><a href="../index.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1"></use></svg><span>peircemyheart - v0.0.2</span></a>
 <ul class="tsd-small-nested-navigation" id="tsd-nav-container" data-base="..">
 <li><a href="../modules/AEG_AEGTree.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>AEG/AEGTree</a></li>
+<li><a href="../modules/AEG_AEGUtils.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>AEG/AEGUtils</a></li>
 <li><a href="../modules/AEG_AtomNode.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>AEG/AtomNode</a></li>
 <li><a href="../modules/AEG_CutNode.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>AEG/CutNode</a></li>
 <li><a href="../modules/AEG_Ellipse.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>AEG/Ellipse</a></li>
