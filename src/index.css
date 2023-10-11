@@ -53,6 +53,23 @@ p {
     background-color: white;
 }
 
+#subBar {
+    border: 2px solid black;
+    width: 95vw;
+    float: right;
+    height: 2vw;
+    box-sizing: border-box;
+    background-color: white;
+}
+
+#cutTools {
+    display: none
+}
+
+#atomTools {
+    display: none
+}
+
 .toolSetting {
     margin: 0.1vw;
     display: inline-flex;
@@ -74,3 +91,9 @@ p {
     left: 0px;
     z-index: -1;
 }
+.no-highlight{
+    user-select: none; 
+    -moz-user-select: none; 
+    -webkit-text-select: none;
+    -webkit-user-select: none; 
+ }

@@ -1,5 +1,6 @@
 import {Point} from "./Point";
 import {Rectangle} from "./Rectangle";
+import {shapesOverlaps, shapeContains, pointInELlipse} from "./AEGUtils";
 
 /**
  * Class that defines an Ellipse.
@@ -47,14 +48,32 @@ export class Ellipse {
     }
 
     /**
-     * Method that checks whether a point is within this ellipse.
+     * Method that returns the string representation of an ellipse.
+     * @returns The coordinates and radii for the ellipse.
+     */
+    public toString(): string {
+        return (
+            "An ellipse with Center at: " +
+            this.center.toString() +
+            ", \n" +
+            "Horizontal Radius of: " +
+            this.radiusX +
+            ", \n" +
+            "Vertical Radius of: " +
+            this.radiusY +
+            ", \n" +
+            "Bounding box: " +
+            this.boundingBox.toString()
+        );
+    }
+
+    /**
+     * Method that checks whether a point is within the given ellipse.
      * @param otherPoint The point that might be inside this ellipse.
      * @returns True, if the point is inside this ellipse. Else, false
      */
-    public containsPoint(otherPoint: Point): boolean {
-        //ELLIPSE TO BE IMPLEMENTED ACCURATELY
-        //return this.boundingBox.containsPoint(otherPoint);
-        return false;
+    public containsPoint(point: Point): boolean {
+        return pointInELlipse(this, point);
     }
 
     /**
@@ -63,9 +82,7 @@ export class Ellipse {
      * @returns True, if there is an overlap. Else, false.
      */
     public overlaps(otherShape: Rectangle | Ellipse): boolean {
-        //ELLIPSE TO BE IMPLEMENTED ACCURATELY
-        //return this.boundingBox.overlaps(otherShape);
-        return false;
+        return shapesOverlaps(this, otherShape);
     }
 
     /**
@@ -73,26 +90,7 @@ export class Ellipse {
      * @param otherShape The shape that might be within this ellipse.
      * @returns True, if the shape is within this ellipse. Else, false.
      */
-    public containsShape(otherShape: Rectangle | Ellipse): boolean {
-        //ELLIPSE TO BE IMPLEMENTED ACCURATELY
-        //this.boundingBox.containsShape(otherShape);
-        return false;
-    }
-
-    /**
-     * Method that returns the string representation of an ellipse.
-     * @returns The coordinates and radii for the ellipse.
-     */
-    public toString(): string {
-        return (
-            "An ellipse with Center at: " +
-            this.center.toString() +
-            ", " +
-            "Horizontal Radius of: " +
-            this.radiusX +
-            ", " +
-            "Vertical Radius of: " +
-            this.radiusY
-        );
+    public contains(otherShape: Rectangle | Ellipse): boolean {
+        return shapeContains(this, otherShape);
     }
 }

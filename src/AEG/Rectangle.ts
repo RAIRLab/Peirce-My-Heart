@@ -1,5 +1,6 @@
 import {Ellipse} from "./Ellipse";
 import {Point} from "./Point";
+import {shapesOverlaps, shapeContains, pointInRect} from "./AEGUtils";
 
 /**
  * Class that defines a Rectangle.
@@ -29,10 +30,10 @@ export class Rectangle {
      * @param w The width of the rectangle.
      * @param h The height of the rectangle.
      */
-    public constructor(vertex: Point, w: number, h: number) {
-        this.startVertex = vertex;
-        this.width = w;
-        this.height = h;
+    public constructor(vertex?: Point, w?: number, h?: number) {
+        this.startVertex = vertex ?? new Point();
+        this.width = w ?? 0;
+        this.height = h ?? 0;
     }
 
     /**
@@ -57,19 +58,12 @@ export class Rectangle {
     }
 
     /**
-     * Method that checks whether there is a point inside this rectangle.
+     * Method that checks whether there is a point inside the given rectangle.
      * @param otherPoint The point that might be inside this rectangle.
      * @returns True, if the point is completely inside the rectangle. Else, false.
      */
-    public containsPoint(otherPoint: Point): boolean {
-        const thisCorners = this.getCorners();
-
-        return (
-            thisCorners[0].x <= otherPoint.x &&
-            thisCorners[1].x >= otherPoint.x &&
-            thisCorners[1].y <= otherPoint.y &&
-            thisCorners[2].y >= otherPoint.y
-        );
+    public containsPoint(point: Point): boolean {
+        return pointInRect(this, point);
     }
 
     /**
@@ -78,26 +72,7 @@ export class Rectangle {
      * @returns True, if there is an overlap. Else, false.
      */
     public overlaps(otherShape: Rectangle | Ellipse): boolean {
-        if (otherShape instanceof Rectangle) {
-            const thisCorners = this.getCorners();
-            const otherCorners = otherShape.getCorners();
-
-            //Overlap occurs if either of the corners of either shape are within the other
-            for (let i = 0; i < 4; i++) {
-                if (
-                    this.containsPoint(otherCorners[i]) ||
-                    otherShape.containsPoint(thisCorners[i])
-                ) {
-                    return true;
-                }
-            }
-            return false;
-        } else {
-            //ELLIPSE TO BE IMPLEMENTED ACCURATELY
-            //const ellipseBoundary = (otherShape as Ellipse).boundingBox;
-            //return this.overlaps(ellipseBoundary);
-            return false;
-        }
+        return shapesOverlaps(this, otherShape);
     }
 
     /**
@@ -105,18 +80,8 @@ export class Rectangle {
      * @param otherShape The shape that might be within this rectangle.
      * @returns True, if the shape is within this rectangle. Else, false.
      */
-    public containsShape(otherShape: Rectangle | Ellipse): boolean {
-        if (otherShape instanceof Rectangle) {
-            const otherCorners = otherShape.getCorners();
-
-            //Other rectangle is within this rectangle if its opposite corners are within
-            return this.containsPoint(otherCorners[0]) && this.containsPoint(otherCorners[2]);
-        } else {
-            //ELLIPSE TO BE IMPLEMENTED ACCURATELY
-            //const ellipseBoundary = (otherShape as Ellipse).boundingBox;
-            //return this.containsShape(ellipseBoundary);
-            return true;
-        }
+    public contains(otherShape: Rectangle | Ellipse): boolean {
+        return shapeContains(this, otherShape);
     }
 
     /**
