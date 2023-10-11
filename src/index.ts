@@ -32,6 +32,8 @@ ctx.font = "35pt arial";
 
 //Global State
 const cutDisplay = <HTMLParagraphElement>document.getElementById("graphString");
+const cutTools = <HTMLParagraphElement>document.getElementById("cutTools");
+const atomTools = <HTMLParagraphElement>document.getElementById("atomTools");
 let modeState: string;
 export const tree: AEGTree = new AEGTree();
 
@@ -53,7 +55,9 @@ function ellipseMode() {
     if (modeState !== "ellipseMode") {
         removeListeners();
         modeState = "ellipseMode";
+        atomTools.style.display = "none";
     }
+    cutTools.style.display = "block";
     canvas.addEventListener("mousedown", cutHandler);
     canvas.addEventListener("mousemove", cutHandler);
     canvas.addEventListener("mouseup", cutHandler);
@@ -68,7 +72,9 @@ function atomMode() {
     if (modeState !== "atomMode") {
         removeListeners();
         modeState = "atomMode";
+        cutTools.style.display = "none";
     }
+    atomTools.style.display = "block";
     window.addEventListener("keypress", atomHandler);
     canvas.addEventListener("mousedown", atomHandler);
     canvas.addEventListener("mousemove", atomHandler);
