@@ -101,21 +101,21 @@ function removeListeners() {
  */
 export function redrawCut(incomingNode: CutNode) {
     cutDisplay.innerHTML = tree.toString();
-    for (let i = 0; incomingNode.Children.length > i; i++) {
-        if (incomingNode.Children[i] instanceof AtomNode) {
-            redrawAtom(<AtomNode>incomingNode.Children[i]);
+    for (let i = 0; incomingNode.children.length > i; i++) {
+        if (incomingNode.children[i] instanceof AtomNode) {
+            redrawAtom(<AtomNode>incomingNode.children[i]);
         } else {
-            redrawCut(<CutNode>incomingNode.Children[i]);
+            redrawCut(<CutNode>incomingNode.children[i]);
         }
     }
-    if (incomingNode.Ellipse instanceof Ellipse) {
+    if (incomingNode.ellipse instanceof Ellipse) {
         ctx.strokeStyle = "#000000";
         ctx.beginPath();
         ctx.ellipse(
-            incomingNode.Ellipse.center.x,
-            incomingNode.Ellipse.center.y,
-            incomingNode.Ellipse.radiusX,
-            incomingNode.Ellipse.radiusY,
+            incomingNode.ellipse.center.x,
+            incomingNode.ellipse.center.y,
+            incomingNode.ellipse.radiusX,
+            incomingNode.ellipse.radiusY,
             0,
             0,
             2 * Math.PI
@@ -129,7 +129,7 @@ export function redrawCut(incomingNode: CutNode) {
  * @param incomingNode The Atom Node to be redrawn
  */
 function redrawAtom(incomingNode: AtomNode) {
-    const displayBox = incomingNode.Rectangle;
+    const displayBox = incomingNode.rectangle;
     ctx.strokeStyle = "#000000";
     ctx.fillStyle = "#000000";
     ctx.beginPath();
@@ -139,6 +139,6 @@ function redrawAtom(incomingNode: AtomNode) {
         displayBox.width,
         displayBox.height
     );
-    ctx.fillText(incomingNode.Identifier, incomingNode.Origin.x, incomingNode.Origin.y);
+    ctx.fillText(incomingNode.identifier, incomingNode.origin.x, incomingNode.origin.y);
     ctx.stroke();
 }

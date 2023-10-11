@@ -15,7 +15,7 @@ let atomMetrics: TextMetrics;
 let hasMouseDown: Boolean = false;
 let hasAtom: Boolean = false;
 let currentAtom: AtomNode = new AtomNode("a"); //MAKING a THE DEFAULT IDENTIFIER FOR ATOMS
-atomDisplay.innerHTML = currentAtom.Identifier;
+atomDisplay.innerHTML = currentAtom.identifier;
 
 /**
  * Will compare the event given with all possible events it could be.
@@ -32,23 +32,23 @@ export function atomHandler(event: Event) {
         const thisEvent: KeyboardEvent = <KeyboardEvent>event;
         const regex = new RegExp(/^[A-Za-z]$/);
         if (regex.test(thisEvent.key)) {
-            currentAtom.Identifier = thisEvent.key;
-            atomDisplay.innerHTML = currentAtom.Identifier;
+            currentAtom.identifier = thisEvent.key;
+            atomDisplay.innerHTML = currentAtom.identifier;
             hasAtom = true;
         }
     } else if (event.type === "mousedown" && hasAtom) {
         const thisEvent: MouseEvent = <MouseEvent>event;
-        atomMetrics = ctx.measureText(currentAtom.Identifier);
+        atomMetrics = ctx.measureText(currentAtom.identifier);
         const startVertex: Point = new Point(
             thisEvent.clientX,
             thisEvent.clientY - atomMetrics.actualBoundingBoxAscent
         );
-        currentAtom.Rectangle = new Rectangle(
+        currentAtom.rectangle = new Rectangle(
             startVertex,
             atomMetrics.width,
             atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
         );
-        currentAtom.Origin = new Point(thisEvent.clientX, thisEvent.clientY);
+        currentAtom.origin = new Point(thisEvent.clientX, thisEvent.clientY);
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         redrawCut(tree.sheet);
@@ -60,8 +60,8 @@ export function atomHandler(event: Event) {
         hasMouseDown = true;
     } else if (event.type === "mousemove" && hasMouseDown) {
         const thisEvent: MouseEvent = <MouseEvent>event;
-        currentAtom.Origin = new Point(thisEvent.clientX, thisEvent.clientY);
-        currentAtom.Rectangle.startVertex = new Point(
+        currentAtom.origin = new Point(thisEvent.clientX, thisEvent.clientY);
+        currentAtom.rectangle.startVertex = new Point(
             thisEvent.clientX,
             thisEvent.clientY - atomMetrics.actualBoundingBoxAscent
         );
@@ -77,14 +77,14 @@ export function atomHandler(event: Event) {
         if (tree.canInsert(currentAtom)) {
             tree.insert(currentAtom);
         }
-        currentAtom = new AtomNode(currentAtom.Identifier);
+        currentAtom = new AtomNode(currentAtom.identifier);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         redrawCut(tree.sheet);
         hasMouseDown = false;
         console.log(tree.toString());
     } else if (event.type === "mouseout" && hasMouseDown) {
         hasMouseDown = false;
-        currentAtom = new AtomNode(currentAtom.Identifier);
+        currentAtom = new AtomNode(currentAtom.identifier);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         redrawCut(tree.sheet);
     }
@@ -98,9 +98,9 @@ export function atomHandler(event: Event) {
 function drawAtom(thisAtom: AtomNode, color: string) {
     ctx.fillStyle = color;
     ctx.strokeStyle = color;
-    const displayBox = thisAtom.Rectangle;
+    const displayBox = thisAtom.rectangle;
     ctx.beginPath();
-    ctx.fillText(thisAtom.Identifier, thisAtom.Origin.x, thisAtom.Origin.y);
+    ctx.fillText(thisAtom.identifier, thisAtom.origin.x, thisAtom.origin.y);
     ctx.rect(
         displayBox.startVertex.x,
         displayBox.startVertex.y,

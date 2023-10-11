@@ -2,6 +2,7 @@ import {AtomNode} from "./AtomNode";
 import {CutNode} from "./CutNode";
 import {Point} from "./Point";
 import {Ellipse} from "./Ellipse";
+import {shapesOverlap} from "./AEGUtils";
 
 export class AEGTree {
     sheet: CutNode;
@@ -28,24 +29,24 @@ export class AEGTree {
      * @returns True, if the structure is structurally consistent. Else, false.
      */
     private verifyAEG(currentCut: CutNode): boolean {
-        for (let i = 0; i < currentCut.Children.length; i++) {
+        for (let i = 0; i < currentCut.children.length; i++) {
             //Check that all children, in this level, are in currentCut
-            if (!currentCut.containsNode(currentCut.Children[i])) {
+            if (!currentCut.containsNode(currentCut.children[i])) {
                 return false;
             }
 
             //Check for overlaps on the same level
-            for (let j = i + 1; j < currentCut.Children.length; j++) {
-                if (this.overlaps(currentCut.Children[i], currentCut.Children[j])) {
+            for (let j = i + 1; j < currentCut.children.length; j++) {
+                if (this.overlaps(currentCut.children[i], currentCut.children[j])) {
                     return false;
                 }
             }
         }
-        for (let i = 0; i < currentCut.Children.length; i++) {
+        for (let i = 0; i < currentCut.children.length; i++) {
             //Check one level deeper if the child is a CutNode. Recursive case
             if (
-                currentCut.Children[i] instanceof CutNode &&
-                !this.verifyAEG(currentCut.Children[i] as CutNode)
+                currentCut.children[i] instanceof CutNode &&
+                !this.verifyAEG(currentCut.children[i] as CutNode)
             ) {
                 return false;
             }
@@ -61,8 +62,8 @@ export class AEGTree {
      */
     public canInsert(incomingNode: AtomNode | CutNode): boolean {
         const currentCut: CutNode = this.sheet.getCurrentCut(incomingNode);
-        for (let i = 0; i < currentCut.Children.length; i++) {
-            if (this.overlaps(incomingNode, currentCut.Children[i])) {
+        for (let i = 0; i < currentCut.children.length; i++) {
+            if (this.overlaps(incomingNode, currentCut.children[i])) {
                 return false;
             }
         }
@@ -80,14 +81,14 @@ export class AEGTree {
         }
 
         const currentCut: CutNode = this.sheet.getCurrentCut(incomingNode);
-        const originalChildren: (AtomNode | CutNode)[] = [...currentCut.Children];
-        currentCut.Child = incomingNode;
+        const originalChildren: (AtomNode | CutNode)[] = [...currentCut.children];
+        currentCut.child = incomingNode;
 
         if (incomingNode instanceof CutNode) {
             for (let i = 0; i < originalChildren.length; i++) {
                 if (incomingNode.containsNode(originalChildren[i])) {
-                    incomingNode.Child = originalChildren[i];
-                    currentCut.Children.splice(i, 1);
+                    incomingNode.child = originalChildren[i];
+                    currentCut.children.splice(i, 1);
                 }
             }
         }
@@ -114,24 +115,25 @@ export class AEGTree {
 
         if (incomingNode instanceof AtomNode) {
             if (otherNode instanceof AtomNode) {
-                return (incomingNode as AtomNode).Rectangle.overlaps(
-                    (otherNode as AtomNode).Rectangle
+                return shapesOverlap(
+                    (incomingNode as AtomNode).rectangle,
+                    (otherNode as AtomNode).rectangle
                 );
             } else {
                 //the case where otherNode is the sheet is handled in canInsert()
                 //and all child.ellipse[i] will never be null. this is the reason for ! below
 
-                ellipse1 = (otherNode as CutNode).Ellipse!;
-                return (incomingNode as AtomNode).Rectangle.overlaps(ellipse1);
+                ellipse1 = (otherNode as CutNode).ellipse!;
+                return shapesOverlap((incomingNode as AtomNode).rectangle, ellipse1);
             }
         } else {
             if (otherNode instanceof AtomNode) {
-                ellipse1 = (incomingNode as CutNode).Ellipse!;
-                return ellipse1.overlaps((otherNode as AtomNode).Rectangle);
+                ellipse1 = (incomingNode as CutNode).ellipse!;
+                return shapesOverlap(ellipse1, (otherNode as AtomNode).rectangle);
             } else {
-                ellipse1 = (incomingNode as CutNode).Ellipse!;
-                ellipse2 = (otherNode as CutNode).Ellipse!;
-                return ellipse1.overlaps(ellipse2);
+                ellipse1 = (incomingNode as CutNode).ellipse!;
+                ellipse2 = (otherNode as CutNode).ellipse!;
+                return shapesOverlap(ellipse1, ellipse2);
             }
         }
     }

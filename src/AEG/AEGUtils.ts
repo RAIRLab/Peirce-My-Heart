@@ -8,7 +8,7 @@ import {Rectangle} from "./Rectangle";
  * @param existingShape The existing shape
  * @returns True, if the new shape overlaps the existing shape. Else, false
  */
-export function shapesOverlaps(
+export function shapesOverlap(
     newShape: Rectangle | Ellipse,
     existingShape: Rectangle | Ellipse
 ): boolean {
@@ -17,32 +17,16 @@ export function shapesOverlaps(
             //For rectangle-rectangle, check if their edges intersect
             return edgesIntersect(newShape, existingShape);
         } else {
-            //For ellipse-rectangle collision, check if points on the ellipse are
-            //within the rectangle
-            const points: Point[] = getEllipsePoints(existingShape as Ellipse, 64);
-            for (let i = 0; i < points.length; i++) {
-                if (pointInRect(newShape as Rectangle, points[i])) {
-                    return true;
-                }
-            }
-            return false;
+            return ellipseRectangleCollision(existingShape as Ellipse, newShape as Rectangle);
         }
     } else {
         if (existingShape instanceof Rectangle) {
-            //For ellipse-rectangle collision, check if points on the ellipse are
-            //within the rectangle
-            const points: Point[] = getEllipsePoints(newShape as Ellipse, 64);
-            for (let i = 0; i < points.length; i++) {
-                if (pointInRect(existingShape as Rectangle, points[i])) {
-                    return true;
-                }
-            }
-            return false;
+            return ellipseRectangleCollision(newShape as Ellipse, existingShape as Rectangle);
         } else {
             //For ellipse-ellipse collision, check if the rectangular bounding boxes intersect.
             //If they do, check if points of the new ellipse are within the current ellipse
             if (
-                shapesOverlaps(
+                shapesOverlap(
                     (newShape as Ellipse).boundingBox,
                     (existingShape as Ellipse).boundingBox
                 ) ||
@@ -54,9 +38,9 @@ export function shapesOverlaps(
                 //if there is an overlap, check if points along the ellipse curve overlap
                 //this can be done by checking if points along the curve of this ellipse
                 //are within the other ellipse
-                const points: Point[] = getEllipsePoints(newShape, 64);
+                const points: Point[] = getEllipsePoints(newShape);
                 for (let i = 0; i < points.length; i++) {
-                    if (pointInELlipse(existingShape as Ellipse, points[i])) {
+                    if (pointInEllipse(existingShape as Ellipse, points[i])) {
                         return true;
                     }
                 }
@@ -64,6 +48,18 @@ export function shapesOverlaps(
             return false;
         }
     }
+}
+
+function ellipseRectangleCollision(ellipse: Ellipse, rectangle: Rectangle): boolean {
+    //For ellipse-rectangle collision, check if points on the ellipse are
+    //within the rectangle
+    const points: Point[] = getEllipsePoints(ellipse);
+    for (let i = 0; i < points.length; i++) {
+        if (pointInRect(rectangle, points[i])) {
+            return true;
+        }
+    }
+    return false;
 }
 
 /**
@@ -104,7 +100,7 @@ export function shapeContains(
             //the ellipse
             const innerCorners = (innerShape as Rectangle).getCorners();
             for (let i = 0; i < 4; i++) {
-                if (!pointInELlipse(outerShape as Ellipse, innerCorners[i])) {
+                if (!pointInEllipse(outerShape as Ellipse, innerCorners[i])) {
                     return false;
                 }
             }
@@ -112,10 +108,10 @@ export function shapeContains(
         } else {
             //An ellipse contains an ellipse if all the widest coordinates of the inner ellipse
             //are within the outer ellipse
-            const innerCoords: Point[] = getEllipsePoints(innerShape as Ellipse, 64);
+            const innerCoords: Point[] = getEllipsePoints(innerShape as Ellipse);
             //= getWidestCoordinates(innerShape as Ellipse);
             for (let i = 0; i < innerCoords.length; i++) {
-                if (!pointInELlipse(outerShape as Ellipse, innerCoords[i])) {
+                if (!pointInEllipse(outerShape as Ellipse, innerCoords[i])) {
                     return false;
                 }
             }
@@ -286,7 +282,7 @@ export function pointInRect(rect: Rectangle, point: Point): boolean {
  * @param otherPoint The point that might be inside the given ellipse.
  * @returns True, if the point is inside the given ellipse. Else, false
  */
-export function pointInELlipse(ellipse: Ellipse, point: Point): boolean {
+export function pointInEllipse(ellipse: Ellipse, point: Point): boolean {
     //(x-h)^2/rx^2 + (y-k)^2/ry^2 <= 1
     //(x, y) = new point
     //(h, k) = center
@@ -324,7 +320,8 @@ function getWidestCoordinates(ellipse: Ellipse): Point[] {
  * @param ellipse The given ellipse
  * @returns An array of points along the bounding curve of the ellipse
  */
-function getEllipsePoints(ellipse: Ellipse, amount: number): Point[] {
+export function getEllipsePoints(ellipse: Ellipse): Point[] {
+    const amount = 400;
     const points: Point[] = [];
     const pointDist = ellipse.radiusX / (amount / 4);
 
@@ -333,7 +330,7 @@ function getEllipsePoints(ellipse: Ellipse, amount: number): Point[] {
     let y: number;
 
     for (let i = 1; i < amount; i++) {
-        if (i < amount / 2 + 1) {
+        if (i <= amount / 2) {
             x = points[i - 1].x + pointDist;
             y = getCurvePoint(ellipse, x, 1);
         } else {
