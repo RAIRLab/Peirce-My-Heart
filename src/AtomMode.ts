@@ -9,11 +9,13 @@ if (res === null) {
     throw Error("2d rendering context not supported");
 }
 const ctx: CanvasRenderingContext2D = res;
+const atomDisplay = <HTMLParagraphElement>document.getElementById("atomDisplay");
 let atomMetrics: TextMetrics;
 
 let hasMouseDown: Boolean = false;
 let hasAtom: Boolean = false;
 let currentAtom: AtomNode = new AtomNode("a"); //MAKING a THE DEFAULT IDENTIFIER FOR ATOMS
+atomDisplay.innerHTML = currentAtom.Identifier;
 
 /**
  * Will compare the event given with all possible events it could be.
@@ -31,6 +33,7 @@ export function atomHandler(event: Event) {
         const regex = new RegExp(/^[A-Za-z]$/);
         if (regex.test(thisEvent.key)) {
             currentAtom.Identifier = thisEvent.key;
+            atomDisplay.innerHTML = currentAtom.Identifier;
             hasAtom = true;
         }
     } else if (event.type === "mousedown" && hasAtom) {
