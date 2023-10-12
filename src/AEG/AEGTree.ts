@@ -85,7 +85,7 @@ export class AEGTree {
         currentCut.child = incomingNode;
 
         if (incomingNode instanceof CutNode) {
-            for (let i = 0; i < originalChildren.length; i++) {
+            for (let i = originalChildren.length - 1; i >= 0; i--) {
                 if (incomingNode.containsNode(originalChildren[i])) {
                     incomingNode.child = originalChildren[i];
                     currentCut.children.splice(i, 1);
