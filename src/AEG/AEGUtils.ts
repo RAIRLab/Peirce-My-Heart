@@ -130,18 +130,14 @@ function edgesWithin(rect1: Rectangle, rect2: Rectangle): boolean {
     const corners1 = rect1.getCorners();
     const corners2 = rect2.getCorners();
 
-    if (
+    return (
         //Check if the horizontal edges are within
         ((corners1[0].y <= corners2[0].y && corners1[2].y >= corners2[0].y) ||
             (corners1[0].y <= corners2[2].y && corners1[2].y >= corners2[2].y)) &&
         //Check if the vertical edges are within
         ((corners1[0].x <= corners2[0].x && corners1[1].x >= corners2[0].x) ||
             (corners1[0].x <= corners2[1].x && corners1[1].x >= corners2[1].x))
-    ) {
-        return true;
-    }
-
-    return false;
+    );
 }
 
 /**
