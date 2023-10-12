@@ -15,7 +15,7 @@ export function shapesOverlap(
     if (newShape instanceof Rectangle) {
         if (existingShape instanceof Rectangle) {
             //For rectangle-rectangle, check if their edges intersect
-            return edgesWithin(newShape, existingShape) || edgesWithin(existingShape, newShape);
+            return edgesWithin(newShape, existingShape) && edgesWithin(existingShape, newShape);
         } else {
             return ellipseRectangleCollision(existingShape as Ellipse, newShape as Rectangle);
         }
@@ -132,11 +132,11 @@ function edgesWithin(rect1: Rectangle, rect2: Rectangle): boolean {
 
     return (
         //Check if the horizontal edges are within
-        ((corners1[0].y <= corners2[0].y && corners1[2].y >= corners2[0].y) ||
-            (corners1[0].y <= corners2[2].y && corners1[2].y >= corners2[2].y)) &&
+        (corners1[0].y <= corners2[0].y && corners1[2].y >= corners2[0].y) ||
+        (corners1[0].y <= corners2[2].y && corners1[2].y >= corners2[2].y) ||
         //Check if the vertical edges are within
-        ((corners1[0].x <= corners2[0].x && corners1[1].x >= corners2[0].x) ||
-            (corners1[0].x <= corners2[1].x && corners1[1].x >= corners2[1].x))
+        (corners1[0].x <= corners2[0].x && corners1[1].x >= corners2[0].x) ||
+        (corners1[0].x <= corners2[1].x && corners1[1].x >= corners2[1].x)
     );
 }
 
