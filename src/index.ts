@@ -32,13 +32,17 @@ ctx.font = "35pt arial";
 
 //Global State
 const cutDisplay = <HTMLParagraphElement>document.getElementById("graphString");
+const cutTools = <HTMLParagraphElement>document.getElementById("cutTools");
+const atomTools = <HTMLParagraphElement>document.getElementById("atomTools");
 window.addEventListener("keypress", keyPressHandler);
 canvas.addEventListener("mousedown", mouseDownHandler);
 canvas.addEventListener("mousemove", mouseMoveHandler);
 canvas.addEventListener("mouseup", mouseUpHandler);
 canvas.addEventListener("mouseout", mouseOutHandler);
+canvas.addEventListener("mouseenter", mouseEnterHandler);
 let modeState = "";
 let hasMouseDown = false;
+let hasMouseIn = true;
 export const tree: AEGTree = new AEGTree();
 
 //Window Exports
@@ -57,6 +61,9 @@ declare global {
  */
 function ellipseMode() {
     modeState = "cutMode";
+    cutTools.style.display = "block";
+    //Block all other mode tools
+    atomTools.style.display = "none";
 }
 
 /**
@@ -65,6 +72,9 @@ function ellipseMode() {
  */
 function atomMode() {
     modeState = "atomMode";
+    atomTools.style.display = "block";
+    //Block all other mode tools
+    cutTools.style.display = "none";
 }
 
 /**
@@ -87,12 +97,12 @@ function mouseDownHandler(event: MouseEvent) {
     switch (modeState) {
         case "cutMode":
             cutMouseDown(event);
-            hasMouseDown = true;
             break;
         case "atomMode":
-            hasMouseDown = atomMouseDown(event);
+            atomMouseDown(event);
             break;
     }
+    hasMouseDown = true;
 }
 
 /**
@@ -102,12 +112,12 @@ function mouseDownHandler(event: MouseEvent) {
 function mouseMoveHandler(event: MouseEvent) {
     switch (modeState) {
         case "cutMode":
-            if (hasMouseDown) {
+            if (hasMouseDown && hasMouseIn) {
                 cutMouseMove(event);
             }
             break;
         case "atomMode":
-            if (hasMouseDown) {
+            if (hasMouseDown && hasMouseIn) {
                 atomMouseMove(event);
             }
             break;
@@ -125,7 +135,7 @@ function mouseUpHandler(event: MouseEvent) {
             cutMouseUp(event);
             break;
         case "atomMode":
-            atomMouseUp(event);
+            atomMouseUp();
             break;
     }
     hasMouseDown = false;
@@ -138,18 +148,16 @@ function mouseUpHandler(event: MouseEvent) {
 function mouseOutHandler() {
     switch (modeState) {
         case "cutMode":
-            if (hasMouseDown) {
-                cutMouseOut();
-            }
-            hasMouseDown = false;
+            cutMouseOut();
             break;
         case "atomMode":
-            if (hasMouseDown) {
-                atomMouseOut();
-            }
-            hasMouseDown = false;
+            atomMouseOut();
             break;
     }
+}
+
+function mouseEnterHandler() {
+    hasMouseIn = true;
 }
 
 /**
