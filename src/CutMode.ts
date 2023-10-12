@@ -126,7 +126,7 @@ export function createEllipse(original: Point, current: Point): Ellipse {
  */
 function drawEllipse(thisCut: CutNode, color: string) {
     ctx.strokeStyle = color;
-    const ellipse: Ellipse = <Ellipse>thisCut.Ellipse;
+    const ellipse: Ellipse = <Ellipse>thisCut.ellipse;
     const center: Point = ellipse.center;
     ctx.beginPath();
     ctx.ellipse(center.x, center.y, ellipse.radiusX, ellipse.radiusY, 0, 0, 2 * Math.PI);

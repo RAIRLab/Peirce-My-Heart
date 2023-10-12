@@ -10,6 +10,7 @@ if (res === null) {
 }
 const ctx: CanvasRenderingContext2D = res;
 const atomDisplay = <HTMLParagraphElement>document.getElementById("atomDisplay");
+const atomDisplay = <HTMLParagraphElement>document.getElementById("atomDisplay");
 let atomMetrics: TextMetrics;
 let wasOut: boolean;
 
@@ -111,9 +112,9 @@ export function atomMouseOut() {
 function drawAtom(thisAtom: AtomNode, color: string) {
     ctx.fillStyle = color;
     ctx.strokeStyle = color;
-    const displayBox = thisAtom.Rectangle;
+    const displayBox = thisAtom.rectangle;
     ctx.beginPath();
-    ctx.fillText(thisAtom.Identifier, thisAtom.Origin.x, thisAtom.Origin.y);
+    ctx.fillText(thisAtom.identifier, thisAtom.origin.x, thisAtom.origin.y);
     ctx.rect(
         displayBox.startVertex.x,
         displayBox.startVertex.y,
