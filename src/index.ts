@@ -10,6 +10,7 @@ import {Ellipse} from "./AEG/Ellipse";
 import {AtomNode} from "./AEG/AtomNode";
 import {cutHandler} from "./CutMode";
 import {atomHandler} from "./AtomMode";
+import {saveFile} from "./FileUtils";
 
 //Extend the window interface to export functions without TS complaining
 declare global {
@@ -40,10 +41,12 @@ export const tree: AEGTree = new AEGTree();
 //Window Exports
 window.atomMode = atomMode;
 window.ellipseMode = ellipseMode;
+window.saveMode = saveMode;
 declare global {
     interface Window {
         ellipseMode: () => void;
         atomMode: () => void;
+        saveMode: () => void;
     }
 }
 
@@ -80,6 +83,11 @@ function atomMode() {
     canvas.addEventListener("mousemove", atomHandler);
     canvas.addEventListener("mouseup", atomHandler);
     canvas.addEventListener("mouseout", atomHandler);
+}
+
+function saveMode() {
+    console.log(tree);
+    saveFile(tree);
 }
 
 /**
