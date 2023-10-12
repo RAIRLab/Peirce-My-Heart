@@ -1,4 +1,4 @@
-
+/// <reference types="vitest" />
 import {resolve} from 'path';
 import {defineConfig} from 'vite'
 
@@ -7,7 +7,7 @@ export default defineConfig(({command, mode}) => {
     return {
         root: root,
         base: "/Peirce-My-Heart/",
-        publicDir: "../public/", 
+        publicDir: "../public/",
         build:{
             //only minify if you're trying to debug in the chrome debugger, otherwise use vsc debug
             //minify: mode === "production", 
@@ -20,6 +20,9 @@ export default defineConfig(({command, mode}) => {
                     homepage: resolve(__dirname, root, "aeg.html")
                 }
             }
+        },
+        test:{
+            include:["../tests/*"]   
         }
     };
 })
