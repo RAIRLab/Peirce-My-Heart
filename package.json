@@ -10,7 +10,9 @@
     "preview": "vite preview --open",
     "live-edit": "vite serve --open",
     "build-docs": "typedoc",
-    "vsc-debug": "vite serve"
+    "vsc-debug": "vite serve",
+    "live-test": "vitest",
+    "test" : "vitest run"
   },
   "repository": {
     "type": "git",
@@ -33,7 +35,8 @@
     "gts": "^5.2.0",
     "typedoc": "^0.25.2",
     "typescript": "~5.2.2",
-    "vite": "^4.4.11"
+    "vite": "^4.4.11",
+    "vitest": "^0.34.6"
   },
   "dependencies": {
     "nomial": "^1.0.11"
