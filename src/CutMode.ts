@@ -41,7 +41,7 @@ export function cutMouseMove(event: MouseEvent) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     redrawCut(tree.sheet);
     currentEllipse = createEllipse(startingPoint, currentPoint);
-    newCut.Ellipse = currentEllipse;
+    newCut.ellipse = currentEllipse;
 
     if (!wasOut) {
         if (tree.canInsert(newCut) && ellipseLargeEnough(currentEllipse)) {
@@ -126,7 +126,7 @@ export function createEllipse(original: Point, current: Point): Ellipse {
  */
 function drawEllipse(thisCut: CutNode, color: string) {
     ctx.strokeStyle = color;
-    const ellipse: Ellipse = <Ellipse>thisCut.Ellipse;
+    const ellipse: Ellipse = <Ellipse>thisCut.ellipse;
     const center: Point = ellipse.center;
     ctx.beginPath();
     ctx.ellipse(center.x, center.y, ellipse.radiusX, ellipse.radiusY, 0, 0, 2 * Math.PI);
