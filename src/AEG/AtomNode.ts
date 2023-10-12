@@ -12,17 +12,17 @@ export class AtomNode {
     /**
      * The rectangle signifying the boundary box of this node.
      */
-    private rect: Rectangle;
+    private internalRectangle: Rectangle;
 
     /**
      * The string value of the proposition represented by this node.
      */
-    private identifier: string;
+    private internalIdentifier: string;
 
     /**
      * The point the atom is initially placed.
      */
-    private origin: Point;
+    private internalOrigin: Point;
 
     /**
      * Construct an atom node with given boundary box and proposition.
@@ -30,54 +30,54 @@ export class AtomNode {
      * @param val (Required) The value of the proposition represented by this node.
      */
     public constructor(val: string, origin?: Point, rect?: Rectangle) {
-        this.rect = rect ?? new Rectangle();
-        this.identifier = val;
-        this.origin = origin ?? new Point();
+        this.internalRectangle = rect ?? new Rectangle();
+        this.internalIdentifier = val;
+        this.internalOrigin = origin ?? new Point();
     }
 
     /**
      * Accessor to get the bounding rectangle of the Atom Node.
      * @returns The bounding rectangle of this Atom Node
      */
-    public get Rectangle(): Rectangle {
-        return this.rect;
+    public get rectangle(): Rectangle {
+        return this.internalRectangle;
     }
 
     /**
      * Modifier to set the bounding rectangle of the Atom Node.
      */
-    public set Rectangle(rect: Rectangle) {
-        this.rect = rect;
+    public set rectangle(rect: Rectangle) {
+        this.internalRectangle = rect;
     }
 
     /**
      * Accessor to get the identifier of the Atom Node.
      * @returns The identifier of this Atom Node
      */
-    public get Identifier(): string {
-        return this.identifier;
+    public get identifier(): string {
+        return this.internalIdentifier;
     }
 
     /**
      * Modifier to set the identifier of the Atom Node
      */
-    public set Identifier(identifier: string) {
-        this.identifier = identifier;
+    public set identifier(identifier: string) {
+        this.internalIdentifier = identifier;
     }
 
     /**
      * Accessor to get the origin (top left) vertex of the bounding rectangle of the Atom Node.
      * @returns The origin of the bounding rectangle
      */
-    public get Origin(): Point {
-        return this.origin;
+    public get origin(): Point {
+        return this.internalOrigin;
     }
 
     /**
      * Modifier to set the origin (top left) vertex of the bounding rectangle of the Atom Node.
      */
-    public set Origin(point: Point) {
-        this.origin = point;
+    public set origin(point: Point) {
+        this.internalOrigin = point;
     }
 
     /**
@@ -86,7 +86,7 @@ export class AtomNode {
      * @returns True, if the point is within this node. Else, false.
      */
     public containsPoint(otherPoint: Point): boolean {
-        return this.rect.containsPoint(otherPoint);
+        return this.internalRectangle.containsPoint(otherPoint);
     }
 
     /**
@@ -96,9 +96,9 @@ export class AtomNode {
      */
     public containsNode(otherNode: AtomNode | CutNode): boolean {
         if (otherNode instanceof AtomNode) {
-            return this.rect.contains((otherNode as AtomNode).Rectangle);
+            return this.internalRectangle.contains((otherNode as AtomNode).rectangle);
         } else {
-            return this.rect.contains((otherNode as CutNode).Ellipse as Ellipse);
+            return this.internalRectangle.contains((otherNode as CutNode).ellipse as Ellipse);
         }
     }
 
@@ -109,10 +109,10 @@ export class AtomNode {
     public toString(): string {
         return (
             "An atom representing the proposition: " +
-            this.identifier +
+            this.internalIdentifier +
             " and " +
             "Boundary box of: " +
-            this.rect.toString()
+            this.internalRectangle.toString()
         );
     }
 }

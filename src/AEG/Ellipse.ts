@@ -1,6 +1,6 @@
 import {Point} from "./Point";
 import {Rectangle} from "./Rectangle";
-import {shapesOverlaps, shapeContains, pointInEllipse} from "./AEGUtils";
+import {shapesOverlap, shapeContains, pointInEllipse} from "./AEGUtils";
 
 /**
  * Class that defines an Ellipse.
@@ -71,7 +71,7 @@ export class Ellipse {
      * @returns True, if there is an overlap. Else, false.
      */
     public overlaps(otherShape: Rectangle | Ellipse): boolean {
-        return shapesOverlaps(this, otherShape);
+        return shapesOverlap(this, otherShape);
     }
 
     /**

@@ -13,59 +13,77 @@ if (res === null) {
 }
 const ctx: CanvasRenderingContext2D = res;
 
-let hasMouseDown: Boolean = false;
 let currentEllipse: Ellipse = new Ellipse();
 let startingPoint: Point = new Point();
+let wasOut: boolean;
 
 /**
- * Will compare the event given with all possible events it could be.
- * mousedown events will allocate the starting point and allow the later events to take place
- * mousemove will call createEllipse starting and current points, if invalid place will color it.
- * mouseup will add the cut to the tree if it is in a valid place, and set hasmousedown to false.
- * mosueout will end drawing early.
- * @param event The event that will be used
+ * Sets the starting point for the ellipse to where the user clicks.
+ * @param event The mouse down event
  */
-export function cutHandler(event: MouseEvent) {
-    let newCut: CutNode = new CutNode(new Ellipse());
+export function cutMouseDown(event: MouseEvent) {
+    startingPoint.x = event.clientX;
+    startingPoint.y = event.clientY;
+    wasOut = false;
+}
+
+/**
+ * Takes the current point of the ellipse and draws the ellipse between those two points.
+ * Checks to see if the current point is valid to determine color.
+ * Redraws the canvas then draws the ellipse.
+ * @param event The mouse move event
+ */
+export function cutMouseMove(event: MouseEvent) {
+    const newCut: CutNode = new CutNode(new Ellipse());
     const currentPoint: Point = new Point();
+    currentPoint.x = event.clientX;
+    currentPoint.y = event.clientY;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    redrawCut(tree.sheet);
+    currentEllipse = createEllipse(startingPoint, currentPoint);
+    newCut.ellipse = currentEllipse;
 
-    if (event.type === "mousedown") {
-        hasMouseDown = true;
-        startingPoint.x = event.clientX;
-        startingPoint.y = event.clientY;
-    } else if (event.type === "mousemove" && hasMouseDown) {
-        currentPoint.x = event.clientX;
-        currentPoint.y = event.clientY;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        redrawCut(tree.sheet);
-        currentEllipse = createEllipse(startingPoint, currentPoint);
-        newCut.Ellipse = currentEllipse;
-
-        if (tree.canInsert(newCut) && currentEllipse.radiusX > 15 && currentEllipse.radiusY > 15) {
+    if (!wasOut) {
+        if (tree.canInsert(newCut) && ellipseLargeEnough(currentEllipse)) {
             drawEllipse(newCut, "#00FF00");
         } else {
             drawEllipse(newCut, "#FF0000");
         }
-    } else if (event.type === "mouseup" && hasMouseDown) {
-        newCut = new CutNode(currentEllipse);
-        if (tree.canInsert(newCut) && currentEllipse.radiusX > 15 && currentEllipse.radiusY > 15) {
-            tree.insert(newCut);
-        }
-        hasMouseDown = false;
-        startingPoint = new Point();
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        redrawCut(tree.sheet);
-        console.log(tree.toString());
-    } else if (event.type === "mouseout" && hasMouseDown) {
-        hasMouseDown = false;
-        startingPoint = new Point();
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        redrawCut(tree.sheet);
     }
 }
 
 /**
- * A function to draw an ellipse between two points designated by the user.
+ * Takes the current point of the mouse up event and if it is in a legal position adds it to the tree
+ * Redraws the canvas, if the cut was legal it will be there on the new redraw.
+ * @param event The mouse up event
+ */
+export function cutMouseUp(event: MouseEvent) {
+    let newCut: CutNode = new CutNode(currentEllipse);
+    const currentPoint: Point = new Point();
+    currentPoint.x = event.clientX;
+    currentPoint.y = event.clientY;
+    currentEllipse = createEllipse(startingPoint, currentPoint);
+    newCut = new CutNode(currentEllipse);
+    if (tree.canInsert(newCut) && !wasOut && ellipseLargeEnough(currentEllipse)) {
+        tree.insert(newCut);
+    }
+    startingPoint = new Point();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    redrawCut(tree.sheet);
+}
+
+/**
+ * Resets the canvas if the mouse ends up out of the canvas.
+ */
+export function cutMouseOut() {
+    wasOut = true;
+    startingPoint = new Point();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    redrawCut(tree.sheet);
+}
+
+/**
+ * A function to calculate an ellipse between two points designated by the user.
  * @param original the point where the user originally clicked
  * @param current the point where the user's mouse is currently located
  */
@@ -108,9 +126,21 @@ export function createEllipse(original: Point, current: Point): Ellipse {
  */
 function drawEllipse(thisCut: CutNode, color: string) {
     ctx.strokeStyle = color;
-    const ellipse: Ellipse = <Ellipse>thisCut.Ellipse;
+    const ellipse: Ellipse = <Ellipse>thisCut.ellipse;
     const center: Point = ellipse.center;
     ctx.beginPath();
     ctx.ellipse(center.x, center.y, ellipse.radiusX, ellipse.radiusY, 0, 0, 2 * Math.PI);
     ctx.stroke();
+}
+
+/**
+ * Checks to see if the given ellipse is large enough to be considered legal.
+ * @param ellipse The ellipse to be checked
+ * @returns Whether the given ellipse is large enough to be legal
+ */
+function ellipseLargeEnough(ellipse: Ellipse) {
+    if (ellipse.radiusX > 15 && ellipse.radiusY > 15) {
+        return true;
+    }
+    return false;
 }
