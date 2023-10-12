@@ -18,6 +18,15 @@ let hasKeyPress = false;
  * Checks to see if the pressed key is a valid letter, if yes sets it to the atom node.
  * @param event The keypress event
  */
+export function atomHandler(event: Event) {
+    if (event.type === "keypress") {
+        const thisEvent: KeyboardEvent = <KeyboardEvent>event;
+        const regex = new RegExp(/^[A-Za-z]$/);
+        if (regex.test(thisEvent.key)) {
+            currentAtom.Identifier = thisEvent.key;
+            hasAtom = true;
+        }
+    } else if (event.type === "mousedown" && hasAtom) {
 export function atomKeyPress(event: KeyboardEvent) {
     const thisEvent: KeyboardEvent = <KeyboardEvent>event;
     const regex = new RegExp(/^[A-Za-z]$/);
@@ -36,17 +45,17 @@ export function atomKeyPress(event: KeyboardEvent) {
 export function atomMouseDown(event: MouseEvent): boolean {
     if (hasKeyPress) {
         const thisEvent: MouseEvent = <MouseEvent>event;
-        atomMetrics = ctx.measureText(currentAtom.identifier);
+        atomMetrics = ctx.measureText(currentAtom.Identifier);
         const startVertex: Point = new Point(
             thisEvent.clientX,
             thisEvent.clientY - atomMetrics.actualBoundingBoxAscent
         );
-        currentAtom.rect = new Rectangle(
+        currentAtom.Rectangle = new Rectangle(
             startVertex,
             atomMetrics.width,
             atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
         );
-        currentAtom.origin = new Point(thisEvent.clientX, thisEvent.clientY);
+        currentAtom.Origin = new Point(thisEvent.clientX, thisEvent.clientY);
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         redrawCut(tree.sheet);
@@ -55,6 +64,14 @@ export function atomMouseDown(event: MouseEvent): boolean {
         } else {
             drawAtom(currentAtom, "#6600ff");
         }
+        hasMouseDown = true;
+    } else if (event.type === "mousemove" && hasMouseDown) {
+        const thisEvent: MouseEvent = <MouseEvent>event;
+        currentAtom.Origin = new Point(thisEvent.clientX, thisEvent.clientY);
+        currentAtom.Rectangle.startVertex = new Point(
+            thisEvent.clientX,
+            thisEvent.clientY - atomMetrics.actualBoundingBoxAscent
+        );
         return true;
     }
     return false;
@@ -72,6 +89,28 @@ export function atomMouseMove(event: MouseEvent) {
         thisEvent.clientY - atomMetrics.actualBoundingBoxAscent
     );
 
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        redrawCut(tree.sheet);
+        if (tree.canInsert(currentAtom)) {
+            drawAtom(currentAtom, "#00FF00");
+        } else {
+            drawAtom(currentAtom, "#FF0000");
+        }
+    } else if (event.type === "mouseup" && hasMouseDown) {
+        if (tree.canInsert(currentAtom)) {
+            tree.insert(currentAtom);
+        }
+        currentAtom = new AtomNode(currentAtom.Identifier);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        redrawCut(tree.sheet);
+        hasMouseDown = false;
+        console.log(tree.toString());
+    } else if (event.type === "mouseout" && hasMouseDown) {
+        hasMouseDown = false;
+        currentAtom = new AtomNode(currentAtom.Identifier);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        redrawCut(tree.sheet);
+    }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     redrawCut(tree.sheet);
     if (tree.canInsert(currentAtom)) {
@@ -112,9 +151,9 @@ export function atomMouseOut() {
 function drawAtom(thisAtom: AtomNode, color: string) {
     ctx.fillStyle = color;
     ctx.strokeStyle = color;
-    const displayBox = thisAtom.rect;
+    const displayBox = thisAtom.Rectangle;
     ctx.beginPath();
-    ctx.fillText(thisAtom.identifier, thisAtom.origin.x, thisAtom.origin.y);
+    ctx.fillText(thisAtom.Identifier, thisAtom.Origin.x, thisAtom.Origin.y);
     ctx.rect(
         displayBox.startVertex.x,
         displayBox.startVertex.y,

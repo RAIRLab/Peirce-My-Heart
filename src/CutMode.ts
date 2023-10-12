@@ -31,6 +31,8 @@ export function cutMouseDown(event: MouseEvent) {
  * Redraws the canvas then draws the ellipse.
  * @param event The mouse move event
  */
+export function cutHandler(event: MouseEvent) {
+    let newCut: CutNode = new CutNode(new Ellipse());
 export function cutMouseMove(event: MouseEvent) {
     const newCut: CutNode = new CutNode();
     const currentPoint: Point = new Point();
@@ -122,7 +124,7 @@ export function createEllipse(original: Point, current: Point): Ellipse {
  */
 function drawEllipse(thisCut: CutNode, color: string) {
     ctx.strokeStyle = color;
-    const ellipse: Ellipse = <Ellipse>thisCut.ellipse;
+    const ellipse: Ellipse = <Ellipse>thisCut.Ellipse;
     const center: Point = ellipse.center;
     ctx.beginPath();
     ctx.ellipse(center.x, center.y, ellipse.radiusX, ellipse.radiusY, 0, 0, 2 * Math.PI);
