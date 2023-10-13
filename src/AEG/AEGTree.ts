@@ -2,7 +2,8 @@ import {AtomNode} from "./AtomNode";
 import {CutNode} from "./CutNode";
 import {Point} from "./Point";
 import {Ellipse} from "./Ellipse";
-import {shapesOverlap} from "./AEGUtils";
+import {Rectangle} from "./Rectangle";
+import {shapesOverlap, shapesIntersect} from "./AEGUtils";
 
 /**
  * Represents the background AEG tree structure.
@@ -68,7 +69,7 @@ export class AEGTree {
     public canInsert(incomingNode: AtomNode | CutNode): boolean {
         const currentCut: CutNode = this.sheet.getCurrentCut(incomingNode);
         for (let i = 0; i < currentCut.children.length; i++) {
-            if (this.overlaps(incomingNode, currentCut.children[i])) {
+            if (this.intersects(incomingNode, currentCut.children[i])) {
                 return false;
             }
         }
@@ -106,6 +107,21 @@ export class AEGTree {
      */
     public remove(incomingPoint: Point): void {
         this.sheet.remove(incomingPoint);
+    }
+
+    /**
+     * Determines if the incoming node's boundaries intersect the other node's boundaries.
+     * @param incomingNode the incoming node
+     * @param otherNode the other node
+     * @returns the result of each shape's respective intersect() methods.
+     */
+    private intersects(incomingNode: AtomNode | CutNode, otherNode: AtomNode | CutNode) {
+        const incomingShape: Rectangle | Ellipse =
+            incomingNode instanceof AtomNode ? incomingNode.rectangle : incomingNode.ellipse!;
+        const otherShape: Rectangle | Ellipse =
+            otherNode instanceof AtomNode ? otherNode.rectangle : otherNode.ellipse!;
+
+        return shapesIntersect(incomingShape, otherShape);
     }
 
     /**
