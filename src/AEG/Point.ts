@@ -1,5 +1,5 @@
 /**
- * Class that defines a Point.
+ * Defines a Point.
  * @author Anusha Tiwari
  * @author Ryan Reilly
  */
@@ -15,17 +15,32 @@ export class Point {
     y: number;
 
     /**
-     * Construct a new point at the given coordinates.
-     * If no coordinates specified, default them to 0.
+     * Constructs a new point at the given coordinates.
+     * If no coordinates are specified, default them to 0.
      * @param coordX The specified x coordinate.
      * @param coordY The specified y coordinate.
+     * @throws Error on receiving NaN or Infinity values as coordinates.
      */
     public constructor(coordX?: number, coordY?: number) {
         this.x = coordX ?? 0;
         this.y = coordY ?? 0;
+        if (!Number.isFinite(this.x) || !Number.isFinite(this.y)) {
+            throw new Error("NaN or Infinity value(s) were passed in constructing a Point.");
+        }
     }
 
+    /**
+     * Sets this Point's coordinates according to the incoming numbers.
+     * @param coordX the incoming value for x
+     * @param coordY the incoming value for y
+     * @throws Error on receiving NaN or Infinity values as coordinates.
+     */
     public set(coordX: number, coordY: number) {
+        if (!Number.isFinite(coordX) || !Number.isFinite(coordY)) {
+            throw new Error(
+                "NaN or Infinity value(s) were passed in setting " + this + "'s coords."
+            );
+        }
         this.x = coordX;
         this.y = coordY;
     }
@@ -42,10 +57,10 @@ export class Point {
     }
 
     /**
-     * Method that returns a string representation of the point.
-     * @returns The coordinates of the point.
+     * Returns a string representation of the point.
+     * @returns The coordinates of the point in string form.
      */
     public toString(): string {
-        return "X: " + this.x + ", Y: " + this.y;
+        return "(" + this.x + ", " + this.y + ")";
     }
 }

@@ -4,7 +4,7 @@ import {Ellipse} from "./Ellipse";
 import {Point} from "./Point";
 
 /**
- * Class that defines an Atom.
+ * Defines an Atom.
  * @author Anusha Tiwari
  * @author Ryan Reilly
  */
@@ -30,7 +30,7 @@ export class AtomNode {
      * @param val (Required) The value of the proposition represented by this node.
      */
     public constructor(val: string, origin?: Point, rect?: Rectangle) {
-        this.internalRectangle = rect ?? new Rectangle();
+        this.internalRectangle = rect ?? new Rectangle(new Point(0, 0), 0, 0);
         this.internalIdentifier = val;
         this.internalOrigin = origin ?? new Point();
     }
