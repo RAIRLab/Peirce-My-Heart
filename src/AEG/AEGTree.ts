@@ -115,31 +115,11 @@ export class AEGTree {
      * @returns the result of each shape's respective intersect() methods.
      */
     private intersects(incomingNode: AtomNode | CutNode, otherNode: AtomNode | CutNode) {
-        if (incomingNode instanceof AtomNode) {
-            if (otherNode instanceof AtomNode) {
-                return shapesIntersect(
-                    (incomingNode as AtomNode).rectangle,
-                    (otherNode as AtomNode).rectangle
-                );
-            } else {
-                return shapesIntersect(
-                    (incomingNode as AtomNode).rectangle,
-                    (otherNode as CutNode).ellipse!
-                );
-            }
-        } else {
-            if (otherNode instanceof AtomNode) {
-                return shapesIntersect(
-                    (incomingNode as CutNode).ellipse!,
-                    (otherNode as AtomNode).rectangle
-                );
-            } else {
-                return shapesIntersect(
-                    (incomingNode as CutNode).ellipse!,
-                    (otherNode as CutNode).ellipse!
-                );
-            }
-        }
+        incomingShape : Rectangle | Ellipse = \ 
+            incomingNode instanceof AtomNode ? incomingNode.rectangle : incomingNode.ellipse!;
+        otherShape : Rectangle | Ellipse = \ 
+            otherNode instanceof AtomNode ? otherNode .rectangle : otherNode .ellipse!; 
+        return shapesIntersect(incomingShape,otherShape)  
     }
 
     /**
