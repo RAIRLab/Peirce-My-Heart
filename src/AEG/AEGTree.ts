@@ -2,7 +2,7 @@ import {AtomNode} from "./AtomNode";
 import {CutNode} from "./CutNode";
 import {Point} from "./Point";
 import {Ellipse} from "./Ellipse";
-import {shapesOverlap} from "./AEGUtils";
+import {shapesOverlap, shapesIntersect} from "./AEGUtils";
 
 /**
  * Represents the background AEG tree structure.
@@ -68,7 +68,7 @@ export class AEGTree {
     public canInsert(incomingNode: AtomNode | CutNode): boolean {
         const currentCut: CutNode = this.sheet.getCurrentCut(incomingNode);
         for (let i = 0; i < currentCut.children.length; i++) {
-            if (this.overlaps(incomingNode, currentCut.children[i])) {
+            if (this.intersects(incomingNode, currentCut.children[i])) {
                 return false;
             }
         }
@@ -106,6 +106,40 @@ export class AEGTree {
      */
     public remove(incomingPoint: Point): void {
         this.sheet.remove(incomingPoint);
+    }
+
+    /**
+     * Determines if the incoming node's boundaries intersect the other node's boundaries.
+     * @param incomingNode the incoming node
+     * @param otherNode the other node
+     * @returns the result of each shape's respective intersect() methods.
+     */
+    private intersects(incomingNode: AtomNode | CutNode, otherNode: AtomNode | CutNode) {
+        if (incomingNode instanceof AtomNode) {
+            if (otherNode instanceof AtomNode) {
+                return shapesIntersect(
+                    (incomingNode as AtomNode).rectangle,
+                    (otherNode as AtomNode).rectangle
+                );
+            } else {
+                return shapesIntersect(
+                    (incomingNode as AtomNode).rectangle,
+                    (otherNode as CutNode).ellipse!
+                );
+            }
+        } else {
+            if (otherNode instanceof AtomNode) {
+                return shapesIntersect(
+                    (incomingNode as CutNode).ellipse!,
+                    (otherNode as AtomNode).rectangle
+                );
+            } else {
+                return shapesIntersect(
+                    (incomingNode as CutNode).ellipse!,
+                    (otherNode as CutNode).ellipse!
+                );
+            }
+        }
     }
 
     /**
