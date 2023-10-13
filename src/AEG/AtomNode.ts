@@ -31,7 +31,9 @@ export class AtomNode {
     public constructor(val: string, origin: Point, rect: Rectangle) {
         if (val.length !== 1) {
             throw new Error(
-                "String greater than length 1 passed in as identifier in AtomNode constructor."
+                "String of length " +
+                    val.length +
+                    " passed in as identifier in AtomNode constructor, which is not of length 1."
             );
         }
         if (new RegExp(/^[A-Za-z]$/).test(val) === false) {
