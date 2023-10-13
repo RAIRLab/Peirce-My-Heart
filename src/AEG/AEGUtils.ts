@@ -130,6 +130,7 @@ function edgesWithin(rect1: Rectangle, rect2: Rectangle): boolean {
     const corners1 = rect1.getCorners();
     const corners2 = rect2.getCorners();
 
+    //2 equal edges (aka edges on edges) are considered as intersection
     return (
         //Check if the horizontal edges are within
         ((corners1[0].y <= corners2[0].y && corners1[2].y >= corners2[0].y) ||
@@ -149,11 +150,12 @@ function edgesWithin(rect1: Rectangle, rect2: Rectangle): boolean {
 export function pointInRect(rect: Rectangle, point: Point): boolean {
     const rectCorners = rect.getCorners();
 
+    //Points on edges are considered to be contained
     return (
-        rectCorners[0].x < point.x &&
-        rectCorners[1].x > point.x &&
-        rectCorners[0].y < point.y &&
-        rectCorners[2].y > point.y
+        rectCorners[0].x <= point.x &&
+        rectCorners[1].x >= point.x &&
+        rectCorners[0].y <= point.y &&
+        rectCorners[2].y >= point.y
     );
 }
 
@@ -168,10 +170,10 @@ export function pointInEllipse(ellipse: Ellipse, point: Point): boolean {
     //(x, y) = new point
     //(h, k) = center
 
-    const p: number = //Math.ceil(
+    //Points on edges are considered to be contained
+    const p: number =
         Math.pow(point.x - ellipse.center.x, 2) / Math.pow(ellipse.radiusX, 2) +
         Math.pow(point.y - ellipse.center.y, 2) / Math.pow(ellipse.radiusY, 2);
-    //);
 
     return p <= 1;
 }
