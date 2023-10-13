@@ -38,10 +38,6 @@ describe("Ellipse containsPoint soliloquy:", () => {
         [0, 10],
         [10, 0],
         [10, 10],
-        [10, 5], //farthest reaches of this Ellipse
-        [0, 5],
-        [5, 0],
-        [5, 10],
         [100, 100], //arbitrary Points that just shouldn't be within
         [200, 200],
     ])("Ellipse of center (5, 5), {radX, radY} = 5 should not contain Point (%f, %f).", (x, y) => {
@@ -49,6 +45,10 @@ describe("Ellipse containsPoint soliloquy:", () => {
     });
 
     test.each([
+        [10, 5], //farthest reaches of this Ellipse
+        [0, 5],
+        [5, 0],
+        [5, 10],
         [5, 5], //we want this Ellipse to contain its center
         [6, 6], //arbitrary Points that should be contained within
         [4.3, 4.4],
