@@ -29,9 +29,18 @@ export class AtomNode {
      * @param val The value of the proposition represented by this node.
      */
     public constructor(val: string, origin: Point, rect: Rectangle) {
-        if (val === "") {
-            throw new Error("Empty string passed in for identifier in AtomNode constructor.");
+        if (val.length !== 1) {
+            throw new Error(
+                "String greater than length 1 passed in as identifier in AtomNode constructor."
+            );
         }
+        if (new RegExp(/^[A-Za-z]$/).test(val) === false) {
+            throw new Error(
+                val +
+                    " not contained in Latin alphabet passed in as identifier in AtomNode constructor."
+            );
+        }
+
         this.internalIdentifier = val;
         this.internalOrigin = origin;
         this.internalRectangle = rect;

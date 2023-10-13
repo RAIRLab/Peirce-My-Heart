@@ -5,15 +5,7 @@ import {Rectangle} from "../src/AEG/Rectangle";
 import {Point} from "../src/AEG/Point";
 
 describe("Ellipse constructor soliloquy:", () => {
-    const ell: Ellipse = new Ellipse(new Point(0, 0), 0, 0);
     const center: Point = new Point(10, 10);
-
-    //TODO: No more default constructor - is this test necessary?
-    test("Default Ellipse constructor should produce an Ellipse of center (0, 0), radX = 0, radY = 0.", () => {
-        expect(ell.center).toStrictEqual(new Point(0, 0));
-        expect(ell.radiusX).toBe(0);
-        expect(ell.radiusY).toBe(0);
-    });
 
     test.fails.each([
         [-1, 1],
@@ -39,17 +31,17 @@ describe("Ellipse containsPoint soliloquy:", () => {
         [0, 10],
         [10, 0],
         [10, 10],
-        [100, 100], //arbitrary Points that just shouldn't be within
+        [10, 5], //farthest reaches of this Ellipse
+        [0, 5],
+        [5, 0],
+        [5, 10],
+        [100, 100], //arbitrary Points that shouldn't be within
         [200, 200],
     ])("Ellipse of center (5, 5), {radX, radY} = 5 should not contain Point (%f, %f).", (x, y) => {
         expect(ell.containsPoint(new Point(x, y))).toBeFalsy();
     });
 
     test.each([
-        [10, 5], //farthest reaches of this Ellipse
-        [0, 5],
-        [5, 0],
-        [5, 10],
         [5, 5], //we want this Ellipse to contain its center
         [6, 6], //arbitrary Points that should be contained within
         [4.3, 4.4],

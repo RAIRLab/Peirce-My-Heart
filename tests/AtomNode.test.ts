@@ -9,10 +9,23 @@ import {Point} from "../src/AEG/Point";
  * @author Ryan Reilly
  */
 describe("AtomNode constructor soliloquy:", () => {
-    test.fails(
-        "AtomNode constructor should fail if the empty string is passed as an argument.",
-        () => {
-            new AtomNode("", new Point(0, 0), new Rectangle(new Point(0, 0), 0, 0));
+    const pt: Point = new Point(0, 0);
+    const rect: Rectangle = new Rectangle(pt, 0, 0);
+
+    test.fails.each([
+        [""],
+        ["00"],
+        ["      "],
+        ["Call me Ishmael. Some time ago, never mind how long precisely, "],
+        ["SPLIT YOUR LUNGS WITH BLOOD AND THUNDER... WHEN YOU SEE THE WHITE WHALE!"],
+    ])("Construction with identifiers not of length 1 should fail.", val => {
+        new AtomNode(val, pt, rect);
+    });
+
+    test.fails.each([["1"], ["."], [" "], ["Б"], ["ц"]])(
+        "Construction with identifier %s not in the Latin alphabet should fail.",
+        val => {
+            new AtomNode(val, pt, rect);
         }
     );
 
@@ -36,14 +49,6 @@ describe("AtomNode containsPoint soliloquy:", () => {
     );
 
     test.each([
-        [0, 0], //each of four corners of the bounding box
-        [0, 10],
-        [10, 0],
-        [10, 10],
-        [0, 5], //Points on each of the four sides
-        [5, 0],
-        [5, 10],
-        [10, 5],
         [1, 1], //arbitrary Points that should be in here
         [9, 9],
         [7.561231231231213, 4.12783918264],
@@ -56,10 +61,20 @@ describe("AtomNode containsPoint soliloquy:", () => {
     );
 
     test.each([
+        [0, 0], //each of four corners of the bounding box
+        [0, 10],
+        [10, 0],
+        [10, 10],
+        [0, 5], //Points on each of the four sides
+        [5, 0],
+        [5, 10],
+        [10, 5],
         [-1, -1], //arbitrary points that should not be in here
         [-1, 10],
         [10, -1],
         [11, 11],
+        [200, -12398],
+        [-12390, 43],
     ])(
         "AtomNode with Rectangle of TL vertex (0, 0), {w, h} = 10 should not contain Point (%f, %f).",
         (x, y) => {

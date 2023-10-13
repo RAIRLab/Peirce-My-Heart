@@ -10,11 +10,6 @@ let point: Point;
 describe("Point constructor soliloquy: ", () => {
     point = new Point(0, 0);
 
-    //TODO: No more default constructor - is this test necessary?
-    test("Default constructor should create a Point with x = 0 and y = 0.", () => {
-        expect(point.toString()).toBe("(0, 0)");
-    });
-
     test.each([
         [10, 10, "(10, 10)"],
         [-10, 10, "(-10, 10)"],
