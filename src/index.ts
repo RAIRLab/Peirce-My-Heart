@@ -86,6 +86,7 @@ function atomMode() {
  * Calls the function to save the file
  */
 async function saveMode() {
+    //TODO: CTRL+S Hotkey
     const file = saveFile(tree);
 
     if ("showSaveFilePicker" in window) {
@@ -133,10 +134,14 @@ async function loadMode() {
 
     const file = await fileHandle.getFile();
     const reader = new FileReader();
-    reader.addEventListener("load", e => {
+    reader.addEventListener("load", () => {
         const aegData = reader.result;
-        tree = loadFile(aegData);
-        redrawCut(tree.sheet); //ERR0R => TREE NOT BUILT  PROPERLY
+        const loadData = loadFile(aegData);
+        if (loadData instanceof AEGTree) {
+            tree = loadData;
+            redrawCut(tree.sheet);
+        }
+        //TODO: else popup error
     });
 
     reader.readAsText(file);
