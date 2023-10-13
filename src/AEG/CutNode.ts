@@ -1,3 +1,4 @@
+import {shapeContains} from "./AEGUtils";
 import {AtomNode} from "./AtomNode";
 import {Ellipse} from "./Ellipse";
 import {Point} from "./Point";
@@ -115,9 +116,9 @@ export class CutNode {
         }
 
         if (otherNode instanceof AtomNode) {
-            return this.internalEllipse.contains(otherNode.rectangle);
+            return shapeContains(this.internalEllipse, otherNode.rectangle);
         } else {
-            return this.internalEllipse.contains(otherNode.ellipse as Ellipse);
+            return shapeContains(this.internalEllipse, otherNode.internalEllipse!);
         }
     }
 
