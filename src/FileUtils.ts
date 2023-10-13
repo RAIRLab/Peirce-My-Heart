@@ -57,7 +57,6 @@ export function loadFile(fileData: string | ArrayBuffer | null): AEGTree | null 
     if (typeof fileData === "string") {
         const data: sheetObj = JSON.parse(fileData);
         const childData: (atomObj | cutObj)[] = data.internalSheet.internalChildren;
-        console.log(childData);
 
         const tree: AEGTree = new AEGTree();
         const children: (AtomNode | CutNode)[] = [];
@@ -73,7 +72,6 @@ export function loadFile(fileData: string | ArrayBuffer | null): AEGTree | null 
         });
 
         tree.sheet.children = children;
-        console.log(tree);
         return tree;
     }
 
