@@ -15,7 +15,7 @@ export function shapesOverlap(
     if (newShape instanceof Rectangle) {
         if (existingShape instanceof Rectangle) {
             //For rectangle-rectangle, check if their edges intersect
-            return edgesWithin(newShape, existingShape) && edgesWithin(existingShape, newShape);
+            return edgesWithin(newShape, existingShape);
         } else {
             return ellipseRectangleCollision(existingShape as Ellipse, newShape as Rectangle);
         }
@@ -133,11 +133,15 @@ function edgesWithin(rect1: Rectangle, rect2: Rectangle): boolean {
     //2 equal edges (aka edges on edges) are considered as intersection
     return (
         //Check if the horizontal edges are within
-        (corners1[0].y <= corners2[0].y && corners1[2].y >= corners2[0].y) ||
-        (corners1[0].y <= corners2[2].y && corners1[2].y >= corners2[2].y) ||
+        ((corners1[0].y <= corners2[0].y && corners1[2].y >= corners2[0].y) ||
+            (corners1[0].y <= corners2[2].y && corners1[2].y >= corners2[2].y) ||
+            (corners2[0].y <= corners1[0].y && corners2[2].y >= corners1[0].y) ||
+            (corners2[0].y <= corners1[2].y && corners2[2].y >= corners1[2].y)) &&
         //Check if the vertical edges are within
-        (corners1[0].x <= corners2[0].x && corners1[1].x >= corners2[0].x) ||
-        (corners1[0].x <= corners2[1].x && corners1[1].x >= corners2[1].x)
+        ((corners1[0].x <= corners2[0].x && corners1[1].x >= corners2[0].x) ||
+            (corners1[0].x <= corners2[1].x && corners1[1].x >= corners2[1].x) ||
+            (corners2[0].x <= corners1[0].x && corners2[1].x >= corners1[0].x) ||
+            (corners2[0].x <= corners1[1].x && corners2[1].x >= corners1[1].x))
     );
 }
 
@@ -204,22 +208,18 @@ function getWidestCoordinates(ellipse: Ellipse): Point[] {
  * @returns An array of points along the bounding curve of the ellipse
  */
 export function getEllipsePoints(ellipse: Ellipse): Point[] {
-    const amount = 400;
     const points: Point[] = [];
-    const pointDist = ellipse.radiusX / (amount / 4);
-
-    points[0] = getWidestCoordinates(ellipse)[3];
     let x: number;
     let y: number;
+    let curve = 1;
 
-    for (let i = 1; i < amount; i++) {
-        if (i <= amount / 2) {
-            x = points[i - 1].x + pointDist;
-            y = getCurvePoint(ellipse, x, 1);
-        } else {
-            x = points[i - 1].x - pointDist;
-            y = getCurvePoint(ellipse, x, -1);
+    for (let i = 0; i < 360; i++) {
+        x = ellipse.center.x + ellipse.radiusX * Math.cos(i * (Math.PI / 180));
+        if (i > 180) {
+            curve = -1;
         }
+        y = getCurvePoint(ellipse, x, curve);
+
         points[i] = new Point(x, y);
     }
 
