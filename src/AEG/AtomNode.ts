@@ -30,7 +30,7 @@ export class AtomNode {
      * @param val (Required) The value of the proposition represented by this node.
      */
     public constructor(val: string, origin?: Point, rect?: Rectangle) {
-        this.internalRectangle = rect ?? new Rectangle();
+        this.internalRectangle = rect ?? new Rectangle(new Point(0, 0), 0, 0);
         this.internalIdentifier = val;
         this.internalOrigin = origin ?? new Point();
     }
