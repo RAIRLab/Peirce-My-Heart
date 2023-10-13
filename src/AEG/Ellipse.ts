@@ -30,16 +30,15 @@ export class Ellipse {
 
     /**
      * Construct an ellipse using the given points and radii.
-     * If no values specified, default them to 0.
      * @param center The center point of the ellipse.
      * @param radX The horizontal radius of the ellipse.
      * @param radY The vertical radius of the ellipse.
      * @throws Errors on NaN, Infinity, and negative radii lengths.
      */
-    public constructor(center?: Point, radX?: number, radY?: number) {
-        this.center = center ?? new Point();
-        this.radiusX = radX ?? 0;
-        this.radiusY = radY ?? 0;
+    public constructor(center: Point, radX: number, radY: number) {
+        this.center = center;
+        this.radiusX = radX;
+        this.radiusY = radY;
 
         if (!Number.isFinite(this.radiusX) || !Number.isFinite(this.radiusY)) {
             throw new Error("A radius passed into an Ellipse construction was NaN or Infinity.");

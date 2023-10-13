@@ -2,6 +2,7 @@ import {AtomNode} from "./AtomNode";
 import {CutNode} from "./CutNode";
 import {Point} from "./Point";
 import {Ellipse} from "./Ellipse";
+import {Rectangle} from "./Rectangle";
 import {shapesOverlap, shapesIntersect} from "./AEGUtils";
 
 /**
@@ -115,11 +116,12 @@ export class AEGTree {
      * @returns the result of each shape's respective intersect() methods.
      */
     private intersects(incomingNode: AtomNode | CutNode, otherNode: AtomNode | CutNode) {
-        incomingShape : Rectangle | Ellipse = \ 
+        const incomingShape: Rectangle | Ellipse =
             incomingNode instanceof AtomNode ? incomingNode.rectangle : incomingNode.ellipse!;
-        otherShape : Rectangle | Ellipse = \ 
-            otherNode instanceof AtomNode ? otherNode .rectangle : otherNode .ellipse!; 
-        return shapesIntersect(incomingShape,otherShape)  
+        const otherShape: Rectangle | Ellipse =
+            otherNode instanceof AtomNode ? otherNode.rectangle : otherNode.ellipse!;
+
+        return shapesIntersect(incomingShape, otherShape);
     }
 
     /**

@@ -24,17 +24,17 @@ export class AtomNode {
 
     /**
      * Construct an atom node with given boundary box and proposition.
-     * @param rect (Required) The rectangle to be set as the boundary box of this node.
+     * @param rect The rectangle to be set as the boundary box of this node.
      * @param origin Top left corner of the passed in Rectangle
-     * @param val (Required) The value of the proposition represented by this node.
+     * @param val The value of the proposition represented by this node.
      */
-    public constructor(val: string, origin?: Point, rect?: Rectangle) {
+    public constructor(val: string, origin: Point, rect: Rectangle) {
         if (val === "") {
             throw new Error("Empty string passed in for identifier in AtomNode constructor.");
         }
         this.internalIdentifier = val;
-        this.internalOrigin = origin ?? new Point();
-        this.internalRectangle = rect ?? new Rectangle(new Point(0, 0), 0, 0);
+        this.internalOrigin = origin;
+        this.internalRectangle = rect;
     }
 
     /**

@@ -13,7 +13,11 @@ const atomDisplay = <HTMLParagraphElement>document.getElementById("atomDisplay")
 let atomMetrics: TextMetrics;
 let wasOut: boolean;
 
-let currentAtom: AtomNode = new AtomNode("A"); //Default character A
+let currentAtom: AtomNode = new AtomNode(
+    "A",
+    new Point(0, 0),
+    new Rectangle(new Point(0, 0), 0, 0)
+); //Default character A
 atomDisplay.innerHTML = currentAtom.identifier;
 
 /**
@@ -87,7 +91,11 @@ export function atomMouseUp() {
     if (tree.canInsert(currentAtom) && !wasOut) {
         tree.insert(currentAtom);
     }
-    currentAtom = new AtomNode(currentAtom.identifier);
+    currentAtom = new AtomNode(
+        currentAtom.identifier,
+        new Point(0, 0),
+        new Rectangle(new Point(0, 0), 0, 0)
+    );
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     redrawCut(tree.sheet);
     console.log(tree.toString());
@@ -97,7 +105,11 @@ export function atomMouseUp() {
  * If the mouse leaves the canvas resets the current atom.
  */
 export function atomMouseOut() {
-    currentAtom = new AtomNode(currentAtom.identifier);
+    currentAtom = new AtomNode(
+        currentAtom.identifier,
+        new Point(0, 0),
+        new Rectangle(new Point(0, 0), 0, 0)
+    );
     wasOut = true;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     redrawCut(tree.sheet);

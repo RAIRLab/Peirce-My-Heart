@@ -12,7 +12,7 @@ describe("AtomNode constructor soliloquy:", () => {
     test.fails(
         "AtomNode constructor should fail if the empty string is passed as an argument.",
         () => {
-            new AtomNode("");
+            new AtomNode("", new Point(0, 0), new Rectangle(new Point(0, 0), 0, 0));
         }
     );
 

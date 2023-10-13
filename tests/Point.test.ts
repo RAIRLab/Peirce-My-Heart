@@ -8,7 +8,9 @@ import {Point} from "../src/AEG/Point";
  */
 let point: Point;
 describe("Point constructor soliloquy: ", () => {
-    point = new Point();
+    point = new Point(0, 0);
+
+    //TODO: No more default constructor - is this test necessary?
     test("Default constructor should create a Point with x = 0 and y = 0.", () => {
         expect(point.toString()).toBe("(0, 0)");
     });
@@ -39,7 +41,7 @@ describe("Point constructor soliloquy: ", () => {
 });
 
 describe("Point set soliloquy:", () => {
-    const point2 = new Point();
+    const point2 = new Point(0, 0);
     test.each([
         [10, 10, "(10, 10)"],
         [-10, 10, "(-10, 10)"],
@@ -66,7 +68,7 @@ describe("Point set soliloquy:", () => {
 });
 
 describe("Point distance soliloquy:", () => {
-    point = new Point();
+    point = new Point(0, 0);
     test.each([
         [point, point, 0],
         [point, new Point(10, 10), Math.sqrt(200)],
@@ -78,7 +80,7 @@ describe("Point distance soliloquy:", () => {
 });
 
 describe("Point distance soliloquy (float):", () => {
-    point = new Point();
+    point = new Point(0, 0);
     test.each([
         [point, new Point(0.00000000000001, 0.000000000001), 0],
         [point, new Point(-0.00000000001, -0.0000000000001), 0],
