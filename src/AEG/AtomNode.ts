@@ -1,6 +1,4 @@
 import {Rectangle} from "./Rectangle";
-import {CutNode} from "./CutNode";
-import {Ellipse} from "./Ellipse";
 import {Point} from "./Point";
 
 /**
@@ -26,13 +24,28 @@ export class AtomNode {
 
     /**
      * Construct an atom node with given boundary box and proposition.
-     * @param rect (Required) The rectangle to be set as the boundary box of this node.
-     * @param val (Required) The value of the proposition represented by this node.
+     * @param rect The rectangle to be set as the boundary box of this node.
+     * @param origin Top left corner of the passed in Rectangle
+     * @param val The value of the proposition represented by this node.
      */
-    public constructor(val: string, origin?: Point, rect?: Rectangle) {
-        this.internalRectangle = rect ?? new Rectangle(new Point(0, 0), 0, 0);
+    public constructor(val: string, origin: Point, rect: Rectangle) {
+        if (val.length !== 1) {
+            throw new Error(
+                "String of length " +
+                    val.length +
+                    " passed in as identifier in AtomNode constructor, which is not of length 1."
+            );
+        }
+        if (!/^[A-Za-z]$/.test(val)) {
+            throw new Error(
+                val +
+                    " not contained in Latin alphabet passed in as identifier in AtomNode constructor."
+            );
+        }
+
         this.internalIdentifier = val;
-        this.internalOrigin = origin ?? new Point();
+        this.internalOrigin = origin;
+        this.internalRectangle = rect;
     }
 
     /**
@@ -90,19 +103,6 @@ export class AtomNode {
     }
 
     /**
-     * Method that checks whether a node is contained within this node.
-     * @param otherNode The node that might be within this node.
-     * @returns True, if the node is within this node. Else, false.
-     */
-    public containsNode(otherNode: AtomNode | CutNode): boolean {
-        if (otherNode instanceof AtomNode) {
-            return this.internalRectangle.contains((otherNode as AtomNode).rectangle);
-        } else {
-            return this.internalRectangle.contains((otherNode as CutNode).ellipse as Ellipse);
-        }
-    }
-
-    /**
      * Method that returns string representation of an atom node.
      * @returns The value and boundary box of an atom node.
      */
@@ -110,8 +110,7 @@ export class AtomNode {
         return (
             "An atom representing the proposition: " +
             this.internalIdentifier +
-            " and " +
-            "Boundary box of: " +
+            " and Boundary box of: " +
             this.internalRectangle.toString()
         );
     }

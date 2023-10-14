@@ -13,8 +13,8 @@ if (res === null) {
 }
 const ctx: CanvasRenderingContext2D = res;
 
-let currentEllipse: Ellipse = new Ellipse();
-let startingPoint: Point = new Point();
+let currentEllipse: Ellipse = new Ellipse(new Point(0, 0), 0, 0);
+let startingPoint: Point = new Point(0, 0);
 let wasOut: boolean;
 
 /**
@@ -34,8 +34,8 @@ export function cutMouseDown(event: MouseEvent) {
  * @param event The mouse move event
  */
 export function cutMouseMove(event: MouseEvent) {
-    const newCut: CutNode = new CutNode(new Ellipse());
-    const currentPoint: Point = new Point();
+    const newCut: CutNode = new CutNode(new Ellipse(new Point(0, 0), 0, 0));
+    const currentPoint: Point = new Point(0, 0);
     currentPoint.x = event.clientX;
     currentPoint.y = event.clientY;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -59,7 +59,7 @@ export function cutMouseMove(event: MouseEvent) {
  */
 export function cutMouseUp(event: MouseEvent) {
     let newCut: CutNode = new CutNode(currentEllipse);
-    const currentPoint: Point = new Point();
+    const currentPoint: Point = new Point(0, 0);
     currentPoint.x = event.clientX;
     currentPoint.y = event.clientY;
     currentEllipse = createEllipse(startingPoint, currentPoint);
@@ -67,7 +67,7 @@ export function cutMouseUp(event: MouseEvent) {
     if (tree.canInsert(newCut) && !wasOut && ellipseLargeEnough(currentEllipse)) {
         tree.insert(newCut);
     }
-    startingPoint = new Point();
+    startingPoint = new Point(0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     redrawCut(tree.sheet);
 }
@@ -77,7 +77,7 @@ export function cutMouseUp(event: MouseEvent) {
  */
 export function cutMouseOut() {
     wasOut = true;
-    startingPoint = new Point();
+    startingPoint = new Point(0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     redrawCut(tree.sheet);
 }

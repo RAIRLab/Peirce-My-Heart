@@ -75,11 +75,11 @@ describe("Rectangle containsPoint soliloquy:", () => {
     });
 
     test.each([
-        [0, 0],
+        [0, 0], //corners
         [0, 10],
         [10, 0],
         [10, 10],
-        [0, 5],
+        [0, 5], //edges
         [5, 0],
         [10, 5],
         [5, 10],
@@ -96,7 +96,7 @@ describe("Rectangle containsPoint soliloquy:", () => {
         [10, 10.1],
         [10.1, 10],
         [10.1, 10.1],
-    ])("Rectangle of TL vertex (0, 0), {w, h} = 10 should not contain Point (%f, %f).", (x, y) => {
+    ])("Rectangle of TL vertex (0, 0), {w, h} = 10 should contain Point (%f, %f).", (x, y) => {
         expect(rect.containsPoint(new Point(x, y))).toBeFalsy();
     });
 });
@@ -174,8 +174,13 @@ describe("Rectangle-on-Rectangle contains soliloquy:", () => {
         [10, 0, 0, 0],
         [0, 10, 0, 0],
         [10, 10, 0, 0],
+        [10, 10, 10, 10], //shares only the bottom right corner of the existing Rectangle
+        [10, 0, 10, 10], //shares just the right side of the existing Rectangle, continues right
+        [0, 10, 10, 10], //shares just the bottom of the existing Rectangle, continues down
         [5, 5, 5, 5], //begins inside the existing Rectangle but touches that Rectangle's bounds from inside
-        [-5, -5, 5, 5], //begins outside the existing Rectangle but touches that Rectangle's bounds from outside
+        [2, 2, 8, 2],
+        [-5, 5, 5, 5], //begins outside the existing Rectangle but touches that Rectangle's bounds from outside
+        [-2, 2, 2, 4],
     ])(
         "Rectangle of TL vertex (0, 0) and {w, h} = 10 should not contain Rectangle of TL vertex (%f, %f) and w = %f, h = %f.",
         (x, y, w, h) => {

@@ -17,7 +17,10 @@
         "vite",
         "vitetest",
         "xshift",
-        "yshift"
+        "yshift",
+        "ICSI",
+        "RAIR",
+        "npmignore"
     ],
     "editor.rulers": [100]
 }
