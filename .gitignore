@@ -2,3 +2,5 @@ node_modules
 dist
 build
 peircemyheart-*
+docs
+public/docs

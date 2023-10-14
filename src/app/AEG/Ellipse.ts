@@ -1,5 +1,6 @@
 import {Point} from "./Point";
 import {Rectangle} from "./Rectangle";
+import {shapesOverlap, shapeContains, signedDistanceFromEllipse} from "./AEGUtils";
 
 /**
  * Class that defines an Ellipse.
@@ -29,15 +30,23 @@ export class Ellipse {
 
     /**
      * Construct an ellipse using the given points and radii.
-     * If no values specified, default them to 0.
      * @param center The center point of the ellipse.
      * @param radX The horizontal radius of the ellipse.
      * @param radY The vertical radius of the ellipse.
+     * @throws Errors on NaN, Infinity, and negative radii lengths.
      */
-    public constructor(center?: Point, radX?: number, radY?: number) {
-        this.center = center ?? new Point();
-        this.radiusX = radX ?? 0;
-        this.radiusY = radY ?? 0;
+    public constructor(center: Point, radX: number, radY: number) {
+        this.center = center;
+        this.radiusX = radX;
+        this.radiusY = radY;
+
+        if (!Number.isFinite(this.radiusX) || !Number.isFinite(this.radiusY)) {
+            throw new Error("A radius passed into an Ellipse construction was NaN or Infinity.");
+        } else if (this.radiusX !== undefined && this.radiusX < 0) {
+            throw new Error("Horizontal radius in an Ellipse construction was negative.");
+        } else if (this.radiusY !== undefined && this.radiusY < 0) {
+            throw new Error("Vertical radius in an Ellipse construction was negative.");
+        }
 
         const boundingVertex: Point = new Point(
             this.center.x - this.radiusX,
@@ -47,30 +56,12 @@ export class Ellipse {
     }
 
     /**
-     * Method that returns the string representation of an ellipse.
-     * @returns The coordinates and radii for the ellipse.
-     */
-    public toString(): string {
-        return (
-            "An ellipse with\nCenter at: " +
-            this.center.toString +
-            ", \n" +
-            "Horizontal Radius of: " +
-            this.radiusX +
-            ", \n" +
-            "Vertical Radius of: " +
-            this.radiusY
-        );
-    }
-
-    /**
-     * Method that checks whether a point is within this ellipse.
+     * Method that checks whether a point is within the given ellipse.
      * @param otherPoint The point that might be inside this ellipse.
      * @returns True, if the point is inside this ellipse. Else, false
      */
-    public containsPoint(otherPoint: Point): boolean {
-        //ELLIPSE TO BE IMPLEMENTED ACCURATELY
-        return this.boundingBox.containsPoint(otherPoint);
+    public containsPoint(point: Point): boolean {
+        return signedDistanceFromEllipse(this, point) < 0;
     }
 
     /**
@@ -79,8 +70,7 @@ export class Ellipse {
      * @returns True, if there is an overlap. Else, false.
      */
     public overlaps(otherShape: Rectangle | Ellipse): boolean {
-        //ELLIPSE TO BE IMPLEMENTED ACCURATELY
-        return this.boundingBox.overlaps(otherShape);
+        return shapesOverlap(this, otherShape);
     }
 
     /**
@@ -88,8 +78,24 @@ export class Ellipse {
      * @param otherShape The shape that might be within this ellipse.
      * @returns True, if the shape is within this ellipse. Else, false.
      */
-    public containsShape(otherShape: Rectangle | Ellipse): boolean {
-        //ELLIPSE TO BE IMPLEMENTED ACCURATELY
-        return this.boundingBox.containsShape(otherShape);
+    public contains(otherShape: Rectangle | Ellipse): boolean {
+        return shapeContains(this, otherShape);
+    }
+
+    /**
+     * Method that returns the string representation of an ellipse.
+     * @returns The coordinates and radii for the ellipse.
+     */
+    public toString(): string {
+        return (
+            "An ellipse with Center at: " +
+            this.center.toString() +
+            ", Horizontal radius: " +
+            this.radiusX +
+            ", Vertical radius: " +
+            this.radiusY +
+            ", Bounding box: " +
+            this.boundingBox.toString()
+        );
     }
 }

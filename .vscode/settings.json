@@ -1,15 +1,27 @@
 {
     "cSpell.words": [
         "Anusha",
+        "atomnode",
+        "hasmousedown",
         "Huda",
         "jamesoswald",
+        "mosueout",
         "peaceiris",
         "peircemyheart",
+        "radx",
+        "rady",
+        "Rensselaer",
         "styleguidelines",
         "Subrina",
         "Tiwari",
+        "vite",
+        "wicg",
+        "vitetest",
         "xshift",
-        "yshift"
+        "yshift",
+        "ICSI",
+        "RAIR",
+        "npmignore"
     ],
     "editor.rulers": [100]
 }

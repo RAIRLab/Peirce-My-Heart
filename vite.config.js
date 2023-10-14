@@ -1,3 +1,5 @@
+/// <reference types="vitest" />
+
 /**
  * @author James Oswald
  */
@@ -7,33 +9,26 @@ import {defineConfig} from 'vite';
 import {viteSingleFile} from "vite-plugin-singlefile";
 
 export default defineConfig(({command, mode}) => {
-    let root = "src/app";
-    let outDir = "../../build";
-    if (mode === "electron") {
-        return {
-            root: root,
-            publicDir: "../electron",
-            plugins:[viteSingleFile()],
-            build:{
-                outDir: outDir,
-                emptyOutDir: true,
-            }
-        };
-    } else {
-        return {
-            root: root,
-            build:{
-                outDir: outDir,
-                emptyOutDir: true,
-                rollupOptions:{
-                    //Paths to the multiple input pages for our application
-                    input:{
-                        index: resolve(__dirname, root, "index.html"),
-                        about: resolve(__dirname, root, "about.html"),
-                        homepage: resolve(__dirname, root, "aeg.html")
-                    }
+    let root = "src"
+    return {
+        root: root,
+        base: "/Peirce-My-Heart/",
+        publicDir: "../public/",
+        build:{
+            //only minify if you're trying to debug in the chrome debugger, otherwise use vsc debug
+            //minify: mode === "production", 
+            outDir: "../build",
+            emptyOutDir: true,
+            rollupOptions:{
+                input:{
+                    index: resolve(__dirname, root, "index.html"),
+                    about: resolve(__dirname, root, "about.html"),
+                    homepage: resolve(__dirname, root, "aeg.html")
                 }
             }
-        };
-    }
+        },
+        test:{
+            include:["../tests/*"]   
+        }
+    };
 })

@@ -1,18 +1,18 @@
-name: Validate Documentation Build
+name: Run all tests
 
 on:
   pull_request:
     branches: [ master ]
 
 jobs:
-  buildDocs:
+  test:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install NPM deps
+      - name: Install NPM dependencies
         run: npm install
 
-      - name: Build Docs
-        run: npm run build-docs
+      - name: Run all vitest tests
+        run: npm run test

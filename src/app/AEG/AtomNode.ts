@@ -1,10 +1,8 @@
 import {Rectangle} from "./Rectangle";
-import {CutNode} from "./CutNode";
-import {Ellipse} from "./Ellipse";
 import {Point} from "./Point";
 
 /**
- * Class that defines an Atom.
+ * Defines an Atom.
  * @author Anusha Tiwari
  * @author Ryan Reilly
  */
@@ -12,27 +10,96 @@ export class AtomNode {
     /**
      * The rectangle signifying the boundary box of this node.
      */
-    rect: Rectangle;
+    private internalRectangle: Rectangle;
 
     /**
      * The string value of the proposition represented by this node.
      */
-    identifier: string;
+    private internalIdentifier: string;
 
     /**
      * The point the atom is initially placed.
      */
-    origin: Point;
+    private internalOrigin: Point;
 
     /**
      * Construct an atom node with given boundary box and proposition.
      * @param rect The rectangle to be set as the boundary box of this node.
+     * @param origin Top left corner of the passed in Rectangle
      * @param val The value of the proposition represented by this node.
      */
-    public constructor(val: string, origin: Point, rect?: Rectangle) {
-        this.rect = rect ?? new Rectangle();
-        this.identifier = val;
-        this.origin = origin;
+    public constructor(val: string, origin: Point, rect: Rectangle) {
+        if (val.length !== 1) {
+            throw new Error(
+                "String of length " +
+                    val.length +
+                    " passed in as identifier in AtomNode constructor, which is not of length 1."
+            );
+        }
+        if (!/^[A-Za-z]$/.test(val)) {
+            throw new Error(
+                val +
+                    " not contained in Latin alphabet passed in as identifier in AtomNode constructor."
+            );
+        }
+
+        this.internalIdentifier = val;
+        this.internalOrigin = origin;
+        this.internalRectangle = rect;
+    }
+
+    /**
+     * Accessor to get the bounding rectangle of the Atom Node.
+     * @returns The bounding rectangle of this Atom Node
+     */
+    public get rectangle(): Rectangle {
+        return this.internalRectangle;
+    }
+
+    /**
+     * Modifier to set the bounding rectangle of the Atom Node.
+     */
+    public set rectangle(rect: Rectangle) {
+        this.internalRectangle = rect;
+    }
+
+    /**
+     * Accessor to get the identifier of the Atom Node.
+     * @returns The identifier of this Atom Node
+     */
+    public get identifier(): string {
+        return this.internalIdentifier;
+    }
+
+    /**
+     * Modifier to set the identifier of the Atom Node
+     */
+    public set identifier(identifier: string) {
+        this.internalIdentifier = identifier;
+    }
+
+    /**
+     * Accessor to get the origin (top left) vertex of the bounding rectangle of the Atom Node.
+     * @returns The origin of the bounding rectangle
+     */
+    public get origin(): Point {
+        return this.internalOrigin;
+    }
+
+    /**
+     * Modifier to set the origin (top left) vertex of the bounding rectangle of the Atom Node.
+     */
+    public set origin(point: Point) {
+        this.internalOrigin = point;
+    }
+
+    /**
+     * Method that checks whether a point is contained within this node.
+     * @param otherPoint The point that might be within this node.
+     * @returns True, if the point is within this node. Else, false.
+     */
+    public containsPoint(otherPoint: Point): boolean {
+        return this.internalRectangle.containsPoint(otherPoint);
     }
 
     /**
@@ -42,33 +109,9 @@ export class AtomNode {
     public toString(): string {
         return (
             "An atom representing the proposition: " +
-            this.identifier +
-            " and \n" +
-            "Boundary box of: \n" +
-            this.rect.toString
+            this.internalIdentifier +
+            " and Boundary box of: " +
+            this.internalRectangle.toString()
         );
-    }
-
-    /**
-     * Method that checks whether a point is contained within this node.
-     * @param otherPoint The point that might be within this node.
-     * @returns True, if the point is within this node. Else, false.
-     */
-    public containsPoint(otherPoint: Point): boolean {
-        return this.rect.containsPoint(otherPoint);
-    }
-
-    /**
-     * Method that checks whether a node is contained within this node.
-     * @param otherNode The node that might be within this node.
-     * @returns True, if the node is within this node. Else, false.
-     */
-    public containsNode(otherNode: AtomNode | CutNode): boolean {
-        if (otherNode instanceof AtomNode) {
-            return this.rect.containsShape((otherNode as AtomNode).rect);
-        } else {
-            //ELLIPSE TO BE IMPLEMENTED ACCURATELY
-            return this.rect.containsShape((otherNode as CutNode).ellipse as Ellipse);
-        }
     }
 }

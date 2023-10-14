@@ -14,11 +14,11 @@ jobs:
       - name: Install NPM deps
         run: npm install
 
-      - name: Vite build
-        run: npm run build
-
       - name: Documentation Generation
         run: npm run build-docs
+
+      - name: Vite build
+        run: npm run build
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3

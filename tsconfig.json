@@ -4,8 +4,10 @@
     "lib": ["dom"],
     "rootDir": ".",
     "declaration": false,
+    "types": [ "@types/wicg-file-system-access"]
   },
   "include": [
-    "src/app/**/*.ts",
+    "src/**/*.ts",
+    "tests/**/*.ts"
   ]
 }

@@ -1,44 +1,110 @@
 import {AtomNode} from "./AtomNode";
 import {CutNode} from "./CutNode";
 import {Point} from "./Point";
+import {Ellipse} from "./Ellipse";
+import {Rectangle} from "./Rectangle";
+import {shapesOverlap, shapesIntersect} from "./AEGUtils";
 
+/**
+ * Represents the background AEG tree structure.
+ * @author Ryan Reilly
+ * @author Anusha Tiwari
+ */
 export class AEGTree {
-    sheet: CutNode;
+    private internalSheet: CutNode;
 
     public constructor(sheet?: CutNode) {
-        this.sheet = sheet ?? new CutNode();
-        this.sheet.ellipse = null;
+        this.internalSheet = sheet ?? new CutNode(null);
+    }
+
+    public get sheet(): CutNode {
+        return this.internalSheet;
+    }
+
+    public set sheet(sheet: CutNode) {
+        this.internalSheet = sheet;
     }
 
     /**
-     * Method that recursively ensures the bounding box structure of this AEG is consistent with
-     * the hierarchy. It is consistent if bounding boxes of children nodes are within the bounding
-     * box of the parent node.
-     * @returns True, if the structure is consistent. Else, false.
+     * Calls verifyAEG() with the sheet of assertion as its argument.
+     * @returns the result of verifyAEG() called with the sheet of assertion
      */
-    public verifyAEG(): boolean {
-        return this.sheet.verifyCut();
+    public verify(): boolean {
+        return this.verifyAEG(this.internalSheet);
     }
 
     /**
-     * Method that checks whether the given node can be inserted into this tree
+     * Checks for consistency in the tree's structure.
+     * Structural consistency is achieved when:
+     * All bounding boxes of currentCut's child nodes are within the bounding box of currentCut,
+     * The same is true for each CutNode within currentCut,
+     * And the children of each cut level do not overlap with each other.
+     * @param currentCut: The cut for which we are checking consistency.
+     * @returns True, if the structure is structurally consistent. Else, false.
+     */
+    private verifyAEG(currentCut: CutNode): boolean {
+        for (let i = 0; i < currentCut.children.length; i++) {
+            //Check that all children, in this level, are in currentCut
+            if (!currentCut.containsNode(currentCut.children[i])) {
+                return false;
+            }
+
+            //Check for overlaps on the same level
+            for (let j = i + 1; j < currentCut.children.length; j++) {
+                if (this.overlaps(currentCut.children[i], currentCut.children[j])) {
+                    return false;
+                }
+            }
+        }
+        for (let i = 0; i < currentCut.children.length; i++) {
+            //Check one level deeper if the child is a CutNode. Recursive case
+            if (
+                currentCut.children[i] instanceof CutNode &&
+                !this.verifyAEG(currentCut.children[i] as CutNode)
+            ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Checks whether the given node can be inserted into this tree
      * at a given point without overlapping any bounding boxes.
      * @param incomingNode The node to be inserted.
-     * @param insertionPoint The point at which the node must be inserted
      * @returns True, if the node can be inserted. Else, false
      */
-    public canInsertAEG(incomingNode: AtomNode | CutNode, insertionPoint: Point): boolean {
-        return this.sheet.canInsert(incomingNode, insertionPoint);
+    public canInsert(incomingNode: AtomNode | CutNode): boolean {
+        const currentCut: CutNode = this.internalSheet.getCurrentCut(incomingNode);
+        for (let i = 0; i < currentCut.children.length; i++) {
+            if (this.intersects(incomingNode, currentCut.children[i])) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
-     * Method that inserts a given node into this tree at a given point.
+     * Inserts a given node into this tree, if possible.
+     * Throws an error otherwise.
      * @param incomingNode The node to be inserted
-     * @param insertionPoint The point at which the node should be inserted
      */
-    public insertAEG(incomingNode: AtomNode | CutNode, insertionPoint: Point): void {
-        if (this.canInsertAEG(incomingNode, insertionPoint)) {
-            this.sheet.insert(incomingNode, insertionPoint);
+    public insert(incomingNode: AtomNode | CutNode): void {
+        if (!this.canInsert(incomingNode)) {
+            throw new Error("Insertion failed. " + incomingNode + " had a collision.");
+        }
+
+        const currentCut: CutNode = this.internalSheet.getCurrentCut(incomingNode);
+        const originalChildren: (AtomNode | CutNode)[] = [...currentCut.children];
+        currentCut.child = incomingNode;
+
+        if (incomingNode instanceof CutNode) {
+            for (let i = originalChildren.length - 1; i >= 0; i--) {
+                if (incomingNode.containsNode(originalChildren[i])) {
+                    incomingNode.child = originalChildren[i];
+                    currentCut.children.splice(i, 1);
+                }
+            }
         }
     }
 
@@ -48,6 +114,60 @@ export class AEGTree {
      * @returns True, if the node was successfully removed. Else, false
      */
     public remove(incomingPoint: Point): void {
-        this.sheet.remove(incomingPoint);
+        this.internalSheet.remove(incomingPoint);
+    }
+
+    /**
+     * Determines if the incoming node's boundaries intersect the other node's boundaries.
+     * @param incomingNode the incoming node
+     * @param otherNode the other node
+     * @returns the result of each shape's respective intersect() methods.
+     */
+    private intersects(incomingNode: AtomNode | CutNode, otherNode: AtomNode | CutNode) {
+        const incomingShape: Rectangle | Ellipse =
+            incomingNode instanceof AtomNode ? incomingNode.rectangle : incomingNode.ellipse!;
+        const otherShape: Rectangle | Ellipse =
+            otherNode instanceof AtomNode ? otherNode.rectangle : otherNode.ellipse!;
+
+        return shapesIntersect(incomingShape, otherShape);
+    }
+
+    /**
+     * Determines if the incoming node's boundaries overlap the other node's boundaries.
+     * @param incomingNode the incoming node
+     * @param otherNode the other node
+     * @returns the result of each shape's respective overlaps() methods.
+     */
+    private overlaps(incomingNode: AtomNode | CutNode, otherNode: AtomNode | CutNode): boolean {
+        let ellipse1: Ellipse;
+        let ellipse2: Ellipse;
+
+        if (incomingNode instanceof AtomNode) {
+            if (otherNode instanceof AtomNode) {
+                return shapesOverlap(
+                    (incomingNode as AtomNode).rectangle,
+                    (otherNode as AtomNode).rectangle
+                );
+            } else {
+                //the case where otherNode is the sheet is handled in canInsert()
+                //and all child.ellipse[i] will never be null. this is the reason for ! below
+
+                ellipse1 = (otherNode as CutNode).ellipse!;
+                return shapesOverlap((incomingNode as AtomNode).rectangle, ellipse1);
+            }
+        } else {
+            if (otherNode instanceof AtomNode) {
+                ellipse1 = (incomingNode as CutNode).ellipse!;
+                return shapesOverlap(ellipse1, (otherNode as AtomNode).rectangle);
+            } else {
+                ellipse1 = (incomingNode as CutNode).ellipse!;
+                ellipse2 = (otherNode as CutNode).ellipse!;
+                return shapesOverlap(ellipse1, ellipse2);
+            }
+        }
+    }
+
+    public toString(): string {
+        return this.internalSheet.toFormulaString();
     }
 }
