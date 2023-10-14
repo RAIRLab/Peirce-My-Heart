@@ -29,7 +29,7 @@
 <ul class="tsd-hierarchy">
 <li><span class="target">AEGTree</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/ffc236f/src/AEG/AEGTree.ts#L12">AEG/AEGTree.ts:12</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/4e50cbc/src/AEG/AEGTree.ts#L13">AEG/AEGTree.ts:13</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -47,6 +47,7 @@
 <h3 class="tsd-index-heading">Methods</h3>
 <div class="tsd-index-list"><a href="AEG_AEGTree.AEGTree.html#canInsert" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>can<wbr/>Insert</span></a>
 <a href="AEG_AEGTree.AEGTree.html#insert" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>insert</span></a>
+<a href="AEG_AEGTree.AEGTree.html#intersects" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>intersects</span></a>
 <a href="AEG_AEGTree.AEGTree.html#overlaps" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>overlaps</span></a>
 <a href="AEG_AEGTree.AEGTree.html#remove" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>remove</span></a>
 <a href="AEG_AEGTree.AEGTree.html#toString" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>to<wbr/>String</span></a>
@@ -67,14 +68,14 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">sheet</span>: <a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="AEG_AEGTree.AEGTree.html" class="tsd-signature-type tsd-kind-class">AEGTree</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/ffc236f/src/AEG/AEGTree.ts#L15">AEG/AEGTree.ts:15</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/4e50cbc/src/AEG/AEGTree.ts#L16">AEG/AEGTree.ts:16</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member"><a id="sheet" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>sheet</span><a href="#sheet" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">sheet</span><span class="tsd-signature-symbol">:</span> <a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/ffc236f/src/AEG/AEGTree.ts#L13">AEG/AEGTree.ts:13</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/4e50cbc/src/AEG/AEGTree.ts#L14">AEG/AEGTree.ts:14</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member"><a id="canInsert" class="tsd-anchor"></a>
@@ -89,7 +90,7 @@ at a given point without overlapping any bounding boxes.</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">incomingNode</span>: <a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a><span class="tsd-signature-symbol"> | </span><a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a></h5>
+<h5><span class="tsd-kind-parameter">incomingNode</span>: <a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a><span class="tsd-signature-symbol"> | </span><a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a></h5>
 <div class="tsd-comment tsd-typography"><p>The node to be inserted.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
@@ -97,7 +98,7 @@ at a given point without overlapping any bounding boxes.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/ffc236f/src/AEG/AEGTree.ts#L68">AEG/AEGTree.ts:68</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/4e50cbc/src/AEG/AEGTree.ts#L69">AEG/AEGTree.ts:69</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="insert" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>insert</span><a href="#insert" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -110,14 +111,39 @@ Throws an error otherwise.</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">incomingNode</span>: <a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a><span class="tsd-signature-symbol"> | </span><a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a></h5>
+<h5><span class="tsd-kind-parameter">incomingNode</span>: <a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a><span class="tsd-signature-symbol"> | </span><a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a></h5>
 <div class="tsd-comment tsd-typography"><p>The node to be inserted</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/ffc236f/src/AEG/AEGTree.ts#L83">AEG/AEGTree.ts:83</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/4e50cbc/src/AEG/AEGTree.ts#L84">AEG/AEGTree.ts:84</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-private"><a id="intersects" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>intersects</span><a href="#intersects" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-private">
+<li class="tsd-signature tsd-anchor-link" id="intersects.intersects-1"><span class="tsd-kind-call-signature">intersects</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">incomingNode</span>, <span class="tsd-kind-parameter">otherNode</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><a href="#intersects.intersects-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Determines if the incoming node&#39;s boundaries intersect the other node&#39;s boundaries.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">incomingNode</span>: <a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a><span class="tsd-signature-symbol"> | </span><a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a></h5>
+<div class="tsd-comment tsd-typography"><p>the incoming node</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li>
+<li>
+<h5><span class="tsd-kind-parameter">otherNode</span>: <a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a><span class="tsd-signature-symbol"> | </span><a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a></h5>
+<div class="tsd-comment tsd-typography"><p>the other node</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><p>the result of each shape&#39;s respective intersect() methods.</p>
+
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/4e50cbc/src/AEG/AEGTree.ts#L118">AEG/AEGTree.ts:118</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="overlaps" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>overlaps</span><a href="#overlaps" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -129,12 +155,12 @@ Throws an error otherwise.</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">incomingNode</span>: <a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a><span class="tsd-signature-symbol"> | </span><a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a></h5>
+<h5><span class="tsd-kind-parameter">incomingNode</span>: <a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a><span class="tsd-signature-symbol"> | </span><a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a></h5>
 <div class="tsd-comment tsd-typography"><p>the incoming node</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li>
 <li>
-<h5><span class="tsd-kind-parameter">otherNode</span>: <a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a><span class="tsd-signature-symbol"> | </span><a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a></h5>
+<h5><span class="tsd-kind-parameter">otherNode</span>: <a href="AEG_AtomNode.AtomNode.html" class="tsd-signature-type tsd-kind-class">AtomNode</a><span class="tsd-signature-symbol"> | </span><a href="AEG_CutNode.CutNode.html" class="tsd-signature-type tsd-kind-class">CutNode</a></h5>
 <div class="tsd-comment tsd-typography"><p>the other node</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
@@ -142,7 +168,7 @@ Throws an error otherwise.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/ffc236f/src/AEG/AEGTree.ts#L117">AEG/AEGTree.ts:117</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/4e50cbc/src/AEG/AEGTree.ts#L133">AEG/AEGTree.ts:133</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="remove" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>remove</span><a href="#remove" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -162,7 +188,7 @@ Throws an error otherwise.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/ffc236f/src/AEG/AEGTree.ts#L107">AEG/AEGTree.ts:107</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/4e50cbc/src/AEG/AEGTree.ts#L108">AEG/AEGTree.ts:108</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toString" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>String</span><a href="#toString" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -170,7 +196,7 @@ Throws an error otherwise.</p>
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/ffc236f/src/AEG/AEGTree.ts#L146">AEG/AEGTree.ts:146</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/4e50cbc/src/AEG/AEGTree.ts#L162">AEG/AEGTree.ts:162</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="verify" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>verify</span><a href="#verify" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -182,7 +208,7 @@ Throws an error otherwise.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/ffc236f/src/AEG/AEGTree.ts#L23">AEG/AEGTree.ts:23</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/4e50cbc/src/AEG/AEGTree.ts#L24">AEG/AEGTree.ts:24</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="verifyAEG" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>verifyAEG</span><a href="#verifyAEG" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -203,7 +229,7 @@ And the children of each cut level do not overlap with each other.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/ffc236f/src/AEG/AEGTree.ts#L36">AEG/AEGTree.ts:36</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/RAIRLab/Peirce-My-Heart/blob/4e50cbc/src/AEG/AEGTree.ts#L37">AEG/AEGTree.ts:37</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -227,6 +253,7 @@ And the children of each cut level do not overlap with each other.</p>
 <li><a href="#sheet" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>sheet</span></a></li>
 <li><a href="#canInsert" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>can<wbr/>Insert</span></a></li>
 <li><a href="#insert" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>insert</span></a></li>
+<li><a href="#intersects" class="tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>intersects</span></a></li>
 <li><a href="#overlaps" class="tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>overlaps</span></a></li>
 <li><a href="#remove" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>remove</span></a></li>
 <li><a href="#toString" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>to<wbr/>String</span></a></li>
