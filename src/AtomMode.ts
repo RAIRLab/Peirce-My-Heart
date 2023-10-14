@@ -7,6 +7,7 @@ import {Point} from "./AEG/Point";
 import {AtomNode} from "./AEG/AtomNode";
 import {redrawCut, tree} from "./index";
 import {Rectangle} from "./AEG/Rectangle";
+import {offSet} from "./DragMode";
 
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
 const res: CanvasRenderingContext2D | null = canvas.getContext("2d");
@@ -47,18 +48,18 @@ export function atomMouseDown(event: MouseEvent) {
     atomMetrics = ctx.measureText(currentAtom.identifier);
     wasOut = false;
     const startVertex: Point = new Point(
-        event.clientX,
-        event.clientY - atomMetrics.actualBoundingBoxAscent
+        event.clientX - offSet.x,
+        event.clientY - atomMetrics.actualBoundingBoxAscent - offSet.y
     );
     currentAtom.rectangle = new Rectangle(
         startVertex,
         atomMetrics.width,
         atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
     );
-    currentAtom.origin = new Point(event.clientX, event.clientY);
+    currentAtom.origin = new Point(event.clientX - offSet.x, event.clientY - offSet.y);
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    redrawCut(tree.sheet);
+    redrawCut(tree.sheet, offSet);
     if (tree.canInsert(currentAtom)) {
         drawAtom(currentAtom, "#00FF00");
     } else {
@@ -71,14 +72,14 @@ export function atomMouseDown(event: MouseEvent) {
  * @param event The mouse move event
  */
 export function atomMouseMove(event: MouseEvent) {
-    currentAtom.origin = new Point(event.clientX, event.clientY);
+    currentAtom.origin = new Point(event.clientX - offSet.x, event.clientY - offSet.y);
     currentAtom.rectangle.startVertex = new Point(
-        event.clientX,
-        event.clientY - atomMetrics.actualBoundingBoxAscent
+        event.clientX - offSet.x,
+        event.clientY - atomMetrics.actualBoundingBoxAscent - offSet.y
     );
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    redrawCut(tree.sheet);
+    redrawCut(tree.sheet, offSet);
     if (!wasOut) {
         if (tree.canInsert(currentAtom)) {
             drawAtom(currentAtom, "#00FF00");
@@ -102,7 +103,7 @@ export function atomMouseUp() {
         new Rectangle(new Point(0, 0), 0, 0)
     );
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    redrawCut(tree.sheet);
+    redrawCut(tree.sheet, offSet);
 }
 
 /**
@@ -116,7 +117,7 @@ export function atomMouseOut() {
     );
     wasOut = true;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    redrawCut(tree.sheet);
+    redrawCut(tree.sheet, offSet);
 }
 
 /**
@@ -129,10 +130,10 @@ function drawAtom(thisAtom: AtomNode, color: string) {
     ctx.strokeStyle = color;
     const displayBox = thisAtom.rectangle;
     ctx.beginPath();
-    ctx.fillText(thisAtom.identifier, thisAtom.origin.x, thisAtom.origin.y);
+    ctx.fillText(thisAtom.identifier, thisAtom.origin.x + offSet.x, thisAtom.origin.y + offSet.y);
     ctx.rect(
-        displayBox.startVertex.x,
-        displayBox.startVertex.y,
+        displayBox.startVertex.x + offSet.x,
+        displayBox.startVertex.y + offSet.y,
         displayBox.width,
         displayBox.height
     );

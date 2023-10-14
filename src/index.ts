@@ -9,9 +9,11 @@ import {AEGTree} from "./AEG/AEGTree";
 import {CutNode} from "./AEG/CutNode";
 import {Ellipse} from "./AEG/Ellipse";
 import {AtomNode} from "./AEG/AtomNode";
+import {Point} from "./AEG/Point";
 import {cutMouseDown, cutMouseMove, cutMouseOut, cutMouseUp} from "./CutMode";
 import {atomKeyPress, atomMouseDown, atomMouseMove, atomMouseUp, atomMouseOut} from "./AtomMode";
 import {saveFile, loadFile} from "./FileUtils";
+import {dragMouseDown, dragMouseMove, offSet} from "./DragMode";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -80,7 +82,7 @@ function atomMode() {
  * Sets the current mode to move mode. Hides non moveTools.
  */
 function dragMode() {
-    modeState = "moveMode";
+    modeState = "dragMode";
     cutTools.style.display = "none";
     atomTools.style.display = "none";
 }
@@ -145,7 +147,7 @@ async function loadMode() {
         const loadData = loadFile(aegData);
         if (loadData instanceof AEGTree) {
             tree = loadData;
-            redrawCut(tree.sheet);
+            redrawCut(tree.sheet, offSet);
         }
         //TODO: else popup error
     });
@@ -176,6 +178,9 @@ function mouseDownHandler(event: MouseEvent) {
         case "atomMode":
             atomMouseDown(event);
             break;
+        case "dragMode":
+            dragMouseDown(event);
+            break;
     }
     hasMouseDown = true;
 }
@@ -194,6 +199,11 @@ function mouseMoveHandler(event: MouseEvent) {
         case "atomMode":
             if (hasMouseDown && hasMouseIn) {
                 atomMouseMove(event);
+            }
+            break;
+        case "dragMode":
+            if (hasMouseDown && hasMouseIn) {
+                dragMouseMove(event);
             }
             break;
     }
@@ -240,21 +250,21 @@ function mouseEnterHandler() {
  * Sends any Atom children to redrawAtom.
  * @param incomingNode The CutNode to be iterated through
  */
-export function redrawCut(incomingNode: CutNode) {
+export function redrawCut(incomingNode: CutNode, offSet: Point) {
     cutDisplay.innerHTML = tree.toString();
     for (let i = 0; incomingNode.children.length > i; i++) {
         if (incomingNode.children[i] instanceof AtomNode) {
-            redrawAtom(<AtomNode>incomingNode.children[i]);
+            redrawAtom(<AtomNode>incomingNode.children[i], offSet);
         } else {
-            redrawCut(<CutNode>incomingNode.children[i]);
+            redrawCut(<CutNode>incomingNode.children[i], offSet);
         }
     }
     if (incomingNode.ellipse instanceof Ellipse) {
         ctx.strokeStyle = "#000000";
         ctx.beginPath();
         ctx.ellipse(
-            incomingNode.ellipse.center.x,
-            incomingNode.ellipse.center.y,
+            incomingNode.ellipse.center.x + offSet.x,
+            incomingNode.ellipse.center.y + offSet.y,
             incomingNode.ellipse.radiusX,
             incomingNode.ellipse.radiusY,
             0,
@@ -269,17 +279,21 @@ export function redrawCut(incomingNode: CutNode) {
  * Redraws the given atom. Also redraws the the bounding box.
  * @param incomingNode The Atom Node to be redrawn
  */
-function redrawAtom(incomingNode: AtomNode) {
+function redrawAtom(incomingNode: AtomNode, offSet: Point) {
     const displayBox = incomingNode.rectangle;
     ctx.strokeStyle = "#000000";
     ctx.fillStyle = "#000000";
     ctx.beginPath();
     ctx.rect(
-        displayBox.startVertex.x,
-        displayBox.startVertex.y,
+        displayBox.startVertex.x + offSet.x,
+        displayBox.startVertex.y + offSet.y,
         displayBox.width,
         displayBox.height
     );
-    ctx.fillText(incomingNode.identifier, incomingNode.origin.x, incomingNode.origin.y);
+    ctx.fillText(
+        incomingNode.identifier,
+        incomingNode.origin.x + offSet.x,
+        incomingNode.origin.y + offSet.y
+    );
     ctx.stroke();
 }
