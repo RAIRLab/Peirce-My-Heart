@@ -16,14 +16,13 @@ export class Point {
 
     /**
      * Constructs a new point at the given coordinates.
-     * If no coordinates are specified, default them to 0.
      * @param coordX The specified x coordinate.
      * @param coordY The specified y coordinate.
      * @throws Error on receiving NaN or Infinity values as coordinates.
      */
-    public constructor(coordX?: number, coordY?: number) {
-        this.x = coordX ?? 0;
-        this.y = coordY ?? 0;
+    public constructor(coordX: number, coordY: number) {
+        this.x = coordX;
+        this.y = coordY;
         if (!Number.isFinite(this.x) || !Number.isFinite(this.y)) {
             throw new Error("NaN or Infinity value(s) were passed in constructing a Point.");
         }

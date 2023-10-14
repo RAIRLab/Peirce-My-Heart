@@ -25,12 +25,11 @@ export class Rectangle {
 
     /**
      * Constructs a rectangle using the given points and lengths.
-     * If no Point specified, default startVertex to (0, 0).
      * @param vertex The starting point of the rectangle.
      * @param w The width of the rectangle.
      * @param h The height of the rectangle.
      */
-    public constructor(vertex?: Point, w?: number, h?: number) {
+    public constructor(vertex: Point, w: number, h: number) {
         if (!Number.isFinite(w) || !Number.isFinite(h)) {
             throw new Error(
                 "Infinity/NaN passed in for width/height while constructing a Rectangle."
@@ -40,9 +39,9 @@ export class Rectangle {
         } else if (h !== undefined && h < 0) {
             throw new Error("Negative value passed for height while constructing a Rectangle.");
         }
-        this.startVertex = vertex ?? new Point(0, 0);
-        this.width = w ?? 0;
-        this.height = h ?? 0;
+        this.startVertex = vertex;
+        this.width = w;
+        this.height = h;
     }
 
     /**
