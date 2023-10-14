@@ -36,7 +36,7 @@ export class AtomNode {
                     " passed in as identifier in AtomNode constructor, which is not of length 1."
             );
         }
-        if (new RegExp(/^[A-Za-z]$/).test(val) === false) {
+        if (!/^[A-Za-z]$/.test(val)) {
             throw new Error(
                 val +
                     " not contained in Latin alphabet passed in as identifier in AtomNode constructor."
