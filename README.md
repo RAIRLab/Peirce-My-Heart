@@ -111,9 +111,11 @@ npm run test
 ```
 /.github/ : The code for github workflows this project uses, used for automatically deploying.
 
-/src/ : source code for the application 
+/src/ : source code for the application.
 
-/tests/ : vitest compatible .test.ts files that are run on commits and must be passed before all merges to master
+/public/ : non-code based resources for the application, icons, images, etc.
+
+/tests/ : testing source .test.ts files, made with vitest.
 
 /.eslintignore : list of .js and .ts files the linter shouldn't look at
 
