@@ -249,6 +249,7 @@ function mouseEnterHandler() {
  * Iterates through the entire tree, if there are no children the for loop will not begin.
  * Sends any Atom children to redrawAtom.
  * @param incomingNode The CutNode to be iterated through
+ * @param offSet The difference between the actual graph and the current canvas
  */
 export function redrawCut(incomingNode: CutNode, offSet: Point) {
     cutDisplay.innerHTML = tree.toString();
@@ -278,6 +279,7 @@ export function redrawCut(incomingNode: CutNode, offSet: Point) {
 /**
  * Redraws the given atom. Also redraws the the bounding box.
  * @param incomingNode The Atom Node to be redrawn
+ * @param offSet The difference between the actual graph and the current canvas
  */
 function redrawAtom(incomingNode: AtomNode, offSet: Point) {
     const displayBox = incomingNode.rectangle;

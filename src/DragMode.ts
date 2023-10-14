@@ -22,7 +22,7 @@ export let offSet: Point = new Point(0, 0); //No offset at the start
  * @param event The mouse down event in drag mode
  */
 export function dragMouseDown(event: MouseEvent) {
-    originPoint = new Point(event.x + offSet.x, event.y + offSet.y);
+    originPoint = new Point(event.x - offSet.x, event.y - offSet.y);
 }
 
 /**
@@ -30,7 +30,7 @@ export function dragMouseDown(event: MouseEvent) {
  * @param event The mouse move event in drag mode
  */
 export function dragMouseMove(event: MouseEvent) {
-    offSet = new Point(originPoint.x - event.x, originPoint.y - event.y);
+    offSet = new Point(event.x - originPoint.x, event.y - originPoint.y);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     redrawCut(tree.sheet, offSet);
 }
