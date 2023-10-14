@@ -10,6 +10,7 @@ import {Ellipse} from "./AEG/Ellipse";
 import {AtomNode} from "./AEG/AtomNode";
 import {cutMouseDown, cutMouseMove, cutMouseOut, cutMouseUp} from "./CutMode";
 import {atomKeyPress, atomMouseDown, atomMouseMove, atomMouseUp, atomMouseOut} from "./AtomMode";
+import {saveFile, loadFile} from "./FileUtils";
 
 //Extend the window interface to export functions without TS complaining
 declare global {
@@ -43,15 +44,19 @@ canvas.addEventListener("mouseenter", mouseEnterHandler);
 let modeState = "";
 let hasMouseDown = false;
 let hasMouseIn = true;
-export const tree: AEGTree = new AEGTree();
+export let tree: AEGTree = new AEGTree();
 
 //Window Exports
 window.atomMode = atomMode;
 window.ellipseMode = ellipseMode;
+window.saveMode = saveMode;
+window.loadMode = loadMode;
 declare global {
     interface Window {
         ellipseMode: () => void;
         atomMode: () => void;
+        saveMode: () => void;
+        loadMode: () => void;
     }
 }
 
@@ -77,6 +82,70 @@ function atomMode() {
     cutTools.style.display = "none";
 }
 
+/**
+ * Calls the function to save the file
+ */
+async function saveMode() {
+    //TODO: CTRL+S Hotkey
+    const file = saveFile(tree);
+
+    if ("showSaveFilePicker" in window) {
+        //Slow Download
+        const saveHandle = await window.showSaveFilePicker({
+            excludeAcceptAllOption: true,
+            suggestedName: "AEG Tree",
+            startIn: "downloads",
+            types: [
+                {
+                    description: "JSON Files",
+                    accept: {
+                        "text/json": [".json"],
+                    },
+                },
+            ],
+        });
+
+        const writable = await saveHandle.createWritable();
+        await writable.write(file);
+        await writable.close();
+    } else {
+        //Quick Download
+        const f = document.createElement("a");
+        f.href = file;
+        f.download = "AEGTree.json";
+        f.click();
+    }
+}
+
+async function loadMode() {
+    const [fileHandle] = await window.showOpenFilePicker({
+        excludeAcceptAllOption: true,
+        multiple: false,
+        startIn: "downloads",
+        types: [
+            {
+                description: "JSON Files",
+                accept: {
+                    "text/json": [".json"],
+                },
+            },
+        ],
+    });
+
+    const file = await fileHandle.getFile();
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+        const aegData = reader.result;
+        const loadData = loadFile(aegData);
+        if (loadData instanceof AEGTree) {
+            tree = loadData;
+            redrawCut(tree.sheet);
+        }
+        //TODO: else popup error
+    });
+
+    reader.readAsText(file);
+}
 /**
  * Calls the respective keypress function depending on current mode.
  * @param event The event of a keypress

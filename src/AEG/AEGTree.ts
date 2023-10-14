@@ -11,10 +11,18 @@ import {shapesOverlap, shapesIntersect} from "./AEGUtils";
  * @author Anusha Tiwari
  */
 export class AEGTree {
-    sheet: CutNode;
+    private internalSheet: CutNode;
 
     public constructor(sheet?: CutNode) {
-        this.sheet = sheet ?? new CutNode(null);
+        this.internalSheet = sheet ?? new CutNode(null);
+    }
+
+    public get sheet(): CutNode {
+        return this.internalSheet;
+    }
+
+    public set sheet(sheet: CutNode) {
+        this.internalSheet = sheet;
     }
 
     /**
@@ -22,7 +30,7 @@ export class AEGTree {
      * @returns the result of verifyAEG() called with the sheet of assertion
      */
     public verify(): boolean {
-        return this.verifyAEG(this.sheet);
+        return this.verifyAEG(this.internalSheet);
     }
 
     /**
@@ -67,7 +75,7 @@ export class AEGTree {
      * @returns True, if the node can be inserted. Else, false
      */
     public canInsert(incomingNode: AtomNode | CutNode): boolean {
-        const currentCut: CutNode = this.sheet.getCurrentCut(incomingNode);
+        const currentCut: CutNode = this.internalSheet.getCurrentCut(incomingNode);
         for (let i = 0; i < currentCut.children.length; i++) {
             if (this.intersects(incomingNode, currentCut.children[i])) {
                 return false;
@@ -86,7 +94,7 @@ export class AEGTree {
             throw new Error("Insertion failed. " + incomingNode + " had a collision.");
         }
 
-        const currentCut: CutNode = this.sheet.getCurrentCut(incomingNode);
+        const currentCut: CutNode = this.internalSheet.getCurrentCut(incomingNode);
         const originalChildren: (AtomNode | CutNode)[] = [...currentCut.children];
         currentCut.child = incomingNode;
 
@@ -106,7 +114,7 @@ export class AEGTree {
      * @returns True, if the node was successfully removed. Else, false
      */
     public remove(incomingPoint: Point): void {
-        this.sheet.remove(incomingPoint);
+        this.internalSheet.remove(incomingPoint);
     }
 
     /**
@@ -160,6 +168,6 @@ export class AEGTree {
     }
 
     public toString(): string {
-        return this.sheet.toFormulaString();
+        return this.internalSheet.toFormulaString();
     }
 }
