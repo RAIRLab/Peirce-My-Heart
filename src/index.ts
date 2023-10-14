@@ -13,7 +13,7 @@ import {Point} from "./AEG/Point";
 import {cutMouseDown, cutMouseMove, cutMouseOut, cutMouseUp} from "./CutMode";
 import {atomKeyPress, atomMouseDown, atomMouseMove, atomMouseUp, atomMouseOut} from "./AtomMode";
 import {saveFile, loadFile} from "./FileUtils";
-import {dragMosueOut, dragMouseDown, dragMouseMove, offSet} from "./DragMode";
+import {dragMosueOut, dragMouseDown, dragMouseMove, offset} from "./DragMode";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -147,7 +147,7 @@ async function loadMode() {
         const loadData = loadFile(aegData);
         if (loadData instanceof AEGTree) {
             tree = loadData;
-            redrawCut(tree.sheet, offSet);
+            redrawCut(tree.sheet, offset);
         }
         //TODO: else popup error
     });
@@ -190,22 +190,18 @@ function mouseDownHandler(event: MouseEvent) {
  * @param event the mouse move event
  */
 function mouseMoveHandler(event: MouseEvent) {
-    switch (modeState) {
-        case "cutMode":
-            if (hasMouseDown && hasMouseIn) {
+    if (hasMouseDown && hasMouseIn) {
+        switch (modeState) {
+            case "cutMode":
                 cutMouseMove(event);
-            }
-            break;
-        case "atomMode":
-            if (hasMouseDown && hasMouseIn) {
+                break;
+            case "atomMode":
                 atomMouseMove(event);
-            }
-            break;
-        case "dragMode":
-            if (hasMouseDown && hasMouseIn) {
+                break;
+            case "dragMode":
                 dragMouseMove(event);
-            }
-            break;
+                break;
+        }
     }
 }
 
@@ -253,23 +249,23 @@ function mouseEnterHandler() {
  * Iterates through the entire tree, if there are no children the for loop will not begin.
  * Sends any Atom children to redrawAtom.
  * @param incomingNode The CutNode to be iterated through
- * @param offSet The difference between the actual graph and the current canvas
+ * @param offset The difference between the actual graph and the current canvas
  */
-export function redrawCut(incomingNode: CutNode, offSet: Point) {
+export function redrawCut(incomingNode: CutNode, offset: Point) {
     cutDisplay.innerHTML = tree.toString();
     for (let i = 0; incomingNode.children.length > i; i++) {
         if (incomingNode.children[i] instanceof AtomNode) {
-            redrawAtom(<AtomNode>incomingNode.children[i], offSet);
+            redrawAtom(<AtomNode>incomingNode.children[i], offset);
         } else {
-            redrawCut(<CutNode>incomingNode.children[i], offSet);
+            redrawCut(<CutNode>incomingNode.children[i], offset);
         }
     }
     if (incomingNode.ellipse instanceof Ellipse) {
         ctx.strokeStyle = "#000000";
         ctx.beginPath();
         ctx.ellipse(
-            incomingNode.ellipse.center.x + offSet.x,
-            incomingNode.ellipse.center.y + offSet.y,
+            incomingNode.ellipse.center.x + offset.x,
+            incomingNode.ellipse.center.y + offset.y,
             incomingNode.ellipse.radiusX,
             incomingNode.ellipse.radiusY,
             0,
@@ -283,23 +279,23 @@ export function redrawCut(incomingNode: CutNode, offSet: Point) {
 /**
  * Redraws the given atom. Also redraws the the bounding box.
  * @param incomingNode The Atom Node to be redrawn
- * @param offSet The difference between the actual graph and the current canvas
+ * @param offset The difference between the actual graph and the current canvas
  */
-function redrawAtom(incomingNode: AtomNode, offSet: Point) {
+function redrawAtom(incomingNode: AtomNode, offset: Point) {
     const displayBox = incomingNode.rectangle;
     ctx.strokeStyle = "#000000";
     ctx.fillStyle = "#000000";
     ctx.beginPath();
     ctx.rect(
-        displayBox.startVertex.x + offSet.x,
-        displayBox.startVertex.y + offSet.y,
+        displayBox.startVertex.x + offset.x,
+        displayBox.startVertex.y + offset.y,
         displayBox.width,
         displayBox.height
     );
     ctx.fillText(
         incomingNode.identifier,
-        incomingNode.origin.x + offSet.x,
-        incomingNode.origin.y + offSet.y
+        incomingNode.origin.x + offset.x,
+        incomingNode.origin.y + offset.y
     );
     ctx.stroke();
 }
