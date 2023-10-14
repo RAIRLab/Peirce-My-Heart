@@ -1,3 +1,8 @@
+/**
+ * File containing atom based event functions.
+ * @author Dawn Moore
+ */
+
 import {Point} from "./AEG/Point";
 import {AtomNode} from "./AEG/AtomNode";
 import {redrawCut, tree} from "./index";
@@ -98,7 +103,6 @@ export function atomMouseUp() {
     );
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     redrawCut(tree.sheet);
-    console.log(tree.toString());
 }
 
 /**

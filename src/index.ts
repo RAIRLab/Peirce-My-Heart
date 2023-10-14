@@ -2,6 +2,7 @@
  * A program to draw ellipses and atoms.
  * @author Dawn Moore
  * @author James Oswald
+ * @author Anusha Tiwari
  */
 
 import {AEGTree} from "./AEG/AEGTree";
@@ -11,14 +12,6 @@ import {AtomNode} from "./AEG/AtomNode";
 import {cutMouseDown, cutMouseMove, cutMouseOut, cutMouseUp} from "./CutMode";
 import {atomKeyPress, atomMouseDown, atomMouseMove, atomMouseUp, atomMouseOut} from "./AtomMode";
 import {saveFile, loadFile} from "./FileUtils";
-
-//Extend the window interface to export functions without TS complaining
-declare global {
-    interface Window {
-        ellipseMode: () => void;
-        atomMode: () => void;
-    }
-}
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -48,23 +41,25 @@ export let tree: AEGTree = new AEGTree();
 
 //Window Exports
 window.atomMode = atomMode;
-window.ellipseMode = ellipseMode;
+window.cutMode = cutMode;
+window.dragMode = dragMode;
 window.saveMode = saveMode;
 window.loadMode = loadMode;
 declare global {
     interface Window {
-        ellipseMode: () => void;
+        cutMode: () => void;
         atomMode: () => void;
+        dragMode: () => void;
         saveMode: () => void;
         loadMode: () => void;
     }
 }
 
 /**
- * If there is no current mode creates the listeners.
+ * If there is no current mode creates the listeners. Hides non cutTools.
  * Sets the current mode to cut mode.
  */
-function ellipseMode() {
+function cutMode() {
     modeState = "cutMode";
     cutTools.style.display = "block";
     //Block all other mode tools
@@ -72,8 +67,7 @@ function ellipseMode() {
 }
 
 /**
- * If there is no current mode creates the listeners.
- * Sets the current mode to atom mode.
+ * Sets the current mode to atom mode. Hides non atomTools.
  */
 function atomMode() {
     modeState = "atomMode";
@@ -83,7 +77,16 @@ function atomMode() {
 }
 
 /**
- * Calls the function to save the file
+ * Sets the current mode to move mode. Hides non moveTools.
+ */
+function dragMode() {
+    modeState = "moveMode";
+    cutTools.style.display = "none";
+    atomTools.style.display = "none";
+}
+
+/**
+ * Calls the function to save the file.
  */
 async function saveMode() {
     //TODO: CTRL+S Hotkey
@@ -117,6 +120,9 @@ async function saveMode() {
     }
 }
 
+/**
+ * Calls the function to load the files.
+ */
 async function loadMode() {
     const [fileHandle] = await window.showOpenFilePicker({
         excludeAcceptAllOption: true,

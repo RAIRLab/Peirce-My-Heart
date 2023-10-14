@@ -1,3 +1,9 @@
+/**
+ * File containing cut based event functions.
+ * @author Dawn Moore
+ * @author James Oswald
+ */
+
 import {Point} from "./AEG/Point";
 import {CutNode} from "./AEG/CutNode";
 import {Ellipse} from "./AEG/Ellipse";
