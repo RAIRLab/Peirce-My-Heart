@@ -15,6 +15,12 @@ export function shapesOverlap(
     return shapesIntersect(newShape, existingShape) || shapeContains(existingShape, newShape);
 }
 
+/**
+ * Method that checks whether two shapes intersect
+ * @param newShape The new shape that might intersect with the existing shape
+ * @param existingShape The existing shape
+ * @returns True, if shapes intersect. Else, false.
+ */
 export function shapesIntersect(
     newShape: Rectangle | Ellipse,
     existingShape: Rectangle | Ellipse
@@ -29,6 +35,8 @@ export function shapesIntersect(
         if (existingShape instanceof Rectangle) {
             return ellipseRectangleIntersection(newShape as Ellipse, existingShape as Rectangle);
         } else {
+            //For ellipse-ellipse collision, check if the rectangular bounding boxes intersect.
+            //If they do, check if points of the new ellipse are within the current ellipse
             if (
                 edgesIntersect(
                     (newShape as Ellipse).boundingBox,
@@ -42,8 +50,8 @@ export function shapesIntersect(
                 const points: Point[] = getEllipsePoints(newShape);
                 let val: number;
                 for (let i = 0; i < points.length; i++) {
-                    val = ellipsePointValue(existingShape as Ellipse, points[i]);
-                    if (val <= 1) {
+                    val = signedDistanceFromEllipse(existingShape as Ellipse, points[i]);
+                    if (val <= 0) {
                         //Intersection if the point is within the ellipse OR on the ellipse
                         return true;
                     }
@@ -114,8 +122,8 @@ export function shapeContains(
             const innerCorners = (innerShape as Rectangle).getCorners();
             let val: number;
             for (let i = 0; i < 4; i++) {
-                val = ellipsePointValue(outerShape as Ellipse, innerCorners[i]);
-                if (!(val < 1)) {
+                val = signedDistanceFromEllipse(outerShape as Ellipse, innerCorners[i]);
+                if (!(val < 0)) {
                     //The point should be completely within the ellipse
                     return false;
                 }
@@ -127,8 +135,8 @@ export function shapeContains(
             const innerCoords: Point[] = getEllipsePoints(innerShape as Ellipse);
             let val: number;
             for (let i = 0; i < innerCoords.length; i++) {
-                val = ellipsePointValue(outerShape as Ellipse, innerCoords[i]);
-                if (!(val < 1)) {
+                val = signedDistanceFromEllipse(outerShape as Ellipse, innerCoords[i]);
+                if (!(val < 0)) {
                     //The point should be completely within the ellipse
                     return false;
                 }
@@ -185,10 +193,11 @@ export function pointInRect(rect: Rectangle, point: Point): boolean {
  * Method that returns the value of a point compared to the ellipse
  * @param ellipse The given ellipse
  * @param otherPoint The point that might be inside the given ellipse.
- * @returns 1, if the point is on the ellipse.
- * Returns <1 if the point is completely within the ellipse.
+ * @returns 0, if the point is on the ellipse.
+ * Returns <0 if the point is completely within the ellipse.
+ * Returns >0 if the point is completely outside the ellipse.
  */
-export function ellipsePointValue(ellipse: Ellipse, point: Point): number {
+export function signedDistanceFromEllipse(ellipse: Ellipse, point: Point): number {
     //(x-h)^2/rx^2 + (y-k)^2/ry^2 <= 1
     //(x, y) = new point
     //(h, k) = center
@@ -198,7 +207,7 @@ export function ellipsePointValue(ellipse: Ellipse, point: Point): number {
         Math.pow(point.x - ellipse.center.x, 2) / Math.pow(ellipse.radiusX, 2) +
         Math.pow(point.y - ellipse.center.y, 2) / Math.pow(ellipse.radiusY, 2);
 
-    return p;
+    return p - 1;
 }
 
 /**
@@ -254,6 +263,9 @@ export function getEllipsePoints(ellipse: Ellipse): Point[] {
  * @returns A point along the curve
  */
 function getCurvePoint(ellipse: Ellipse, x: number, curveHalf: number): number {
+    if (ellipse.radiusX === 0 || ellipse.radiusY === 0) {
+        return ellipse.center.y;
+    }
     return (
         curveHalf *
             ellipse.radiusY *
