@@ -125,9 +125,9 @@ export class AEGTree {
      */
     private intersects(incomingNode: AtomNode | CutNode, otherNode: AtomNode | CutNode) {
         const incomingShape: Rectangle | Ellipse =
-            incomingNode instanceof AtomNode ? incomingNode.rectangle : incomingNode.ellipse!;
+            incomingNode instanceof AtomNode ? incomingNode.calcRect() : incomingNode.ellipse!;
         const otherShape: Rectangle | Ellipse =
-            otherNode instanceof AtomNode ? otherNode.rectangle : otherNode.ellipse!;
+            otherNode instanceof AtomNode ? otherNode.calcRect() : otherNode.ellipse!;
 
         return shapesIntersect(incomingShape, otherShape);
     }
@@ -145,20 +145,20 @@ export class AEGTree {
         if (incomingNode instanceof AtomNode) {
             if (otherNode instanceof AtomNode) {
                 return shapesOverlap(
-                    (incomingNode as AtomNode).rectangle,
-                    (otherNode as AtomNode).rectangle
+                    (incomingNode as AtomNode).calcRect(),
+                    (otherNode as AtomNode).calcRect()
                 );
             } else {
                 //the case where otherNode is the sheet is handled in canInsert()
                 //and all child.ellipse[i] will never be null. this is the reason for ! below
 
                 ellipse1 = (otherNode as CutNode).ellipse!;
-                return shapesOverlap((incomingNode as AtomNode).rectangle, ellipse1);
+                return shapesOverlap((incomingNode as AtomNode).calcRect(), ellipse1);
             }
         } else {
             if (otherNode instanceof AtomNode) {
                 ellipse1 = (incomingNode as CutNode).ellipse!;
-                return shapesOverlap(ellipse1, (otherNode as AtomNode).rectangle);
+                return shapesOverlap(ellipse1, (otherNode as AtomNode).calcRect());
             } else {
                 ellipse1 = (incomingNode as CutNode).ellipse!;
                 ellipse2 = (otherNode as CutNode).ellipse!;
