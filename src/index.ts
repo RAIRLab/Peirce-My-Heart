@@ -13,7 +13,7 @@ import {Point} from "./AEG/Point";
 import {cutMouseDown, cutMouseMove, cutMouseOut, cutMouseUp} from "./CutMode";
 import {atomKeyPress, atomMouseDown, atomMouseMove, atomMouseUp, atomMouseOut} from "./AtomMode";
 import {saveFile, loadFile} from "./FileUtils";
-import {dragMouseDown, dragMouseMove, offSet} from "./DragMode";
+import {dragMosueOut, dragMouseDown, dragMouseMove, offSet} from "./DragMode";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -238,7 +238,11 @@ function mouseOutHandler() {
         case "atomMode":
             atomMouseOut();
             break;
+        case "dragMode":
+            dragMosueOut();
+            break;
     }
+    hasMouseIn = false;
 }
 
 function mouseEnterHandler() {

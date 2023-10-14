@@ -16,6 +16,7 @@ const ctx: CanvasRenderingContext2D = res;
 
 let originPoint: Point;
 export let offSet: Point = new Point(0, 0); //No offset at the start
+let wasOut: boolean;
 
 /**
  * Sets the origin point of the user's click so it can be compared for offset.
@@ -23,6 +24,7 @@ export let offSet: Point = new Point(0, 0); //No offset at the start
  */
 export function dragMouseDown(event: MouseEvent) {
     originPoint = new Point(event.x - offSet.x, event.y - offSet.y);
+    wasOut = false;
 }
 
 /**
@@ -30,7 +32,15 @@ export function dragMouseDown(event: MouseEvent) {
  * @param event The mouse move event in drag mode
  */
 export function dragMouseMove(event: MouseEvent) {
-    offSet = new Point(event.x - originPoint.x, event.y - originPoint.y);
+    if (!wasOut) {
+        offSet = new Point(event.x - originPoint.x, event.y - originPoint.y);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        redrawCut(tree.sheet, offSet);
+    }
+}
+
+export function dragMosueOut() {
+    wasOut = true;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     redrawCut(tree.sheet, offSet);
 }
