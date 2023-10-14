@@ -2,23 +2,18 @@
  * A program to draw ellipses and atoms.
  * @author Dawn Moore
  * @author James Oswald
+ * @author Anusha Tiwari
  */
 
 import {AEGTree} from "./AEG/AEGTree";
 import {CutNode} from "./AEG/CutNode";
 import {Ellipse} from "./AEG/Ellipse";
 import {AtomNode} from "./AEG/AtomNode";
+import {Point} from "./AEG/Point";
 import {cutMouseDown, cutMouseMove, cutMouseOut, cutMouseUp} from "./CutMode";
 import {atomKeyPress, atomMouseDown, atomMouseMove, atomMouseUp, atomMouseOut} from "./AtomMode";
 import {saveFile, loadFile} from "./FileUtils";
-
-//Extend the window interface to export functions without TS complaining
-declare global {
-    interface Window {
-        ellipseMode: () => void;
-        atomMode: () => void;
-    }
-}
+import {dragMosueOut, dragMouseDown, dragMouseMove, offset} from "./DragMode";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -48,23 +43,25 @@ export let tree: AEGTree = new AEGTree();
 
 //Window Exports
 window.atomMode = atomMode;
-window.ellipseMode = ellipseMode;
+window.cutMode = cutMode;
+window.dragMode = dragMode;
 window.saveMode = saveMode;
 window.loadMode = loadMode;
 declare global {
     interface Window {
-        ellipseMode: () => void;
+        cutMode: () => void;
         atomMode: () => void;
+        dragMode: () => void;
         saveMode: () => void;
         loadMode: () => void;
     }
 }
 
 /**
- * If there is no current mode creates the listeners.
+ * If there is no current mode creates the listeners. Hides non cutTools.
  * Sets the current mode to cut mode.
  */
-function ellipseMode() {
+function cutMode() {
     modeState = "cutMode";
     cutTools.style.display = "block";
     //Block all other mode tools
@@ -72,8 +69,7 @@ function ellipseMode() {
 }
 
 /**
- * If there is no current mode creates the listeners.
- * Sets the current mode to atom mode.
+ * Sets the current mode to atom mode. Hides non atomTools.
  */
 function atomMode() {
     modeState = "atomMode";
@@ -83,7 +79,16 @@ function atomMode() {
 }
 
 /**
- * Calls the function to save the file
+ * Sets the current mode to move mode. Hides non moveTools.
+ */
+function dragMode() {
+    modeState = "dragMode";
+    cutTools.style.display = "none";
+    atomTools.style.display = "none";
+}
+
+/**
+ * Calls the function to save the file.
  */
 async function saveMode() {
     //TODO: CTRL+S Hotkey
@@ -117,6 +122,9 @@ async function saveMode() {
     }
 }
 
+/**
+ * Calls the function to load the files.
+ */
 async function loadMode() {
     const [fileHandle] = await window.showOpenFilePicker({
         excludeAcceptAllOption: true,
@@ -139,7 +147,7 @@ async function loadMode() {
         const loadData = loadFile(aegData);
         if (loadData instanceof AEGTree) {
             tree = loadData;
-            redrawCut(tree.sheet);
+            redrawCut(tree.sheet, offset);
         }
         //TODO: else popup error
     });
@@ -170,6 +178,9 @@ function mouseDownHandler(event: MouseEvent) {
         case "atomMode":
             atomMouseDown(event);
             break;
+        case "dragMode":
+            dragMouseDown(event);
+            break;
     }
     hasMouseDown = true;
 }
@@ -179,17 +190,18 @@ function mouseDownHandler(event: MouseEvent) {
  * @param event the mouse move event
  */
 function mouseMoveHandler(event: MouseEvent) {
-    switch (modeState) {
-        case "cutMode":
-            if (hasMouseDown && hasMouseIn) {
+    if (hasMouseDown && hasMouseIn) {
+        switch (modeState) {
+            case "cutMode":
                 cutMouseMove(event);
-            }
-            break;
-        case "atomMode":
-            if (hasMouseDown && hasMouseIn) {
+                break;
+            case "atomMode":
                 atomMouseMove(event);
-            }
-            break;
+                break;
+            case "dragMode":
+                dragMouseMove(event);
+                break;
+        }
     }
 }
 
@@ -222,7 +234,11 @@ function mouseOutHandler() {
         case "atomMode":
             atomMouseOut();
             break;
+        case "dragMode":
+            dragMosueOut();
+            break;
     }
+    hasMouseIn = false;
 }
 
 function mouseEnterHandler() {
@@ -233,22 +249,23 @@ function mouseEnterHandler() {
  * Iterates through the entire tree, if there are no children the for loop will not begin.
  * Sends any Atom children to redrawAtom.
  * @param incomingNode The CutNode to be iterated through
+ * @param offset The difference between the actual graph and the current canvas
  */
-export function redrawCut(incomingNode: CutNode) {
+export function redrawCut(incomingNode: CutNode, offset: Point) {
     cutDisplay.innerHTML = tree.toString();
     for (let i = 0; incomingNode.children.length > i; i++) {
         if (incomingNode.children[i] instanceof AtomNode) {
-            redrawAtom(<AtomNode>incomingNode.children[i]);
+            redrawAtom(<AtomNode>incomingNode.children[i], offset);
         } else {
-            redrawCut(<CutNode>incomingNode.children[i]);
+            redrawCut(<CutNode>incomingNode.children[i], offset);
         }
     }
     if (incomingNode.ellipse instanceof Ellipse) {
         ctx.strokeStyle = "#000000";
         ctx.beginPath();
         ctx.ellipse(
-            incomingNode.ellipse.center.x,
-            incomingNode.ellipse.center.y,
+            incomingNode.ellipse.center.x + offset.x,
+            incomingNode.ellipse.center.y + offset.y,
             incomingNode.ellipse.radiusX,
             incomingNode.ellipse.radiusY,
             0,
@@ -262,18 +279,23 @@ export function redrawCut(incomingNode: CutNode) {
 /**
  * Redraws the given atom. Also redraws the the bounding box.
  * @param incomingNode The Atom Node to be redrawn
+ * @param offset The difference between the actual graph and the current canvas
  */
-function redrawAtom(incomingNode: AtomNode) {
+function redrawAtom(incomingNode: AtomNode, offset: Point) {
     const displayBox = incomingNode.rectangle;
     ctx.strokeStyle = "#000000";
     ctx.fillStyle = "#000000";
     ctx.beginPath();
     ctx.rect(
-        displayBox.startVertex.x,
-        displayBox.startVertex.y,
+        displayBox.startVertex.x + offset.x,
+        displayBox.startVertex.y + offset.y,
         displayBox.width,
         displayBox.height
     );
-    ctx.fillText(incomingNode.identifier, incomingNode.origin.x, incomingNode.origin.y);
+    ctx.fillText(
+        incomingNode.identifier,
+        incomingNode.origin.x + offset.x,
+        incomingNode.origin.y + offset.y
+    );
     ctx.stroke();
 }
