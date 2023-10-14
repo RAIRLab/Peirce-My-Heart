@@ -1,6 +1,6 @@
 import {Point} from "./Point";
 import {Rectangle} from "./Rectangle";
-import {shapesOverlap, shapeContains, ellipsePointValue} from "./AEGUtils";
+import {shapesOverlap, shapeContains, signedDistanceFromEllipse} from "./AEGUtils";
 
 /**
  * Class that defines an Ellipse.
@@ -61,7 +61,7 @@ export class Ellipse {
      * @returns True, if the point is inside this ellipse. Else, false
      */
     public containsPoint(point: Point): boolean {
-        return ellipsePointValue(this, point) < 1;
+        return signedDistanceFromEllipse(this, point) < 0;
     }
 
     /**
