@@ -1,9 +1,17 @@
+/**
+ * File containing cut based event functions.
+ * @author Dawn Moore
+ * @author James Oswald
+ */
+
 import {Point} from "./AEG/Point";
 import {CutNode} from "./AEG/CutNode";
 import {Ellipse} from "./AEG/Ellipse";
 import {redrawCut} from "./index";
 import {tree} from "./index";
+import {offset} from "./DragMode";
 
+//Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
 const res: CanvasRenderingContext2D | null = canvas.getContext("2d");
 const showRectElm: HTMLInputElement = <HTMLInputElement>document.getElementById("showRect");
@@ -13,8 +21,10 @@ if (res === null) {
 }
 const ctx: CanvasRenderingContext2D = res;
 
-let currentEllipse: Ellipse = new Ellipse(new Point(0, 0), 0, 0);
-let startingPoint: Point = new Point(0, 0);
+//The point the ellipse is initially placed.
+let startingPoint: Point;
+
+//Tracks if the mouse has ever left canvas disallowing future movements.
 let wasOut: boolean;
 
 /**
@@ -22,8 +32,7 @@ let wasOut: boolean;
  * @param event The mouse down event
  */
 export function cutMouseDown(event: MouseEvent) {
-    startingPoint.x = event.clientX;
-    startingPoint.y = event.clientY;
+    startingPoint = new Point(event.clientX - offset.x, event.clientY - offset.y);
     wasOut = false;
 }
 
@@ -35,16 +44,13 @@ export function cutMouseDown(event: MouseEvent) {
  */
 export function cutMouseMove(event: MouseEvent) {
     const newCut: CutNode = new CutNode(new Ellipse(new Point(0, 0), 0, 0));
-    const currentPoint: Point = new Point(0, 0);
-    currentPoint.x = event.clientX;
-    currentPoint.y = event.clientY;
+    const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    redrawCut(tree.sheet);
-    currentEllipse = createEllipse(startingPoint, currentPoint);
-    newCut.ellipse = currentEllipse;
+    redrawCut(tree.sheet, offset);
+    newCut.ellipse = createEllipse(startingPoint, currentPoint);
 
     if (!wasOut) {
-        if (tree.canInsert(newCut) && ellipseLargeEnough(currentEllipse)) {
+        if (tree.canInsert(newCut) && ellipseLargeEnough(newCut.ellipse)) {
             drawEllipse(newCut, "#00FF00");
         } else {
             drawEllipse(newCut, "#FF0000");
@@ -58,18 +64,13 @@ export function cutMouseMove(event: MouseEvent) {
  * @param event The mouse up event
  */
 export function cutMouseUp(event: MouseEvent) {
-    let newCut: CutNode = new CutNode(currentEllipse);
-    const currentPoint: Point = new Point(0, 0);
-    currentPoint.x = event.clientX;
-    currentPoint.y = event.clientY;
-    currentEllipse = createEllipse(startingPoint, currentPoint);
-    newCut = new CutNode(currentEllipse);
-    if (tree.canInsert(newCut) && !wasOut && ellipseLargeEnough(currentEllipse)) {
+    const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
+    const newCut: CutNode = new CutNode(createEllipse(startingPoint, currentPoint));
+    if (tree.canInsert(newCut) && !wasOut && ellipseLargeEnough(<Ellipse>newCut.ellipse)) {
         tree.insert(newCut);
     }
-    startingPoint = new Point(0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    redrawCut(tree.sheet);
+    redrawCut(tree.sheet, offset);
 }
 
 /**
@@ -77,9 +78,8 @@ export function cutMouseUp(event: MouseEvent) {
  */
 export function cutMouseOut() {
     wasOut = true;
-    startingPoint = new Point(0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    redrawCut(tree.sheet);
+    redrawCut(tree.sheet, offset);
 }
 
 /**
@@ -129,7 +129,15 @@ function drawEllipse(thisCut: CutNode, color: string) {
     const ellipse: Ellipse = <Ellipse>thisCut.ellipse;
     const center: Point = ellipse.center;
     ctx.beginPath();
-    ctx.ellipse(center.x, center.y, ellipse.radiusX, ellipse.radiusY, 0, 0, 2 * Math.PI);
+    ctx.ellipse(
+        center.x + offset.x,
+        center.y + offset.y,
+        ellipse.radiusX,
+        ellipse.radiusY,
+        0,
+        0,
+        2 * Math.PI
+    );
     ctx.stroke();
 }
 
