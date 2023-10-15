@@ -286,3 +286,13 @@ export function redrawCut(incomingNode: CutNode, offset: Point) {
 function redrawAtom(incomingNode: AtomNode) {
     drawAtom(incomingNode, "#000000");
 }
+
+/**
+ * Resizes the canvas to the current width and height of the window
+ */
+function resizeHandler() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+window.onresize = resizeHandler;

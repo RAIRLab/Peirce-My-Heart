@@ -1,5 +1,7 @@
 node_modules
 dist
 build
+peircemyheart-*
 docs
 public/docs
+electron-build

@@ -1,4 +1,6 @@
 build/
 dist/
+*.config.js
 public/
-vite.config.js
+peircemyheart-*
+electron-build/
