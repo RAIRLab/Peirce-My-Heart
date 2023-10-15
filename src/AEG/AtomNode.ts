@@ -8,11 +8,6 @@ import {Point} from "./Point";
  */
 export class AtomNode {
     /**
-     * The rectangle signifying the boundary box of this node.
-     */
-    private internalRectangle: Rectangle;
-
-    /**
      * The string value of the proposition represented by this node.
      */
     private internalIdentifier: string;
@@ -23,12 +18,22 @@ export class AtomNode {
     private internalOrigin: Point;
 
     /**
+     * The font size width of the given identifier.
+     */
+    private internalWidth: number;
+
+    /**
+     * the font size height of the given identifier.
+     */
+    private internalHeight: number;
+
+    /**
      * Construct an atom node with given boundary box and proposition.
      * @param rect The rectangle to be set as the boundary box of this node.
      * @param origin Top left corner of the passed in Rectangle
      * @param val The value of the proposition represented by this node.
      */
-    public constructor(val: string, origin: Point, rect: Rectangle) {
+    public constructor(val: string, origin: Point, width: number, height: number) {
         if (val.length !== 1) {
             throw new Error(
                 "String of length " +
@@ -45,22 +50,40 @@ export class AtomNode {
 
         this.internalIdentifier = val;
         this.internalOrigin = origin;
-        this.internalRectangle = rect;
+        this.internalWidth = width;
+        this.internalHeight = height;
     }
 
     /**
-     * Accessor to get the bounding rectangle of the Atom Node.
-     * @returns The bounding rectangle of this Atom Node
+     * Accessor to get the width of this Atom Node.
+     * @returns The width of this Atom Node
      */
-    public get rectangle(): Rectangle {
-        return this.internalRectangle;
+    public get width(): number {
+        return this.internalWidth;
     }
 
     /**
-     * Modifier to set the bounding rectangle of the Atom Node.
+     * Modifier to set the width of this Atom Node.
+     * @param width The new Atom Node width
      */
-    public set rectangle(rect: Rectangle) {
-        this.internalRectangle = rect;
+    public set width(width: number) {
+        this.internalWidth = width;
+    }
+
+    /**
+     * Accessor to get the height of this Atom Node.
+     * @returns the height of this Atom Node
+     */
+    public get height(): number {
+        return this.internalHeight;
+    }
+
+    /**
+     * Modifier to set the height of this Atom Node.
+     * @param height THe new Atom Node height
+     */
+    public set height(height: number) {
+        this.internalHeight = height;
     }
 
     /**
@@ -99,7 +122,7 @@ export class AtomNode {
      * @returns True, if the point is within this node. Else, false.
      */
     public containsPoint(otherPoint: Point): boolean {
-        return this.internalRectangle.containsPoint(otherPoint);
+        return this.calcRect().containsPoint(otherPoint);
     }
 
     /**
@@ -111,7 +134,20 @@ export class AtomNode {
             "An atom representing the proposition: " +
             this.internalIdentifier +
             " and Boundary box of: " +
-            this.internalRectangle.toString()
+            this.calcRect().toString()
+        );
+    }
+
+    /**
+     * Creates a rectangle based off the origin, width, and height.
+     * Origin is altered by the internalHeight to move the point from the bottom left to top right.
+     * @returns The new rectangle based off the atom.
+     */
+    public calcRect(): Rectangle {
+        return new Rectangle(
+            new Point(this.internalOrigin.x, this.internalOrigin.y - this.internalHeight),
+            this.internalWidth,
+            this.internalHeight
         );
     }
 }
