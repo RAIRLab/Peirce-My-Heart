@@ -1,7 +1,6 @@
 import {describe, test, expect} from "vitest";
 
 import {AtomNode} from "../src/AEG/AtomNode";
-import {Rectangle} from "../src/AEG/Rectangle";
 import {Point} from "../src/AEG/Point";
 
 /**
@@ -10,7 +9,6 @@ import {Point} from "../src/AEG/Point";
  */
 describe("AtomNode constructor soliloquy:", () => {
     const pt: Point = new Point(0, 0);
-    const rect: Rectangle = new Rectangle(pt, 0, 0);
 
     test.fails.each([
         [""],
@@ -19,34 +17,27 @@ describe("AtomNode constructor soliloquy:", () => {
         ["Call me Ishmael. Some time ago, never mind how long precisely, "],
         ["SPLIT YOUR LUNGS WITH BLOOD AND THUNDER... WHEN YOU SEE THE WHITE WHALE!"],
     ])("Construction with identifiers not of length 1 should fail.", val => {
-        new AtomNode(val, pt, rect);
+        new AtomNode(val, pt, 0, 0);
     });
 
     test.fails.each([["1"], ["."], [" "], ["Б"], ["ц"]])(
         "Construction with identifier %s not in the Latin alphabet should fail.",
         val => {
-            new AtomNode(val, pt, rect);
+            new AtomNode(val, pt, 0, 0);
         }
     );
 
-    const atom: AtomNode = new AtomNode(
-        "F",
-        new Point(0, 0),
-        new Rectangle(new Point(0, 0), 10, 10)
-    );
-    test("AtomNode construction with identifier F and Rectangle with TopLeft vertex (0, 0) and {h, w} = 10 should produce accurate apt results.", () => {
+    const atom: AtomNode = new AtomNode("F", new Point(0, 10), 10, 10);
+    test("AtomNode construction with identifier F and Rectangle with BottomLeft vertex (0, 10) and {h, w} = 10 should produce accurate apt results.", () => {
         expect(atom.identifier).toBe("F");
-        expect(atom.origin).toStrictEqual(new Point(0, 0));
-        expect(atom.rectangle).toStrictEqual(new Rectangle(new Point(0, 0), 10, 10));
+        expect(atom.origin).toStrictEqual(new Point(0, 10));
+        expect(atom.width).toBe(10); //I am not sure if this is the correct thing to be using but searching it seems to be?
+        expect(atom.height).toBe(10);
     });
 });
 
 describe("AtomNode containsPoint soliloquy:", () => {
-    const atom: AtomNode = new AtomNode(
-        "A",
-        new Point(0, 0),
-        new Rectangle(new Point(0, 0), 10, 10)
-    );
+    const atom: AtomNode = new AtomNode("A", new Point(0, 10), 10, 10);
 
     test.each([
         [1, 1], //arbitrary Points that should be in here
@@ -54,7 +45,7 @@ describe("AtomNode containsPoint soliloquy:", () => {
         [7.561231231231213, 4.12783918264],
         [3.1, 4.5],
     ])(
-        "AtomNode with Rectangle of TL vertex (0, 0), {w, h} = 10 should contain Point (%f, %f).",
+        "AtomNode with Rectangle of BL vertex (0, 10), {w, h} = 10 should contain Point (%f, %f).",
         (x, y) => {
             expect(atom.containsPoint(new Point(x, y))).toBeTruthy();
         }
@@ -76,7 +67,7 @@ describe("AtomNode containsPoint soliloquy:", () => {
         [200, -12398],
         [-12390, 43],
     ])(
-        "AtomNode with Rectangle of TL vertex (0, 0), {w, h} = 10 should not contain Point (%f, %f).",
+        "AtomNode with Rectangle of BL vertex (0, 10), {w, h} = 10 should not contain Point (%f, %f).",
         (x, y) => {
             expect(atom.containsPoint(new Point(x, y))).toBeFalsy();
         }
@@ -84,13 +75,13 @@ describe("AtomNode containsPoint soliloquy:", () => {
 });
 
 describe("AtomNode toString soliloquy:", () => {
-    const tom: AtomNode = new AtomNode("A", new Point(0, 0), new Rectangle(new Point(0, 0), 10, 5)); //this one is tom. like you, he is indivisible. say hello
+    const tom: AtomNode = new AtomNode("A", new Point(0, 5), 10, 5); //this one is tom. like you, he is indivisible. say hello
 
     const expectedString =
         "An atom representing the proposition: " +
         tom.identifier +
         " and Boundary box of: " +
-        tom.rectangle;
+        tom.calcRect().toString();
 
     test(
         "Atom with identifier A and default measurements should produce a toString of the form " +

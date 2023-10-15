@@ -12,6 +12,7 @@ import {AtomNode} from "./AEG/AtomNode";
 import {Point} from "./AEG/Point";
 import {cutMouseDown, cutMouseMove, cutMouseOut, cutMouseUp} from "./CutMode";
 import {atomKeyPress, atomMouseDown, atomMouseMove, atomMouseUp, atomMouseOut} from "./AtomMode";
+import {drawAtom} from "./AtomMode";
 import {saveFile, loadFile} from "./FileUtils";
 import {dragMosueOut, dragMouseDown, dragMouseMove, offset} from "./DragMode";
 
@@ -217,7 +218,7 @@ function mouseUpHandler(event: MouseEvent) {
             cutMouseUp(event);
             break;
         case "atomMode":
-            atomMouseUp();
+            atomMouseUp(event);
             break;
     }
     hasMouseDown = false;
@@ -256,7 +257,7 @@ export function redrawCut(incomingNode: CutNode, offset: Point) {
     cutDisplay.innerHTML = tree.toString();
     for (let i = 0; incomingNode.children.length > i; i++) {
         if (incomingNode.children[i] instanceof AtomNode) {
-            redrawAtom(<AtomNode>incomingNode.children[i], offset);
+            redrawAtom(<AtomNode>incomingNode.children[i]);
         } else {
             redrawCut(<CutNode>incomingNode.children[i], offset);
         }
@@ -282,21 +283,6 @@ export function redrawCut(incomingNode: CutNode, offset: Point) {
  * @param incomingNode The Atom Node to be redrawn
  * @param offset The difference between the actual graph and the current canvas
  */
-function redrawAtom(incomingNode: AtomNode, offset: Point) {
-    const displayBox = incomingNode.rectangle;
-    ctx.strokeStyle = "#000000";
-    ctx.fillStyle = "#000000";
-    ctx.beginPath();
-    ctx.rect(
-        displayBox.startVertex.x + offset.x,
-        displayBox.startVertex.y + offset.y,
-        displayBox.width,
-        displayBox.height
-    );
-    ctx.fillText(
-        incomingNode.identifier,
-        incomingNode.origin.x + offset.x,
-        incomingNode.origin.y + offset.y
-    );
-    ctx.stroke();
+function redrawAtom(incomingNode: AtomNode) {
+    drawAtom(incomingNode, "#000000");
 }
