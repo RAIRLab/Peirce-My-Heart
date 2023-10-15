@@ -130,6 +130,7 @@ export function atomMouseOut() {
  * @param color the color of the atom.
  */
 export function drawAtom(thisAtom: AtomNode, color: string) {
+    atomMetrics = ctx.measureText(identifier);
     ctx.fillStyle = color;
     ctx.strokeStyle = color;
     ctx.beginPath();
