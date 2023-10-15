@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/James-Oswald/PeirceMyHeart#readme",
   "devDependencies": {
-    "@types/node": "20.8.3",
+    "@types/node": "20.8.6",
     "@types/wicg-file-system-access": "^2023.10.1",
     "electron": "^26.2.1",
     "electron-packager": "^17.1.2",
