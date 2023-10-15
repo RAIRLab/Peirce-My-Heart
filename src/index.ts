@@ -147,6 +147,7 @@ async function loadMode() {
         const loadData = loadFile(aegData);
         if (loadData instanceof AEGTree) {
             tree = loadData;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             redrawCut(tree.sheet, offset);
         }
         //TODO: else popup error
