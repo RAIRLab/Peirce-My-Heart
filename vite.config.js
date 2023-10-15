@@ -1,17 +1,22 @@
 /// <reference types="vitest" />
+
+/**
+ * @author James Oswald
+ */
+
 import {resolve} from 'path';
-import {defineConfig} from 'vite'
+import {defineConfig} from 'vite';
 
 export default defineConfig(({command, mode}) => {
     let root = "src"
     return {
         root: root,
-        base: "/Peirce-My-Heart/",
+        base: mode === "electron" ? "" : "/Peirce-My-Heart/",
         publicDir: "../public/",
         build:{
             //only minify if you're trying to debug in the chrome debugger, otherwise use vsc debug
             //minify: mode === "production", 
-            outDir: "../build",
+            outDir: mode === "electron" ? "../electron-build" : "../build",
             emptyOutDir: true,
             rollupOptions:{
                 input:{

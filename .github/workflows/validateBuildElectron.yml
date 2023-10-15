@@ -5,9 +5,8 @@ on:
     branches: [ master ]
 
 jobs:
-  build-Ubuntu:
+  build-Electron-Ubuntu:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
 
@@ -15,9 +14,9 @@ jobs:
         run: npm install
 
       - name: use Vite to compile the application
-        run: npm run build
+        run: npm run build-electron
 
-  build-Windows:
+  build-Electron-Windows:
     runs-on: windows-latest
 
     steps:
@@ -27,4 +26,4 @@ jobs:
         run: npm install
 
       - name: use Vite to compile the application
-        run: npm run build
+        run: npm run build-electron
