@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "peircemyheart electron app",
     "main": "electron.js",
-    "license": "ISC",
+    "license": "MIT",
     "devDependencies": {
       "electron": "^2.0.3"
     },
