@@ -3,7 +3,6 @@ import {AtomNode} from "./AEG/AtomNode";
 import {CutNode} from "./AEG/CutNode";
 import {Ellipse} from "./AEG/Ellipse";
 import {Point} from "./AEG/Point";
-import {Rectangle} from "./AEG/Rectangle";
 
 /**
  * Interface for an object describing Sheet of Assertion
@@ -28,11 +27,8 @@ interface cutObj {
  * Interface for an object describing an Atom Node
  */
 interface atomObj {
-    internalRectangle: {
-        startVertex: {x: number; y: number};
-        width: number;
-        height: number;
-    };
+    internalWidth: number;
+    internalHeight: number;
     internalIdentifier: string;
     internalOrigin: {x: number; y: number};
 }
@@ -109,15 +105,9 @@ function toCut(data: cutObj): CutNode {
  * @returns An AtomNode
  */
 function toAtom(data: atomObj): AtomNode {
-    const rect: Rectangle = new Rectangle(
-        new Point(data.internalRectangle.startVertex.x, data.internalRectangle.startVertex.y),
-        data.internalRectangle.width,
-        data.internalRectangle.height
-    );
-
     const identifier: string = data.internalIdentifier;
 
     const origin: Point = new Point(data.internalOrigin.x, data.internalOrigin.y);
 
-    return new AtomNode(identifier, origin, rect);
+    return new AtomNode(identifier, origin, data.internalWidth, data.internalHeight);
 }

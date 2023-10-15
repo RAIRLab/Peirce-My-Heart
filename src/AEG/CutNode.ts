@@ -116,7 +116,7 @@ export class CutNode {
         }
 
         if (otherNode instanceof AtomNode) {
-            return shapeContains(this.internalEllipse, otherNode.rectangle);
+            return shapeContains(this.internalEllipse, otherNode.calcRect());
         } else {
             return shapeContains(this.internalEllipse, otherNode.internalEllipse!);
         }
