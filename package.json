@@ -9,7 +9,7 @@
     "build": "vite build --mode production",
     "build-dev": "vite build --mode development",
     "build-docs": "typedoc",
-    "build-electron": "vite build --mode electron && electron-packager --overwrite --platform=all electron-build peircemyheart",
+    "build-electron": "vite build --mode electron && electron-packager --overwrite electron-build peircemyheart",
     "preview": "vite preview --open",
     "live-edit": "vite serve --open",
     "vsc-debug": "vite serve",
