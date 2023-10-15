@@ -27,17 +27,17 @@ describe("AtomNode constructor soliloquy:", () => {
         }
     );
 
-    const atom: AtomNode = new AtomNode("F", new Point(0, 0), 10, 10);
-    test("AtomNode construction with identifier F and Rectangle with TopLeft vertex (0, 0) and {h, w} = 10 should produce accurate apt results.", () => {
+    const atom: AtomNode = new AtomNode("F", new Point(0, 10), 10, 10);
+    test("AtomNode construction with identifier F and Rectangle with BottomLeft vertex (0, 10) and {h, w} = 10 should produce accurate apt results.", () => {
         expect(atom.identifier).toBe("F");
-        expect(atom.origin).toStrictEqual(new Point(0, 0));
+        expect(atom.origin).toStrictEqual(new Point(0, 10));
         expect(atom.width).toBe(10); //I am not sure if this is the correct thing to be using but searching it seems to be?
         expect(atom.height).toBe(10);
     });
 });
 
 describe("AtomNode containsPoint soliloquy:", () => {
-    const atom: AtomNode = new AtomNode("A", new Point(0, 0), 10, 10);
+    const atom: AtomNode = new AtomNode("A", new Point(0, 10), 10, 10);
 
     test.each([
         [1, 1], //arbitrary Points that should be in here
@@ -45,7 +45,7 @@ describe("AtomNode containsPoint soliloquy:", () => {
         [7.561231231231213, 4.12783918264],
         [3.1, 4.5],
     ])(
-        "AtomNode with Rectangle of TL vertex (0, 0), {w, h} = 10 should contain Point (%f, %f).",
+        "AtomNode with Rectangle of BL vertex (0, 10), {w, h} = 10 should contain Point (%f, %f).",
         (x, y) => {
             expect(atom.containsPoint(new Point(x, y))).toBeTruthy();
         }
@@ -67,7 +67,7 @@ describe("AtomNode containsPoint soliloquy:", () => {
         [200, -12398],
         [-12390, 43],
     ])(
-        "AtomNode with Rectangle of TL vertex (0, 0), {w, h} = 10 should not contain Point (%f, %f).",
+        "AtomNode with Rectangle of BL vertex (0, 10), {w, h} = 10 should not contain Point (%f, %f).",
         (x, y) => {
             expect(atom.containsPoint(new Point(x, y))).toBeFalsy();
         }
@@ -75,7 +75,7 @@ describe("AtomNode containsPoint soliloquy:", () => {
 });
 
 describe("AtomNode toString soliloquy:", () => {
-    const tom: AtomNode = new AtomNode("A", new Point(0, 0), 10, 5); //this one is tom. like you, he is indivisible. say hello
+    const tom: AtomNode = new AtomNode("A", new Point(0, 5), 10, 5); //this one is tom. like you, he is indivisible. say hello
 
     const expectedString =
         "An atom representing the proposition: " +
