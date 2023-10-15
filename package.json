@@ -2,14 +2,16 @@
   "name": "peircemyheart",
   "version": "0.0.2",
   "description": "A web application for modeling Charles Peirce's Alpha Existential Graph System. In development for UAlbany 499.",
+  "main": "build/index.html",
   "scripts": {
     "lint": "gts lint",
     "fix": "gts fix",
     "build": "vite build --mode production",
     "build-dev": "vite build --mode development",
+    "build-docs": "typedoc",
+    "build-electron": "vite build --mode electron && electron-packager --overwrite electron-build peircemyheart",
     "preview": "vite preview --open",
     "live-edit": "vite serve --open",
-    "build-docs": "typedoc",
     "vsc-debug": "vite serve",
     "live-test": "vitest",
     "test": "vitest run"
@@ -33,10 +35,13 @@
   "devDependencies": {
     "@types/node": "20.8.3",
     "@types/wicg-file-system-access": "^2023.10.1",
+    "electron": "^26.2.1",
+    "electron-packager": "^17.1.2",
     "gts": "^5.2.0",
     "typedoc": "^0.25.2",
     "typescript": "~5.2.2",
     "vite": "^4.4.11",
+    "vite-plugin-singlefile": "^0.13.5",
     "vitest": "^0.34.6"
   }
 }
