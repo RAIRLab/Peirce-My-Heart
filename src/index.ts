@@ -299,3 +299,13 @@ function redrawAtom(incomingNode: AtomNode, offset: Point) {
     );
     ctx.stroke();
 }
+
+/**
+ * Resizes the canvas to the current width and height of the window
+ */
+function resizeHandler() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+window.onresize = resizeHandler;
