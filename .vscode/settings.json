@@ -17,11 +17,17 @@
         "vite",
         "wicg",
         "vitetest",
+        "vitest",
         "xshift",
         "yshift",
         "ICSI",
         "RAIR",
-        "npmignore"
+        "npmignore",
+        "viewports",
+        "msedge",
+        "singlefile",
+        "aegtest",
+        "uitest"
     ],
     "editor.rulers": [100]
 }
