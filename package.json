@@ -43,5 +43,8 @@
     "vite": "^4.4.11",
     "vite-plugin-singlefile": "^0.13.5",
     "vitest": "^0.34.6"
+  },
+  "dependencies": {
+    "selenium-webdriver": "^4.14.0"
   }
 }

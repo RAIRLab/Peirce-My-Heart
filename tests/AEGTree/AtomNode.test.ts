@@ -1,7 +1,7 @@
 import {describe, test, expect} from "vitest";
 
-import {AtomNode} from "../src/AEG/AtomNode";
-import {Point} from "../src/AEG/Point";
+import {AtomNode} from "../../src/AEG/AtomNode";
+import {Point} from "../../src/AEG/Point";
 
 /**
  * Contains comprehensive tests on the AtomNode class.
