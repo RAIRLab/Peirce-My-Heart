@@ -6,13 +6,14 @@ on:
 
 jobs:
   test:
+    timeout-minutes: 5
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Install NPM dependencies
-        run: npm install
+        run: npm ci
 
       - name: Run all vitest tests
         run: npm run test
