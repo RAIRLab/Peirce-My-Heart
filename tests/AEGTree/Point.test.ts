@@ -1,6 +1,6 @@
 import {describe, expect, test} from "vitest";
 
-import {Point} from "../src/AEG/Point";
+import {Point} from "../../src/AEG/Point";
 
 /**
  * Contains comprehensive unit tests on the Point class.
