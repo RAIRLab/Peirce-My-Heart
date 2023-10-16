@@ -8,7 +8,7 @@ Sponsored by James Oswald (RAIR Lab)
 
 ## Development
 
-**All listed commands should be run in the project root**
+**All listed commands should be run in the project root (Peirce-My-Heart)**
 
 ### Documentation
 
@@ -35,6 +35,7 @@ We also use it to invoke all core development tools via `npm run`.
 2. [**Vite**](https://vitejs.dev/) : Vite is an asset bundler and build system for large web projects with 
 many types of resources such as typescript. Additionally, it provides excellent debugging features.
 We use it as a build system for Typescript, Asset Compressor, and Live Debugger.
+    * **Vitest** : a testing framework native to Vite with support for TypeScript. It allows for github workflow compatibility and running numerous tests with one command.
  
 3. [**gts**](https://github.com/google/gts) : gts (Google TypeScript Style) is a set of style guidelines and tools for typescript
 consistent and readable formatting. It provides defaults for the following tools we use:
@@ -97,17 +98,32 @@ open attached to the Vite server, any vs code breakpoints triggered in chrome
 will be jumped to in VSC.
 
 
+## Testing
+
+Test your changes! Vitest will help here by looking for all .test.ts files in /tests/ and running them.
+To perform this locally in a terminal, run the following:
+```bash
+npm run test
+```
+
+
 ### Root Files and Folders Overview
 ```
 /.github/ : The code for github workflows this project uses, used for automatically deploying.
 
-/src/ : source code for the application 
+/src/ : source code for the application.
+
+/public/ : non-code based resources for the application, icons, images, etc.
+
+/tests/ : testing source .test.ts files, made with vitest.
 
 /.eslintignore : list of .js and .ts files the linter shouldn't look at
 
 /.eslintrc.json : config for the linter, which catches semantic errors in your typescript code.
 
 /.gitignore : list of files and folders shouldn't be uploaded with git version control
+
+/.npmignore : list of the files NPM shouldn't peep
 
 /.prettierrc.js : config for prettier, which catches syntactic errors in your typescript code.
 

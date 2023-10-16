@@ -1,3 +1,4 @@
+import {shapeContains} from "./AEGUtils";
 import {AtomNode} from "./AtomNode";
 import {Ellipse} from "./Ellipse";
 import {Point} from "./Point";
@@ -12,21 +13,63 @@ export class CutNode {
     /**
      * The boundary of this node.
      */
-    ellipse: Ellipse | null; //Null for sheet of assertion
+    private internalEllipse: Ellipse | null; //Null for sheet of assertion
 
     /**
      * Contains the list of child nodes nested within this node.
      */
-    children: (AtomNode | CutNode)[];
+    private internalChildren: (AtomNode | CutNode)[];
 
     /**
      * Constructs a CutNode with the incoming Ellipse as its boundary box.
-     * @param ellipse The ellipse to be set as the boundary box of this node.
+     * @param ellipse (Required) The ellipse to be set as the boundary box of this node.
+     * For Sheet of Assertion, this should be passed as null.
      * @param childList The list of children nodes nested within this node.
+     * If not passed, defaults to an empty array.
      */
-    public constructor(ellipse?: Ellipse, childList?: (AtomNode | CutNode)[]) {
-        this.ellipse = ellipse ?? new Ellipse();
-        this.children = childList ?? [];
+    public constructor(ellipse: Ellipse | null, childList?: (AtomNode | CutNode)[]) {
+        this.internalEllipse = ellipse;
+        this.internalChildren = childList ?? [];
+    }
+
+    /**
+     * Accessor to get the bounding ellipse of the Cut Node.
+     * @returns The bounding ellipse of this Cut Node
+     * Returns null for Sheet of Assertion
+     */
+    public get ellipse(): Ellipse | null {
+        return this.internalEllipse;
+    }
+
+    /**
+     * Modifier to set the bounding ellipse of this Cut Node
+     */
+    public set ellipse(ellipse: Ellipse) {
+        this.internalEllipse = ellipse;
+    }
+
+    /**
+     * Accessor to get the children (array of nodes nested within) of the Cut Node.
+     * @returns The children of the Cut Node
+     */
+    public get children(): (AtomNode | CutNode)[] {
+        return this.internalChildren;
+    }
+
+    /**
+     * Modifier that sets the children of the Cut Node.
+     * @param list The list of nodes to be added as the children of the Cut Node
+     */
+    public set children(list: (AtomNode | CutNode)[]) {
+        this.internalChildren = list;
+    }
+
+    /**
+     * Modifier that adds a child to the Cut Node.
+     * @param child The node to be added as a child of the Cut Node
+     */
+    public set child(child: AtomNode | CutNode) {
+        this.internalChildren.push(child);
     }
 
     /**
@@ -35,9 +78,9 @@ export class CutNode {
      * @returns the deepest valid CutNode in which newNode can fit
      */
     public getCurrentCut(newNode: CutNode | AtomNode): CutNode {
-        for (let i = 0; i < this.children.length; i++) {
-            const child: CutNode | AtomNode = this.children[i];
-            if (child instanceof CutNode && this.children[i].containsNode(newNode)) {
+        for (let i = 0; i < this.internalChildren.length; i++) {
+            const child: CutNode | AtomNode = this.internalChildren[i];
+            if (child instanceof CutNode && child.containsNode(newNode)) {
                 //newNode can be placed at least one layer deeper
                 return child.getCurrentCut(newNode);
             }
@@ -51,13 +94,13 @@ export class CutNode {
      * @returns True, if the point is within this node. Else, false.
      */
     public containsPoint(otherPoint: Point): boolean {
-        if (this.ellipse === null) {
+        if (this.internalEllipse === null) {
             //This CutNode represents the sheet.
             //Everything is within the sheet.
             return true;
         }
 
-        return this.ellipse.containsPoint(otherPoint);
+        return this.internalEllipse.containsPoint(otherPoint);
     }
 
     /**
@@ -66,18 +109,16 @@ export class CutNode {
      * @returns True, otherNode it is within this CutNode. Else, false.
      */
     public containsNode(otherNode: AtomNode | CutNode): boolean {
-        if (this.ellipse === null) {
+        if (this.internalEllipse === null) {
             //This CutNode represents the sheet.
             //Everything is within the sheet.
             return true;
         }
 
         if (otherNode instanceof AtomNode) {
-            return this.ellipse.containsShape(otherNode.rect);
-        } else if (otherNode instanceof CutNode) {
-            return this.ellipse.containsShape(otherNode.ellipse as Ellipse);
+            return shapeContains(this.internalEllipse, otherNode.calcRect());
         } else {
-            throw Error("containsNode expected AtomNode or CutNode");
+            return shapeContains(this.internalEllipse, otherNode.internalEllipse!);
         }
     }
 
@@ -90,17 +131,17 @@ export class CutNode {
         if (this.containsPoint(incomingPoint)) {
             let isSmallest = true;
 
-            for (let i = 0; i < this.children.length; i++) {
+            for (let i = 0; i < this.internalChildren.length; i++) {
                 //Check if the point is within a child
-                if (this.children[i].containsPoint(incomingPoint)) {
+                if (this.internalChildren[i].containsPoint(incomingPoint)) {
                     isSmallest = false;
 
-                    if (this.children[i] instanceof CutNode) {
+                    if (this.internalChildren[i] instanceof CutNode) {
                         //If the point is within a cut node, check its children
-                        return (this.children[i] as CutNode).remove(incomingPoint);
+                        return (this.internalChildren[i] as CutNode).remove(incomingPoint);
                     } else {
                         //If the point is within an atom node, remove it
-                        this.children = this.children.splice(i, 1);
+                        this.internalChildren = this.internalChildren.splice(i, 1);
                         return true;
                     }
                 }
@@ -122,21 +163,29 @@ export class CutNode {
     public toString(): string {
         let str: string;
 
-        if (this.ellipse === null) {
+        if (this.internalEllipse === null) {
             str = "Sheet of Assertion of the AEG Tree";
         } else {
-            str = "A cut node with boundary box of \n" + this.ellipse.toString();
+            str = "A cut node with boundary box of \n" + this.internalEllipse.toString();
         }
 
-        if (this.children.length > 0) {
-            str += ", \n" + "With nested nodes: " + this.children.toString();
+        if (this.internalChildren.length > 0) {
+            str += ", \n" + "With nested nodes: " + this.internalChildren.toString();
         }
         return str;
     }
 
+    /**
+     * Constructs a string representation of an AEGTree or a subtree.
+     * () - cut
+     * char - atom
+     * (char char ()) - valid nesting of two chars and a cut inside another cut
+     * @returns an accurate string representation of the AEGTree or a subtree
+     * @author James Oswald
+     */
     public toFormulaString(): string {
         let formulaString = "";
-        for (const child of this.children) {
+        for (const child of this.internalChildren) {
             if (child instanceof AtomNode) {
                 formulaString += child.identifier;
             } else if (child instanceof CutNode) {
@@ -145,7 +194,7 @@ export class CutNode {
             formulaString += " ";
         }
         formulaString = formulaString.slice(0, -1);
-        if (this.ellipse === null) {
+        if (this.internalEllipse === null) {
             formulaString = "[" + formulaString + "]";
         } else {
             formulaString = "(" + formulaString + ")";

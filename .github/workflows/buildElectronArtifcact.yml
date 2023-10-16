@@ -1,0 +1,26 @@
+name: Build and Deploy Peirce my Heart
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    timeout-minutes: 5
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install NPM deps
+        run: npm ci
+
+      - name: Vite build
+        run: npm run build-electron
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: executables
+          path: |
+            peircemyheart-linux-x64
+            peircemyheart-win32-x64
