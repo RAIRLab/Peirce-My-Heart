@@ -6,24 +6,26 @@ on:
 
 jobs:
   build-Electron-Ubuntu:
+    timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
       - name: Install NPM deps
-        run: npm install
+        run: npm ci
 
       - name: use Vite to compile the application
         run: npm run build-electron
 
   build-Electron-Windows:
+    timeout-minutes: 5
     runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Install NPM deps
-        run: npm install
+        run: npm ci
 
       - name: use Vite to compile the application
         run: npm run build-electron
