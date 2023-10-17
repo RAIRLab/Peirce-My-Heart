@@ -6,13 +6,14 @@ on:
 
 jobs:
   build:
+    timeout-minutes: 5
     runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Install NPM deps
-        run: npm install
+        run: npm ci
 
       - name: Vite build
         run: npm run build-electron
