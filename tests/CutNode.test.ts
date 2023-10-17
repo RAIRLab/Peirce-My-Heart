@@ -107,8 +107,45 @@ describe("CutNode getCurrentCut soliloquy:", () => {
     });
 });
 
-describe.skip("CutNode containsPoint soliloquy:", () => {
-    const cNode: CutNode = new CutNode(new Ellipse(new Point(5, 5), 5, 5));
+describe("CutNode containsPoint soliloquy:", () => {
+    const cNode: CutNode = new CutNode(testEllipse);
+
+    test.each([
+        [0, 0],
+        [1000000, 1000000],
+        [-100000, -10000.128971987],
+    ])("Sheet of assertion should contain all points.", (x, y) => {
+        expect(new CutNode(null).containsPoint(new Point(x, y))).toBeTruthy();
+    });
+
+    test.each([
+        [5, 5], //arbitrary points that should be contained within
+        [3, 3],
+        [7, 7],
+    ])(
+        "CutNode with Ellipse of center (5, 5) and {radX, radY} = 5 should contain (%i, %i)",
+        (x, y) => {
+            expect(cNode.containsPoint(new Point(x, y))).toBeTruthy();
+        }
+    );
+
+    test.each([
+        [0, 0], //we probably should not have our Ellipses be Rectangles. These would be the corners
+        [0, 10],
+        [10, 0],
+        [10, 10],
+        [10, 5], //farthest reaches of this Ellipse
+        [0, 5],
+        [5, 0],
+        [5, 10],
+        [100, 100], //arbitrary Points that shouldn't be within
+        [200, 200],
+    ])(
+        "CutNode with Ellipse of center (5, 5), {radX, radY} = 5 should not contain Point (%f, %f).",
+        (x, y) => {
+            expect(cNode.containsPoint(new Point(x, y))).toBeFalsy();
+        }
+    );
 });
 
 describe.skip("CutNode containsNode soliloquy:", () => {
@@ -119,8 +156,23 @@ describe.skip("CutNode remove soliloquy:", () => {
     const cNode: CutNode = new CutNode(new Ellipse(new Point(5, 5), 5, 5));
 });
 
-describe.skip("CutNode toString soliloquy:", () => {
-    const cNode: CutNode = new CutNode(new Ellipse(new Point(5, 5), 5, 5));
+describe("CutNode toString soliloquy:", () => {
+    const sheetNode: CutNode = new CutNode(null);
+
+    test("Sheet of Assertion with no children should produce an appropriate toString.", () => {
+        expect(sheetNode.toString()).toStrictEqual("Sheet of Assertion of the AEG Tree");
+    });
+
+    const cNode: CutNode = new CutNode(testEllipse);
+    cNode.child = new AtomNode("A", new Point(3, 3), 5, 5);
+    cNode.child = new CutNode(new Ellipse(new Point(1, 1), 2, 2));
+
+    let expectedString = "A cut node with boundary box of " + cNode.ellipse?.toString();
+    expectedString += ", With nested nodes: " + cNode.children.toString();
+
+    test("Regular constructor should produce an appropriate toString.", () => {
+        expect(cNode.toString()).toStrictEqual(expectedString);
+    });
 });
 
 describe.skip("CutNode toFormulaString soliloquy:", () => {
