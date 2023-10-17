@@ -152,8 +152,80 @@ describe("CutNode containsPoint soliloquy:", () => {
     );
 });
 
-describe.skip("CutNode containsNode soliloquy:", () => {
+describe("CutNode containsNode soliloquy:", () => {
+    const sheetNode: CutNode = new CutNode(null);
+
+    test.each([
+        [sheetNode],
+        [new CutNode(testEllipse)],
+        [new CutNode(new Ellipse(new Point(100, 1098109238), 17824, 44.44444))],
+        [new AtomNode("A", new Point(0, 0), 1, 1)],
+        [new AtomNode("L", new Point(100000, -100091283), 3, 9999)],
+    ])("Sheet of assertion should contain all nodes.", node => {
+        expect(sheetNode.containsNode(node)).toBeTruthy();
+    });
+
     const cNode: CutNode = new CutNode(testEllipse);
+
+    test("CutNode of any measurement should not contain itself.", () => {
+        expect(cNode.containsNode(cNode)).toBeFalsy();
+    });
+
+    test.each([
+        [5, 0, 10, 10], //Begins at the CutNode's Ellipse's topmost point but top right corner is outside
+        [5, 5, 10, 10], //Begins at the CutNode's Ellipse's center but bottom right corner is outside
+        [0, 0, 5, 5], //Begins outside the CutNode's Ellipse but all other corners are contained within
+        [0, 5, 5, 5],
+    ])(
+        "CutNode with Ellipse of center (5, 5) and {radX, radY} = 5 should not contain AtomNode with Rectangle of TL vertex (%f, %f) and w = %f, h = %f.",
+        (x, y, w, h) => {
+            expect(cNode.containsNode(new AtomNode("A", new Point(x, y), w, h))).toBeFalsy();
+        }
+    );
+
+    test.each([
+        [5, 5, 6, 6], //Begins at the same Point as the CutNode's Ellipse but is larger
+        [15, 15, 5, 5], //Begins outside the CutNode's Ellipse and touches the CutNode's rightmost Point
+        [5, 15, 5, 5], //Begins below the CutNode's Ellipse and touches the CutNode's bottommost Point
+        [5, 5, 1, 10], //Begins at the same center but has one larger radius
+        [5, 5, 10, 1],
+        [2, 2, 3, 4], //arbitrary CutNodes that should not be in here
+        [8, 8, 8, 8],
+        [2.3, -2, 5, 5],
+    ])(
+        "CutNode with Ellipse of center (5, 5) and {radX, radY} = 5 should not contain CutNode with Ellipse of center (%f, %f) and radX = %f, radY = %f.",
+        (x, y, radX, radY) => {
+            expect(
+                cNode.containsNode(new CutNode(new Ellipse(new Point(x, y), radX, radY)))
+            ).toBeFalsy();
+        }
+    );
+
+    test.each([
+        [5, 5, 2, 2], //Arbitrary AtomNodes that should be in here
+        [5, 5, 3, 3],
+        [3, 3, 0.5, 0.5],
+        [8, 8, 0.5, 0.5],
+    ])(
+        "CutNode with Ellipse of center (5, 5) and {radX, radY} = 5 should contain AtomNode with Rectangle of TL vertex (%f, %f) and w = %f, h = %f.",
+        (x, y, w, h) => {
+            expect(cNode.containsNode(new AtomNode("A", new Point(x, y), w, h))).toBeTruthy();
+        }
+    );
+
+    test.each([
+        [5, 5, 1, 1], //arbitrary CutNodes that should be in here
+        [3, 3, 0.5, 0.5],
+        [5, 5, 1, 3],
+        [7, 7, 0.8, 0.8],
+    ])(
+        "CutNode with Ellipse of center (5, 5) and {radX, radY} = 5 should contain CutNode with Ellipse of center (%f, %f) and radX = %f, radY = %f.",
+        (x, y, radX, radY) => {
+            expect(
+                cNode.containsNode(new CutNode(new Ellipse(new Point(x, y), radX, radY)))
+            ).toBeTruthy();
+        }
+    );
 });
 
 describe.skip("CutNode remove soliloquy:", () => {

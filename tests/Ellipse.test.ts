@@ -123,7 +123,7 @@ describe("Ellipse-on-Ellipse contains soliloquy:", () => {
     const ell: Ellipse = new Ellipse(new Point(5, 5), 5, 5); //diameters of 10
 
     test("Any Ellipse should not contain an Ellipse with the same measurements.", () => {
-        expect(ell.contains(new Rectangle(new Point(0, 0), 5, 5))).toBeFalsy();
+        expect(ell.contains(ell)).toBeFalsy();
     });
 });
 
