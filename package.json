@@ -35,7 +35,7 @@
   "devDependencies": {
     "@types/node": "20.8.3",
     "@types/wicg-file-system-access": "^2023.10.1",
-    "electron": "^26.2.1",
+    "electron": "^27.0.0",
     "electron-packager": "^17.1.2",
     "gts": "^5.2.0",
     "typedoc": "^0.25.2",
