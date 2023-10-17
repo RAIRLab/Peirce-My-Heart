@@ -8,6 +8,10 @@ import {Point} from "../src/AEG/Point";
 const testCenter = new Point(5, 5);
 const testEllipse = new Ellipse(testCenter, 5, 5);
 
+/**
+ * Contains comprehensive tests on the CutNode class.
+ * @author Ryan Reilly
+ */
 describe("CutNode constructor soliloquy:", () => {
     const cNode: CutNode = new CutNode(testEllipse);
 
@@ -149,11 +153,11 @@ describe("CutNode containsPoint soliloquy:", () => {
 });
 
 describe.skip("CutNode containsNode soliloquy:", () => {
-    const cNode: CutNode = new CutNode(new Ellipse(new Point(5, 5), 5, 5));
+    const cNode: CutNode = new CutNode(testEllipse);
 });
 
 describe.skip("CutNode remove soliloquy:", () => {
-    const cNode: CutNode = new CutNode(new Ellipse(new Point(5, 5), 5, 5));
+    const cNode: CutNode = new CutNode(testEllipse);
 });
 
 describe("CutNode toString soliloquy:", () => {
@@ -175,6 +179,34 @@ describe("CutNode toString soliloquy:", () => {
     });
 });
 
-describe.skip("CutNode toFormulaString soliloquy:", () => {
-    const cNode: CutNode = new CutNode(new Ellipse(new Point(5, 5), 5, 5));
+describe("CutNode toFormulaString soliloquy:", () => {
+    const sheetNode: CutNode = new CutNode(null);
+
+    test("Sheet of assertion should produce a formula string with only square brackets.", () => {
+        expect(sheetNode.toFormulaString()).toStrictEqual("[]");
+    });
+
+    test("CutNode should produce an appropriate formula string with children one level deep.", () => {
+        const newSheetNode: CutNode = new CutNode(null);
+        newSheetNode.child = new CutNode(testEllipse);
+        newSheetNode.child = new AtomNode("A", new Point(0, 0), 1, 1);
+        expect(newSheetNode.toFormulaString()).toStrictEqual("[() A]");
+    });
+
+    test("CutNode should produce an appropriate formula string with children one+ levels deep.", () => {
+        const parentCutNode: CutNode = new CutNode(testEllipse);
+        parentCutNode.child = new AtomNode("J", new Point(0, 0), 1, 1);
+        parentCutNode.child = new CutNode(testEllipse);
+        const emptyCutNode: CutNode = new CutNode(testEllipse);
+        const childAtomNode: AtomNode = new AtomNode("B", new Point(0, 0), 1, 1);
+
+        const children: (CutNode | AtomNode)[] = [];
+
+        children.push(parentCutNode);
+        children.push(emptyCutNode);
+        children.push(childAtomNode);
+
+        const cNode: CutNode = new CutNode(testEllipse, children);
+        expect(cNode.toFormulaString()).toStrictEqual("((J ()) () B)");
+    });
 });
