@@ -10,7 +10,7 @@ h2 {
     font-size: xx-large;
     border-style: dotted;
 }
-p1 {
+p {
     color: #77697f;
     font-size: x-large;
 }
@@ -63,7 +63,7 @@ body {
 .button {
     --button-offset: 0.28em;
     --bg: 178, 60%, 48%;
-    background-color: a5668b;
+    background-color: #a5668b;
     border: 0;
     border-radius: 0.2em;
     padding: 0.1em;
