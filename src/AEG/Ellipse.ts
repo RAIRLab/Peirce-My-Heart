@@ -1,6 +1,6 @@
 import {Point} from "./Point";
 import {Rectangle} from "./Rectangle";
-import {shapesOverlaps, shapeContains, pointInELlipse} from "./AEGUtils";
+import {shapesOverlap, shapeContains, signedDistanceFromEllipse} from "./AEGUtils";
 
 /**
  * Class that defines an Ellipse.
@@ -30,21 +30,56 @@ export class Ellipse {
 
     /**
      * Construct an ellipse using the given points and radii.
-     * If no values specified, default them to 0.
      * @param center The center point of the ellipse.
      * @param radX The horizontal radius of the ellipse.
      * @param radY The vertical radius of the ellipse.
+     * @throws Errors on NaN, Infinity, and negative radii lengths.
      */
-    public constructor(center?: Point, radX?: number, radY?: number) {
-        this.center = center ?? new Point();
-        this.radiusX = radX ?? 0;
-        this.radiusY = radY ?? 0;
+    public constructor(center: Point, radX: number, radY: number) {
+        this.center = center;
+        this.radiusX = radX;
+        this.radiusY = radY;
+
+        if (!Number.isFinite(this.radiusX) || !Number.isFinite(this.radiusY)) {
+            throw new Error("A radius passed into an Ellipse construction was NaN or Infinity.");
+        } else if (this.radiusX !== undefined && this.radiusX < 0) {
+            throw new Error("Horizontal radius in an Ellipse construction was negative.");
+        } else if (this.radiusY !== undefined && this.radiusY < 0) {
+            throw new Error("Vertical radius in an Ellipse construction was negative.");
+        }
 
         const boundingVertex: Point = new Point(
             this.center.x - this.radiusX,
             this.center.y - this.radiusY
         );
         this.boundingBox = new Rectangle(boundingVertex, this.radiusX * 2, this.radiusY * 2);
+    }
+
+    /**
+     * Method that checks whether a point is within the given ellipse.
+     * @param otherPoint The point that might be inside this ellipse.
+     * @returns True, if the point is inside this ellipse. Else, false
+     */
+    public containsPoint(point: Point): boolean {
+        return signedDistanceFromEllipse(this, point) < 0;
+    }
+
+    /**
+     * Method that checks whether there is an overlap between this ellipse and another shape.
+     * @param otherShape The other shape that might be overlapping this ellipse.
+     * @returns True, if there is an overlap. Else, false.
+     */
+    public overlaps(otherShape: Rectangle | Ellipse): boolean {
+        return shapesOverlap(this, otherShape);
+    }
+
+    /**
+     * Method that checks whether another shape is within this ellipse.
+     * @param otherShape The shape that might be within this ellipse.
+     * @returns True, if the shape is within this ellipse. Else, false.
+     */
+    public contains(otherShape: Rectangle | Ellipse): boolean {
+        return shapeContains(this, otherShape);
     }
 
     /**
@@ -55,42 +90,12 @@ export class Ellipse {
         return (
             "An ellipse with Center at: " +
             this.center.toString() +
-            ", \n" +
-            "Horizontal Radius of: " +
+            ", Horizontal radius: " +
             this.radiusX +
-            ", \n" +
-            "Vertical Radius of: " +
+            ", Vertical radius: " +
             this.radiusY +
-            ", \n" +
-            "Bounding box: " +
+            ", Bounding box: " +
             this.boundingBox.toString()
         );
-    }
-
-    /**
-     * Method that checks whether a point is within the given ellipse.
-     * @param otherPoint The point that might be inside this ellipse.
-     * @returns True, if the point is inside this ellipse. Else, false
-     */
-    public containsPoint(point: Point): boolean {
-        return pointInELlipse(this, point);
-    }
-
-    /**
-     * Method that checks whether there is an overlap between this ellipse and another shape.
-     * @param otherShape The other shape that might be overlapping this ellipse.
-     * @returns True, if there is an overlap. Else, false.
-     */
-    public overlaps(otherShape: Rectangle | Ellipse): boolean {
-        return shapesOverlaps(this, otherShape);
-    }
-
-    /**
-     * Method that checks whether another shape is within this ellipse.
-     * @param otherShape The shape that might be within this ellipse.
-     * @returns True, if the shape is within this ellipse. Else, false.
-     */
-    public contains(otherShape: Rectangle | Ellipse): boolean {
-        return shapeContains(this, otherShape);
     }
 }
