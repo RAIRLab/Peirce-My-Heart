@@ -51,10 +51,7 @@ export function atomMouseDown(event: MouseEvent) {
     wasOut = false;
     const currentAtom = new AtomNode(
         identifier,
-        new Point(
-            event.clientX - offset.x,
-            event.clientY - atomMetrics.fontBoundingBoxDescent - offset.y
-        ),
+        new Point(event.clientX - offset.x, event.clientY - offset.y),
         atomMetrics.width,
         atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
     );
@@ -75,10 +72,7 @@ export function atomMouseDown(event: MouseEvent) {
 export function atomMouseMove(event: MouseEvent) {
     const currentAtom = new AtomNode(
         identifier,
-        new Point(
-            event.clientX - offset.x,
-            event.clientY - atomMetrics.fontBoundingBoxDescent - offset.y
-        ),
+        new Point(event.clientX - offset.x, event.clientY - offset.y),
         atomMetrics.width,
         atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
     );
@@ -101,10 +95,7 @@ export function atomMouseMove(event: MouseEvent) {
 export function atomMouseUp(event: MouseEvent) {
     const currentAtom = new AtomNode(
         identifier,
-        new Point(
-            event.clientX - offset.x,
-            event.clientY - atomMetrics.fontBoundingBoxDescent - offset.y
-        ),
+        new Point(event.clientX - offset.x, event.clientY - offset.y),
         atomMetrics.width,
         atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
     );
@@ -130,7 +121,8 @@ export function atomMouseOut() {
  * @param color the color of the atom.
  */
 export function drawAtom(thisAtom: AtomNode, color: string) {
-    atomMetrics = ctx.measureText(identifier);
+    ctx.textBaseline = "bottom";
+    atomMetrics = ctx.measureText(thisAtom.identifier);
     ctx.fillStyle = color;
     ctx.strokeStyle = color;
     ctx.beginPath();
