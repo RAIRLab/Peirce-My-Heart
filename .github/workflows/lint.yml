@@ -6,13 +6,14 @@ on:
 
 jobs:
   lint:
+    timeout-minutes: 5
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Install NPM deps
-        run: npm install
+        run: npm ci
 
       - name: Lint TS Code according to gts
         run: npm run lint
