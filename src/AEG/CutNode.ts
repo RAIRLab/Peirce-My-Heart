@@ -149,7 +149,6 @@ export class CutNode {
                             (this.children[i] as CutNode).children[j].containsPoint(incomingPoint)
                         ) {
                             //If the child has children, and one of its children contains the Point, recursion time.
-                            //console.log("child type: " + this.children[i]);
                             if ((this.children[i] as CutNode).children[j] instanceof AtomNode) {
                                 (this.children[i] as CutNode).children.splice(j, 1);
                             } else {
