@@ -229,7 +229,61 @@ describe("CutNode containsNode soliloquy:", () => {
 });
 
 describe.skip("CutNode remove soliloquy:", () => {
+    const sheetNode: CutNode = new CutNode(null);
+
+    test("Removing the Sheet of Assertion should return false.", () => {
+        expect(sheetNode.remove(new Point(0, 0))).toBeFalsy();
+    });
+
     const cNode: CutNode = new CutNode(testEllipse);
+
+    test("Removing a Point not within the requested CutNode should return false.", () => {
+        expect(cNode.remove(new Point(50, 50))).toBeFalsy();
+    });
+
+    test("Removing an AtomNode one level deep should be successful.", () => {
+        cNode.child = new AtomNode("A", new Point(4, 4), 2, 2);
+        expect(cNode.remove(testCenter)).toBeTruthy();
+        expect(cNode.children.length).toBe(0);
+    });
+
+    test("Removing a childless CutNode one level deep should be successful.", () => {
+        cNode.child = new CutNode(new Ellipse(testCenter, 2, 2));
+        expect(cNode.remove(testCenter)).toBeTruthy();
+        expect(cNode.children.length).toBe(0);
+    });
+
+    test("Removing a CutNode with children, but with no children who contain the Point, should be successful.", () => {
+        cNode.child = new AtomNode("B", new Point(8, 8), 1, 1);
+        cNode.child = new CutNode(new Ellipse(new Point(5, 2), 0.5, 0.5));
+        expect(cNode.remove(testCenter)).toBeTruthy();
+        expect(cNode).toBeNull();
+    });
+
+    test("Removing a CutNode with children two cut levels deep should be successful.", () => {
+        const dee: AtomNode = new AtomNode("D", new Point(4, 4), 2, 2);
+        const childCut: CutNode = new CutNode(new Ellipse(testCenter, 4, 4));
+        childCut.child = dee;
+
+        cNode.child = childCut;
+
+        expect(cNode.remove(testCenter)).toBeTruthy();
+        expect((cNode.children[0] as CutNode).children.length).toBe(0);
+    });
+
+    test("Removing a CutNode with children several levels deep should be successful.", () => {
+        const ell: AtomNode = new AtomNode("L", new Point(4, 4), 1.5, 1.5);
+        const childCutThreeDeep: CutNode = new CutNode(new Ellipse(testCenter, 2, 2));
+        const childCutTwoDeep: CutNode = new CutNode(new Ellipse(testCenter, 3, 3));
+        const childCutOneDeep: CutNode = new CutNode(new Ellipse(testCenter, 4, 4));
+        childCutThreeDeep.child = ell;
+        childCutTwoDeep.child = childCutThreeDeep;
+        childCutOneDeep.child = childCutTwoDeep;
+        cNode.child = childCutOneDeep;
+
+        expect(cNode.remove(testCenter)).toBeTruthy();
+        expect(childCutThreeDeep.children.length).toBe(0);
+    });
 });
 
 describe("CutNode toString soliloquy:", () => {
