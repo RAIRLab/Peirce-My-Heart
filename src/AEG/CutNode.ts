@@ -123,36 +123,46 @@ export class CutNode {
     }
 
     /**
-     * Removes the node lowest on the tree containing the incoming Point.
+     * Removes the lowest node recognized by this CutNode containing the incoming Point.
      * @param incomingPoint The incoming Point
-     * @returns True, if the node was successfully removed. Else, false
+     * @returns True, if the node was successfully removed.
      */
     public remove(incomingPoint: Point): boolean {
-        if (this.containsPoint(incomingPoint)) {
-            let isSmallest = true;
+        if (!this.containsPoint(incomingPoint) || this.ellipse === null) {
+            return false;
+        }
 
-            for (let i = 0; i < this.internalChildren.length; i++) {
-                //Check if the point is within a child
-                if (this.internalChildren[i].containsPoint(incomingPoint)) {
-                    isSmallest = false;
-
-                    if (this.internalChildren[i] instanceof CutNode) {
-                        //If the point is within a cut node, check its children
-                        return (this.internalChildren[i] as CutNode).remove(incomingPoint);
-                    } else {
-                        //If the point is within an atom node, remove it
-                        this.internalChildren = this.internalChildren.splice(i, 1);
-                        return true;
+        //We do contain the Point at this stage.
+        for (let i = 0; i < this.children.length; i++) {
+            if (this.children[i].containsPoint(incomingPoint)) {
+                if (
+                    this.children[i] instanceof AtomNode || //If the child is childless, the child must be spliced.
+                    (this.children[i] instanceof CutNode &&
+                        (this.children[i] as CutNode).children.length === 0)
+                ) {
+                    this.children.splice(i, 1);
+                    return true;
+                }
+            } else {
+                //We have a CutNode with more than 0 children.
+                for (let j = 0; j < (this.children[i] as CutNode).children.length; j++) {
+                    if (
+                        ((this.children[i] as CutNode).children[j] as CutNode).containsPoint(
+                            incomingPoint
+                        )
+                    ) {
+                        //If the child has children, and one of its children contains the Point, recursion time.
+                        return ((this.children[i] as CutNode).children[j] as CutNode).remove(
+                            incomingPoint
+                        );
                     }
                 }
-            }
-            //if the point is not contained within any children nodes, delete this node
-            if (isSmallest) {
-                //What to do to remove this node?
+                //Here, we have a CutNode with more than 0 children, none of which contained the Point.
+                //This is now the lowest node containing the Point, and so, we must remove the child.
+                this.children.splice(i, 1);
                 return true;
             }
         }
-
         return false;
     }
 
