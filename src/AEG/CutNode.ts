@@ -142,25 +142,28 @@ export class CutNode {
                 ) {
                     this.children.splice(i, 1);
                     return true;
-                }
-            } else {
-                //We have a CutNode with more than 0 children.
-                for (let j = 0; j < (this.children[i] as CutNode).children.length; j++) {
-                    if (
-                        ((this.children[i] as CutNode).children[j] as CutNode).containsPoint(
-                            incomingPoint
-                        )
-                    ) {
-                        //If the child has children, and one of its children contains the Point, recursion time.
-                        return ((this.children[i] as CutNode).children[j] as CutNode).remove(
-                            incomingPoint
-                        );
+                } else {
+                    //We have a CutNode with more than 0 children.
+                    for (let j = 0; j < (this.children[i] as CutNode).children.length; j++) {
+                        if (
+                            (this.children[i] as CutNode).children[j].containsPoint(incomingPoint)
+                        ) {
+                            //If the child has children, and one of its children contains the Point, recursion time.
+                            //console.log("child type: " + this.children[i]);
+                            if ((this.children[i] as CutNode).children[j] instanceof AtomNode) {
+                                (this.children[i] as CutNode).children.splice(j, 1);
+                            } else {
+                                return (
+                                    (this.children[i] as CutNode).children[j] as CutNode
+                                ).remove(incomingPoint);
+                            }
+                        }
                     }
+                    //Here, we have a CutNode with more than 0 children, none of which contained the Point.
+                    //This is now the lowest node containing the Point, and so, we must remove the child.
+                    this.children.splice(i, 1);
+                    return true;
                 }
-                //Here, we have a CutNode with more than 0 children, none of which contained the Point.
-                //This is now the lowest node containing the Point, and so, we must remove the child.
-                this.children.splice(i, 1);
-                return true;
             }
         }
         return false;
@@ -176,11 +179,11 @@ export class CutNode {
         if (this.internalEllipse === null) {
             str = "Sheet of Assertion of the AEG Tree";
         } else {
-            str = "A cut node with boundary box of \n" + this.internalEllipse.toString();
+            str = "A cut node with boundary box of " + this.internalEllipse.toString();
         }
 
         if (this.internalChildren.length > 0) {
-            str += ", \n" + "With nested nodes: " + this.internalChildren.toString();
+            str += ", With nested nodes: " + this.internalChildren.toString();
         }
         return str;
     }
