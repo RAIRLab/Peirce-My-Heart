@@ -1,18 +1,19 @@
-
 body, html{
     margin: 0;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
     display:contents;
+    background-color: #f9ddd0;
 }
 
 p {
     margin: 0px;
+    text-emphasis-color: white;
 }
 
 #header {
-    background-color: white;
+    background-color: #a6b6d9;
     border: 2px solid black;
     height: 3vw;
     width: 100vw;
@@ -37,6 +38,16 @@ p {
     height: 2vw;
     border: 2px solid black;
     margin: 3px;
+    border-radius: 50%;
+}
+
+.modeButton:active,
+.modeButton:focus-visible {
+    transform: translateY(2px);
+    box-shadow: none;
+}
+.modeButton:hover {
+  background-color: rgb(156, 206, 239);
 }
 
 #content {
@@ -50,7 +61,7 @@ p {
     float: right;
     height: 2vw;
     box-sizing: border-box;
-    background-color: white;
+    background-color: #94b09c;
 }
 
 #subBar {
@@ -59,7 +70,7 @@ p {
     float: right;
     height: 2vw;
     box-sizing: border-box;
-    background-color: white;
+    background-color: rgb(188, 240, 200);
 }
 
 #cutTools {
@@ -79,7 +90,7 @@ p {
 #sidebar {
     box-sizing: border-box;
     border: 2px solid black;
-    background-color: white;
+    background-color: #526D82;
     height: 100vh;
     float: left;
     width: 5vw;
