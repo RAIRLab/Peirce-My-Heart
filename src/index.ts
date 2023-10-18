@@ -284,7 +284,7 @@ export function redrawCut(incomingNode: CutNode, offset: Point) {
  * @param offset The difference between the actual graph and the current canvas
  */
 function redrawAtom(incomingNode: AtomNode) {
-    drawAtom(incomingNode, "#000000");
+    drawAtom(incomingNode, "#000000", false);
 }
 
 /**
