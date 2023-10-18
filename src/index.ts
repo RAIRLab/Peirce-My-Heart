@@ -162,6 +162,7 @@ async function loadMode() {
  */
 function keyDownHandler(event: KeyboardEvent) {
     if (event.ctrlKey && event.key === "s") {
+        event.preventDefault(); //prevents Chrome and such from saving the .html of the current webpage
         saveMode();
     } else {
         switch (modeState) {
