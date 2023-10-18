@@ -113,8 +113,8 @@ export class AEGTree {
      * @param incomingPoint The point indicating the node that must be removed
      * @returns True, if the node was successfully removed. Else, false
      */
-    public remove(incomingPoint: Point): void {
-        this.internalSheet.remove(incomingPoint);
+    public remove(incomingPoint: Point): boolean {
+        return this.internalSheet.remove(incomingPoint);
     }
 
     /**
