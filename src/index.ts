@@ -37,7 +37,18 @@ canvas.addEventListener("mousemove", mouseMoveHandler);
 canvas.addEventListener("mouseup", mouseUpHandler);
 canvas.addEventListener("mouseout", mouseOutHandler);
 canvas.addEventListener("mouseenter", mouseEnterHandler);
-let modeState = "";
+enum Mode {
+    atomMode,
+    cutMode,
+    dragMode,
+    moveSingleMode,
+    moveMultiMode,
+    copySingleMode,
+    copyMultiMode,
+    deleteSingleMode,
+    deleteMultiMode,
+}
+let modeState: Mode;
 let hasMouseDown = false;
 let hasMouseIn = true;
 export let tree: AEGTree = new AEGTree();
@@ -48,6 +59,12 @@ window.cutMode = cutMode;
 window.dragMode = dragMode;
 window.saveMode = saveMode;
 window.loadMode = loadMode;
+window.moveSingleMode = moveSingleMode;
+window.moveMultiMode = moveMultiMode;
+window.copySingleMode = copySingleMode;
+window.copyMultiMode = copyMultiMode;
+window.deleteSingleMode = deleteSingleMode;
+window.deleteMultiMode = deleteMultiMode;
 declare global {
     interface Window {
         cutMode: () => void;
@@ -55,35 +72,94 @@ declare global {
         dragMode: () => void;
         saveMode: () => void;
         loadMode: () => void;
+        moveSingleMode: () => void;
+        moveMultiMode: () => void;
+        copySingleMode: () => void;
+        copyMultiMode: () => void;
+        deleteSingleMode: () => void;
+        deleteMultiMode: () => void;
     }
 }
 
 /**
- * If there is no current mode creates the listeners. Hides non cutTools.
- * Sets the current mode to cut mode.
+ * Sets the current mode to cut mode. Hides non cutTools.f
  */
 function cutMode() {
-    modeState = "cutMode";
+    modeState = Mode.cutMode;
     cutTools.style.display = "block";
     //Block all other mode tools
     atomTools.style.display = "none";
 }
 
 /**
- * Sets the current mode to atom mode. Hides non atomTools.
+ * Sets the current mode to atom mode. Hides non atom tools.
  */
 function atomMode() {
-    modeState = "atomMode";
+    modeState = Mode.atomMode;
     atomTools.style.display = "block";
     //Block all other mode tools
     cutTools.style.display = "none";
 }
 
 /**
- * Sets the current mode to move mode. Hides non moveTools.
+ * Sets the current mode to move mode. Hides non move tools.
  */
 function dragMode() {
-    modeState = "dragMode";
+    modeState = Mode.dragMode;
+    cutTools.style.display = "none";
+    atomTools.style.display = "none";
+}
+
+/**
+ * Sets the current mode to moveSingleMode. Hides non move tools.
+ */
+function moveSingleMode() {
+    modeState = Mode.moveSingleMode;
+    cutTools.style.display = "none";
+    atomTools.style.display = "none";
+}
+
+/**
+ * Sets the current mode to moveMultiMode. Hides non move tools.
+ */
+function moveMultiMode() {
+    modeState = Mode.moveMultiMode;
+    cutTools.style.display = "none";
+    atomTools.style.display = "none";
+}
+
+/**
+ * Sets the current mode to copySingleMode. Hides non copy tools.
+ */
+function copySingleMode() {
+    modeState = Mode.copySingleMode;
+    cutTools.style.display = "none";
+    atomTools.style.display = "none";
+}
+
+/**
+ * Sets the current mode to copyMultiMode. Hides non copy tools.
+ */
+function copyMultiMode() {
+    modeState = Mode.copyMultiMode;
+    cutTools.style.display = "none";
+    atomTools.style.display = "none";
+}
+
+/**
+ * Sets the current mode to deleteSingleMode. Hides non delete tools.
+ */
+function deleteSingleMode() {
+    modeState = Mode.deleteSingleMode;
+    cutTools.style.display = "none";
+    atomTools.style.display = "none";
+}
+
+/**
+ * Sets the current mode to deleteMultiMode. Hides non delete tools.
+ */
+function deleteMultiMode() {
+    modeState = Mode.deleteMultiMode;
     cutTools.style.display = "none";
     atomTools.style.display = "none";
 }
@@ -162,7 +238,7 @@ function keyDownHandler(event: KeyboardEvent) {
         saveMode();
     } else {
         switch (modeState) {
-            case "atomMode":
+            case Mode.atomMode:
                 atomKeyPress(event);
                 break;
         }
@@ -175,13 +251,13 @@ function keyDownHandler(event: KeyboardEvent) {
  */
 function mouseDownHandler(event: MouseEvent) {
     switch (modeState) {
-        case "cutMode":
+        case Mode.cutMode:
             cutMouseDown(event);
             break;
-        case "atomMode":
+        case Mode.atomMode:
             atomMouseDown(event);
             break;
-        case "dragMode":
+        case Mode.dragMode:
             dragMouseDown(event);
             break;
     }
@@ -195,13 +271,13 @@ function mouseDownHandler(event: MouseEvent) {
 function mouseMoveHandler(event: MouseEvent) {
     if (hasMouseDown && hasMouseIn) {
         switch (modeState) {
-            case "cutMode":
+            case Mode.cutMode:
                 cutMouseMove(event);
                 break;
-            case "atomMode":
+            case Mode.atomMode:
                 atomMouseMove(event);
                 break;
-            case "dragMode":
+            case Mode.dragMode:
                 dragMouseMove(event);
                 break;
         }
@@ -215,10 +291,10 @@ function mouseMoveHandler(event: MouseEvent) {
  */
 function mouseUpHandler(event: MouseEvent) {
     switch (modeState) {
-        case "cutMode":
+        case Mode.cutMode:
             cutMouseUp(event);
             break;
-        case "atomMode":
+        case Mode.atomMode:
             atomMouseUp(event);
             break;
     }
@@ -231,13 +307,13 @@ function mouseUpHandler(event: MouseEvent) {
  */
 function mouseOutHandler() {
     switch (modeState) {
-        case "cutMode":
+        case Mode.cutMode:
             cutMouseOut();
             break;
-        case "atomMode":
+        case Mode.atomMode:
             atomMouseOut();
             break;
-        case "dragMode":
+        case Mode.dragMode:
             dragMosueOut();
             break;
     }
