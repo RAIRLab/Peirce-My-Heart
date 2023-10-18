@@ -92,7 +92,6 @@ function dragMode() {
  * Calls the function to save the file.
  */
 async function saveMode() {
-    //TODO: CTRL+S Hotkey
     const file = saveFile(tree);
 
     if ("showSaveFilePicker" in window) {
@@ -164,11 +163,12 @@ async function loadMode() {
 function keyDownHandler(event: KeyboardEvent) {
     if (event.ctrlKey && event.key === "s") {
         saveMode();
-    }
-    switch (modeState) {
-        case "atomMode":
-            atomKeyPress(event);
-            break;
+    } else {
+        switch (modeState) {
+            case "atomMode":
+                atomKeyPress(event);
+                break;
+        }
     }
 }
 
