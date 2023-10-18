@@ -38,6 +38,7 @@ p {
     height: 2vw;
     border: 2px solid black;
     margin: 3px;
+    border-radius: 50%;
 }
 
 .modeButton:active,
@@ -69,7 +70,7 @@ p {
     float: right;
     height: 2vw;
     box-sizing: border-box;
-    background-color: white;
+    background-color: rgb(193, 240, 214);
 }
 
 #subBar {
@@ -78,7 +79,7 @@ p {
     float: right;
     height: 2vw;
     box-sizing: border-box;
-    background-color: white;
+    background-color: rgb(196, 236, 214);
 }
 
 #cutTools {
