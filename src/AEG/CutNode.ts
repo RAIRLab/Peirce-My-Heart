@@ -128,7 +128,7 @@ export class CutNode {
      * @returns True, if the node was successfully removed.
      */
     public remove(incomingPoint: Point): boolean {
-        if (!this.containsPoint(incomingPoint) || this.ellipse === null) {
+        if (!this.containsPoint(incomingPoint)) {
             return false;
         }
 
@@ -159,7 +159,7 @@ export class CutNode {
                         }
                     }
                     //Here, we have a CutNode with more than 0 children, none of which contained the Point.
-                    //This is now the lowest node containing the Point, and so, we must remove the child.
+                    //This CutNode is now the lowest node containing the Point, and so, we must remove that child.
                     this.children.splice(i, 1);
                     return true;
                 }

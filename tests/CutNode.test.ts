@@ -235,6 +235,12 @@ describe("CutNode remove soliloquy:", () => {
         expect(sheetNode.remove(new Point(0, 0))).toBeFalsy();
     });
 
+    test("Removing a child of the Sheet of Assertion should be successful.", () => {
+        sheetNode.child = new AtomNode("H", new Point(0, 4), 3, 3);
+        expect(sheetNode.remove(new Point(2, 2))).toBeTruthy();
+        expect(sheetNode.children.length).toBe(0);
+    });
+
     const cNode: CutNode = new CutNode(testEllipse);
 
     test("Removing a Point not within the requested CutNode should return false.", () => {
