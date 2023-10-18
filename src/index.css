@@ -4,7 +4,9 @@ body, html{
     height: 100vh;
     overflow: hidden;
     display:contents;
-    background-color: #f9ddd0;
+    background-color: white;
+    font-weight: bold;
+    font-size: larger;
 }
 
 p {
@@ -70,7 +72,7 @@ p {
     float: right;
     height: 2vw;
     box-sizing: border-box;
-    background-color: rgb(188, 240, 200);
+    background-color: rgb(190, 215, 190);
 }
 
 #cutTools {
