@@ -123,36 +123,48 @@ export class CutNode {
     }
 
     /**
-     * Removes the node lowest on the tree containing the incoming Point.
+     * Removes the lowest node recognized by this CutNode containing the incoming Point.
      * @param incomingPoint The incoming Point
-     * @returns True, if the node was successfully removed. Else, false
+     * @returns True, if the node was successfully removed.
      */
     public remove(incomingPoint: Point): boolean {
-        if (this.containsPoint(incomingPoint)) {
-            let isSmallest = true;
-
-            for (let i = 0; i < this.internalChildren.length; i++) {
-                //Check if the point is within a child
-                if (this.internalChildren[i].containsPoint(incomingPoint)) {
-                    isSmallest = false;
-
-                    if (this.internalChildren[i] instanceof CutNode) {
-                        //If the point is within a cut node, check its children
-                        return (this.internalChildren[i] as CutNode).remove(incomingPoint);
-                    } else {
-                        //If the point is within an atom node, remove it
-                        this.internalChildren = this.internalChildren.splice(i, 1);
-                        return true;
-                    }
-                }
-            }
-            //if the point is not contained within any children nodes, delete this node
-            if (isSmallest) {
-                //What to do to remove this node?
-                return true;
-            }
+        if (!this.containsPoint(incomingPoint)) {
+            return false;
         }
 
+        //We do contain the Point at this stage.
+        for (let i = 0; i < this.children.length; i++) {
+            if (this.children[i].containsPoint(incomingPoint)) {
+                if (
+                    this.children[i] instanceof AtomNode || //If the child is childless, the child must be spliced.
+                    (this.children[i] instanceof CutNode &&
+                        (this.children[i] as CutNode).children.length === 0)
+                ) {
+                    this.children.splice(i, 1);
+                    return true;
+                } else {
+                    //We have a CutNode with more than 0 children.
+                    for (let j = 0; j < (this.children[i] as CutNode).children.length; j++) {
+                        if (
+                            (this.children[i] as CutNode).children[j].containsPoint(incomingPoint)
+                        ) {
+                            //If the child has children, and one of its children contains the Point, recursion time.
+                            if ((this.children[i] as CutNode).children[j] instanceof AtomNode) {
+                                (this.children[i] as CutNode).children.splice(j, 1);
+                            } else {
+                                return (
+                                    (this.children[i] as CutNode).children[j] as CutNode
+                                ).remove(incomingPoint);
+                            }
+                        }
+                    }
+                    //Here, we have a CutNode with more than 0 children, none of which contained the Point.
+                    //This CutNode is now the lowest node containing the Point, and so, we must remove that child.
+                    this.children.splice(i, 1);
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -166,11 +178,11 @@ export class CutNode {
         if (this.internalEllipse === null) {
             str = "Sheet of Assertion of the AEG Tree";
         } else {
-            str = "A cut node with boundary box of \n" + this.internalEllipse.toString();
+            str = "A cut node with boundary box of " + this.internalEllipse.toString();
         }
 
         if (this.internalChildren.length > 0) {
-            str += ", \n" + "With nested nodes: " + this.internalChildren.toString();
+            str += ", With nested nodes: " + this.internalChildren.toString();
         }
         return str;
     }
