@@ -31,7 +31,7 @@ ctx.font = "35pt arial";
 const cutDisplay = <HTMLParagraphElement>document.getElementById("graphString");
 const cutTools = <HTMLParagraphElement>document.getElementById("cutTools");
 const atomTools = <HTMLParagraphElement>document.getElementById("atomTools");
-window.addEventListener("keypress", keyPressHandler);
+window.addEventListener("keydown", keyDownHandler);
 canvas.addEventListener("mousedown", mouseDownHandler);
 canvas.addEventListener("mousemove", mouseMoveHandler);
 canvas.addEventListener("mouseup", mouseUpHandler);
@@ -156,11 +156,15 @@ async function loadMode() {
 
     reader.readAsText(file);
 }
+
 /**
- * Calls the respective keypress function depending on current mode.
+ * Calls the respective keydown function depending on current mode.
  * @param event The event of a keypress
  */
-function keyPressHandler(event: KeyboardEvent) {
+function keyDownHandler(event: KeyboardEvent) {
+    if (event.ctrlKey && event.key === "s") {
+        saveMode();
+    }
     switch (modeState) {
         case "atomMode":
             atomKeyPress(event);
