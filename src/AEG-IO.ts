@@ -38,9 +38,11 @@ interface atomObj {
  * @param handle The handler for the save file picker
  * @param aegData Serialized JSON string containing the AEG data
  */
-export async function saveFile(handle: FileSystemFileHandle, aegData: string) {
+export async function saveFile(handle: FileSystemFileHandle, aegData: AEGTree) {
+    const data = JSON.stringify(aegData, null, "\t");
+
     const writable = await handle.createWritable();
-    await writable.write(aegData);
+    await writable.write(data);
     await writable.close();
 }
 
