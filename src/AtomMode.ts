@@ -19,6 +19,10 @@ const ctx: CanvasRenderingContext2D = res;
 //HTML letter display
 const atomDisplay = <HTMLParagraphElement>document.getElementById("atomDisplay");
 
+//HTML bounding box check
+const atomCheckBox = <HTMLInputElement>document.getElementById("atomBox");
+const atomCheckBoxes = <HTMLInputElement>document.getElementById("atomBoxes");
+
 //Allows font measurement in pixels to creature atom bounding box.
 let atomMetrics: TextMetrics;
 
@@ -59,9 +63,9 @@ export function atomMouseDown(event: MouseEvent) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     redrawCut(tree.sheet, offset);
     if (tree.canInsert(currentAtom)) {
-        drawAtom(currentAtom, "#00FF00");
+        drawAtom(currentAtom, "#00FF00", true);
     } else {
-        drawAtom(currentAtom, "#FF0000");
+        drawAtom(currentAtom, "#FF0000", true);
     }
 }
 
@@ -81,9 +85,9 @@ export function atomMouseMove(event: MouseEvent) {
     redrawCut(tree.sheet, offset);
     if (!wasOut) {
         if (tree.canInsert(currentAtom)) {
-            drawAtom(currentAtom, "#00FF00");
+            drawAtom(currentAtom, "#00FF00", true);
         } else {
-            drawAtom(currentAtom, "#FF0000");
+            drawAtom(currentAtom, "#FF0000", true);
         }
     }
 }
@@ -120,18 +124,20 @@ export function atomMouseOut() {
  * @param thisAtom the atomMode to be drawn.
  * @param color the color of the atom.
  */
-export function drawAtom(thisAtom: AtomNode, color: string) {
+export function drawAtom(thisAtom: AtomNode, color: string, currentAtom: Boolean) {
     ctx.textBaseline = "bottom";
     atomMetrics = ctx.measureText(thisAtom.identifier);
     ctx.fillStyle = color;
     ctx.strokeStyle = color;
     ctx.beginPath();
     ctx.fillText(thisAtom.identifier, thisAtom.origin.x + offset.x, thisAtom.origin.y + offset.y);
-    ctx.rect(
-        thisAtom.origin.x + offset.x,
-        thisAtom.origin.y + offset.y - atomMetrics.actualBoundingBoxAscent,
-        thisAtom.width,
-        thisAtom.height
-    );
+    if (atomCheckBoxes.checked || (atomCheckBox.checked && currentAtom)) {
+        ctx.rect(
+            thisAtom.origin.x + offset.x,
+            thisAtom.origin.y + offset.y - atomMetrics.actualBoundingBoxAscent,
+            thisAtom.width,
+            thisAtom.height
+        );
+    }
     ctx.stroke();
 }
