@@ -112,7 +112,7 @@ export function createEllipse(original: Point, current: Point): Ellipse {
 
     if (showRectElm.checked) {
         ctx.beginPath();
-        ctx.rect(original.x, original.y, -sdx, -sdy);
+        ctx.rect(original.x + offset.x, original.y + offset.y, -sdx, -sdy);
         ctx.stroke();
     }
 
