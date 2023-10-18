@@ -13,7 +13,7 @@ import {Point} from "./AEG/Point";
 import {cutMouseDown, cutMouseMove, cutMouseOut, cutMouseUp} from "./CutMode";
 import {atomKeyPress, atomMouseDown, atomMouseMove, atomMouseUp, atomMouseOut} from "./AtomMode";
 import {drawAtom} from "./AtomMode";
-import {saveFile, loadFile} from "./FileUtils";
+import {saveFile, loadFile} from "./AEG-IO";
 import {dragMosueOut, dragMouseDown, dragMouseMove, offset} from "./DragMode";
 
 //Setting up Canvas
@@ -92,8 +92,6 @@ function dragMode() {
  * Calls the function to save the file.
  */
 async function saveMode() {
-    const file = saveFile(tree);
-
     if ("showSaveFilePicker" in window) {
         //Slow Download
         const saveHandle = await window.showSaveFilePicker({
@@ -110,13 +108,11 @@ async function saveMode() {
             ],
         });
 
-        const writable = await saveHandle.createWritable();
-        await writable.write(file);
-        await writable.close();
+        saveFile(saveHandle, tree);
     } else {
         //Quick Download
         const f = document.createElement("a");
-        f.href = file;
+        f.href = JSON.stringify(tree, null, "\t");
         f.download = "AEGTree.json";
         f.click();
     }
