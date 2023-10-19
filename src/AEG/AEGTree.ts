@@ -89,7 +89,7 @@ export class AEGTree {
      * Throws an error otherwise.
      * @param incomingNode The node to be inserted
      */
-    public insert(incomingNode: AtomNode | CutNode): void {
+    public insert(incomingNode: AtomNode | CutNode): boolean {
         if (!this.canInsert(incomingNode)) {
             throw new Error("Insertion failed. " + incomingNode + " had a collision.");
         }
@@ -106,6 +106,8 @@ export class AEGTree {
                 }
             }
         }
+
+        return true;
     }
 
     /**
@@ -113,8 +115,8 @@ export class AEGTree {
      * @param incomingPoint The point indicating the node that must be removed
      * @returns True, if the node was successfully removed. Else, false
      */
-    public remove(incomingPoint: Point): void {
-        this.internalSheet.remove(incomingPoint);
+    public remove(incomingPoint: Point): boolean {
+        return this.internalSheet.remove(incomingPoint);
     }
 
     /**
