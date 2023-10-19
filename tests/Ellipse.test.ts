@@ -4,6 +4,10 @@ import {Ellipse} from "../src/AEG/Ellipse";
 import {Rectangle} from "../src/AEG/Rectangle";
 import {Point} from "../src/AEG/Point";
 
+/**
+ * Contains comprehensive tests on the Ellipse class.
+ * @author Ryan Reilly
+ */
 describe("Ellipse constructor soliloquy:", () => {
     const center: Point = new Point(10, 10);
 
@@ -119,7 +123,7 @@ describe("Ellipse-on-Ellipse contains soliloquy:", () => {
     const ell: Ellipse = new Ellipse(new Point(5, 5), 5, 5); //diameters of 10
 
     test("Any Ellipse should not contain an Ellipse with the same measurements.", () => {
-        expect(ell.contains(new Rectangle(new Point(0, 0), 5, 5))).toBeFalsy();
+        expect(ell.contains(ell)).toBeFalsy();
     });
 });
 
