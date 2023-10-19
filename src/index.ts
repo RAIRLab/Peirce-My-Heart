@@ -58,11 +58,10 @@ declare global {
     }
 }
 
-//Active mode button stays pressed down
+//Active mode button stays pressed down until another mode button is clicked
 const modeButtons = document.querySelectorAll(".modeButton");
 modeButtons.forEach(button => {
     button.addEventListener("click", () => {
-        console.log("clicked");
         button.classList.toggle("modeButtonPressed");
         modeButtons.forEach(otherButton => {
             if (otherButton !== button) {

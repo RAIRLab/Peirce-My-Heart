@@ -15,6 +15,7 @@ p {
 #header {
     background-color: #a6b6d9;
     border: 2px solid #000000;
+    border-right: 0px;
     min-height: 6vh;
     width: 100vw;
     text-align: center;
@@ -50,9 +51,9 @@ p {
 }
 
 .modeButtonPressed {
-    -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
-     -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
-          box-shadow: inset 0px 0px 5px #c1c1c1;
+    -webkit-box-shadow: inset 0px 0px 5px #000000; 
+     -moz-box-shadow: inset 0px 0px 5px #000000;
+          box-shadow: inset 0px 0px 5px #000000;
 }
 
 .modeButton:hover {
@@ -66,34 +67,31 @@ p {
     min-width: 6vw;
 }
 
-#graphString {
-    width: 84vw;
-    overflow-wrap: break-word;
-}
-
 #content {
     width: 100%;
     height: auto;
 }
 
 #toolbar {
-    border: 2px solid #000000;
-    border-left: 0px;
-    border-top: 0px;
+    border-bottom: 2px solid black;
     min-height: 7vh;
-    max-height: fit-content;
-    width: 100vw;
+    max-height: 10vh;
+    max-width: 100vw;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overflow-wrap: break-word;
     box-sizing: border-box;
     background-color: #94b09c;
 }
 
 #subBar {
-    border: 2px solid black;
-    border-left: 0px;
-    border-top: 0px;
+    border-bottom: 2px solid black;
     min-height: 6vh;
-    max-height: fit-content;
-    width: 100vw;
+    max-height: 10vh;
+    max-width: 100vw;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overflow-wrap: break-word;
     box-sizing: border-box;
     background-color: #bed7be;
 }
