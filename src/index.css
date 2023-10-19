@@ -4,24 +4,25 @@ body, html{
     height: 100vh;
     overflow: hidden;
     display:contents;
-    background-color: white;
-    font-weight: bold;
-    font-size: larger;
+    background-color: #ffffff;
 }
 
 p {
     margin: 0px;
-    text-emphasis-color: white;
+    text-emphasis-color: #ffffff;
+    white-space: nowrap;
 }
 
 #header {
     background-color: #a6b6d9;
-    border: 2px solid black;
-    height: 3vw;
+    border: 2px solid #000000;
+    min-height: 7vh;
     width: 100vw;
     text-align: center;
-    padding-top: 1vw;
+    padding-top: 1vh;
     box-sizing: border-box;
+    font-weight: bold;
+    font-size: x-large;
 }
 
 #application {
@@ -33,23 +34,36 @@ p {
 
 .row {
     display: flex;
+    justify-content: space-around;
 }
 
 .modeButton {
-    width: 2vw;
-    height: 2vw;
-    border: 2px solid black;
-    margin: 3px;
-    border-radius: 50%;
+    min-width: 2vw;
+    min-height: 5vh;
+    border: 2px solid #000000;
+    margin: 2px;
+    border-radius: 25%;
+    box-shadow: 1px 2px 1px #000000;
 }
 
-.modeButton:active,
-.modeButton:focus-visible {
+.modeButton:active {
     transform: translateY(2px);
-    box-shadow: none;
 }
+
+.modeButton:focus {
+    -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
+     -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
+          box-shadow: inset 0px 0px 5px #c1c1c1;
+}
+
 .modeButton:hover {
-  background-color: rgb(156, 206, 239);
+  background-color: #d4e8f5;
+}
+
+.fileButton {
+    float: right;
+    margin-right: 10px;
+    display: inline-block;
 }
 
 #content {
@@ -58,21 +72,25 @@ p {
 }
 
 #toolbar {
-    border: 2px solid black;
-    width: 95vw;
-    float: right;
-    height: 2vw;
+    border: 2px solid #000000;
+    border-left: 0px;
+    border-top: 0px;
+    min-height: 7vh;
+    max-height: fit-content;
+    width: 100vw;
     box-sizing: border-box;
     background-color: #94b09c;
 }
 
 #subBar {
     border: 2px solid black;
-    width: 95vw;
-    float: right;
-    height: 2vw;
+    border-left: 0px;
+    border-top: 0px;
+    min-height: 6vh;
+    max-height: fit-content;
+    width: 100vw;
     box-sizing: border-box;
-    background-color: rgb(190, 215, 190);
+    background-color: #bed7be;
 }
 
 #cutTools {
@@ -89,13 +107,20 @@ p {
     margin: 5px;
 }
 
+.tree-string {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+}
+
 #sidebar {
     box-sizing: border-box;
-    border: 2px solid black;
+    border: 2px solid #000000;
+    border-top: 0px;
     background-color: #526D82;
     height: 100vh;
     float: left;
-    width: 5vw;
+    min-width: 6vw;
 }
 
 #canvas {
@@ -104,9 +129,10 @@ p {
     left: 0px;
     z-index: -1;
 }
+
 .no-highlight{
     user-select: none; 
     -moz-user-select: none; 
     -webkit-text-select: none;
     -webkit-user-select: none; 
- }
+}
