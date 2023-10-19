@@ -28,8 +28,32 @@ describe.skip("AEGTree verify soliloquy:", () => {
     const tree: AEGTree = new AEGTree();
 });
 
-describe.skip("AEGTree canInsert soliloquy:", () => {
+describe("AEGTree canInsert soliloquy:", () => {
     const tree: AEGTree = new AEGTree();
+
+    test("Empty tree should be able to insert all types of node.", () => {
+        expect(tree.canInsert(new AtomNode("G", origin, 5, 5))).toBeTruthy();
+        expect(tree.canInsert(new CutNode(testEllipse))).toBeTruthy();
+    });
+
+    test("Intersecting CutNodes should not be able to be inserted.", () => {
+        tree.insert(new CutNode(testEllipse));
+        expect(tree.canInsert(new CutNode(new Ellipse(testCenter, 5, 6)))).toBeFalsy();
+    });
+
+    test("AtomNode intersecting a CutNode should not be able to be inserted.", () => {
+        expect(tree.canInsert(new AtomNode("A", new Point(8, 5), 5, 5))).toBeFalsy();
+    });
+
+    test("AtomNode intersecting an AtomNode should not be able to be inserted.", () => {
+        tree.insert(new AtomNode("Y", testCenter, 3, 3));
+        expect(tree.canInsert(new AtomNode("N", testCenter, 4, 4))).toBeFalsy();
+    });
+
+    //Should be impossible, just wanted a case written to express the thought. Currently throws an error if not skipped
+    test.skip("Tree should not be able to insert another Sheet of Assertion.", () => {
+        expect(tree.canInsert(new CutNode(null))).toBeFalsy();
+    });
 });
 
 describe.skip("AEGTree insert soliloquy:", () => {
@@ -43,18 +67,17 @@ describe("AEGTree remove soliloquy:", () => {
         expect(tree.remove(new Point(0, 0))).toBeFalsy();
     });
 
-    test("Removing a child of the tree should be successful.", () => {
+    test("Removing a child of the tree one level deep should be successful.", () => {
         tree.insert(new AtomNode("A", new Point(0, 4), 3, 3));
         expect(tree.remove(new Point(2, 2))).toBeTruthy();
     });
-});
 
-describe.skip("AEGTree intersects soliloquy:", () => {
-    const tree: AEGTree = new AEGTree();
-});
-
-describe.skip("AEGTree overlaps soliloquy:", () => {
-    const tree: AEGTree = new AEGTree();
+    test("Removing a child of the tree one+ levels deep should be successful.", () => {
+        const coco: CutNode = new CutNode(new Ellipse(origin, 10, 10)); //my friend's cat is named Coco
+        coco.child = new AtomNode("P", new Point(7, 7), 2, 2);
+        tree.insert(coco);
+        expect(tree.remove(new Point(6, 6))).toBeTruthy();
+    });
 });
 
 describe("AEGTree toString soliloquy:", () => {
