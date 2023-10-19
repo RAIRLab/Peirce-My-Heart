@@ -22,8 +22,36 @@ describe("AEGTree constructor soliloquy:", () => {
     });
 });
 
-describe.skip("AEGTree verify soliloquy:", () => {
+describe("AEGTree verify soliloquy:", () => {
     const tree: AEGTree = new AEGTree();
+
+    test("Verification with empty Sheet of Assertion should be successful.", () => {
+        expect(tree.verify()).toBeTruthy();
+    });
+
+    test("Verification with CutNode with valid children should be successful.", () => {
+        tree.insert(new CutNode(new Ellipse(testCenter, 50, 50)));
+        tree.insert(new CutNode(testEllipse));
+        tree.insert(new AtomNode("A", origin, 1, 1));
+        expect(tree.verify()).toBeTruthy();
+    });
+
+    test("Verification with CutNode with invalid children should be unsuccessful.", () => {
+        const cocoNode: CutNode = new CutNode(new Ellipse(testCenter, 20, 20)); //hi Coco
+        cocoNode.child = new AtomNode("F", new Point(1000, 1000), 50, 50);
+        cocoNode.child = new CutNode(new Ellipse(new Point(-5000, -5000), 2, 2));
+        tree.insert(cocoNode);
+        expect(tree.verify()).toBeFalsy();
+    });
+
+    test("Verification after inserting a CutNode around existing nodes should be successful.", () => {
+        const treeThree: AEGTree = new AEGTree();
+
+        treeThree.insert(new CutNode(new Ellipse(testCenter, 10, 10)));
+        treeThree.insert(new AtomNode("K", origin, 1, 1));
+        treeThree.insert(new CutNode(new Ellipse(testCenter, 100, 100)));
+        expect(treeThree.verify()).toBeTruthy();
+    });
 });
 
 describe("AEGTree canInsert soliloquy:", () => {
