@@ -1,5 +1,5 @@
 body, html{
-    margin: 0;
+    margin: 0px;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
@@ -10,13 +10,12 @@ body, html{
 p {
     margin: 0px;
     text-emphasis-color: #ffffff;
-    white-space: nowrap;
 }
 
 #header {
     background-color: #a6b6d9;
     border: 2px solid #000000;
-    min-height: 7vh;
+    min-height: 6vh;
     width: 100vw;
     text-align: center;
     padding-top: 1vh;
@@ -39,7 +38,7 @@ p {
 
 .modeButton {
     min-width: 2vw;
-    min-height: 5vh;
+    min-height: 4vh;
     border: 2px solid #000000;
     margin: 2px;
     border-radius: 25%;
@@ -63,7 +62,13 @@ p {
 .fileButton {
     float: right;
     margin-right: 10px;
-    display: inline-block;
+    margin-top: 3px;
+    min-width: 6vw;
+}
+
+#graphString {
+    width: 84vw;
+    overflow-wrap: break-word;
 }
 
 #content {
@@ -107,20 +112,15 @@ p {
     margin: 5px;
 }
 
-.tree-string {
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    hyphens: auto;
-}
-
 #sidebar {
     box-sizing: border-box;
     border: 2px solid #000000;
     border-top: 0px;
+    padding-top: 3px;
     background-color: #526D82;
     height: 100vh;
-    float: left;
     min-width: 6vw;
+    float: left;
 }
 
 #canvas {
