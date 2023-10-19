@@ -13,7 +13,7 @@ import {Point} from "./AEG/Point";
 import {cutMouseDown, cutMouseMove, cutMouseOut, cutMouseUp} from "./CutMode";
 import {atomKeyPress, atomMouseDown, atomMouseMove, atomMouseUp, atomMouseOut} from "./AtomMode";
 import {drawAtom} from "./AtomMode";
-import {saveFile, loadFile} from "./FileUtils";
+import {saveFile, loadFile} from "./AEG-IO";
 import {dragMosueOut, dragMouseDown, dragMouseMove, offset} from "./DragMode";
 
 //Setting up Canvas
@@ -31,7 +31,7 @@ ctx.font = "35pt arial";
 const cutDisplay = <HTMLParagraphElement>document.getElementById("graphString");
 const cutTools = <HTMLParagraphElement>document.getElementById("cutTools");
 const atomTools = <HTMLParagraphElement>document.getElementById("atomTools");
-window.addEventListener("keypress", keyPressHandler);
+window.addEventListener("keydown", keyDownHandler);
 canvas.addEventListener("mousedown", mouseDownHandler);
 canvas.addEventListener("mousemove", mouseMoveHandler);
 canvas.addEventListener("mouseup", mouseUpHandler);
@@ -92,9 +92,6 @@ function dragMode() {
  * Calls the function to save the file.
  */
 async function saveMode() {
-    //TODO: CTRL+S Hotkey
-    const file = saveFile(tree);
-
     if ("showSaveFilePicker" in window) {
         //Slow Download
         const saveHandle = await window.showSaveFilePicker({
@@ -111,13 +108,11 @@ async function saveMode() {
             ],
         });
 
-        const writable = await saveHandle.createWritable();
-        await writable.write(file);
-        await writable.close();
+        saveFile(saveHandle, tree);
     } else {
         //Quick Download
         const f = document.createElement("a");
-        f.href = file;
+        f.href = JSON.stringify(tree, null, "\t");
         f.download = "AEGTree.json";
         f.click();
     }
@@ -156,15 +151,21 @@ async function loadMode() {
 
     reader.readAsText(file);
 }
+
 /**
- * Calls the respective keypress function depending on current mode.
+ * Calls the respective keydown function depending on current mode.
  * @param event The event of a keypress
  */
-function keyPressHandler(event: KeyboardEvent) {
-    switch (modeState) {
-        case "atomMode":
-            atomKeyPress(event);
-            break;
+function keyDownHandler(event: KeyboardEvent) {
+    if (event.ctrlKey && event.key === "s") {
+        event.preventDefault(); //prevents Chrome and such from saving the .html of the current webpage
+        saveMode();
+    } else {
+        switch (modeState) {
+            case "atomMode":
+                atomKeyPress(event);
+                break;
+        }
     }
 }
 
@@ -284,7 +285,7 @@ export function redrawCut(incomingNode: CutNode, offset: Point) {
  * @param offset The difference between the actual graph and the current canvas
  */
 function redrawAtom(incomingNode: AtomNode) {
-    drawAtom(incomingNode, "#000000");
+    drawAtom(incomingNode, "#000000", false);
 }
 
 /**
