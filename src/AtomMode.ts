@@ -22,6 +22,7 @@ const atomDisplay = <HTMLParagraphElement>document.getElementById("atomDisplay")
 //HTML bounding box check
 const atomCheckBox = <HTMLInputElement>document.getElementById("atomBox");
 const atomCheckBoxes = <HTMLInputElement>document.getElementById("atomBoxes");
+atomCheckBoxes.addEventListener("input", checkBoxRedraw);
 
 //Allows font measurement in pixels to creature atom bounding box.
 let atomMetrics: TextMetrics;
@@ -140,4 +141,12 @@ export function drawAtom(thisAtom: AtomNode, color: string, currentAtom: Boolean
         );
     }
     ctx.stroke();
+}
+
+/**
+ * When the checkbox for showing all bounding boxes is checked redraws the canvas showing the boxes.
+ */
+function checkBoxRedraw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    redrawCut(tree.sheet, offset);
 }
