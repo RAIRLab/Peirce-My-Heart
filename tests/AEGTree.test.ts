@@ -4,9 +4,7 @@ import {AtomNode} from "../src/AEG/AtomNode";
 import {CutNode} from "../src/AEG/CutNode";
 import {Point} from "../src/AEG/Point";
 import {Ellipse} from "../src/AEG/Ellipse";
-import {Rectangle} from "../src/AEG/Rectangle";
 import {AEGTree} from "../src/AEG/AEGTree";
-import {shapesOverlap, shapesIntersect} from "../src/AEG/AEGUtils";
 
 const origin = new Point(0, 0);
 const testCenter = new Point(5, 5);
@@ -56,8 +54,31 @@ describe("AEGTree canInsert soliloquy:", () => {
     });
 });
 
-describe.skip("AEGTree insert soliloquy:", () => {
+describe("AEGTree insert soliloquy:", () => {
     const tree: AEGTree = new AEGTree();
+
+    test("Insertions on an empty sheet should be successful.", () => {
+        expect(tree.insert(new CutNode(testEllipse))).toBeTruthy();
+        expect(tree.insert(new AtomNode("Y", testCenter, 3, 3))).toBeTruthy();
+    });
+
+    test.fails("Attempting to insert an intersecting CutNode should throw an error.", () => {
+        tree.insert(new CutNode(new Ellipse(testCenter, 5, 6)));
+    });
+
+    test.fails("Attempting to insert an intersecting AtomNode should throw an error.", () => {
+        tree.insert(new AtomNode("N", testCenter, 4, 4));
+    });
+
+    test("Insertion inside an existing CutNode should be successful.", () => {
+        tree.remove(testCenter);
+        expect(tree.insert(new CutNode(new Ellipse(testCenter, 4, 4)))).toBeTruthy();
+        expect(tree.insert(new AtomNode("Z", testCenter, 0.01, 0.01))).toBeTruthy();
+    });
+
+    test("Insertion around existing nodes should be successful.", () => {
+        expect(tree.insert(new CutNode(new Ellipse(testCenter, 50, 50)))).toBeTruthy();
+    });
 });
 
 describe("AEGTree remove soliloquy:", () => {
