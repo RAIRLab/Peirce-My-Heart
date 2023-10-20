@@ -15,6 +15,7 @@ import {atomKeyPress, atomMouseDown, atomMouseMove, atomMouseUp, atomMouseOut} f
 import {drawAtom} from "./AtomMode";
 import {saveFile, loadFile} from "./AEG-IO";
 import {dragMosueOut, dragMouseDown, dragMouseMove, offset} from "./DragMode";
+import {placedColor} from "./Themes";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -277,7 +278,7 @@ export function redrawCut(incomingNode: CutNode, offset: Point) {
         }
     }
     if (incomingNode.ellipse instanceof Ellipse) {
-        ctx.strokeStyle = "#000000";
+        ctx.strokeStyle = placedColor();
         ctx.beginPath();
         ctx.ellipse(
             incomingNode.ellipse.center.x + offset.x,
@@ -298,7 +299,7 @@ export function redrawCut(incomingNode: CutNode, offset: Point) {
  * @param offset The difference between the actual graph and the current canvas
  */
 function redrawAtom(incomingNode: AtomNode) {
-    drawAtom(incomingNode, "#000000", false);
+    drawAtom(incomingNode, placedColor(), false);
 }
 
 /**

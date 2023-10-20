@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="utf-8"/>
     <title>Peirce My Heart</title>
     <link rel="manifest" href="PeirceMyHeart.webmanifest"/>
     <link rel="icon" href="icons/favicon.ico">
@@ -10,6 +11,10 @@
     <meta name="author" content="Rensselaer Artificial Intelligence and Reasoning Laboratory"/>
     <!--Fork Awesome Icons-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css" integrity="sha256-XoaMnoYC5TH6/+ihMEnospgm0J1PM/nioxbOUdnM8HY=" crossorigin="anonymous">
+    <!--Theme Change Library-->
+    <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
+
+    <link rel="stylesheet" href="themes.css">
     <link rel="stylesheet" href="index.css">
     <script type="module" src="index.ts"></script>
   </head>
@@ -41,6 +46,15 @@
           <p id="graphString"></p>
         </div>
         <div class="fileButton">
+          <div class="toolSetting">
+            <p class="no-highlight">Theme:</p>
+          </div>
+          <select id="theme-select" name="theme-select" data-choose-theme>
+            <option value="">Nature</option>
+            <option value="Wireframe">Wireframe</option>
+            <option value="Dark-Wireframe">Dark-Wireframe</option>
+            <option value="vs-code">VS-Code</option>
+          </select>
           <button type="button" onclick="saveMode()" title="Save File" class="modeButton">
             <i class="fa fa-floppy-o" aria-hidden="true"></i>
           </button>
