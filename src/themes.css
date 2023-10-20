@@ -6,6 +6,9 @@
 :root {
     --global-background : #ffffff;
     --p-text : #000000;
+    --canvas-items : #000000;
+    --good-placement : #00FF00;
+    --bad-placement : #FF0000;
     --header-border: 2px solid #000000;
     --header-bg : #a6b6d9;
     --toolbar-border: 2px solid black;
@@ -50,7 +53,7 @@
 /* Dark Wireframe, showcases using a new CSS Variable in multiple places:
    --dark-highlights controls the highlight color */
 [data-theme="Dark-Wireframe"] {
-    --dark-highlights : #4297ad;
+    --dark-highlights : #762eac;
     --global-background : #000000;
     --p-text : var(--dark-highlights);
     --canvas-bg : #000000;

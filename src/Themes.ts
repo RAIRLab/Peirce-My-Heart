@@ -26,7 +26,7 @@ let illegalColorStr: string = cssVar("--bad-placement");
 let placedColorStr: string = cssVar("--canvas-items");
 
 /**
- * 
+ * Redraw the canvas and update the HTML states
  */
 function setTheme() {
     /*
@@ -47,7 +47,6 @@ function setTheme() {
     });
 }
 
-//Redraw the canvas and update the HTML states
 themeSelector.addEventListener("input", ()=>{setTheme();});
 window.addEventListener("DOMContentLoaded", ()=>{setTheme();});
 
