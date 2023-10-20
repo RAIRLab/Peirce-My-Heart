@@ -7,6 +7,7 @@ import {Point} from "./AEG/Point";
 import {AtomNode} from "./AEG/AtomNode";
 import {redrawCut, tree} from "./index";
 import {offset} from "./DragMode";
+import {legalColor, illegalColor} from "./Themes";
 
 //Setting Up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -64,9 +65,9 @@ export function atomMouseDown(event: MouseEvent) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     redrawCut(tree.sheet, offset);
     if (tree.canInsert(currentAtom)) {
-        drawAtom(currentAtom, "#00FF00", true);
+        drawAtom(currentAtom, legalColor(), true);
     } else {
-        drawAtom(currentAtom, "#FF0000", true);
+        drawAtom(currentAtom, illegalColor(), true);
     }
 }
 
@@ -86,9 +87,9 @@ export function atomMouseMove(event: MouseEvent) {
     redrawCut(tree.sheet, offset);
     if (!wasOut) {
         if (tree.canInsert(currentAtom)) {
-            drawAtom(currentAtom, "#00FF00", true);
+            drawAtom(currentAtom, legalColor(), true);
         } else {
-            drawAtom(currentAtom, "#FF0000", true);
+            drawAtom(currentAtom, illegalColor(), true);
         }
     }
 }
