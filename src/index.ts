@@ -142,6 +142,7 @@ function atomMode() {
  * Sets the current mode to move mode. Hides non move tools.
  */
 function dragMode() {
+    console.log(tree);
     modeState = Mode.dragMode;
     cutTools.style.display = "none";
     atomTools.style.display = "none";
