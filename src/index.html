@@ -38,23 +38,22 @@
     <div id="toolbar">
       <div id="genericTools">
         <div class="toolSetting">
-          <p class="no-highlight" id="graphString"></p>
+          <p id="graphString"></p>
         </div>
-        <!-- fileButton class to be styled -->
-        <button type="button" onclick="saveMode()" title="Save File" class="fileButton">
-          Export AEG
-        </button>
-        <button type="button" onclick="loadMode()" title="Load File" class="fileButton">
-          Import AEG
-        </button>
+        <div class="fileButton">
+          <button type="button" onclick="saveMode()" title="Save File" class="modeButton">
+            <i class="fa fa-floppy-o" aria-hidden="true"></i>
+          </button>
+          <button type="button" onclick="loadMode()" title="Load File" class="modeButton">
+            <i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i>
+          </button>
+        </div>
       </div>
     </div>
     <div id="subBar">
       <div id="cutTools">
         <div class="toolSetting">
           <p class="no-highlight">Show Guidelines:</p>
-        </div>
-        <div class="toolSetting">
           <input id="showRect" type="checkbox" title="Show Rect"/>
         </div>
         <div class="toolSetting">
@@ -76,14 +75,10 @@
         </div>
         <div class="toolSetting">
           <p class="no-highlight">Show Current Bounding Box</p>
-        </div>
-        <div class = "toolSetting">
           <input id="atomBox" type="checkbox" title="Show atomBox"/>
         </div>
         <div class="toolSetting">
           <p class="no-highlight">Show All Bounding Boxes</p>
-        </div>
-        <div class = "toolSetting">
           <input id="atomBoxes" type="checkbox" title="Show atomBoxes"/>
         </div>
       </div>
