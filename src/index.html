@@ -10,6 +10,8 @@
     <meta name="author" content="Rensselaer Artificial Intelligence and Reasoning Laboratory"/>
     <!--Fork Awesome Icons-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css" integrity="sha256-XoaMnoYC5TH6/+ihMEnospgm0J1PM/nioxbOUdnM8HY=" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
+
     <link rel="stylesheet" href="index.css">
     <script type="module" src="index.ts"></script>
   </head>
@@ -39,6 +41,12 @@
       <div id="genericTools">
         <div class="toolSetting">
           <p id="graphString"></p>
+        </div>
+        <div class="toolSetting">
+          <select data-choose-theme>
+            <option value="Huda-Tiwari">Huda-Tiwari</option>
+            <option value="Oswald-Wireframe">Oswald-Wireframe</option>
+          </select>
         </div>
         <div class="fileButton">
           <button type="button" onclick="saveMode()" title="Save File" class="modeButton">
