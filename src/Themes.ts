@@ -25,8 +25,10 @@ let legalColorStr: string = cssVar("--good-placement");
 let illegalColorStr: string = cssVar("--bad-placement");
 let placedColorStr: string = cssVar("--canvas-items");
 
-//Redraw the canvas and update the HTML states
-themeSelector.addEventListener("input", () => {
+/**
+ * 
+ */
+function setTheme() {
     /*
     This is a really bad way of doing things, but we have to ensure this
     code is executed AFTER the themeSelector input handler from the library
@@ -43,7 +45,11 @@ themeSelector.addEventListener("input", () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         redrawCut(tree.sheet, offset);
     });
-});
+}
+
+//Redraw the canvas and update the HTML states
+themeSelector.addEventListener("input", ()=>{setTheme();});
+window.addEventListener("DOMContentLoaded", ()=>{setTheme();});
 
 /**
  * @returns the string color of components not allowed to be placed / dropped on the canvas
