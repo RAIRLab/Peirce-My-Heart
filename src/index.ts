@@ -15,6 +15,18 @@ import {atomKeyPress, atomMouseDown, atomMouseMove, atomMouseUp, atomMouseOut} f
 import {drawAtom} from "./AtomMode";
 import {saveFile, loadFile} from "./AEG-IO";
 import {dragMosueOut, dragMouseDown, dragMouseMove, offset} from "./DragMode";
+import {
+    moveSingleMouseDown,
+    moveSingleMouseMove,
+    moveSingleMouseUp,
+    moveSingleMouseOut,
+} from "./MoveSingleMode";
+import {
+    moveMultiMouseDown,
+    moveMultiMouseMove,
+    moveMultiMouseUp,
+    moveMultiMouseOut,
+} from "./MoveMultiMode";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -37,6 +49,10 @@ canvas.addEventListener("mousemove", mouseMoveHandler);
 canvas.addEventListener("mouseup", mouseUpHandler);
 canvas.addEventListener("mouseout", mouseOutHandler);
 canvas.addEventListener("mouseenter", mouseEnterHandler);
+
+/**
+ * Enum to represent the current drawing mode the program is currently in.
+ */
 enum Mode {
     atomMode,
     cutMode,
@@ -48,9 +64,17 @@ enum Mode {
     deleteSingleMode,
     deleteMultiMode,
 }
+
+//Used to determine the current mode the program is in.
 let modeState: Mode;
+
+//Boolean value representing whether the mouse button is down. Assumed to not be down at the start.
 let hasMouseDown = false;
+
+//Boolean value representing whether the mouse is in the canvas. Assumed to be in at the start.
 let hasMouseIn = true;
+
+//The current tree representing the canvas.
 export let tree: AEGTree = new AEGTree();
 
 //Window Exports
@@ -260,6 +284,11 @@ function mouseDownHandler(event: MouseEvent) {
         case Mode.dragMode:
             dragMouseDown(event);
             break;
+        case Mode.moveSingleMode:
+            moveSingleMouseDown(event);
+            break;
+        case Mode.moveMultiMode:
+            moveMultiMouseDown(event);
     }
     hasMouseDown = true;
 }
@@ -280,6 +309,12 @@ function mouseMoveHandler(event: MouseEvent) {
             case Mode.dragMode:
                 dragMouseMove(event);
                 break;
+            case Mode.moveSingleMode:
+                moveSingleMouseMove(event);
+                break;
+            case Mode.moveMultiMode:
+                moveMultiMouseMove(event);
+                break;
         }
     }
 }
@@ -296,6 +331,12 @@ function mouseUpHandler(event: MouseEvent) {
             break;
         case Mode.atomMode:
             atomMouseUp(event);
+            break;
+        case Mode.moveSingleMode:
+            moveSingleMouseUp(event);
+            break;
+        case Mode.moveMultiMode:
+            moveMultiMouseUp(event);
             break;
     }
     hasMouseDown = false;
@@ -315,6 +356,12 @@ function mouseOutHandler() {
             break;
         case Mode.dragMode:
             dragMosueOut();
+            break;
+        case Mode.moveSingleMode:
+            moveSingleMouseOut();
+            break;
+        case Mode.moveMultiMode:
+            moveMultiMouseOut();
             break;
     }
     hasMouseIn = false;
