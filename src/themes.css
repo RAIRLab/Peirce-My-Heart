@@ -44,13 +44,13 @@
     --mode-btn-radius: 0%;
     --mode-btn-hover-bg: none;
     --mode-btn-shadow: none;
-    --mode-btn-press-shadow: none; 
+    --mode-btn-press-shadow: inset 0px 0px 5px #552898; 
 }
 
 /* Dark Wireframe, showcases using a new CSS Variable in multiple places:
    --dark-highlights controls the highlight color */
 [data-theme="Dark-Wireframe"] {
-    --dark-highlights : #222c68;
+    --dark-highlights : #4297ad;
     --global-background : #000000;
     --p-text : var(--dark-highlights);
     --canvas-bg : #000000;
@@ -68,7 +68,7 @@
     --mode-btn-border: 2px solid var(--dark-highlights);
     --mode-btn-bg: #000000;
     --mode-btn-icon-color : var(--dark-highlights);
-    --mode-btn-radius: 0%;
+    --mode-btn-radius: 50%;
     --mode-btn-hover-bg: none;
     --mode-btn-shadow: none;
     --mode-btn-press-shadow: none; 
