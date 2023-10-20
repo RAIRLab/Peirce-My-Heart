@@ -105,6 +105,19 @@ declare global {
     }
 }
 
+//Active mode button stays pressed down until another mode button is clicked
+const modeButtons = document.querySelectorAll(".modeButton");
+modeButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        button.classList.toggle("modeButtonPressed");
+        modeButtons.forEach(otherButton => {
+            if (otherButton !== button) {
+                otherButton.classList.remove("modeButtonPressed");
+            }
+        });
+    });
+});
+
 /**
  * Sets the current mode to cut mode. Hides non cutTools.f
  */
