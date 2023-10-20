@@ -123,6 +123,63 @@ export class CutNode {
     }
 
     /**
+     * Recursive method to return the lowest level node containing the given point.
+     * @param incomingPoint The given point on the canvas.
+     * @returns The lowest node containing the node on the tree.
+     */
+    public getLowestNode(incomingPoint: Point): CutNode | AtomNode {
+        for (let i = 0; i < this.internalChildren.length; i++) {
+            if (this.internalChildren[i].containsPoint(incomingPoint)) {
+                //If there are no children this is the lowest node.
+                if (
+                    this.internalChildren[i] instanceof AtomNode ||
+                    (this.internalChildren[i] instanceof CutNode &&
+                        (this.internalChildren[i] as CutNode).children.length === 0)
+                ) {
+                    return this.internalChildren[i];
+                } else {
+                    return (this.internalChildren[i] as CutNode).getLowestNode(incomingPoint);
+                }
+            }
+        }
+
+        //None of the children contain the point, so this is the lowest node containing the point.
+        return this;
+    }
+
+    /**
+     * Recursive method to return the parent of the lowest node containing the given point.
+     * @param incomingPoint The given point on the canvas.
+     * @returns The parent of the lowest level node.
+     */
+    public getLowestParent(incomingPoint: Point): CutNode {
+        for (let i = 0; i < this.internalChildren.length; i++) {
+            if (this.internalChildren[i].containsPoint(incomingPoint)) {
+                //If there are no children this is the lowest node.
+                if (
+                    this.internalChildren[i] instanceof AtomNode ||
+                    (this.internalChildren[i] instanceof CutNode &&
+                        (this.internalChildren[i] as CutNode).children.length === 0)
+                ) {
+                    return this;
+                } else {
+                    //If the cut child with at least 1 child has children containing the point recurse
+                    const tempCut: CutNode = this.internalChildren[i] as CutNode;
+                    for (let j = 0; j < tempCut.children.length; j++) {
+                        if (tempCut.children[j].containsPoint(incomingPoint)) {
+                            return tempCut.getLowestParent(incomingPoint);
+                        }
+                    }
+                    //If none of the children of the child contain the point, but the child does return the parent.
+                    return this;
+                }
+            }
+        }
+        //I don't really have a way to have a fail state here, it shouldn't be here.
+        return new CutNode(null);
+    }
+
+    /**
      * Removes the lowest node recognized by this CutNode containing the incoming Point.
      * @param incomingPoint The incoming Point
      * @returns True, if the node was successfully removed.

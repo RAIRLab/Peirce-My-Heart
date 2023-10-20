@@ -89,7 +89,7 @@ export class AEGTree {
      * Throws an error otherwise.
      * @param incomingNode The node to be inserted
      */
-    public insert(incomingNode: AtomNode | CutNode): boolean {
+    public insert(incomingNode: AtomNode | CutNode): void {
         if (!this.canInsert(incomingNode)) {
             throw new Error("Insertion failed. " + incomingNode + " had a collision.");
         }
@@ -106,8 +106,24 @@ export class AEGTree {
                 }
             }
         }
+    }
 
-        return true;
+    /**
+     * Finds the lowest node that contains the point in the AEG.
+     * @param incomingPoint The point on the canvas
+     * @return The lowest node containing the point
+     */
+    public getLowestNode(incomingPoint: Point): CutNode | AtomNode {
+        return this.internalSheet.getLowestNode(incomingPoint);
+    }
+
+    /**
+     * Finds the parent of the lowest node that contains the point in the AEG.
+     * @param incomingPoint The point on the canvas
+     * @return The parent of the lowest node containing the point
+     */
+    public getLowestParent(incomingPoint: Point): CutNode {
+        return this.internalSheet.getLowestParent(incomingPoint);
     }
 
     /**
@@ -115,8 +131,8 @@ export class AEGTree {
      * @param incomingPoint The point indicating the node that must be removed
      * @returns True, if the node was successfully removed. Else, false
      */
-    public remove(incomingPoint: Point): boolean {
-        return this.internalSheet.remove(incomingPoint);
+    public remove(incomingPoint: Point): void {
+        this.internalSheet.remove(incomingPoint);
     }
 
     /**
