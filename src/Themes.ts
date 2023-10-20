@@ -47,8 +47,12 @@ function setTheme() {
     });
 }
 
-themeSelector.addEventListener("input", ()=>{setTheme();});
-window.addEventListener("DOMContentLoaded", ()=>{setTheme();});
+themeSelector.addEventListener("input", () => {
+    setTheme();
+});
+window.addEventListener("DOMContentLoaded", () => {
+    setTheme();
+});
 
 /**
  * @returns the string color of components not allowed to be placed / dropped on the canvas
