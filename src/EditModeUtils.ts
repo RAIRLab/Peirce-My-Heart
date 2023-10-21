@@ -22,16 +22,7 @@ import {drawAtom} from "./AtomMode";
  */
 export function validateChildren(incomingNode: CutNode, change: Point): boolean {
     if (incomingNode.ellipse !== null) {
-        const tempCut: CutNode = new CutNode(
-            new Ellipse(
-                new Point(
-                    incomingNode.ellipse.center.x + change.x - offset.x,
-                    incomingNode.ellipse.center.y + change.y - offset.y
-                ),
-                incomingNode.ellipse.radiusX,
-                incomingNode.ellipse.radiusY
-            )
-        );
+        const tempCut: CutNode = alterCut(incomingNode, change);
         if (!tree.canInsert(tempCut)) {
             return false;
         }
@@ -40,22 +31,14 @@ export function validateChildren(incomingNode: CutNode, change: Point): boolean 
     for (let i = 0; i < incomingNode.children.length; i++) {
         if (
             incomingNode.children[i] instanceof CutNode &&
-            (incomingNode.children[i] as CutNode).ellipse !== null
+            (incomingNode.children[i] as CutNode).ellipse !== null &&
+            !validateChildren(incomingNode.children[i] as CutNode, change)
         ) {
-            //If any of this node's children are in a valid location return false for all of them.
-            if (!validateChildren(incomingNode.children[i] as CutNode, change)) {
-                return false;
-            }
+            //If any of this node's children are in an invalid location return false for all of them.
+            return false;
         } else if (incomingNode.children[i] instanceof AtomNode) {
-            const tempAtom: AtomNode = new AtomNode(
-                (incomingNode.children[i] as AtomNode).identifier,
-                new Point(
-                    (incomingNode.children[i] as AtomNode).origin.x + change.x - offset.x,
-                    (incomingNode.children[i] as AtomNode).origin.y + change.y - offset.y
-                ),
-                (incomingNode.children[i] as AtomNode).width,
-                (incomingNode.children[i] as AtomNode).height
-            );
+            let tempAtom = incomingNode.children[i] as AtomNode;
+            tempAtom = alterAtom(tempAtom, change);
 
             if (!tree.canInsert(tempAtom)) {
                 return false;
@@ -76,16 +59,7 @@ export function validateChildren(incomingNode: CutNode, change: Point): boolean 
  */
 export function drawAltered(incomingNode: CutNode | AtomNode, color: string, change: Point) {
     if (incomingNode instanceof CutNode && incomingNode.ellipse !== null) {
-        const tempCut: CutNode = new CutNode(
-            new Ellipse(
-                new Point(
-                    incomingNode.ellipse.center.x + change.x - offset.x,
-                    incomingNode.ellipse.center.y + change.y - offset.y
-                ),
-                incomingNode.ellipse.radiusX,
-                incomingNode.ellipse.radiusY
-            )
-        );
+        const tempCut: CutNode = alterCut(incomingNode, change);
         drawCut(tempCut, color);
         //If this node has any children draws them as well.
         if (incomingNode.children.length !== 0) {
@@ -94,15 +68,7 @@ export function drawAltered(incomingNode: CutNode | AtomNode, color: string, cha
             }
         }
     } else if (incomingNode instanceof AtomNode) {
-        const tempAtom: AtomNode = new AtomNode(
-            incomingNode.identifier,
-            new Point(
-                incomingNode.origin.x + change.x - offset.x,
-                incomingNode.origin.y + change.y - offset.y
-            ),
-            incomingNode.width,
-            incomingNode.height
-        );
+        const tempAtom: AtomNode = alterAtom(incomingNode, change);
         drawAtom(tempAtom, color, true);
     }
 }
@@ -111,20 +77,12 @@ export function drawAltered(incomingNode: CutNode | AtomNode, color: string, cha
  * Inserts the incoming node into the tree with the change to its original location. If the node
  * is a cut node that has children calls this function on each of its children.
  * @param incomingNode The current node to be inserted
- * @param change The The difference between the original position and the new position
+ * @param change The
+ *  difference between the original position and the new position
  */
 export function insertChildren(incomingNode: CutNode | AtomNode, change: Point) {
     if (incomingNode instanceof CutNode && incomingNode.ellipse !== null) {
-        const tempCut: CutNode = new CutNode(
-            new Ellipse(
-                new Point(
-                    incomingNode.ellipse.center.x + change.x - offset.x,
-                    incomingNode.ellipse.center.y + change.y - offset.y
-                ),
-                incomingNode.ellipse.radiusX,
-                incomingNode.ellipse.radiusY
-            )
-        );
+        const tempCut: CutNode = alterCut(incomingNode, change);
         tree.insert(tempCut);
         //If this node has any children recurses to insert them with the same distance change
         if (incomingNode.children.length !== 0) {
@@ -133,16 +91,37 @@ export function insertChildren(incomingNode: CutNode | AtomNode, change: Point) 
             }
         }
     } else if (incomingNode instanceof AtomNode) {
-        const tempAtom: AtomNode = new AtomNode(
-            incomingNode.identifier,
-            new Point(
-                incomingNode.origin.x + change.x - offset.x,
-                incomingNode.origin.y + change.y - offset.y
-            ),
-            incomingNode.width,
-            incomingNode.height
-        );
+        const tempAtom: AtomNode = alterAtom(incomingNode, change);
 
         tree.insert(tempAtom);
     }
+}
+
+export function alterCut(originalCut: CutNode, difference: Point): CutNode {
+    if (originalCut.ellipse !== null) {
+        return new CutNode(
+            new Ellipse(
+                new Point(
+                    originalCut.ellipse.center.x + difference.x - offset.x,
+                    originalCut.ellipse.center.y + difference.y - offset.y
+                ),
+                originalCut.ellipse.radiusX,
+                originalCut.ellipse.radiusY
+            )
+        );
+    } else {
+        throw new Error("Cannot alter the position of a cut without an ellipse.");
+    }
+}
+
+export function alterAtom(originalAtom: AtomNode, difference: Point) {
+    return new AtomNode(
+        originalAtom.identifier,
+        new Point(
+            originalAtom.origin.x + difference.x - offset.x,
+            originalAtom.origin.y + difference.y - offset.y
+        ),
+        originalAtom.width,
+        originalAtom.height
+    );
 }

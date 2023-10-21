@@ -127,7 +127,11 @@ export class CutNode {
      * @param incomingPoint The given point on the canvas.
      * @returns The lowest node containing the node on the tree.
      */
-    public getLowestNode(incomingPoint: Point): CutNode | AtomNode {
+    public getLowestNode(incomingPoint: Point): CutNode | AtomNode | null {
+        if (this.containsPoint(incomingPoint)) {
+            return null;
+        }
+
         for (let i = 0; i < this.internalChildren.length; i++) {
             if (this.internalChildren[i].containsPoint(incomingPoint)) {
                 //If there are no children this is the lowest node.
@@ -152,7 +156,11 @@ export class CutNode {
      * @param incomingPoint The given point on the canvas.
      * @returns The parent of the lowest level node.
      */
-    public getLowestParent(incomingPoint: Point): CutNode {
+    public getLowestParent(incomingPoint: Point): CutNode | null {
+        if (!this.containsPoint(incomingPoint)) {
+            throw new Error("This parent " + this.toString + " does not contain the point.");
+        }
+
         for (let i = 0; i < this.internalChildren.length; i++) {
             if (this.internalChildren[i].containsPoint(incomingPoint)) {
                 //If there are no children this is the lowest node.
@@ -175,8 +183,8 @@ export class CutNode {
                 }
             }
         }
-        //I don't really have a way to have a fail state here, it shouldn't be here.
-        return new CutNode(null);
+        //If none of this node's children contain the point then it cannot be the parent.
+        return null;
     }
 
     /**

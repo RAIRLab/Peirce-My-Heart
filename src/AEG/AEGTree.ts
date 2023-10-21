@@ -115,7 +115,7 @@ export class AEGTree {
      * @param incomingPoint The point on the canvas
      * @return The lowest node containing the point
      */
-    public getLowestNode(incomingPoint: Point): CutNode | AtomNode {
+    public getLowestNode(incomingPoint: Point): CutNode | AtomNode | null {
         return this.internalSheet.getLowestNode(incomingPoint);
     }
 
@@ -124,7 +124,7 @@ export class AEGTree {
      * @param incomingPoint The point on the canvas
      * @return The parent of the lowest node containing the point
      */
-    public getLowestParent(incomingPoint: Point): CutNode {
+    public getLowestParent(incomingPoint: Point): CutNode | null {
         return this.internalSheet.getLowestParent(incomingPoint);
     }
 
