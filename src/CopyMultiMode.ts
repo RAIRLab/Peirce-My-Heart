@@ -11,7 +11,7 @@ import {redrawCut, tree} from "./index";
 import {offset} from "./DragMode";
 import {drawAtom} from "./AtomMode";
 import {legalColor, illegalColor} from "./Themes";
-import {validateChildren, drawAltered, insertChildren} from "./ModeUtils";
+import {validateChildren, drawAltered, insertChildren, alterAtom} from "./EditModeUtils";
 
 //Setting Up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -25,7 +25,7 @@ const ctx: CanvasRenderingContext2D = res;
 let startingPoint: Point;
 
 //The current node and its children we will be moving.
-let currentNode: CutNode | AtomNode;
+let currentNode: CutNode | AtomNode | null = null;
 
 //Whether or not the node is allowed to be moved (not the sheet).
 let legalNode: boolean;
@@ -37,9 +37,11 @@ let legalNode: boolean;
  */
 export function copyMultiMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
-    if (tree.getLowestNode(startingPoint) !== tree.sheet) {
-        currentNode = tree.getLowestNode(startingPoint);
+    currentNode = tree.getLowestNode(startingPoint);
+    if (currentNode !== tree.sheet && currentNode !== null) {
         legalNode = true;
+    } else {
+        legalNode = false;
     }
 }
 
@@ -65,15 +67,7 @@ export function copyMultiMouseMove(event: MouseEvent) {
                 drawAltered(currentNode, illegalColor(), moveDifference);
             }
         } else if (currentNode instanceof AtomNode) {
-            const tempAtom: AtomNode = new AtomNode(
-                currentNode.identifier,
-                new Point(
-                    currentNode.origin.x + moveDifference.x - offset.x,
-                    currentNode.origin.y + moveDifference.y - offset.y
-                ),
-                currentNode.width,
-                currentNode.height
-            );
+            const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
 
             if (tree.canInsert(tempAtom)) {
                 drawAtom(tempAtom, legalColor(), true);
@@ -103,15 +97,7 @@ export function copyMultiMouseUp(event: MouseEvent) {
                 insertChildren(currentNode, moveDifference);
             }
         } else if (currentNode instanceof AtomNode) {
-            const tempAtom: AtomNode = new AtomNode(
-                currentNode.identifier,
-                new Point(
-                    currentNode.origin.x + moveDifference.x - offset.x,
-                    currentNode.origin.y + moveDifference.y - offset.y
-                ),
-                currentNode.width,
-                currentNode.height
-            );
+            const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
 
             if (tree.canInsert(tempAtom)) {
                 tree.insert(tempAtom);

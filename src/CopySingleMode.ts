@@ -9,10 +9,10 @@ import {AtomNode} from "./AEG/AtomNode";
 import {CutNode} from "./AEG/CutNode";
 import {redrawCut, tree} from "./index";
 import {offset} from "./DragMode";
-import {Ellipse} from "./AEG/Ellipse";
 import {drawCut} from "./CutMode";
 import {drawAtom} from "./AtomMode";
 import {legalColor, illegalColor} from "./Themes";
+import {alterAtom, alterCut} from "./EditModeUtils";
 
 //Settings up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -26,7 +26,7 @@ const ctx: CanvasRenderingContext2D = res;
 let startingPoint: Point;
 
 //The node selected with the user mouse down.
-let currentNode: CutNode | AtomNode;
+let currentNode: CutNode | AtomNode | null;
 
 //Whether or not the node is allowed to be moved (not the sheet).
 let legalNode: boolean;
@@ -38,15 +38,16 @@ let legalNode: boolean;
  */
 export function copySingleMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
-    if (tree.getLowestNode(startingPoint) !== tree.sheet) {
-        currentNode = tree.getLowestNode(startingPoint);
-
+    currentNode = tree.getLowestNode(startingPoint);
+    if (currentNode !== tree.sheet && currentNode !== null) {
         if (currentNode instanceof CutNode && currentNode.children.length !== 0) {
             //The cut node loses custody of its children because those do not copy over during
             //copy single mode
             currentNode.children = [];
         }
         legalNode = true;
+    } else {
+        legalNode = false;
     }
 }
 
@@ -64,17 +65,8 @@ export function copySingleMouseMove(event: MouseEvent) {
             event.y - startingPoint.y
         );
         //If the node is a cut, and it has an ellipse, make a temporary cut and draw that.
-        if (currentNode instanceof CutNode && currentNode.ellipse !== null) {
-            const tempCut: CutNode = new CutNode(
-                new Ellipse(
-                    new Point(
-                        currentNode.ellipse.center.x + moveDifference.x - offset.x,
-                        currentNode.ellipse.center.y + moveDifference.y - offset.y
-                    ),
-                    currentNode.ellipse.radiusX,
-                    currentNode.ellipse.radiusY
-                )
-            );
+        if (currentNode instanceof CutNode) {
+            const tempCut: CutNode = alterCut(currentNode, moveDifference);
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             redrawCut(tree.sheet, offset);
@@ -86,15 +78,7 @@ export function copySingleMouseMove(event: MouseEvent) {
             }
         } //If the node is an atom, make a temporary atom and check legality, drawing that.
         else if (currentNode instanceof AtomNode) {
-            const tempAtom: AtomNode = new AtomNode(
-                currentNode.identifier,
-                new Point(
-                    currentNode.origin.x + moveDifference.x - offset.x,
-                    currentNode.origin.y + moveDifference.y - offset.y
-                ),
-                currentNode.width,
-                currentNode.height
-            );
+            const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             redrawCut(tree.sheet, offset);
@@ -120,33 +104,15 @@ export function copySingleMouseUp(event: MouseEvent) {
             event.x - startingPoint.x,
             event.y - startingPoint.y
         );
-        //
         if (currentNode instanceof CutNode && currentNode.ellipse !== null) {
-            const tempCut: CutNode = new CutNode(
-                new Ellipse(
-                    new Point(
-                        currentNode.ellipse.center.x + moveDifference.x - offset.x,
-                        currentNode.ellipse.center.y + moveDifference.y - offset.y
-                    ),
-                    currentNode.ellipse.radiusX,
-                    currentNode.ellipse.radiusY
-                )
-            );
+            const tempCut: CutNode = alterCut(currentNode, moveDifference);
 
             //If the new location is legal, insert the copied cut.
             if (tree.canInsert(tempCut)) {
                 tree.insert(tempCut);
             }
         } else if (currentNode instanceof AtomNode) {
-            const tempAtom: AtomNode = new AtomNode(
-                currentNode.identifier,
-                new Point(
-                    currentNode.origin.x + moveDifference.x - offset.x,
-                    currentNode.origin.y + moveDifference.y - offset.y
-                ),
-                currentNode.width,
-                currentNode.height
-            );
+            const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
 
             //If the new location is legal, insert the copied atom.
             if (tree.canInsert(tempAtom)) {
