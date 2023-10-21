@@ -38,7 +38,6 @@ export function moveMultiMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = tree.getLowestNode(startingPoint);
     if (currentNode !== tree.sheet && currentNode !== null) {
-        currentNode = tree.getLowestNode(startingPoint);
         const currentParent = tree.getLowestParent(startingPoint);
         if (currentParent !== null) {
             currentParent.remove(startingPoint);

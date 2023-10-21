@@ -25,7 +25,7 @@ const ctx: CanvasRenderingContext2D = res;
 let startingPoint: Point;
 
 //The node selected with the user mouse down.
-let currentNode: CutNode | AtomNode | null;
+let currentNode: CutNode | AtomNode | null = null;
 
 //Whether or not the node is allowed to be moved (not the sheet).
 let legalNode: boolean;
