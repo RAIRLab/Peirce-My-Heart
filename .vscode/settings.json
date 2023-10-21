@@ -21,7 +21,10 @@
         "yshift",
         "ICSI",
         "RAIR",
-        "npmignore"
+        "npmignore",
+        "subbar",
+        "buttonface",
+        "Wireframe",
     ],
     "editor.rulers": [100]
 }
