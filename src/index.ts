@@ -143,7 +143,6 @@ function atomMode() {
  * Sets the current mode to move mode. Hides non move tools.
  */
 function dragMode() {
-    console.log(tree);
     modeState = Mode.dragMode;
     cutTools.style.display = "none";
     atomTools.style.display = "none";
@@ -207,7 +206,6 @@ function deleteMultiMode() {
  * Calls the function to save the file.
  */
 async function saveMode() {
-    console.log(tree);
     if ("showSaveFilePicker" in window) {
         //Slow Download
         const saveHandle = await window.showSaveFilePicker({

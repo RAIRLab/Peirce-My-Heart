@@ -103,9 +103,9 @@ export function moveSingleMouseMove(event: MouseEvent) {
             redrawCut(tree.sheet, offset);
 
             if (tree.canInsert(tempAtom)) {
-                drawAtom(tempAtom, "#00FF00", true);
+                drawAtom(tempAtom, legalColor(), true);
             } else {
-                drawAtom(tempAtom, "#FF0000", true);
+                drawAtom(tempAtom, illegalColor(), true);
             }
         }
     }
