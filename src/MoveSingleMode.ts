@@ -9,7 +9,7 @@ import {CutNode} from "./AEG/CutNode";
 import {redrawCut, tree} from "./index";
 import {offset} from "./DragMode";
 import {Ellipse} from "./AEG/Ellipse";
-import {drawEllipse} from "./CutMode";
+import {drawCut} from "./CutMode";
 import {drawAtom} from "./AtomMode";
 
 //Settings up Canvas
@@ -26,14 +26,8 @@ let startingPoint: Point;
 //The node selected with the user mouse down.
 let currentNode: CutNode | AtomNode;
 
-//The new position of the origin of the atom, or the center of the ellipse.
-let alteredOrigin: Point;
-
 //Whether or not the node is allowed to be moved (not the sheet).
 let legalNode: boolean;
-
-//Tracks if the mouse has ever left canvas disallowing future movements.
-let wasOut: boolean;
 
 /**
  * Takes the point the user clicked and stores that for later use. If the lowest node containing
@@ -52,7 +46,6 @@ export function moveSingleMouseDown(event: MouseEvent) {
             reInsert(currentNode.children);
             currentNode.children = [];
         }
-        wasOut = false;
         legalNode = true;
     }
 }
@@ -65,40 +58,40 @@ export function moveSingleMouseDown(event: MouseEvent) {
  * @param event The mouse move event while in moveSingle mode
  */
 export function moveSingleMouseMove(event: MouseEvent) {
-    if (legalNode && !wasOut) {
+    if (legalNode) {
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
             event.y - startingPoint.y
         );
         //If the node is a cut, and it has an ellipse, make a temporary cut and draw that.
         if (currentNode instanceof CutNode && currentNode.ellipse !== null) {
-            alteredOrigin = new Point(
-                currentNode.ellipse.center.x + moveDifference.x - offset.x,
-                currentNode.ellipse.center.y + moveDifference.y - offset.y
-            );
-
             const tempCut: CutNode = new CutNode(
-                new Ellipse(alteredOrigin, currentNode.ellipse.radiusX, currentNode.ellipse.radiusY)
+                new Ellipse(
+                    new Point(
+                        currentNode.ellipse.center.x + moveDifference.x - offset.x,
+                        currentNode.ellipse.center.y + moveDifference.y - offset.y
+                    ),
+                    currentNode.ellipse.radiusX,
+                    currentNode.ellipse.radiusY
+                )
             );
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             redrawCut(tree.sheet, offset);
 
             if (tree.canInsert(tempCut)) {
-                drawEllipse(tempCut, "#00FF00");
+                drawCut(tempCut, "#00FF00");
             } else {
-                drawEllipse(tempCut, "#FF0000");
+                drawCut(tempCut, "#FF0000");
             }
         } //If the node is an atom, make a temporary atom and check legality, drawing that.
         else if (currentNode instanceof AtomNode) {
-            alteredOrigin = new Point(
-                currentNode.origin.x + moveDifference.x - offset.x,
-                currentNode.origin.y + moveDifference.y - offset.y
-            );
-
             const tempAtom: AtomNode = new AtomNode(
                 currentNode.identifier,
-                alteredOrigin,
+                new Point(
+                    currentNode.origin.x + moveDifference.x - offset.x,
+                    currentNode.origin.y + moveDifference.y - offset.y
+                ),
                 currentNode.width,
                 currentNode.height
             );
@@ -122,20 +115,22 @@ export function moveSingleMouseMove(event: MouseEvent) {
  * @param event The mouse up event while in moveSingle mode
  */
 export function moveSingleMouseUp(event: MouseEvent) {
-    if (legalNode && !wasOut) {
+    if (legalNode) {
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
             event.y - startingPoint.y
         );
         //
         if (currentNode instanceof CutNode && currentNode.ellipse !== null) {
-            alteredOrigin = new Point(
-                currentNode.ellipse.center.x + moveDifference.x - offset.x,
-                currentNode.ellipse.center.y + moveDifference.y - offset.y
-            );
-
             const tempCut: CutNode = new CutNode(
-                new Ellipse(alteredOrigin, currentNode.ellipse.radiusX, currentNode.ellipse.radiusY)
+                new Ellipse(
+                    new Point(
+                        currentNode.ellipse.center.x + moveDifference.x - offset.x,
+                        currentNode.ellipse.center.y + moveDifference.y - offset.y
+                    ),
+                    currentNode.ellipse.radiusX,
+                    currentNode.ellipse.radiusY
+                )
             );
 
             //If the new location is legal, insert the cut otherwise reinsert the cut we removed.
@@ -145,14 +140,12 @@ export function moveSingleMouseUp(event: MouseEvent) {
                 tree.insert(currentNode);
             }
         } else if (currentNode instanceof AtomNode) {
-            alteredOrigin = new Point(
-                currentNode.origin.x + moveDifference.x - offset.x,
-                currentNode.origin.y + moveDifference.y - offset.y
-            );
-
             const tempAtom: AtomNode = new AtomNode(
                 currentNode.identifier,
-                alteredOrigin,
+                new Point(
+                    currentNode.origin.x + moveDifference.x - offset.x,
+                    currentNode.origin.y + moveDifference.y - offset.y
+                ),
                 currentNode.width,
                 currentNode.height
             );
@@ -175,7 +168,6 @@ export function moveSingleMouseUp(event: MouseEvent) {
  * Redraws the canvas.
  */
 export function moveSingleMouseOut() {
-    wasOut = true;
     if (legalNode) {
         tree.insert(currentNode);
     }
