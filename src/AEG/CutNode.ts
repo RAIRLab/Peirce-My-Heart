@@ -128,7 +128,7 @@ export class CutNode {
      * @returns The lowest node containing the node on the tree.
      */
     public getLowestNode(incomingPoint: Point): CutNode | AtomNode | null {
-        if (this.containsPoint(incomingPoint)) {
+        if (!this.containsPoint(incomingPoint)) {
             return null;
         }
 
