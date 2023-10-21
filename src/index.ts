@@ -206,6 +206,7 @@ function deleteMultiMode() {
  * Calls the function to save the file.
  */
 async function saveMode() {
+    console.log(tree);
     if ("showSaveFilePicker" in window) {
         //Slow Download
         const saveHandle = await window.showSaveFilePicker({
