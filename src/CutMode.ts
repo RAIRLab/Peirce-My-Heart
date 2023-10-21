@@ -52,9 +52,9 @@ export function cutMouseMove(event: MouseEvent) {
 
     if (!wasOut) {
         if (tree.canInsert(newCut) && ellipseLargeEnough(newCut.ellipse)) {
-            drawEllipse(newCut, legalColor());
+            drawCut(newCut, legalColor());
         } else {
-            drawEllipse(newCut, illegalColor());
+            drawCut(newCut, illegalColor());
         }
     }
 }

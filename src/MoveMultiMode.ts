@@ -11,6 +11,7 @@ import {offset} from "./DragMode";
 import {Ellipse} from "./AEG/Ellipse";
 import {drawCut} from "./CutMode";
 import {drawAtom} from "./AtomMode";
+import {legalColor, illegalColor} from "./Themes";
 
 //Setting Up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -47,9 +48,9 @@ export function moveMultiMouseMove(event: MouseEvent) {
         redrawCut(tree.sheet, offset);
         if (currentNode instanceof CutNode) {
             if (validateChildren(currentNode, moveDifference)) {
-                drawAltered(currentNode, "#00FF00", moveDifference);
+                drawAltered(currentNode, legalColor(), moveDifference);
             } else {
-                drawAltered(currentNode, "#FF0000", moveDifference);
+                drawAltered(currentNode, illegalColor(), moveDifference);
             }
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = new AtomNode(
@@ -63,9 +64,9 @@ export function moveMultiMouseMove(event: MouseEvent) {
             );
 
             if (tree.canInsert(tempAtom)) {
-                drawAtom(tempAtom, "#00FF00", true);
+                drawAtom(tempAtom, legalColor(), true);
             } else {
-                drawAtom(tempAtom, "#FF0000", true);
+                drawAtom(tempAtom, illegalColor(), true);
             }
         }
     }

@@ -11,6 +11,7 @@ import {offset} from "./DragMode";
 import {Ellipse} from "./AEG/Ellipse";
 import {drawCut} from "./CutMode";
 import {drawAtom} from "./AtomMode";
+import {legalColor, illegalColor} from "./Themes";
 
 //Settings up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -80,9 +81,9 @@ export function moveSingleMouseMove(event: MouseEvent) {
             redrawCut(tree.sheet, offset);
 
             if (tree.canInsert(tempCut)) {
-                drawCut(tempCut, "#00FF00");
+                drawCut(tempCut, legalColor());
             } else {
-                drawCut(tempCut, "#FF0000");
+                drawCut(tempCut, illegalColor());
             }
         } //If the node is an atom, make a temporary atom and check legality, drawing that.
         else if (currentNode instanceof AtomNode) {
