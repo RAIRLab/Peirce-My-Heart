@@ -44,7 +44,9 @@ export function moveSingleMouseDown(event: MouseEvent) {
         currentParent.remove(startingPoint);
         if (currentNode instanceof CutNode && currentNode.children.length !== 0) {
             //The cut node loses custody of its children so that those can still be redrawn.
-            reInsert(currentNode.children);
+            for (let i = 0; i < currentNode.children.length; i++) {
+                tree.insert(currentNode.children[i]);
+            }
             currentNode.children = [];
         }
         legalNode = true;
@@ -175,14 +177,4 @@ export function moveSingleMouseOut() {
     legalNode = false;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     redrawCut(tree.sheet, offset);
-}
-
-/**
- * Inserts the children of a removed node back into the tree.
- * @param children The children of the removed cut node
- */
-function reInsert(children: (AtomNode | CutNode)[]) {
-    for (let i = 0; i < children.length; i++) {
-        tree.insert(children[i]);
-    }
 }

@@ -8,10 +8,9 @@ import {AtomNode} from "./AEG/AtomNode";
 import {CutNode} from "./AEG/CutNode";
 import {redrawCut, tree} from "./index";
 import {offset} from "./DragMode";
-import {Ellipse} from "./AEG/Ellipse";
-import {drawCut} from "./CutMode";
 import {drawAtom} from "./AtomMode";
 import {legalColor, illegalColor} from "./Themes";
+import {validateChildren, drawAltered, insertChildren} from "./ModeUtils";
 
 //Setting Up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -23,9 +22,18 @@ const ctx: CanvasRenderingContext2D = res;
 
 //The initial point the user pressed down.
 let startingPoint: Point;
+
+//The current node and its children we will be moving.
 let currentNode: CutNode | AtomNode;
+
+//Whether or not the node is allowed to be moved (not the sheet).
 let legalNode: boolean;
 
+/**
+ * Takes the starting point and sets the lowest node containing that point that is not the sheet to
+ * the current node. Removes that node from its parent.
+ * @param event The mouse down event while in moveMulti mode.
+ */
 export function moveMultiMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     if (tree.getLowestNode(startingPoint) !== tree.sheet) {
@@ -33,10 +41,15 @@ export function moveMultiMouseDown(event: MouseEvent) {
         const currentParent = tree.getLowestParent(startingPoint);
         currentParent.remove(startingPoint);
         legalNode = true;
-        console.log(currentNode);
     }
 }
 
+/**
+ * If the node selected was legal, draws the node with the difference between the starting position
+ * and the current position by altering the point of origin. If the node was a cut node also draws
+ * all of the children with the same change in location.
+ * @param event The mouse move event while in moveMulti mode
+ */
 export function moveMultiMouseMove(event: MouseEvent) {
     if (legalNode) {
         const moveDifference: Point = new Point(
@@ -72,6 +85,13 @@ export function moveMultiMouseMove(event: MouseEvent) {
     }
 }
 
+/**
+ * If the current node is a cut node, and all of its children are in a legal position places it
+ * in the current position. If it is not in a legal position returns the original node to the tree.
+ * If the current node is an atom node and is in a legal position adds it to the tree, otherwise
+ * readds the original node in the original place.
+ * @param event the mouse up event while in moveMulti mode
+ */
 export function moveMultiMouseUp(event: MouseEvent) {
     if (legalNode) {
         const moveDifference: Point = new Point(
@@ -108,6 +128,10 @@ export function moveMultiMouseUp(event: MouseEvent) {
     legalNode = false;
 }
 
+/**
+ * If the current node is a legal node returns it to the original position.
+ * Redraws the canvas to clear any drawings not part of the tree.
+ */
 export function moveMultiMouseOut() {
     if (legalNode) {
         tree.insert(currentNode);
@@ -115,113 +139,4 @@ export function moveMultiMouseOut() {
     legalNode = false;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     redrawCut(tree.sheet, offset);
-}
-
-function validateChildren(incomingNode: CutNode, change: Point): boolean {
-    if (incomingNode.ellipse !== null) {
-        const tempCut: CutNode = new CutNode(
-            new Ellipse(
-                new Point(
-                    incomingNode.ellipse.center.x + change.x - offset.x,
-                    incomingNode.ellipse.center.y + change.y - offset.y
-                ),
-                incomingNode.ellipse.radiusX,
-                incomingNode.ellipse.radiusY
-            )
-        );
-        if (!tree.canInsert(tempCut)) {
-            return false;
-        }
-    }
-
-    for (let i = 0; i < incomingNode.children.length; i++) {
-        if (
-            incomingNode.children[i] instanceof CutNode &&
-            (incomingNode.children[i] as CutNode).ellipse !== null
-        ) {
-            if (!validateChildren(incomingNode.children[i] as CutNode, change)) {
-                return false;
-            }
-        } else if (incomingNode.children[i] instanceof AtomNode) {
-            const tempAtom: AtomNode = new AtomNode(
-                (incomingNode.children[i] as AtomNode).identifier,
-                new Point(
-                    (incomingNode.children[i] as AtomNode).origin.x + change.x - offset.x,
-                    (incomingNode.children[i] as AtomNode).origin.y + change.y - offset.y
-                ),
-                (incomingNode.children[i] as AtomNode).width,
-                (incomingNode.children[i] as AtomNode).height
-            );
-
-            if (!tree.canInsert(tempAtom)) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
-function drawAltered(incomingNode: CutNode | AtomNode, color: string, change: Point) {
-    if (incomingNode instanceof CutNode && incomingNode.ellipse !== null) {
-        const tempCut: CutNode = new CutNode(
-            new Ellipse(
-                new Point(
-                    incomingNode.ellipse.center.x + change.x - offset.x,
-                    incomingNode.ellipse.center.y + change.y - offset.y
-                ),
-                incomingNode.ellipse.radiusX,
-                incomingNode.ellipse.radiusY
-            )
-        );
-        drawCut(tempCut, color);
-        if (incomingNode.children.length !== 0) {
-            for (let i = 0; i < incomingNode.children.length; i++) {
-                drawAltered(incomingNode.children[i], color, change);
-            }
-        }
-    } else if (incomingNode instanceof AtomNode) {
-        const tempAtom: AtomNode = new AtomNode(
-            incomingNode.identifier,
-            new Point(
-                incomingNode.origin.x + change.x - offset.x,
-                incomingNode.origin.y + change.y - offset.y
-            ),
-            incomingNode.width,
-            incomingNode.height
-        );
-        drawAtom(tempAtom, color, true);
-    }
-}
-
-function insertChildren(incomingNode: CutNode | AtomNode, change: Point) {
-    if (incomingNode instanceof CutNode && incomingNode.ellipse !== null) {
-        const tempCut: CutNode = new CutNode(
-            new Ellipse(
-                new Point(
-                    incomingNode.ellipse.center.x + change.x - offset.x,
-                    incomingNode.ellipse.center.y + change.y - offset.y
-                ),
-                incomingNode.ellipse.radiusX,
-                incomingNode.ellipse.radiusY
-            )
-        );
-        tree.insert(tempCut);
-        if (incomingNode.children.length !== 0) {
-            for (let i = 0; i < incomingNode.children.length; i++) {
-                insertChildren(incomingNode.children[i], change);
-            }
-        }
-    } else if (incomingNode instanceof AtomNode) {
-        const tempAtom: AtomNode = new AtomNode(
-            incomingNode.identifier,
-            new Point(
-                incomingNode.origin.x + change.x - offset.x,
-                incomingNode.origin.y + change.y - offset.y
-            ),
-            incomingNode.width,
-            incomingNode.height
-        );
-
-        tree.insert(tempAtom);
-    }
 }
