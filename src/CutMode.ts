@@ -10,6 +10,7 @@ import {Ellipse} from "./AEG/Ellipse";
 import {redrawCut} from "./index";
 import {tree} from "./index";
 import {offset} from "./DragMode";
+import {legalColor, illegalColor} from "./Themes";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -51,9 +52,9 @@ export function cutMouseMove(event: MouseEvent) {
 
     if (!wasOut) {
         if (tree.canInsert(newCut) && ellipseLargeEnough(newCut.ellipse)) {
-            drawCut(newCut, "#00FF00");
+            drawEllipse(newCut, legalColor());
         } else {
-            drawCut(newCut, "#FF0000");
+            drawEllipse(newCut, illegalColor());
         }
     }
 }

@@ -3,18 +3,18 @@ body, html{
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    display:contents;
-    background-color: #ffffff;
+    display: contents;
+    background-color: var(--global-background);
 }
 
 p {
     margin: 0px;
-    text-emphasis-color: #ffffff;
+    color: var(--p-text);
 }
 
 #header {
-    background-color: #a6b6d9;
-    border: 2px solid #000000;
+    background-color: var(--header-bg);
+    border: var(--header-border);
     border-right: 0px;
     min-height: 6vh;
     width: 100vw;
@@ -40,10 +40,12 @@ p {
 .modeButton {
     min-width: 2vw;
     min-height: 4vh;
-    border: 2px solid #000000;
+    border: var(--mode-btn-border);
+    background-color: var(--mode-btn-bg);
     margin: 2px;
-    border-radius: 25%;
-    box-shadow: 1px 2px 1px #000000;
+    border-radius: var(--mode-btn-radius);
+    box-shadow: var(--mode-btn-shadow);
+    color: var(--mode-btn-icon-color);
 }
 
 .modeButton:active {
@@ -51,13 +53,13 @@ p {
 }
 
 .modeButtonPressed {
-    -webkit-box-shadow: inset 0px 0px 5px #000000; 
-     -moz-box-shadow: inset 0px 0px 5px #000000;
-          box-shadow: inset 0px 0px 5px #000000;
+    -webkit-box-shadow: var(--mode-btn-press-shadow); 
+    -moz-box-shadow: var(--mode-btn-press-shadow); 
+    box-shadow: var(--mode-btn-press-shadow); 
 }
 
 .modeButton:hover {
-  background-color: #d4e8f5;
+  background-color: var(--mode-btn-hover-bg);
 }
 
 .fileButton {
@@ -73,7 +75,7 @@ p {
 }
 
 #toolbar {
-    border-bottom: 2px solid black;
+    border-bottom: var(--toolbar-border);
     min-height: 7vh;
     max-height: 10vh;
     max-width: 100vw;
@@ -81,11 +83,11 @@ p {
     overflow-x: hidden;
     overflow-wrap: break-word;
     box-sizing: border-box;
-    background-color: #94b09c;
+    background-color: var(--toolbar-bg)
 }
 
 #subBar {
-    border-bottom: 2px solid black;
+    border-bottom: var(--subbar-border);
     min-height: 6vh;
     max-height: 10vh;
     max-width: 100vw;
@@ -93,7 +95,7 @@ p {
     overflow-x: hidden;
     overflow-wrap: break-word;
     box-sizing: border-box;
-    background-color: #bed7be;
+    background-color: var(--subbar-bg);
 }
 
 #cutTools {
@@ -112,10 +114,10 @@ p {
 
 #sidebar {
     box-sizing: border-box;
-    border: 2px solid #000000;
+    border: var(--sidebar-border);
     border-top: 0px;
     padding-top: 3px;
-    background-color: #526D82;
+    background-color: var(--sidebar-bg);
     height: 100vh;
     min-width: 6vw;
     float: left;
@@ -126,11 +128,12 @@ p {
     top: 0px;
     left: 0px;
     z-index: -1;
+    background-color: var(--canvas-bg);
 }
 
 .no-highlight{
-    user-select: none; 
     -moz-user-select: none; 
     -webkit-text-select: none;
     -webkit-user-select: none; 
+    user-select: none; 
 }
