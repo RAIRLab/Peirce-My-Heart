@@ -28,6 +28,18 @@ import {
     moveMultiMouseUp,
     moveMultiMouseOut,
 } from "./MoveMultiMode";
+import {
+    copySingleMouseDown,
+    copySingleMouseMove,
+    copySingleMouseUp,
+    copySingleMouseOut,
+} from "./CopySingleMode";
+import {
+    copyMultiMouseDown,
+    copyMultiMouseMove,
+    copyMultiMouseUp,
+    copyMultiMouseOut,
+} from "./CopyMultiMode";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -303,6 +315,13 @@ function mouseDownHandler(event: MouseEvent) {
             break;
         case Mode.moveMultiMode:
             moveMultiMouseDown(event);
+            break;
+        case Mode.copySingleMode:
+            copySingleMouseDown(event);
+            break;
+        case Mode.copyMultiMode:
+            copyMultiMouseDown(event);
+            break;
     }
     hasMouseDown = true;
 }
@@ -329,6 +348,12 @@ function mouseMoveHandler(event: MouseEvent) {
             case Mode.moveMultiMode:
                 moveMultiMouseMove(event);
                 break;
+            case Mode.copySingleMode:
+                copySingleMouseMove(event);
+                break;
+            case Mode.copyMultiMode:
+                copyMultiMouseMove(event);
+                break;
         }
     }
 }
@@ -351,6 +376,12 @@ function mouseUpHandler(event: MouseEvent) {
             break;
         case Mode.moveMultiMode:
             moveMultiMouseUp(event);
+            break;
+        case Mode.copySingleMode:
+            copySingleMouseUp(event);
+            break;
+        case Mode.copyMultiMode:
+            copyMultiMouseUp(event);
             break;
     }
     hasMouseDown = false;
@@ -377,6 +408,11 @@ function mouseOutHandler() {
         case Mode.moveMultiMode:
             moveMultiMouseOut();
             break;
+        case Mode.copySingleMode:
+            copySingleMouseOut();
+            break;
+        case Mode.copyMultiMode:
+            copyMultiMouseOut();
     }
     hasMouseIn = false;
 }
