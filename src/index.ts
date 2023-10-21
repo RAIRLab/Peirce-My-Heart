@@ -91,30 +91,33 @@ let hasMouseIn = true;
 export let tree: AEGTree = new AEGTree();
 
 //Window Exports
-window.atomMode = atomMode;
-window.cutMode = cutMode;
-window.dragMode = dragMode;
+window.atomMode = Mode.atomMode;
+window.cutMode = Mode.cutMode;
+window.dragMode = Mode.dragMode;
 window.saveMode = saveMode;
 window.loadMode = loadMode;
-window.moveSingleMode = moveSingleMode;
-window.moveMultiMode = moveMultiMode;
-window.copySingleMode = copySingleMode;
-window.copyMultiMode = copyMultiMode;
-window.deleteSingleMode = deleteSingleMode;
-window.deleteMultiMode = deleteMultiMode;
+window.moveSingleMode = Mode.moveSingleMode;
+window.moveMultiMode = Mode.moveMultiMode;
+window.copySingleMode = Mode.copySingleMode;
+window.copyMultiMode = Mode.copyMultiMode;
+window.deleteSingleMode = Mode.deleteSingleMode;
+window.deleteMultiMode = Mode.deleteMultiMode;
+window.setMode = setMode;
+
 declare global {
     interface Window {
-        cutMode: () => void;
-        atomMode: () => void;
-        dragMode: () => void;
+        atomMode: Mode;
+        cutMode: Mode;
+        dragMode: Mode;
         saveMode: () => void;
         loadMode: () => void;
-        moveSingleMode: () => void;
-        moveMultiMode: () => void;
-        copySingleMode: () => void;
-        copyMultiMode: () => void;
-        deleteSingleMode: () => void;
-        deleteMultiMode: () => void;
+        moveSingleMode: Mode;
+        moveMultiMode: Mode;
+        copySingleMode: Mode;
+        copyMultiMode: Mode;
+        deleteSingleMode: Mode;
+        deleteMultiMode: Mode;
+        setMode: (state: Mode) => void;
     }
 }
 
@@ -131,87 +134,19 @@ modeButtons.forEach(button => {
     });
 });
 
-/**
- * Sets the current mode to cut mode. Hides non cutTools.f
- */
-function cutMode() {
-    modeState = Mode.cutMode;
-    cutTools.style.display = "block";
-    //Block all other mode tools
-    atomTools.style.display = "none";
-}
-
-/**
- * Sets the current mode to atom mode. Hides non atom tools.
- */
-function atomMode() {
-    modeState = Mode.atomMode;
-    atomTools.style.display = "block";
-    //Block all other mode tools
-    cutTools.style.display = "none";
-}
-
-/**
- * Sets the current mode to move mode. Hides non move tools.
- */
-function dragMode() {
-    modeState = Mode.dragMode;
+function setMode(state: Mode) {
+    modeState = state;
     cutTools.style.display = "none";
     atomTools.style.display = "none";
-}
 
-/**
- * Sets the current mode to moveSingleMode. Hides non move tools.
- */
-function moveSingleMode() {
-    modeState = Mode.moveSingleMode;
-    cutTools.style.display = "none";
-    atomTools.style.display = "none";
-}
-
-/**
- * Sets the current mode to moveMultiMode. Hides non move tools.
- */
-function moveMultiMode() {
-    modeState = Mode.moveMultiMode;
-    cutTools.style.display = "none";
-    atomTools.style.display = "none";
-}
-
-/**
- * Sets the current mode to copySingleMode. Hides non copy tools.
- */
-function copySingleMode() {
-    modeState = Mode.copySingleMode;
-    cutTools.style.display = "none";
-    atomTools.style.display = "none";
-}
-
-/**
- * Sets the current mode to copyMultiMode. Hides non copy tools.
- */
-function copyMultiMode() {
-    modeState = Mode.copyMultiMode;
-    cutTools.style.display = "none";
-    atomTools.style.display = "none";
-}
-
-/**
- * Sets the current mode to deleteSingleMode. Hides non delete tools.
- */
-function deleteSingleMode() {
-    modeState = Mode.deleteSingleMode;
-    cutTools.style.display = "none";
-    atomTools.style.display = "none";
-}
-
-/**
- * Sets the current mode to deleteMultiMode. Hides non delete tools.
- */
-function deleteMultiMode() {
-    modeState = Mode.deleteMultiMode;
-    cutTools.style.display = "none";
-    atomTools.style.display = "none";
+    switch (modeState) {
+        case Mode.atomMode:
+            atomTools.style.display = "block";
+            break;
+        case Mode.cutMode:
+            cutTools.style.display = "block";
+            break;
+    }
 }
 
 /**

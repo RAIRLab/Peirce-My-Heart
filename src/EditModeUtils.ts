@@ -77,8 +77,7 @@ export function drawAltered(incomingNode: CutNode | AtomNode, color: string, cha
  * Inserts the incoming node into the tree with the change to its original location. If the node
  * is a cut node that has children calls this function on each of its children.
  * @param incomingNode The current node to be inserted
- * @param change The
- *  difference between the original position and the new position
+ * @param change The difference between the original position and the new position
  */
 export function insertChildren(incomingNode: CutNode | AtomNode, change: Point) {
     if (incomingNode instanceof CutNode && incomingNode.ellipse !== null) {
