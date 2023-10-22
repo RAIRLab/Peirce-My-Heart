@@ -5,7 +5,7 @@ on:
 
 jobs: 
   action:
-    timeout-minutes: 18
+    timeout-minutes: 8
     runs-on: ubuntu-latest
     
     steps:
