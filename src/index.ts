@@ -16,6 +16,30 @@ import {drawAtom} from "./AtomMode";
 import {saveFile, loadFile} from "./AEG-IO";
 import {dragMosueOut, dragMouseDown, dragMouseMove, offset} from "./DragMode";
 import {placedColor} from "./Themes";
+import {
+    moveSingleMouseDown,
+    moveSingleMouseMove,
+    moveSingleMouseUp,
+    moveSingleMouseOut,
+} from "./MoveSingleMode";
+import {
+    moveMultiMouseDown,
+    moveMultiMouseMove,
+    moveMultiMouseUp,
+    moveMultiMouseOut,
+} from "./MoveMultiMode";
+import {
+    copySingleMouseDown,
+    copySingleMouseMove,
+    copySingleMouseUp,
+    copySingleMouseOut,
+} from "./CopySingleMode";
+import {
+    copyMultiMouseDown,
+    copyMultiMouseMove,
+    copyMultiMouseUp,
+    copyMultiMouseOut,
+} from "./CopyMultiMode";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -38,24 +62,78 @@ canvas.addEventListener("mousemove", mouseMoveHandler);
 canvas.addEventListener("mouseup", mouseUpHandler);
 canvas.addEventListener("mouseout", mouseOutHandler);
 canvas.addEventListener("mouseenter", mouseEnterHandler);
-let modeState = "";
+
+/**
+ * Enum to represent the current drawing mode the program is currently in.
+ */
+enum Mode {
+    atomMode,
+    cutMode,
+    dragMode,
+    moveSingleMode,
+    moveMultiMode,
+    copySingleMode,
+    copyMultiMode,
+    deleteSingleMode,
+    deleteMultiMode,
+}
+
+//Used to determine the current mode the program is in.
+let modeState: Mode;
+
+//Boolean value representing whether the mouse button is down. Assumed to not be down at the start.
 let hasMouseDown = false;
+
+//Boolean value representing whether the mouse is in the canvas. Assumed to be in at the start.
 let hasMouseIn = true;
+
+//The current tree representing the canvas.
 export let tree: AEGTree = new AEGTree();
 
 //Window Exports
-window.atomMode = atomMode;
-window.cutMode = cutMode;
-window.dragMode = dragMode;
+window.atomMode = Mode.atomMode;
+window.cutMode = Mode.cutMode;
+window.dragMode = Mode.dragMode;
 window.saveMode = saveMode;
 window.loadMode = loadMode;
+window.moveSingleMode = Mode.moveSingleMode;
+window.moveMultiMode = Mode.moveMultiMode;
+window.copySingleMode = Mode.copySingleMode;
+window.copyMultiMode = Mode.copyMultiMode;
+window.deleteSingleMode = Mode.deleteSingleMode;
+window.deleteMultiMode = Mode.deleteMultiMode;
+window.setMode = setMode;
+window.setHighlight = setHighlight;
+
 declare global {
     interface Window {
-        cutMode: () => void;
-        atomMode: () => void;
-        dragMode: () => void;
+        atomMode: Mode;
+        cutMode: Mode;
+        dragMode: Mode;
         saveMode: () => void;
         loadMode: () => void;
+        moveSingleMode: Mode;
+        moveMultiMode: Mode;
+        copySingleMode: Mode;
+        copyMultiMode: Mode;
+        deleteSingleMode: Mode;
+        deleteMultiMode: Mode;
+        setMode: (state: Mode) => void;
+        setHighlight: (event: string, id: string) => void;
+    }
+}
+
+//Add no-highlight class only when mouse is pressed on a div to ensure that elements in the div are
+//not highlighted any other time
+function setHighlight(event: string, id: string) {
+    const bar = document.getElementById(id);
+    switch (event) {
+        case "mousedown":
+            bar?.classList.remove("no-highlight");
+            break;
+        case "mouseleave":
+            bar?.classList.add("no-highlight");
+            break;
     }
 }
 
@@ -72,34 +150,19 @@ modeButtons.forEach(button => {
     });
 });
 
-/**
- * If there is no current mode creates the listeners. Hides non cutTools.
- * Sets the current mode to cut mode.
- */
-function cutMode() {
-    modeState = "cutMode";
-    cutTools.style.display = "block";
-    //Block all other mode tools
-    atomTools.style.display = "none";
-}
-
-/**
- * Sets the current mode to atom mode. Hides non atomTools.
- */
-function atomMode() {
-    modeState = "atomMode";
-    atomTools.style.display = "block";
-    //Block all other mode tools
-    cutTools.style.display = "none";
-}
-
-/**
- * Sets the current mode to move mode. Hides non moveTools.
- */
-function dragMode() {
-    modeState = "dragMode";
+function setMode(state: Mode) {
+    modeState = state;
     cutTools.style.display = "none";
     atomTools.style.display = "none";
+
+    switch (modeState) {
+        case Mode.atomMode:
+            atomTools.style.display = "block";
+            break;
+        case Mode.cutMode:
+            cutTools.style.display = "block";
+            break;
+    }
 }
 
 /**
@@ -176,7 +239,7 @@ function keyDownHandler(event: KeyboardEvent) {
         saveMode();
     } else {
         switch (modeState) {
-            case "atomMode":
+            case Mode.atomMode:
                 atomKeyPress(event);
                 break;
         }
@@ -189,14 +252,26 @@ function keyDownHandler(event: KeyboardEvent) {
  */
 function mouseDownHandler(event: MouseEvent) {
     switch (modeState) {
-        case "cutMode":
+        case Mode.cutMode:
             cutMouseDown(event);
             break;
-        case "atomMode":
+        case Mode.atomMode:
             atomMouseDown(event);
             break;
-        case "dragMode":
+        case Mode.dragMode:
             dragMouseDown(event);
+            break;
+        case Mode.moveSingleMode:
+            moveSingleMouseDown(event);
+            break;
+        case Mode.moveMultiMode:
+            moveMultiMouseDown(event);
+            break;
+        case Mode.copySingleMode:
+            copySingleMouseDown(event);
+            break;
+        case Mode.copyMultiMode:
+            copyMultiMouseDown(event);
             break;
     }
     hasMouseDown = true;
@@ -209,14 +284,26 @@ function mouseDownHandler(event: MouseEvent) {
 function mouseMoveHandler(event: MouseEvent) {
     if (hasMouseDown && hasMouseIn) {
         switch (modeState) {
-            case "cutMode":
+            case Mode.cutMode:
                 cutMouseMove(event);
                 break;
-            case "atomMode":
+            case Mode.atomMode:
                 atomMouseMove(event);
                 break;
-            case "dragMode":
+            case Mode.dragMode:
                 dragMouseMove(event);
+                break;
+            case Mode.moveSingleMode:
+                moveSingleMouseMove(event);
+                break;
+            case Mode.moveMultiMode:
+                moveMultiMouseMove(event);
+                break;
+            case Mode.copySingleMode:
+                copySingleMouseMove(event);
+                break;
+            case Mode.copyMultiMode:
+                copyMultiMouseMove(event);
                 break;
         }
     }
@@ -229,11 +316,23 @@ function mouseMoveHandler(event: MouseEvent) {
  */
 function mouseUpHandler(event: MouseEvent) {
     switch (modeState) {
-        case "cutMode":
+        case Mode.cutMode:
             cutMouseUp(event);
             break;
-        case "atomMode":
+        case Mode.atomMode:
             atomMouseUp(event);
+            break;
+        case Mode.moveSingleMode:
+            moveSingleMouseUp(event);
+            break;
+        case Mode.moveMultiMode:
+            moveMultiMouseUp(event);
+            break;
+        case Mode.copySingleMode:
+            copySingleMouseUp(event);
+            break;
+        case Mode.copyMultiMode:
+            copyMultiMouseUp(event);
             break;
     }
     hasMouseDown = false;
@@ -245,15 +344,26 @@ function mouseUpHandler(event: MouseEvent) {
  */
 function mouseOutHandler() {
     switch (modeState) {
-        case "cutMode":
+        case Mode.cutMode:
             cutMouseOut();
             break;
-        case "atomMode":
+        case Mode.atomMode:
             atomMouseOut();
             break;
-        case "dragMode":
+        case Mode.dragMode:
             dragMosueOut();
             break;
+        case Mode.moveSingleMode:
+            moveSingleMouseOut();
+            break;
+        case Mode.moveMultiMode:
+            moveMultiMouseOut();
+            break;
+        case Mode.copySingleMode:
+            copySingleMouseOut();
+            break;
+        case Mode.copyMultiMode:
+            copyMultiMouseOut();
     }
     hasMouseIn = false;
 }
