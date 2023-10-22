@@ -63,6 +63,37 @@ declare global {
     }
 }
 
+//Add no-highlight class only when mouse is pressed on a div to ensure that elements in the div are
+//not highlighted any other time
+
+header?.addEventListener("mousedown", () => {
+    header.classList.remove("no-highlight");
+});
+header?.addEventListener("mouseup", () => {
+    header.classList.add("no-highlight");
+});
+
+toolBar?.addEventListener("mousedown", () => {
+    toolBar.classList.remove("no-highlight");
+});
+toolBar?.addEventListener("mouseup", () => {
+    toolBar.classList.add("no-highlight");
+});
+
+subBar?.addEventListener("mousedown", () => {
+    subBar.classList.remove("no-highlight");
+});
+subBar?.addEventListener("mouseup", () => {
+    subBar.classList.add("no-highlight");
+});
+
+sideBar?.addEventListener("mousedown", () => {
+    sideBar.classList.remove("no-highlight");
+});
+sideBar?.addEventListener("mouseup", () => {
+    sideBar.classList.add("no-highlight");
+});
+
 //Active mode button stays pressed down until another mode button is clicked
 const modeButtons = document.querySelectorAll(".modeButton");
 modeButtons.forEach(button => {
@@ -192,13 +223,6 @@ function keyDownHandler(event: KeyboardEvent) {
  * @param event The mouse down event
  */
 function mouseDownHandler(event: MouseEvent) {
-    //Add no-highlight class so that mouse moving out from canvas while being pressed down does not
-    //highlight elements on other areas
-    header?.classList.add("no-highlight");
-    toolBar?.classList.add("no-highlight");
-    subBar?.classList.add("no-highlight");
-    sideBar?.classList.add("no-highlight");
-
     switch (modeState) {
         case "cutMode":
             cutMouseDown(event);
@@ -239,12 +263,6 @@ function mouseMoveHandler(event: MouseEvent) {
  * @param event The mouse up event
  */
 function mouseUpHandler(event: MouseEvent) {
-    //Remove no highlight class because mouse is no longer pressed down on canvas
-    header?.classList.remove("no-highlight");
-    toolBar?.classList.remove("no-highlight");
-    subBar?.classList.remove("no-highlight");
-    sideBar?.classList.remove("no-highlight");
-
     switch (modeState) {
         case "cutMode":
             cutMouseUp(event);
