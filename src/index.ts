@@ -103,6 +103,7 @@ window.copyMultiMode = Mode.copyMultiMode;
 window.deleteSingleMode = Mode.deleteSingleMode;
 window.deleteMultiMode = Mode.deleteMultiMode;
 window.setMode = setMode;
+window.setHighlight = setHighlight;
 
 declare global {
     interface Window {
@@ -118,6 +119,21 @@ declare global {
         deleteSingleMode: Mode;
         deleteMultiMode: Mode;
         setMode: (state: Mode) => void;
+        setHighlight: (event: string, id: string) => void;
+    }
+}
+
+//Add no-highlight class only when mouse is pressed on a div to ensure that elements in the div are
+//not highlighted any other time
+function setHighlight(event: string, id: string) {
+    const bar = document.getElementById(id);
+    switch (event) {
+        case "mousedown":
+            bar?.classList.remove("no-highlight");
+            break;
+        case "mouseleave":
+            bar?.classList.add("no-highlight");
+            break;
     }
 }
 

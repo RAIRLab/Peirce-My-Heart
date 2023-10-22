@@ -19,10 +19,12 @@
     <script type="module" src="index.ts"></script>
   </head>
   <body>
-    <header id="header">
-      <p class="no-highlight">Peirce My Heart</p>
+    <header id="header" class="no-highlight" onmousedown="setHighlight('mousedown', 'header')"
+    onmouseleave="setHighlight('mouseleave', 'header')">
+      <p>Peirce My Heart</p>
     </header>
-    <div id="sidebar">
+    <div id="sidebar" class="no-highlight" onmousedown="setHighlight('mousedown', 'sidebar')"
+    onmouseleave="setHighlight('mouseleave', 'sidebar')">
       <div class="row">
         <button type="button" title="Peirce Mode" class="modeButton">
           <i class="fa fa-question" aria-hidden="true"></i>
@@ -64,40 +66,37 @@
         </button>
       </div>
     </div>
-    <div id="toolbar">
+    <div id="toolbar" class="no-highlight" onmousedown="setHighlight('mousedown', 'toolbar')"
+    onmouseleave="setHighlight('mouseleave', 'toolbar')">
       <div id="genericTools">
         <div class="toolSetting">
           <p id="graphString"></p>
         </div>
         <div class="fileButton">
           <div class="toolSetting">
-            <p class="no-highlight">Theme:</p>
-          </div>
-          <select id="theme-select" name="theme-select" data-choose-theme>
+            <p>Theme:</p>
+          </div><select id="theme-select" name="theme-select" data-choose-theme>
             <option value="">Nature</option>
             <option value="Wireframe">Wireframe</option>
             <option value="Dark-Wireframe">Dark-Wireframe</option>
             <option value="vs-code">VS-Code</option>
-          </select>
-          <button type="button" onclick="saveMode()" title="Save File" class="modeButton">
+          </select><button type="button" onclick="saveMode()" title="Save File" class="modeButton">
             <i class="fa fa-floppy-o" aria-hidden="true"></i>
-          </button>
-          <button type="button" onclick="loadMode()" title="Load File" class="modeButton">
+          </button><button type="button" onclick="loadMode()" title="Load File" class="modeButton">
             <i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i>
           </button>
         </div>
       </div>
     </div>
-    <div id="subBar">
+    <div id="subBar" class="no-highlight" onmousedown="setHighlight('mousedown', 'subBar')"
+    onmouseleave="setHighlight('mouseleave', 'subBar')">
       <div id="cutTools">
         <div class="toolSetting">
-          <p class="no-highlight">Show Guidelines:</p>
+          <p>Show Guidelines:</p>
           <input id="showRect" type="checkbox" title="Show Rect"/>
-        </div>
-        <div class="toolSetting">
-          <p class="no-highlight">Cut Mode:</p>
-        </div>
-        <div class="toolSetting">
+        </div><div class="toolSetting">
+          <p>Cut Mode:</p>
+        </div><div class="toolSetting">
           <select id="mode" name="guideSelector">
             <option value="inscribed">Inscribed</option>
             <option value="circumscribed">Circumscribed</option>
@@ -106,17 +105,14 @@
       </div>
       <div id="atomTools">
         <div class="toolSetting">
-          <p class="no-highlight">Current Atom:</p>
-        </div>
-        <div class="toolSetting">
-          <p class="no-highlight" id="atomDisplay"></p>
-        </div>
-        <div class="toolSetting">
-          <p class="no-highlight">Show Current Bounding Box</p>
+          <p>Current Atom:</p>
+        </div><div class="toolSetting">
+          <p id="atomDisplay"></p>
+        </div><div class="toolSetting">
+          <p>Show Current Bounding Box</p>
           <input id="atomBox" type="checkbox" title="Show atomBox"/>
-        </div>
-        <div class="toolSetting">
-          <p class="no-highlight">Show All Bounding Boxes</p>
+        </div><div class="toolSetting">
+          <p>Show All Bounding Boxes</p>
           <input id="atomBoxes" type="checkbox" title="Show atomBoxes"/>
         </div>
       </div>
