@@ -45,6 +45,9 @@ export function dragMouseMove(event: MouseEvent) {
     }
 }
 
+/**
+ * Sets wasOut to true when the cursor leaves the canvas and redraws the canvas.
+ */
 export function dragMosueOut() {
     wasOut = true;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
