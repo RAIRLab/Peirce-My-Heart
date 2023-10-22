@@ -19,10 +19,12 @@
     <script type="module" src="index.ts"></script>
   </head>
   <body>
-    <header id="header" class="no-highlight">
+    <header id="header" class="no-highlight" onmousedown="setHighlight('mousedown', 'header')"
+    onmouseleave="setHighlight('mouseleave', 'header')">
       <p>Peirce My Heart</p>
     </header>
-    <div id="sidebar" class="no-highlight">
+    <div id="sidebar" class="no-highlight" onmousedown="setHighlight('mousedown', 'sidebar')"
+    onmouseleave="setHighlight('mouseleave', 'sidebar')">
       <div class="row">
         <button type="button" title="Selection Mode" class="modeButton">
           <i class="fa fa-mouse-pointer" aria-hidden="true"></i>
@@ -40,7 +42,8 @@
         </button>
       </div>
     </div>
-    <div id="toolbar" class="no-highlight">
+    <div id="toolbar" class="no-highlight" onmousedown="setHighlight('mousedown', 'toolbar')"
+    onmouseleave="setHighlight('mouseleave', 'toolbar')">
       <div id="genericTools">
         <div class="toolSetting">
           <p id="graphString"></p>
@@ -61,7 +64,8 @@
         </div>
       </div>
     </div>
-    <div id="subBar" class="no-highlight">
+    <div id="subBar" class="no-highlight" onmousedown="setHighlight('mousedown', 'subBar')"
+    onmouseleave="setHighlight('mouseleave', 'subBar')">
       <div id="cutTools">
         <div class="toolSetting">
           <p>Show Guidelines:</p>

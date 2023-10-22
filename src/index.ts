@@ -32,10 +32,6 @@ ctx.font = "35pt arial";
 const cutDisplay = <HTMLParagraphElement>document.getElementById("graphString");
 const cutTools = <HTMLParagraphElement>document.getElementById("cutTools");
 const atomTools = <HTMLParagraphElement>document.getElementById("atomTools");
-const header = document.getElementById("header");
-const sideBar = document.getElementById("sidebar");
-const toolBar = document.getElementById("toolbar");
-const subBar = document.getElementById("subBar");
 window.addEventListener("keydown", keyDownHandler);
 canvas.addEventListener("mousedown", mouseDownHandler);
 canvas.addEventListener("mousemove", mouseMoveHandler);
@@ -53,6 +49,7 @@ window.cutMode = cutMode;
 window.dragMode = dragMode;
 window.saveMode = saveMode;
 window.loadMode = loadMode;
+window.setHighlight = setHighlight;
 declare global {
     interface Window {
         cutMode: () => void;
@@ -60,39 +57,23 @@ declare global {
         dragMode: () => void;
         saveMode: () => void;
         loadMode: () => void;
+        setHighlight: (event: string, id: string) => void;
     }
 }
 
 //Add no-highlight class only when mouse is pressed on a div to ensure that elements in the div are
 //not highlighted any other time
-
-header?.addEventListener("mousedown", () => {
-    header.classList.remove("no-highlight");
-});
-header?.addEventListener("mouseleave", () => {
-    header.classList.add("no-highlight");
-});
-
-toolBar?.addEventListener("mousedown", () => {
-    toolBar.classList.remove("no-highlight");
-});
-toolBar?.addEventListener("mouseleave", () => {
-    toolBar.classList.add("no-highlight");
-});
-
-subBar?.addEventListener("mousedown", () => {
-    subBar.classList.remove("no-highlight");
-});
-subBar?.addEventListener("mouseleave", () => {
-    subBar.classList.add("no-highlight");
-});
-
-sideBar?.addEventListener("mousedown", () => {
-    sideBar.classList.remove("no-highlight");
-});
-sideBar?.addEventListener("mouseleave", () => {
-    sideBar.classList.add("no-highlight");
-});
+function setHighlight(event: string, id: string) {
+    const bar = document.getElementById(id);
+    switch (event) {
+        case "mousedown":
+            bar?.classList.remove("no-highlight");
+            break;
+        case "mouseleave":
+            bar?.classList.add("no-highlight");
+            break;
+    }
+}
 
 //Active mode button stays pressed down until another mode button is clicked
 const modeButtons = document.querySelectorAll(".modeButton");
