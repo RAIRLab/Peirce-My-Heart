@@ -6,6 +6,8 @@
 import {Point} from "./AEG/Point";
 import {AtomNode} from "./AEG/AtomNode";
 import {CutNode} from "./AEG/CutNode";
+import {drawAtom} from "./AtomMode";
+import {drawCut} from "./CutMode";
 import {redrawCut, tree} from "./index";
 import {illegalColor} from "./Themes";
 
@@ -29,7 +31,16 @@ let legalNode: boolean;
  */
 export function deleteSingleMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x, event.y);
-    currentNode = null; //ONLY KEEPING THIS HERE FOR THE INITIAL COMMIT BEFORE UPDATING
+    currentNode = tree.getLowestNode(startingPoint);
+
+    if (currentNode !== tree.sheet && currentNode !== null) {
+        legalNode = true;
+        if (currentNode instanceof AtomNode) {
+            drawAtom(currentNode, illegalColor(), true);
+        } else {
+            drawCut(currentNode, illegalColor());
+        }
+    }
 }
 
 /**
@@ -45,7 +56,14 @@ export function deleteSingleMouseMove() {
  * @param event The mouse up event
  */
 export function deleteSingleMouseUp(event: MouseEvent) {
-    tree.remove(new Point(0, 0)); //ONLY KEEPING THIS HERE FOR THE INITIAL COMMIT BEFORE UPDATING
+    tree.remove(startingPoint);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    redrawCut(tree.sheet, new Point(0, 0));
+    currentNode = null;
+    legalNode = false;
+}
+
+export function deleteSingleMouseOut() {
     currentNode = null;
     legalNode = false;
 }

@@ -5,6 +5,8 @@
 import {Point} from "./AEG/Point";
 import {AtomNode} from "./AEG/AtomNode";
 import {CutNode} from "./AEG/CutNode";
+import {drawAtom} from "./AtomMode";
+import {drawCut} from "./CutMode";
 import {redrawCut, tree} from "./index";
 import {illegalColor} from "./Themes";
 
@@ -28,7 +30,7 @@ let legalNode: boolean;
  */
 export function deleteMultiMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x, event.y);
-    currentNode = null; //ONLY KEEPING THIS HERE FOR THE INITIAL COMMIT BEFORE UPDATING
+    currentNode = tree.getLowestNode(startingPoint);
 }
 
 /**
@@ -44,7 +46,15 @@ export function deleteMultiMouseMove() {
  * @param event The mouse up event
  */
 export function deleteMultiMouseUp(event: MouseEvent) {
-    tree.remove(new Point(0, 0)); //ONLY KEEPING THIS HERE FOR THE INITIAL COMMIT BEFORE UPDATING
+    tree.remove(startingPoint); //ONLY KEEPING THIS HERE FOR THE INITIAL COMMIT BEFORE UPDATING
+    currentNode = null;
+    legalNode = false;
+}
+
+/**
+ * If the mouse is held down and the user leaves canvas, we want to reset fields back to default.
+ */
+export function deleteMultiMouseOut() {
     currentNode = null;
     legalNode = false;
 }
