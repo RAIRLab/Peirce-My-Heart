@@ -104,6 +104,8 @@ window.deleteSingleMode = Mode.deleteSingleMode;
 window.deleteMultiMode = Mode.deleteMultiMode;
 window.setMode = setMode;
 window.setHighlight = setHighlight;
+window.tree = tree;
+window.toString = tree.toString;
 
 declare global {
     interface Window {
@@ -120,6 +122,8 @@ declare global {
         deleteMultiMode: Mode;
         setMode: (state: Mode) => void;
         setHighlight: (event: string, id: string) => void;
+        tree: AEGTree;
+        toString: () => string;
     }
 }
 
