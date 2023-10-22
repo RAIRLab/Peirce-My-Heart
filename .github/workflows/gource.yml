@@ -1,6 +1,6 @@
 name: Gource Action
 on:
-  pull-request:
+  pull_request:
     branches: [ master ]
 
 jobs: 
