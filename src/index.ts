@@ -49,6 +49,7 @@ window.cutMode = cutMode;
 window.dragMode = dragMode;
 window.saveMode = saveMode;
 window.loadMode = loadMode;
+window.setHighlight = setHighlight;
 declare global {
     interface Window {
         cutMode: () => void;
@@ -56,6 +57,21 @@ declare global {
         dragMode: () => void;
         saveMode: () => void;
         loadMode: () => void;
+        setHighlight: (event: string, id: string) => void;
+    }
+}
+
+//Add no-highlight class only when mouse is pressed on a div to ensure that elements in the div are
+//not highlighted any other time
+function setHighlight(event: string, id: string) {
+    const bar = document.getElementById(id);
+    switch (event) {
+        case "mousedown":
+            bar?.classList.remove("no-highlight");
+            break;
+        case "mouseleave":
+            bar?.classList.add("no-highlight");
+            break;
     }
 }
 
