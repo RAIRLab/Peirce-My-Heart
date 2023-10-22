@@ -32,6 +32,10 @@ ctx.font = "35pt arial";
 const cutDisplay = <HTMLParagraphElement>document.getElementById("graphString");
 const cutTools = <HTMLParagraphElement>document.getElementById("cutTools");
 const atomTools = <HTMLParagraphElement>document.getElementById("atomTools");
+const header = document.getElementById("header");
+const sideBar = document.getElementById("sidebar");
+const toolBar = document.getElementById("toolbar");
+const subBar = document.getElementById("subBar");
 window.addEventListener("keydown", keyDownHandler);
 canvas.addEventListener("mousedown", mouseDownHandler);
 canvas.addEventListener("mousemove", mouseMoveHandler);
@@ -188,6 +192,13 @@ function keyDownHandler(event: KeyboardEvent) {
  * @param event The mouse down event
  */
 function mouseDownHandler(event: MouseEvent) {
+    //Add no-highlight class so that mouse moving out from canvas while being pressed down does not
+    //highlight elements on other areas
+    header?.classList.add("no-highlight");
+    toolBar?.classList.add("no-highlight");
+    subBar?.classList.add("no-highlight");
+    sideBar?.classList.add("no-highlight");
+
     switch (modeState) {
         case "cutMode":
             cutMouseDown(event);
@@ -228,6 +239,12 @@ function mouseMoveHandler(event: MouseEvent) {
  * @param event The mouse up event
  */
 function mouseUpHandler(event: MouseEvent) {
+    //Remove no highlight class because mouse is no longer pressed down on canvas
+    header?.classList.remove("no-highlight");
+    toolBar?.classList.remove("no-highlight");
+    subBar?.classList.remove("no-highlight");
+    sideBar?.classList.remove("no-highlight");
+
     switch (modeState) {
         case "cutMode":
             cutMouseUp(event);
