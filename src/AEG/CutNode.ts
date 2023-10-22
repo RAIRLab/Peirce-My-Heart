@@ -212,22 +212,37 @@ export class CutNode {
                     return true;
                 } else {
                     //We have a CutNode with more than 0 children.
-                    for (let j = 0; j < (this.children[i] as CutNode).children.length; j++) {
-                        if (
-                            (this.children[i] as CutNode).children[j].containsPoint(incomingPoint)
-                        ) {
+                    const outerChild: CutNode = this.children[i] as CutNode;
+                    for (let j = 0; j < outerChild.children.length; j++) {
+                        if (outerChild.children[j].containsPoint(incomingPoint)) {
                             //If the child has children, and one of its children contains the Point, recursion time.
-                            if ((this.children[i] as CutNode).children[j] instanceof AtomNode) {
-                                (this.children[i] as CutNode).children.splice(j, 1);
+                            if (outerChild.children[j] instanceof AtomNode) {
+                                outerChild.children.splice(j, 1);
+                                return true;
+                            } else if (
+                                outerChild.children[j] instanceof CutNode &&
+                                (outerChild.children[j] as CutNode).children.length === 0
+                            ) {
+                                outerChild.children.splice(j, 1);
+                                return true;
                             } else {
-                                return (
-                                    (this.children[i] as CutNode).children[j] as CutNode
-                                ).remove(incomingPoint);
+                                if (!(outerChild.children[j] as CutNode).remove(incomingPoint)) {
+                                    const tempNode: CutNode = outerChild.children[j] as CutNode;
+                                    for (let k = 0; k < tempNode.children.length; k++) {
+                                        outerChild.child = tempNode.children[k];
+                                    }
+                                    outerChild.children.splice(j, 1);
+                                }
+                                return true;
                             }
                         }
                     }
                     //Here, we have a CutNode with more than 0 children, none of which contained the Point.
                     //This CutNode is now the lowest node containing the Point, and so, we must remove that child.
+                    const tempNode: CutNode = this.children[i] as CutNode;
+                    for (let j = 0; j < tempNode.children.length; j++) {
+                        this.child = tempNode.children[j];
+                    }
                     this.children.splice(i, 1);
                     return true;
                 }
