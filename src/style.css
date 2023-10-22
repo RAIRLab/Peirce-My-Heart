@@ -1,73 +1,96 @@
-h1 {
-    text-align: center;
-    color: #a5668b;
-    font-size: xx-large;
-    border-style: dotted;
-}
-
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #69306d;
-}
-
-li {
-    float: left;
-}
-
-li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-
-li a:hover {
-    background-color: #f2d7ee;
-}
-
 body {
-    margin: 0;
-    padding: 0;
-    display: grid;
-    place-items: center;
-    min-height: 100vh;
+    background-color: var(--header-bg);
+    color: var(--p-text);
+    width: 100vw;
+    height: 100vh;
+    margin: 0px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overflow-wrap: break-word;
 }
 
-.sidebar-header {
-    background-color: #f1c0ff;
-    padding: 50px 20px;
-    float: left; 
-    margin-right: 1000px;
-    margin-left : -450px;
+#navbar {
+    width: 100vw;
+    height: 5vh;
+    top: 0%;
+    padding:3vh;
+    background-color: var(--toolbar-bg);
+    position: sticky;
+    position: -webkit-sticky;
 }
 
-.button-container {
+.nav-text {
     float: left;
-    margin-left: 10px;
+    margin: 2vh;
 }
 
-.button {
-    --button-offset: 0.48em;
-    --bg: 178, 60%, 48%;
-    background-color:#a5668b;
-    border: 0;
-    border-radius: 0.2em;
-    padding: 0.1em;
-    font-size: 2rem;
-    font-weight: 300;
-    text-transform: uppercase;
-    box-shadow: 0 8px 0 0 #1b2323;
-    cursor: pointer;
-    display: block; 
-    margin-bottom: 10px; 
+.nav-text:hover {
+    font-weight: bold;
 }
 
-.button:active,
-.button:focus-visible {
-    transform: translateY(16px);
-    box-shadow: none;
+#themes {
+    float: right;
+    display: inline-flex;
+    margin-right: 3vw;
+}
+
+#theme-select {
+    height: fit-content;
+    margin: 2.5vh 1vw;
+}
+
+#header {
+    width: 100vw;
+    text-align: center;
+    font-weight: bold;
+    font-size: x-large;
+    margin-top: 2vh;
+}
+
+#content {
+    justify-content: center;
+    margin: 2vh 1vh;
+    width: 95vw;
+}
+
+dt {
+    font-weight: bold;
+}
+#About, #Docs, #App {
+    background-color: var(--toolbar-bg);
+    border: var(--toolbar-border);
+    border-radius: 20px;
+    margin: 15px;
+    width: 30vw;
+    height: 50vh;
+    float: left;
+    box-shadow: 4px 8px 4px var(--mode-btn-icon-color);
+    text-align: center;
+    
+}
+
+.card:hover {
+    transform: translateY(5px);
+    font-weight: bold;
+}
+
+cite {
+    text-decoration: underline;
+}
+
+a {
+    text-decoration: none;
+    color: var(--p-text);
+}
+
+.card-icon {
+    font-size: xx-large;
+    display: block;
+    transform: translateY(15vh);
+}
+
+.card-text {
+    font-size: large;
+    transform: translateY(25vh);
+    overflow-wrap: break-word;
 }
