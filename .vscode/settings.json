@@ -25,6 +25,8 @@
         "subbar",
         "buttonface",
         "Wireframe",
+        "Gource",
+        "nbprojekt",
     ],
     "editor.rulers": [100]
 }
