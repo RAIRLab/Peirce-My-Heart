@@ -52,9 +52,9 @@ export function cutMouseMove(event: MouseEvent) {
 
     if (!wasOut) {
         if (tree.canInsert(newCut) && ellipseLargeEnough(newCut.ellipse)) {
-            drawEllipse(newCut, legalColor());
+            drawCut(newCut, legalColor());
         } else {
-            drawEllipse(newCut, illegalColor());
+            drawCut(newCut, illegalColor());
         }
     }
 }
@@ -125,7 +125,7 @@ export function createEllipse(original: Point, current: Point): Ellipse {
  * @param thisCut The cut containing the ellipse to be drawn
  * @param color the line color of the ellipse
  */
-function drawEllipse(thisCut: CutNode, color: string) {
+export function drawCut(thisCut: CutNode, color: string) {
     ctx.strokeStyle = color;
     const ellipse: Ellipse = <Ellipse>thisCut.ellipse;
     const center: Point = ellipse.center;

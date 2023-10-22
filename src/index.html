@@ -26,19 +26,43 @@
     <div id="sidebar" class="no-highlight" onmousedown="setHighlight('mousedown', 'sidebar')"
     onmouseleave="setHighlight('mouseleave', 'sidebar')">
       <div class="row">
-        <button type="button" title="Selection Mode" class="modeButton">
-          <i class="fa fa-mouse-pointer" aria-hidden="true"></i>
+        <button type="button" title="Peirce Mode" class="modeButton">
+          <i class="fa fa-question" aria-hidden="true"></i>
         </button>
-        <button type="button" onclick= "dragMode()" title="Move Mode" class="modeButton">
+        <button type="button" onclick= "setMode(dragMode)" title="Drag Mode" class="modeButton">
           <i class="fa fa-hand-paper-o" aria-hidden="true"></i>
         </button>
       </div>
       <div class="row">
-        <button type="button" onclick= "atomMode()" title="Atom Mode" class="modeButton">
+        <button type="button" onclick= "setMode(atomMode)" title="Atom Mode" class="modeButton">
             <i class="fa fa-font" aria-hidden="true"></i>
         </button>
-        <button type="button" onclick= "cutMode()" title="Cut Mode" class="modeButton">
+        <button type="button" onclick= "setMode(cutMode)" title="Cut Mode" class="modeButton">
             <i class="fa fa-circle-o" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class = "row">
+        <button type="button" onclick="setMode(moveSingleMode)" title="Move Single Mode" class="modeButton">
+          <i class="fa fa-mouse-pointer" aria-hidden="true"></i>
+        </button>
+        <button type="button" onclick="setMode(moveMultiMode)" title="Move Multi Mode" class="modeButton">
+          <i class="fa fa-arrows" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class = "row">
+        <button type="button" onclick="setMode(copySingleMode)" title="Copy Single Mode" class="modeButton">
+          <i class="fa fa-file-o" aria-hidden="true"></i>
+        </button>
+        <button type="button" onclick="setMode(copyMultiMode)" title="Copy Multi Mode" class="modeButton">
+          <i class="fa fa-files-o" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class = "row">
+        <button type="button" onclick="setMode(deleteSingleMode)" title="Delete Single Mode" class="modeButton">
+          <i class="fa fa-trash-o" aria-hidden="true"></i>
+        </button>
+        <button type="button" onclick="setMode(deleteMultiMode)" title="Delete Multi Mode" class="modeButton">
+          <i class="fa fa-trash" aria-hidden="true"></i>
         </button>
       </div>
     </div>
