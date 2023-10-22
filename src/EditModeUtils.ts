@@ -96,6 +96,13 @@ export function insertChildren(incomingNode: CutNode | AtomNode, change: Point) 
     }
 }
 
+/**
+ * Takes a cut object and changes the center point of the ellipse by the difference.
+ * If the cut does not have an ellipse throws and error.
+ * @param originalCut The original cut to be altered
+ * @param difference The difference on how far the center should move
+ * @returns The new altered version of the cut
+ */
 export function alterCut(originalCut: CutNode, difference: Point): CutNode {
     if (originalCut.ellipse !== null) {
         return new CutNode(
@@ -113,6 +120,12 @@ export function alterCut(originalCut: CutNode, difference: Point): CutNode {
     }
 }
 
+/**
+ * Takes an atom object and changes the origin point by the difference.
+ * @param originalAtom The Atom to be altered
+ * @param difference The difference on how far the center should move
+ * @returns The new altered version of the cut
+ */
 export function alterAtom(originalAtom: AtomNode, difference: Point) {
     return new AtomNode(
         originalAtom.identifier,

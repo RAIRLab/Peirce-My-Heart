@@ -124,6 +124,7 @@ export class CutNode {
 
     /**
      * Recursive method to return the lowest level node containing the given point.
+     * Returns null when this node does not contain the point.
      * @param incomingPoint The given point on the canvas.
      * @returns The lowest node containing the node on the tree.
      */
@@ -153,6 +154,8 @@ export class CutNode {
 
     /**
      * Recursive method to return the parent of the lowest node containing the given point.
+     * Returns null when the parent's children do not contain the point. Throws and error if this
+     * does not contain the point.
      * @param incomingPoint The given point on the canvas.
      * @returns The parent of the lowest level node.
      */

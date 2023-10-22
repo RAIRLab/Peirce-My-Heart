@@ -111,7 +111,6 @@ export function moveSingleMouseUp(event: MouseEvent) {
             event.x - startingPoint.x,
             event.y - startingPoint.y
         );
-        //
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = alterCut(currentNode, moveDifference);
 
