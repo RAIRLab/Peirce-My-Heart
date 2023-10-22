@@ -3,15 +3,91 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>About AEG</title>
+
+    <!--Theme Change Library-->
+    <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
+
     
-    <link rel="stylesheet" href="/Peirce-My-Heart/assets/style-b340052b.css">
+    
+    <link rel="stylesheet" href="/Peirce-My-Heart/assets/themes-6779bd95.css">
+    <link rel="stylesheet" href="/Peirce-My-Heart/assets/style-e5eb2f66.css">
   </head>
   <body>
-    <h1>About AEG</h1>
-    <ul class="content home"> 
-        <li><a href="/about.html" >Alpha Existential Graphs</a></li>     
-        <li><a href="/aeg.html">Homepage</a></li>
-    </ul>
+    <div id="navbar">
+      <div id="themes">
+        <div>
+            <p>Theme:</p>
+        </div><select id="theme-select" name="theme-select" data-choose-theme>
+            <option value="">Nature</option>
+            <option value="Wireframe">Wireframe</option>
+            <option value="Dark-Wireframe">Dark-Wireframe</option>
+            <option value="vs-code">VS-Code</option>
+        </select>
+      </div>
+      
+      <a class="nav-text" href="./aeg.html">Homepage</a>
+      <a class="nav-text" href="./index.html" >Peirce My Heart Application</a>
+    </div>
+
+    <div id="header"><h2>About Alpha Existential Graphs</h2></div>
+
+    <div id="content">
+      <div id="intro">
+        <h3>What are Existential Graphs?</h3>
+        <p>
+          Proposed by <cite><a href="https://en.wikipedia.org/wiki/Charles_Sanders_Peirce">Charles 
+          Sanders Peirce</a></cite>, an <cite><a href="https://en.wikipedia.org/wiki/Existential_graph">
+          Existential Graph</a></cite> is a diagrammatic or visual representation of a logical expression. 
+          There are 3 types of Existential Graphs: Alpha Existential Graphs, Beta Existential Graphs and
+          Gamma Existential Graphs. In our application, we cover Alpha Existential Graphs.        
+        </p>
+
+        <h4>The parts of an Alpha Existential Graph (AEG)</h4>
+        Alpha Existential Graphs are a form of Existential Graphs that are isomorphic to <cite>
+        <a href="https://en.wikipedia.org/wiki/Propositional_calculus">Propositional Logic</a></cite>
+        Propositional Logic. Graphs of this system can be used to construct entire propositional 
+        logic statements with just 3 components: 
+        <dl>
+          <dt>Sheet of Assertion</dt>
+          <dd>The blank page on which the graph is constructed.</dd>
+
+          <dt>Atoms</dt>
+          <dd>The letters or phrases which are used to represent the propositions.</dd>
+
+          <dt>Cuts</dt>
+          <dd>
+            Fully closed curves that are used to represent negation. Everything contained within 
+            the cut will be considered to be negated. Cuts can be nested and concatenated with 
+            other cuts. Empty cuts, i.e. cuts that do not contain anything within them, are 
+            allowed to be present on the graph. Each cut represents a "level" in 
+            the graph; a nested cut represents one level deeper than the level of its parent cut.
+          </dd>
+        </dl>
+
+        <h4>How AEGs Work</h4>
+        Anything drawn on this sheet is asserted to be <b>True</b>. Phrases, subgraphs and even the 
+        entire graph can be equated to <b>True</b> or <b>False.</b> <br/>
+        Since everything drawn on the sheet is considered <b>True</b>, placing multiple atoms on the 
+        same levels can be considered as a conjunction between the atoms. This further applies to 
+        atoms and cuts on the same level as well (Note: Asserting that multiple propositions 
+        are True all at the same time in turn holds that the conjunction of those propositions 
+        is True as well). <br/>
+        Everything contained within a cut is considered negated. As such, an empty cut represents
+        <b>False.</b> <br/>
+        An AEG introduces functionality to represent <b>AND</b> and <b>NOT</b> as seen in propositional
+        logic. Furthermore, all other propositional connectives can be represented in an AEG just 
+        by using <b>AND</b> and <b>NOT.</b> For instance, 
+        <div style="margin: auto; text-align: center;">
+          A <b>OR</b> B <br/>
+          can be represented as <br/>
+          A <b>AND (NOT</b>B<b>)</b>
+        </div>
+
+        In an AEG, this would be represented by having <b>A</b> and <b>CUT</b> on drawn on the
+        Sheet of Assertion, with <b>B</b> drawn within the cut.
+      </div>
+    </div>
+    
   </body>
 </html>
