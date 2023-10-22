@@ -69,28 +69,28 @@ declare global {
 header?.addEventListener("mousedown", () => {
     header.classList.remove("no-highlight");
 });
-header?.addEventListener("mouseup", () => {
+header?.addEventListener("mouseleave", () => {
     header.classList.add("no-highlight");
 });
 
 toolBar?.addEventListener("mousedown", () => {
     toolBar.classList.remove("no-highlight");
 });
-toolBar?.addEventListener("mouseup", () => {
+toolBar?.addEventListener("mouseleave", () => {
     toolBar.classList.add("no-highlight");
 });
 
 subBar?.addEventListener("mousedown", () => {
     subBar.classList.remove("no-highlight");
 });
-subBar?.addEventListener("mouseup", () => {
+subBar?.addEventListener("mouseleave", () => {
     subBar.classList.add("no-highlight");
 });
 
 sideBar?.addEventListener("mousedown", () => {
     sideBar.classList.remove("no-highlight");
 });
-sideBar?.addEventListener("mouseup", () => {
+sideBar?.addEventListener("mouseleave", () => {
     sideBar.classList.add("no-highlight");
 });
 
