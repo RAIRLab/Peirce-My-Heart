@@ -15,6 +15,7 @@ import {atomKeyPress, atomMouseDown, atomMouseMove, atomMouseUp, atomMouseOut} f
 import {drawAtom} from "./AtomMode";
 import {saveFile, loadFile} from "./AEG-IO";
 import {dragMosueOut, dragMouseDown, dragMouseMove, offset} from "./DragMode";
+import {placedColor} from "./Themes";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -48,6 +49,7 @@ window.cutMode = cutMode;
 window.dragMode = dragMode;
 window.saveMode = saveMode;
 window.loadMode = loadMode;
+window.setHighlight = setHighlight;
 declare global {
     interface Window {
         cutMode: () => void;
@@ -55,8 +57,36 @@ declare global {
         dragMode: () => void;
         saveMode: () => void;
         loadMode: () => void;
+        setHighlight: (event: string, id: string) => void;
     }
 }
+
+//Add no-highlight class only when mouse is pressed on a div to ensure that elements in the div are
+//not highlighted any other time
+function setHighlight(event: string, id: string) {
+    const bar = document.getElementById(id);
+    switch (event) {
+        case "mousedown":
+            bar?.classList.remove("no-highlight");
+            break;
+        case "mouseleave":
+            bar?.classList.add("no-highlight");
+            break;
+    }
+}
+
+//Active mode button stays pressed down until another mode button is clicked
+const modeButtons = document.querySelectorAll(".modeButton");
+modeButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        button.classList.toggle("modeButtonPressed");
+        modeButtons.forEach(otherButton => {
+            if (otherButton !== button) {
+                otherButton.classList.remove("modeButtonPressed");
+            }
+        });
+    });
+});
 
 /**
  * If there is no current mode creates the listeners. Hides non cutTools.
@@ -264,7 +294,7 @@ export function redrawCut(incomingNode: CutNode, offset: Point) {
         }
     }
     if (incomingNode.ellipse instanceof Ellipse) {
-        ctx.strokeStyle = "#000000";
+        ctx.strokeStyle = placedColor();
         ctx.beginPath();
         ctx.ellipse(
             incomingNode.ellipse.center.x + offset.x,
@@ -285,7 +315,7 @@ export function redrawCut(incomingNode: CutNode, offset: Point) {
  * @param offset The difference between the actual graph and the current canvas
  */
 function redrawAtom(incomingNode: AtomNode) {
-    drawAtom(incomingNode, "#000000", false);
+    drawAtom(incomingNode, placedColor(), false);
 }
 
 /**

@@ -1,24 +1,28 @@
-
 body, html{
-    margin: 0;
+    margin: 0px;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    display:contents;
+    display: contents;
+    background-color: var(--global-background);
 }
 
 p {
     margin: 0px;
+    color: var(--p-text);
 }
 
 #header {
-    background-color: white;
-    border: 2px solid black;
-    height: 3vw;
+    background-color: var(--header-bg);
+    border: var(--header-border);
+    border-right: 0px;
+    min-height: 6vh;
     width: 100vw;
     text-align: center;
-    padding-top: 1vw;
+    padding-top: 1vh;
     box-sizing: border-box;
+    font-weight: bold;
+    font-size: x-large;
 }
 
 #application {
@@ -30,13 +34,39 @@ p {
 
 .row {
     display: flex;
+    justify-content: space-around;
 }
 
 .modeButton {
-    width: 2vw;
-    height: 2vw;
-    border: 2px solid black;
-    margin: 3px;
+    min-width: 2vw;
+    min-height: 4vh;
+    border: var(--mode-btn-border);
+    background-color: var(--mode-btn-bg);
+    margin: 2px;
+    border-radius: var(--mode-btn-radius);
+    box-shadow: var(--mode-btn-shadow);
+    color: var(--mode-btn-icon-color);
+}
+
+.modeButton:active {
+    transform: translateY(2px);
+}
+
+.modeButtonPressed {
+    -webkit-box-shadow: var(--mode-btn-press-shadow); 
+    -moz-box-shadow: var(--mode-btn-press-shadow); 
+    box-shadow: var(--mode-btn-press-shadow); 
+}
+
+.modeButton:hover {
+  background-color: var(--mode-btn-hover-bg);
+}
+
+.fileButton {
+    float: right;
+    margin-right: 10px;
+    margin-top: 3px;
+    min-width: 6vw;
 }
 
 #content {
@@ -45,21 +75,27 @@ p {
 }
 
 #toolbar {
-    border: 2px solid black;
-    width: 95vw;
-    float: right;
-    height: 2vw;
+    border-bottom: var(--toolbar-border);
+    min-height: 7vh;
+    max-height: 10vh;
+    max-width: 100vw;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overflow-wrap: break-word;
     box-sizing: border-box;
-    background-color: white;
+    background-color: var(--toolbar-bg)
 }
 
 #subBar {
-    border: 2px solid black;
-    width: 95vw;
-    float: right;
-    height: 2vw;
+    border-bottom: var(--subbar-border);
+    min-height: 6vh;
+    max-height: 10vh;
+    max-width: 100vw;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overflow-wrap: break-word;
     box-sizing: border-box;
-    background-color: white;
+    background-color: var(--subbar-bg);
 }
 
 #cutTools {
@@ -78,11 +114,13 @@ p {
 
 #sidebar {
     box-sizing: border-box;
-    border: 2px solid black;
-    background-color: white;
+    border: var(--sidebar-border);
+    border-top: 0px;
+    padding-top: 3px;
+    background-color: var(--sidebar-bg);
     height: 100vh;
+    min-width: 6vw;
     float: left;
-    width: 5vw;
 }
 
 #canvas {
@@ -90,10 +128,12 @@ p {
     top: 0px;
     left: 0px;
     z-index: -1;
+    background-color: var(--canvas-bg);
 }
+
 .no-highlight{
-    user-select: none; 
     -moz-user-select: none; 
     -webkit-text-select: none;
     -webkit-user-select: none; 
- }
+    user-select: none; 
+}

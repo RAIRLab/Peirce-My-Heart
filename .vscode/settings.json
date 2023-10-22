@@ -28,6 +28,9 @@
         "singlefile",
         "aegtest",
         "uitest"
+        "subbar",
+        "buttonface",
+        "Wireframe",
     ],
     "editor.rulers": [100]
 }
