@@ -19,8 +19,8 @@ jobs:
       with:
         gource_title: 'Peirce My Heart'
         logo_url: 'https://i.pinimg.com/736x/4e/35/fe/4e35fe64dbcd102d48e1fef43613d6e7.jpg'
-        gource_resolution: '1080p'
-        gource_fps: 60
+        gource_resolution: '720p'
+        gource_fps: 24
         gource_time_scale: 0.55
         gource_user_scale: 0.7
         gource_font_size: 36
