@@ -6,6 +6,7 @@
 import {Point} from "./AEG/Point";
 import {AtomNode} from "./AEG/AtomNode";
 import {CutNode} from "./AEG/CutNode";
+import {offset} from "./DragMode";
 import {drawAtom} from "./AtomMode";
 import {drawCut} from "./CutMode";
 import {redrawCut, tree} from "./index";
@@ -30,7 +31,7 @@ let legalNode: boolean;
  * @param event The event from which we will get the Point
  */
 export function deleteSingleMouseDown(event: MouseEvent) {
-    startingPoint = new Point(event.x, event.y);
+    startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = tree.getLowestNode(startingPoint);
 
     if (currentNode !== tree.sheet && currentNode !== null) {
@@ -46,23 +47,35 @@ export function deleteSingleMouseDown(event: MouseEvent) {
 /**
  * If the user clicks on a node to delete it, but moves their mouse away,
  * The node will not be deleted and all stored data will be set back to default values.
+ * @param event The mouse move event
  */
-export function deleteSingleMouseMove() {
-    currentNode = null; //ONLY KEEPING THIS HERE FOR THE INITIAL COMMIT BEFORE UPDATING
+export function deleteSingleMouseMove(event: MouseEvent) {
+    const newPoint: Point = new Point(event.x - offset.x, event.y - offset.x);
+    if (!currentNode?.containsPoint(newPoint)) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        redrawCut(tree.sheet, offset);
+        currentNode = null;
+        legalNode = false;
+    }
 }
 
 /**
  * Removes currentNode and sets all data back to default values.
  * @param event The mouse up event
  */
-export function deleteSingleMouseUp(event: MouseEvent) {
-    tree.remove(startingPoint);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    redrawCut(tree.sheet, new Point(0, 0));
+export function deleteSingleMouseUp() {
+    if (legalNode) {
+        tree.remove(startingPoint);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        redrawCut(tree.sheet, offset);
+    }
     currentNode = null;
     legalNode = false;
 }
 
+/**
+ * If the mouse leaves the canvas, reset data back to defaults.
+ */
 export function deleteSingleMouseOut() {
     currentNode = null;
     legalNode = false;

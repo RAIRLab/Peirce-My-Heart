@@ -37,7 +37,7 @@ export function deleteMultiMouseDown(event: MouseEvent) {
  * If the user clicks on a node to delete it, but moves their mouse away,
  * The node will not be deleted and all stored data will be set back to default values.
  */
-export function deleteMultiMouseMove() {
+export function deleteMultiMouseMove(event: MouseEvent) {
     currentNode = null; //ONLY KEEPING THIS HERE FOR THE INITIAL COMMIT BEFORE UPDATING
 }
 
@@ -45,7 +45,7 @@ export function deleteMultiMouseMove() {
  * Removes currentNode and sets all data back to default values.
  * @param event The mouse up event
  */
-export function deleteMultiMouseUp(event: MouseEvent) {
+export function deleteMultiMouseUp() {
     tree.remove(startingPoint); //ONLY KEEPING THIS HERE FOR THE INITIAL COMMIT BEFORE UPDATING
     currentNode = null;
     legalNode = false;

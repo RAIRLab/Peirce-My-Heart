@@ -40,8 +40,19 @@ import {
     copyMultiMouseUp,
     copyMultiMouseOut,
 } from "./CopyMultiMode";
-import {deleteSingleMouseDown, deleteSingleMouseOut, deleteSingleMouseUp} from "./DeleteSingleMode";
-import {deleteMultiMouseDown, deleteMultiMouseOut, deleteMultiMouseUp} from "./DeleteMultiMode";
+import {
+    deleteSingleMouseDown,
+    deleteSingleMouseMove,
+    deleteSingleMouseOut,
+    deleteSingleMouseUp,
+} from "./DeleteSingleMode";
+
+import {
+    deleteMultiMouseDown,
+    deleteMultiMouseMove,
+    deleteMultiMouseOut,
+    deleteMultiMouseUp,
+} from "./DeleteMultiMode";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -313,6 +324,12 @@ function mouseMoveHandler(event: MouseEvent) {
             case Mode.copyMultiMode:
                 copyMultiMouseMove(event);
                 break;
+            case Mode.deleteSingleMode:
+                deleteSingleMouseMove(event);
+                break;
+            case Mode.deleteMultiMode:
+                deleteMultiMouseMove(event);
+                break;
         }
     }
 }
@@ -343,10 +360,10 @@ function mouseUpHandler(event: MouseEvent) {
             copyMultiMouseUp(event);
             break;
         case Mode.deleteSingleMode:
-            deleteSingleMouseUp(event);
+            deleteSingleMouseUp();
             break;
         case Mode.deleteMultiMode:
-            deleteMultiMouseUp(event);
+            deleteMultiMouseUp();
             break;
     }
     hasMouseDown = false;
