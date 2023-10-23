@@ -65,7 +65,16 @@ export function deleteSingleMouseMove(event: MouseEvent) {
  */
 export function deleteSingleMouseUp() {
     if (legalNode) {
-        tree.remove(startingPoint);
+        const currentParent = tree.getLowestParent(startingPoint);
+        if (currentParent !== null) {
+            currentParent.remove(startingPoint);
+        }
+        if (currentNode instanceof CutNode && currentNode.children.length !== 0) {
+            //The cut node loses custody of its children so that those can still be redrawn.
+            for (let i = 0; i < currentNode.children.length; i++) {
+                tree.insert(currentNode.children[i]);
+            }
+        }
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         redrawCut(tree.sheet, offset);
     }
