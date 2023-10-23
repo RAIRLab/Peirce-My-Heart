@@ -1,6 +1,7 @@
 /**
  * Contains logic for deleting one node.
  * @author Ryan Reilly
+ * @author Dawn Moore
  */
 
 import {Point} from "./AEG/Point";
