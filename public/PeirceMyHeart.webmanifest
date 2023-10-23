@@ -1,7 +1,7 @@
 {
     "name":"Peirce My Heart",
     "short_name":"PMH",
-    "categories": ["education", "utilities", "medical"],
+    "categories": ["education", "utilities"],
     "description": "A graphical application for modeling Charles Peirce's alpha existential graph system. Includes the ability to construct, save, and load alpha existential graphs, as well as create, save, and load proofs.",
 
     "display":"standalone",

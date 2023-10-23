@@ -111,6 +111,24 @@ export class AEGTree {
     }
 
     /**
+     * Finds the lowest node that contains the point in the AEG.
+     * @param incomingPoint The point on the canvas
+     * @return The lowest node containing the point
+     */
+    public getLowestNode(incomingPoint: Point): CutNode | AtomNode | null {
+        return this.internalSheet.getLowestNode(incomingPoint);
+    }
+
+    /**
+     * Finds the parent of the lowest node that contains the point in the AEG.
+     * @param incomingPoint The point on the canvas
+     * @return The parent of the lowest node containing the point
+     */
+    public getLowestParent(incomingPoint: Point): CutNode | null {
+        return this.internalSheet.getLowestParent(incomingPoint);
+    }
+
+    /**
      * Removes the node containing this coordinate
      * @param incomingPoint The point indicating the node that must be removed
      * @returns True, if the node was successfully removed. Else, false

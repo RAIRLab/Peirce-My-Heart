@@ -46,6 +46,7 @@ p {
     border-radius: var(--mode-btn-radius);
     box-shadow: var(--mode-btn-shadow);
     color: var(--mode-btn-icon-color);
+    text-align: center;
 }
 
 .modeButton:active {
@@ -107,7 +108,6 @@ p {
 }
 
 .toolSetting {
-    margin: 0.1vw;
     display: inline-flex;
     margin: 5px;
 }
