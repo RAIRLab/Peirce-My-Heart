@@ -40,6 +40,19 @@ import {
     copyMultiMouseUp,
     copyMultiMouseOut,
 } from "./CopyMultiMode";
+import {
+    deleteSingleMouseDown,
+    deleteSingleMouseMove,
+    deleteSingleMouseOut,
+    deleteSingleMouseUp,
+} from "./DeleteSingleMode";
+
+import {
+    deleteMultiMouseDown,
+    deleteMultiMouseMove,
+    deleteMultiMouseOut,
+    deleteMultiMouseUp,
+} from "./DeleteMultiMode";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -277,6 +290,12 @@ function mouseDownHandler(event: MouseEvent) {
         case Mode.copyMultiMode:
             copyMultiMouseDown(event);
             break;
+        case Mode.deleteSingleMode:
+            deleteSingleMouseDown(event);
+            break;
+        case Mode.deleteMultiMode:
+            deleteMultiMouseDown(event);
+            break;
     }
     hasMouseDown = true;
 }
@@ -309,6 +328,12 @@ function mouseMoveHandler(event: MouseEvent) {
             case Mode.copyMultiMode:
                 copyMultiMouseMove(event);
                 break;
+            case Mode.deleteSingleMode:
+                deleteSingleMouseMove(event);
+                break;
+            case Mode.deleteMultiMode:
+                deleteMultiMouseMove(event);
+                break;
         }
     }
 }
@@ -337,6 +362,12 @@ function mouseUpHandler(event: MouseEvent) {
             break;
         case Mode.copyMultiMode:
             copyMultiMouseUp(event);
+            break;
+        case Mode.deleteSingleMode:
+            deleteSingleMouseUp(event);
+            break;
+        case Mode.deleteMultiMode:
+            deleteMultiMouseUp(event);
             break;
     }
     hasMouseDown = false;
@@ -368,6 +399,13 @@ function mouseOutHandler() {
             break;
         case Mode.copyMultiMode:
             copyMultiMouseOut();
+            break;
+        case Mode.deleteSingleMode:
+            deleteSingleMouseOut();
+            break;
+        case Mode.deleteMultiMode:
+            deleteMultiMouseOut();
+            break;
     }
     hasMouseIn = false;
 }
