@@ -52,21 +52,27 @@ export function deleteSingleMouseDown(event: MouseEvent) {
 
 /**
  * If the user clicks on a node to delete it, but moves their mouse away,
- * The node will not be deleted and all stored data will be set back to default values.
+ * The node will not be deleted. Whichever node lowest on the tree now contains the MouseEvent's
+ * Point will be set to the node to be deleted.
  * @param event The mouse move event
  */
 export function deleteSingleMouseMove(event: MouseEvent) {
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.x);
     const newNode: CutNode | AtomNode | null = tree.getLowestNode(newPoint);
     if (currentNode !== null && currentNode !== newNode) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        redrawCut(tree.sheet, offset);
         if (newNode === tree.sheet || newNode === null) {
             currentNode = null;
             legalNode = false;
         } else {
             currentNode = newNode;
+            if (currentNode instanceof AtomNode) {
+                drawAtom(currentNode, illegalColor(), true);
+            } else {
+                drawCut(currentNode, illegalColor());
+            }
         }
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        redrawCut(tree.sheet, offset);
     }
 }
 
@@ -87,9 +93,9 @@ export function deleteSingleMouseUp(event: MouseEvent) {
                 tree.insert(currentNode.children[i]);
             }
         }
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        redrawCut(tree.sheet, offset);
     }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    redrawCut(tree.sheet, offset);
     currentNode = null;
     legalNode = false;
 }
