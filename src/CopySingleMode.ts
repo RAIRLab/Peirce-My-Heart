@@ -38,12 +38,15 @@ let legalNode: boolean;
  */
 export function copySingleMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = tree.getLowestNode(startingPoint);
-    if (currentNode !== tree.sheet && currentNode !== null) {
-        if (currentNode instanceof CutNode && currentNode.children.length !== 0) {
+    const realNode: CutNode | AtomNode | null = tree.getLowestNode(startingPoint);
+    if (realNode !== tree.sheet && realNode !== null) {
+        if (realNode instanceof CutNode && realNode.children.length !== 0) {
             //The cut node loses custody of its children because those do not copy over during
             //copy single mode
+            currentNode = alterCut(realNode, new Point(0, 0));
             currentNode.children = [];
+        } else if (realNode instanceof AtomNode) {
+            currentNode = realNode;
         }
         legalNode = true;
     } else {
