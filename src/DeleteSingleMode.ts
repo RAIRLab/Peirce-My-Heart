@@ -60,6 +60,7 @@ export function deleteSingleMouseMove(event: MouseEvent) {
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.x);
     const newNode: CutNode | AtomNode | null = tree.getLowestNode(newPoint);
     if (currentNode !== null && currentNode !== newNode) {
+        legalNode = true;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         redrawCut(tree.sheet, offset);
         if (newNode === tree.sheet || newNode === null) {
