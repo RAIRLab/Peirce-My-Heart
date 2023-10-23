@@ -40,7 +40,7 @@ export function copySingleMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     const realNode: CutNode | AtomNode | null = tree.getLowestNode(startingPoint);
     if (realNode !== tree.sheet && realNode !== null) {
-        if (realNode instanceof CutNode && realNode.children.length !== 0) {
+        if (realNode instanceof CutNode) {
             //The cut node loses custody of its children because those do not copy over during
             //copy single mode
             currentNode = alterCut(realNode, new Point(0, 0));
