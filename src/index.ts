@@ -360,10 +360,10 @@ function mouseUpHandler(event: MouseEvent) {
             copyMultiMouseUp(event);
             break;
         case Mode.deleteSingleMode:
-            deleteSingleMouseUp();
+            deleteSingleMouseUp(event);
             break;
         case Mode.deleteMultiMode:
-            deleteMultiMouseUp();
+            deleteMultiMouseUp(event);
             break;
     }
     hasMouseDown = false;

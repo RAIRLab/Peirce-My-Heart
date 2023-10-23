@@ -19,8 +19,13 @@ if (res === null) {
 }
 const ctx: CanvasRenderingContext2D = res;
 
+//The initial point the user pressed down.
 let startingPoint: Point;
+
+//The node selected with the user mouse down.
 let currentNode: CutNode | AtomNode | null = null;
+
+//Whether or not the node is allowed to be moved (not the sheet).
 let legalNode: boolean;
 
 /**
@@ -51,11 +56,16 @@ export function deleteSingleMouseDown(event: MouseEvent) {
  */
 export function deleteSingleMouseMove(event: MouseEvent) {
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.x);
-    if (!currentNode?.containsPoint(newPoint)) {
+    const newNode: CutNode | AtomNode | null = tree.getLowestNode(newPoint);
+    if (currentNode !== null && currentNode !== newNode) {
+        if (newNode === tree.sheet || newNode === null) {
+            currentNode = null;
+            legalNode = false;
+        } else {
+            currentNode = newNode;
+        }
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         redrawCut(tree.sheet, offset);
-        currentNode = null;
-        legalNode = false;
     }
 }
 
@@ -63,11 +73,12 @@ export function deleteSingleMouseMove(event: MouseEvent) {
  * Removes currentNode and sets all data back to default values.
  * @param event The mouse up event
  */
-export function deleteSingleMouseUp() {
+export function deleteSingleMouseUp(event: MouseEvent) {
+    const newPoint: Point = new Point(event.x - offset.x, event.y - offset.x);
     if (legalNode) {
-        const currentParent = tree.getLowestParent(startingPoint);
+        const currentParent = tree.getLowestParent(newPoint);
         if (currentParent !== null) {
-            currentParent.remove(startingPoint);
+            currentParent.remove(newPoint);
         }
         if (currentNode instanceof CutNode && currentNode.children.length !== 0) {
             //The cut node loses custody of its children so that those can still be redrawn.
