@@ -25,6 +25,7 @@
         "subbar",
         "buttonface",
         "Wireframe",
+        "Peirced",
     ],
     "editor.rulers": [100]
 }

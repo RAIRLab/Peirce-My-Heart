@@ -99,3 +99,27 @@
     --mode-btn-shadow: none;
     --mode-btn-press-shadow: none; 
 }
+
+[data-theme="Peirced-from-Within"] {
+    --dark-highlights : #B11D20;
+    --p-text : #F5D51D;
+    --canvas-bg : #07140E;
+    --canvas-items : #F4F3CD;
+    --good-placement : #46FF00;
+    --bad-placement : #C60003;
+    --header-border: 1px solid #0A1E0A;
+    --header-bg : #151715;
+    --toolbar-border: 1px solid #02281C;
+    --toolbar-bg: #150F12;
+    --subbar-border: 1px solid #05281C;
+    --subbar-bg: #201412;
+    --sidebar-border: 1px solid #05281C;
+    --sidebar-bg: #05141D;
+    --mode-btn-border: 1px solid #05281C;
+    --mode-btn-bg: r#2B2B2B;
+    --mode-btn-icon-color : #868686;
+    --mode-btn-radius: 0%;
+    --mode-btn-hover-bg: none;
+    --mode-btn-shadow: none;
+    --mode-btn-press-shadow: none; 
+}
