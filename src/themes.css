@@ -78,22 +78,22 @@
 }
 
 [data-theme="vs-code"] {
-    --p-text : rgb(220, 220, 170);
-    --canvas-bg : rgb(31, 31, 31);
-    --canvas-items : rgb(156, 220, 254);
-    --good-placement : rgb(115, 201, 145);
-    --bad-placement : rgb(244, 71, 71);
-    --header-border: 1px solid rgb(204, 204, 204);
-    --header-bg : rgb(43, 43, 43);
-    --toolbar-border: 1px solid rgb(204, 204, 204);
-    --toolbar-bg: rgb(43, 43, 43);
-    --subbar-border: 1px solid rgb(204, 204, 204);
-    --subbar-bg: rgb(43, 43, 43);
-    --sidebar-border: 1px solid rgb(204, 204, 204);
-    --sidebar-bg: rgb(43, 43, 43);
-    --mode-btn-border: 1px solid rgb(204, 204, 204);
-    --mode-btn-bg: rgb(43, 43, 43);
-    --mode-btn-icon-color : rgb(134, 134, 134);
+    --p-text : #DCDCAA;
+    --canvas-bg : #1F1F1F;
+    --canvas-items : #9CDCFE;
+    --good-placement : #73C991;
+    --bad-placement : #F44747;
+    --header-border: 1px solid #CCCCCC;
+    --header-bg : #2B2B2B;
+    --toolbar-border: 1px solid #CCCCCC;
+    --toolbar-bg: #2B2B2B;
+    --subbar-border: 1px solid #CCCCCC;
+    --subbar-bg: #2B2B2B;
+    --sidebar-border: 1px solid #CCCCCC;
+    --sidebar-bg: #2B2B2B;
+    --mode-btn-border: 1px solid #CCCCCC;
+    --mode-btn-bg: #2B2B2B;
+    --mode-btn-icon-color : #868686;
     --mode-btn-radius: 10%;
     --mode-btn-hover-bg: none;
     --mode-btn-shadow: none;
