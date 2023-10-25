@@ -57,7 +57,7 @@ export function deleteSingleMouseDown(event: MouseEvent) {
  * @param event The mouse move event
  */
 export function deleteSingleMouseMove(event: MouseEvent) {
-    const newPoint: Point = new Point(event.x - offset.x, event.y - offset.x);
+    const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
     const newNode: CutNode | AtomNode | null = tree.getLowestNode(newPoint);
     if (currentNode !== null && currentNode !== newNode) {
         legalNode = true;
@@ -82,7 +82,7 @@ export function deleteSingleMouseMove(event: MouseEvent) {
  * @param event The mouse up event
  */
 export function deleteSingleMouseUp(event: MouseEvent) {
-    const newPoint: Point = new Point(event.x - offset.x, event.y - offset.x);
+    const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
     if (legalNode) {
         const currentParent = tree.getLowestParent(newPoint);
         if (currentParent !== null) {
