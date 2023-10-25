@@ -6,20 +6,11 @@
 import {Point} from "./AEG/Point";
 import {AtomNode} from "./AEG/AtomNode";
 import {CutNode} from "./AEG/CutNode";
-import {redrawCut, tree} from "./index";
+import {tree} from "./index";
 import {offset} from "./DragMode";
-import {drawCut} from "./CutMode";
-import {drawAtom} from "./AtomMode";
+import {drawCut, drawAtom, redrawTree} from "./DrawUtils";
 import {legalColor, illegalColor} from "./Themes";
 import {alterAtom, alterCut} from "./EditModeUtils";
-
-//Settings up Canvas
-const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
-const res: CanvasRenderingContext2D | null = canvas.getContext("2d");
-if (res === null) {
-    throw Error("2d rendering context not supported");
-}
-const ctx: CanvasRenderingContext2D = res;
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -75,8 +66,7 @@ export function moveSingleMouseMove(event: MouseEvent) {
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = alterCut(currentNode, moveDifference);
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            redrawCut(tree.sheet, offset);
+            redrawTree(tree);
 
             if (tree.canInsert(tempCut)) {
                 drawCut(tempCut, legalColor());
@@ -87,8 +77,7 @@ export function moveSingleMouseMove(event: MouseEvent) {
         else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            redrawCut(tree.sheet, offset);
+            redrawTree(tree);
 
             if (tree.canInsert(tempAtom)) {
                 drawAtom(tempAtom, legalColor(), true);
@@ -130,8 +119,7 @@ export function moveSingleMouseUp(event: MouseEvent) {
                 tree.insert(currentNode);
             }
         }
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        redrawCut(tree.sheet, offset);
+        redrawTree(tree);
     }
     legalNode = false;
 }
@@ -145,6 +133,5 @@ export function moveSingleMouseOut() {
         tree.insert(currentNode);
     }
     legalNode = false;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    redrawCut(tree.sheet, offset);
+    redrawTree(tree);
 }

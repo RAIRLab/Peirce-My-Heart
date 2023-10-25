@@ -6,16 +6,11 @@
  */
 
 import {AEGTree} from "./AEG/AEGTree";
-import {CutNode} from "./AEG/CutNode";
-import {Ellipse} from "./AEG/Ellipse";
-import {AtomNode} from "./AEG/AtomNode";
-import {Point} from "./AEG/Point";
 import {cutMouseDown, cutMouseMove, cutMouseOut, cutMouseUp} from "./CutMode";
 import {atomKeyPress, atomMouseDown, atomMouseMove, atomMouseUp, atomMouseOut} from "./AtomMode";
-import {drawAtom} from "./AtomMode";
 import {saveFile, loadFile} from "./AEG-IO";
-import {dragMosueOut, dragMouseDown, dragMouseMove, offset} from "./DragMode";
-import {placedColor} from "./Themes";
+import {redrawTree} from "./DrawUtils";
+import {dragMosueOut, dragMouseDown, dragMouseMove} from "./DragMode";
 import {
     moveSingleMouseDown,
     moveSingleMouseMove,
@@ -66,7 +61,6 @@ const ctx: CanvasRenderingContext2D = res;
 ctx.font = "35pt arial";
 
 //Global State
-const cutDisplay = <HTMLParagraphElement>document.getElementById("graphString");
 const cutTools = <HTMLParagraphElement>document.getElementById("cutTools");
 const atomTools = <HTMLParagraphElement>document.getElementById("atomTools");
 window.addEventListener("keydown", keyDownHandler);
@@ -233,8 +227,7 @@ async function loadMode() {
         const loadData = loadFile(aegData);
         if (loadData instanceof AEGTree) {
             tree = loadData;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            redrawCut(tree.sheet, offset);
+            redrawTree(tree);
         }
         //TODO: else popup error
     });
@@ -408,46 +401,6 @@ function mouseOutHandler() {
 
 function mouseEnterHandler() {
     hasMouseIn = true;
-}
-
-/**
- * Iterates through the entire tree, if there are no children the for loop will not begin.
- * Sends any Atom children to redrawAtom.
- * @param incomingNode The CutNode to be iterated through
- * @param offset The difference between the actual graph and the current canvas
- */
-export function redrawCut(incomingNode: CutNode, offset: Point) {
-    cutDisplay.innerHTML = tree.toString();
-    for (let i = 0; incomingNode.children.length > i; i++) {
-        if (incomingNode.children[i] instanceof AtomNode) {
-            redrawAtom(<AtomNode>incomingNode.children[i]);
-        } else {
-            redrawCut(<CutNode>incomingNode.children[i], offset);
-        }
-    }
-    if (incomingNode.ellipse instanceof Ellipse) {
-        ctx.strokeStyle = placedColor();
-        ctx.beginPath();
-        ctx.ellipse(
-            incomingNode.ellipse.center.x + offset.x,
-            incomingNode.ellipse.center.y + offset.y,
-            incomingNode.ellipse.radiusX,
-            incomingNode.ellipse.radiusY,
-            0,
-            0,
-            2 * Math.PI
-        );
-        ctx.stroke();
-    }
-}
-
-/**
- * Redraws the given atom. Also redraws the the bounding box.
- * @param incomingNode The Atom Node to be redrawn
- * @param offset The difference between the actual graph and the current canvas
- */
-function redrawAtom(incomingNode: AtomNode) {
-    drawAtom(incomingNode, placedColor(), false);
 }
 
 /**

@@ -7,20 +7,12 @@
 import {Point} from "./AEG/Point";
 import {CutNode} from "./AEG/CutNode";
 import {Ellipse} from "./AEG/Ellipse";
-import {redrawCut} from "./index";
 import {tree} from "./index";
 import {offset} from "./DragMode";
 import {legalColor, illegalColor} from "./Themes";
+import {drawCut, redrawTree} from "./DrawUtils";
 
-//Setting up Canvas
-const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
-const res: CanvasRenderingContext2D | null = canvas.getContext("2d");
-const showRectElm: HTMLInputElement = <HTMLInputElement>document.getElementById("showRect");
 const modeElm: HTMLSelectElement = <HTMLSelectElement>document.getElementById("mode");
-if (res === null) {
-    throw Error("2d rendering context not supported");
-}
-const ctx: CanvasRenderingContext2D = res;
 
 //The point the ellipse is initially placed.
 let startingPoint: Point;
@@ -46,8 +38,7 @@ export function cutMouseDown(event: MouseEvent) {
 export function cutMouseMove(event: MouseEvent) {
     const newCut: CutNode = new CutNode(new Ellipse(new Point(0, 0), 0, 0));
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    redrawCut(tree.sheet, offset);
+    redrawTree(tree);
     newCut.ellipse = createEllipse(startingPoint, currentPoint);
 
     if (!wasOut) {
@@ -70,8 +61,7 @@ export function cutMouseUp(event: MouseEvent) {
     if (tree.canInsert(newCut) && !wasOut && ellipseLargeEnough(<Ellipse>newCut.ellipse)) {
         tree.insert(newCut);
     }
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    redrawCut(tree.sheet, offset);
+    redrawTree(tree);
 }
 
 /**
@@ -79,8 +69,7 @@ export function cutMouseUp(event: MouseEvent) {
  */
 export function cutMouseOut() {
     wasOut = true;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    redrawCut(tree.sheet, offset);
+    redrawTree(tree);
 }
 
 /**
@@ -111,35 +100,7 @@ export function createEllipse(original: Point, current: Point): Ellipse {
         ry = dy / 2;
     }
 
-    if (showRectElm.checked && !wasOut) {
-        ctx.beginPath();
-        ctx.rect(original.x + offset.x, original.y + offset.y, -sdx, -sdy);
-        ctx.stroke();
-    }
-
     return new Ellipse(center, rx, ry);
-}
-
-/**
- * Draws the given cut onto the canvas.
- * @param thisCut The cut containing the ellipse to be drawn
- * @param color the line color of the ellipse
- */
-export function drawCut(thisCut: CutNode, color: string) {
-    ctx.strokeStyle = color;
-    const ellipse: Ellipse = <Ellipse>thisCut.ellipse;
-    const center: Point = ellipse.center;
-    ctx.beginPath();
-    ctx.ellipse(
-        center.x + offset.x,
-        center.y + offset.y,
-        ellipse.radiusX,
-        ellipse.radiusY,
-        0,
-        0,
-        2 * Math.PI
-    );
-    ctx.stroke();
 }
 
 /**

@@ -6,19 +6,11 @@
 import {Point} from "./AEG/Point";
 import {AtomNode} from "./AEG/AtomNode";
 import {CutNode} from "./AEG/CutNode";
-import {redrawCut, tree} from "./index";
+import {tree} from "./index";
 import {offset} from "./DragMode";
-import {drawAtom} from "./AtomMode";
+import {drawAtom, redrawTree} from "./DrawUtils";
 import {legalColor, illegalColor} from "./Themes";
 import {validateChildren, drawAltered, insertChildren, alterAtom} from "./EditModeUtils";
-
-//Setting Up Canvas
-const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
-const res: CanvasRenderingContext2D | null = canvas.getContext("2d");
-if (res === null) {
-    throw Error("2d rendering context not supported");
-}
-const ctx: CanvasRenderingContext2D = res;
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -61,8 +53,7 @@ export function moveMultiMouseMove(event: MouseEvent) {
             event.y - startingPoint.y
         );
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        redrawCut(tree.sheet, offset);
+        redrawTree(tree);
         if (currentNode instanceof CutNode) {
             if (validateChildren(currentNode, moveDifference)) {
                 drawAltered(currentNode, legalColor(), moveDifference);
@@ -111,8 +102,7 @@ export function moveMultiMouseUp(event: MouseEvent) {
             }
         }
     }
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    redrawCut(tree.sheet, offset);
+    redrawTree(tree);
     legalNode = false;
 }
 
@@ -125,6 +115,5 @@ export function moveMultiMouseOut() {
         tree.insert(currentNode);
     }
     legalNode = false;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    redrawCut(tree.sheet, offset);
+    redrawTree(tree);
 }

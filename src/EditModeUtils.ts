@@ -9,8 +9,7 @@ import {CutNode} from "./AEG/CutNode";
 import {tree} from "./index";
 import {offset} from "./DragMode";
 import {Ellipse} from "./AEG/Ellipse";
-import {drawCut} from "./CutMode";
-import {drawAtom} from "./AtomMode";
+import {drawCut, drawAtom} from "./DrawUtils";
 
 /**
  * Checks the validity of the incoming node and all of its children. If the child is a cut node uses
