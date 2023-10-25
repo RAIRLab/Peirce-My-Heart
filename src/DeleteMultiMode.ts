@@ -36,7 +36,7 @@ let legalNode: boolean;
  * @param event The event from which we will get the Point
  */
 export function deleteMultiMouseDown(event: MouseEvent) {
-    startingPoint = new Point(event.x, event.y);
+    startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = tree.getLowestNode(startingPoint);
 
     if (currentNode !== tree.sheet && currentNode !== null) {
@@ -51,7 +51,7 @@ export function deleteMultiMouseDown(event: MouseEvent) {
  * The removal will update accordingly.
  */
 export function deleteMultiMouseMove(event: MouseEvent) {
-    const newPoint: Point = new Point(event.x - offset.x, event.y - offset.x);
+    const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
     const newNode: CutNode | AtomNode | null = tree.getLowestNode(newPoint);
     if (currentNode !== null && currentNode !== tree.getLowestNode(newPoint)) {
         legalNode = true;
@@ -72,7 +72,7 @@ export function deleteMultiMouseMove(event: MouseEvent) {
  * @param event The mouse up event
  */
 export function deleteMultiMouseUp(event: MouseEvent) {
-    const newPoint: Point = new Point(event.x - offset.x, event.y - offset.x);
+    const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
     if (legalNode) {
         const currentParent = tree.getLowestParent(newPoint);
         if (currentParent !== null) {
