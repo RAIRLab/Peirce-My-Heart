@@ -123,3 +123,27 @@
     --mode-btn-shadow: none;
     --mode-btn-press-shadow: none; 
 }
+
+[data-theme="Vampire-Core"] {
+    --global-background : #ffffff;
+    --p-text : #ffffff;
+    --canvas-bg : #a00404;
+    --canvas-items : #000000;
+    --good-placement : #ffffff;
+    --bad-placement : #e480c6;
+    --header-border: 2px solid #ffffff;
+    --header-bg : #000000;
+    --toolbar-border: 2px solid #ffffff;
+    --toolbar-bg: #000000;
+    --subbar-border: 2px solid #ffffff;
+    --subbar-bg: #000000;
+    --sidebar-border: 2px solid #ffffff;
+    --sidebar-bg: #000000;
+    --mode-btn-border: 2px solid #a00404;
+    --mode-btn-bg: #a00404;;
+    --mode-btn-icon-color :#ffffff;
+    --mode-btn-radius: 25%;
+    --mode-btn-hover-bg: none;
+    --mode-btn-shadow: none;
+    --mode-btn-press-shadow: inset 0px 0px 5px #ffffff; 
+}

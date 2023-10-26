@@ -35,7 +35,7 @@ function setTheme() {
     so that the new styles have been applied by the time this code runs.
     Due to how primitive the library is, there is no way to check for this
     automatically other than an even more complicated solution like observing putting new colors
-    on elements, this seems to wait just long enough that the library hanler finishes first.
+    on elements, this seems to wait just long enough that the library handler finishes first.
     https://stackoverflow.com/questions/47860455/how-to-ensure-an-eventlistener-is-executed-last
     */
     setTimeout(() => {
