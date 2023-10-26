@@ -70,15 +70,25 @@ export function shapesIntersect(
  * @returns True, if the shapes intersect. Else, false.
  */
 function ellipseRectangleIntersection(ellipse: Ellipse, rectangle: Rectangle): boolean {
-    //For ellipse-rectangle collision, check if points on the ellipse are
-    //within the rectangle
-    const points: Point[] = getEllipsePoints(ellipse);
-    for (let i = 0; i < points.length; i++) {
-        if (pointInRect(rectangle, points[i])) {
-            return true;
+    //For ellipse-rectangle collision, check if there are corners of the rectangle both within
+    //and outside the ellipse
+    const corners = rectangle.getCorners();
+    let cornerInEllipse = false;
+    let cornerOutOfEllipse = false;
+    let val: number;
+
+    for (let i = 0; i < 4; i++) {
+        val = signedDistanceFromEllipse(ellipse, corners[i]);
+        if (val < 0) {
+            //The corner is within the ellipse
+            cornerInEllipse = true;
+        } else if (val > 0) {
+            //The corner is outside the ellipse
+            cornerOutOfEllipse = true;
         }
     }
-    return false;
+
+    return cornerInEllipse && cornerOutOfEllipse;
 }
 
 /**
