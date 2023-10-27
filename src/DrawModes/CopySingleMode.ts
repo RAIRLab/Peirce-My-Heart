@@ -63,23 +63,15 @@ export function copySingleMouseMove(event: MouseEvent) {
             const tempCut: CutNode = alterCut(currentNode, moveDifference);
 
             redrawTree(tree);
-
-            if (tree.canInsert(tempCut)) {
-                drawCut(tempCut, legalColor());
-            } else {
-                drawCut(tempCut, illegalColor());
-            }
+            const color = tree.canInsert(tempCut) ? legalColor() : illegalColor();
+            drawCut(tempCut, color);
         } //If the node is an atom, make a temporary atom and check legality, drawing that.
         else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
 
             redrawTree(tree);
-
-            if (tree.canInsert(tempAtom)) {
-                drawAtom(tempAtom, legalColor(), true);
-            } else {
-                drawAtom(tempAtom, illegalColor(), true);
-            }
+            const color = tree.canInsert(tempAtom) ? legalColor() : illegalColor();
+            drawAtom(tempAtom, color, true);
         }
     }
 }

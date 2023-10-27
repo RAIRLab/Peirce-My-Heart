@@ -15,8 +15,6 @@ import {AEGTree} from "../AEG/AEGTree";
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
 const res: CanvasRenderingContext2D | null = canvas.getContext("2d");
-const showRectElm: HTMLInputElement = <HTMLInputElement>document.getElementById("showRect");
-const modeElm: HTMLSelectElement = <HTMLSelectElement>document.getElementById("mode");
 if (res === null) {
     throw Error("2d rendering context not supported");
 }
@@ -51,17 +49,6 @@ export function drawCut(thisCut: CutNode, color: string) {
         2 * Math.PI
     );
     ctx.stroke();
-
-    if (showRectElm.checked) {
-        ctx.beginPath();
-        ctx.rect(
-            ellipse.boundingBox.startVertex.x,
-            ellipse.boundingBox.startVertex.y,
-            ellipse.boundingBox.width,
-            ellipse.boundingBox.height
-        );
-        ctx.stroke();
-    }
 }
 
 /**
@@ -84,6 +71,15 @@ export function drawAtom(thisAtom: AtomNode, color: string, currentAtom: Boolean
             thisAtom.height
         );
     }
+    ctx.stroke();
+}
+
+export function drawGuidelines(original: Point, current: Point, color: string) {
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    const dx: number = original.x - current.x + offset.x;
+    const dy: number = original.y - current.y + offset.y;
+    ctx.rect(original.x, original.y, -dx, -dy);
     ctx.stroke();
 }
 

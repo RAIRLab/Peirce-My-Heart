@@ -60,11 +60,8 @@ export function atomMouseDown(event: MouseEvent) {
     );
 
     redrawTree(tree);
-    if (tree.canInsert(currentAtom)) {
-        drawAtom(currentAtom, legalColor(), true);
-    } else {
-        drawAtom(currentAtom, illegalColor(), true);
-    }
+    const color = tree.canInsert(currentAtom) ? legalColor() : illegalColor();
+    drawAtom(currentAtom, color, true);
 }
 
 /**

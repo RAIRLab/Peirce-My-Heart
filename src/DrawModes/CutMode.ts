@@ -10,8 +10,9 @@ import {Ellipse} from "../AEG/Ellipse";
 import {tree} from "../index";
 import {offset} from "./DragMode";
 import {legalColor, illegalColor} from "../Themes";
-import {drawCut, redrawTree} from "./DrawUtils";
+import {drawCut, redrawTree, drawGuidelines} from "./DrawUtils";
 
+const showRectElm: HTMLInputElement = <HTMLInputElement>document.getElementById("showRect");
 const modeElm: HTMLSelectElement = <HTMLSelectElement>document.getElementById("mode");
 
 //The point the ellipse is initially placed.
@@ -42,10 +43,12 @@ export function cutMouseMove(event: MouseEvent) {
     newCut.ellipse = createEllipse(startingPoint, currentPoint);
 
     if (!wasOut) {
-        if (tree.canInsert(newCut) && ellipseLargeEnough(newCut.ellipse)) {
-            drawCut(newCut, legalColor());
-        } else {
-            drawCut(newCut, illegalColor());
+        const legal = tree.canInsert(newCut) && ellipseLargeEnough(newCut.ellipse);
+        const color = legal ? legalColor() : illegalColor();
+        drawCut(newCut, color);
+
+        if (showRectElm.checked) {
+            drawGuidelines(startingPoint, currentPoint, color);
         }
     }
 }

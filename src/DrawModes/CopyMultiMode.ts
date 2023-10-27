@@ -52,19 +52,12 @@ export function copyMultiMouseMove(event: MouseEvent) {
 
         redrawTree(tree);
         if (currentNode instanceof CutNode) {
-            if (validateChildren(currentNode, moveDifference)) {
-                drawAltered(currentNode, legalColor(), moveDifference);
-            } else {
-                drawAltered(currentNode, illegalColor(), moveDifference);
-            }
+            const color = validateChildren(currentNode, moveDifference) ? legalColor() : illegalColor()
+            drawAltered(currentNode, color, moveDifference);
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
-
-            if (tree.canInsert(tempAtom)) {
-                drawAtom(tempAtom, legalColor(), true);
-            } else {
-                drawAtom(tempAtom, illegalColor(), true);
-            }
+            const color = tree.canInsert(tempAtom) ? legalColor() : illegalColor();
+            drawAtom(tempAtom, color, true);
         }
     }
 }
