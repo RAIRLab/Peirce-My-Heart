@@ -3,14 +3,14 @@
  * @author Dawn MOore
  */
 
-import {Point} from "./AEG/Point";
-import {CutNode} from "./AEG/CutNode";
-import {AtomNode} from "./AEG/AtomNode";
-import {Ellipse} from "./AEG/Ellipse";
-import {tree} from "./index";
+import {Point} from "../AEG/Point";
+import {CutNode} from "../AEG/CutNode";
+import {AtomNode} from "../AEG/AtomNode";
+import {Ellipse} from "../AEG/Ellipse";
+import {tree} from "../index";
 import {offset} from "./DragMode";
-import {placedColor} from "./Themes";
-import {AEGTree} from "./AEG/AEGTree";
+import {placedColor} from "../Themes";
+import {AEGTree} from "../AEG/AEGTree";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");

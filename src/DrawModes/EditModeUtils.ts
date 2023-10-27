@@ -3,12 +3,12 @@
  * @author Dawn Moore
  */
 
-import {Point} from "./AEG/Point";
-import {AtomNode} from "./AEG/AtomNode";
-import {CutNode} from "./AEG/CutNode";
-import {tree} from "./index";
+import {Point} from "../AEG/Point";
+import {AtomNode} from "../AEG/AtomNode";
+import {CutNode} from "../AEG/CutNode";
+import {tree} from "../index";
 import {offset} from "./DragMode";
-import {Ellipse} from "./AEG/Ellipse";
+import {Ellipse} from "../AEG/Ellipse";
 import {drawCut, drawAtom} from "./DrawUtils";
 
 /**

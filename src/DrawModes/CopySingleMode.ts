@@ -4,13 +4,13 @@
  * @author Dawn Moore
  */
 
-import {Point} from "./AEG/Point";
-import {AtomNode} from "./AEG/AtomNode";
-import {CutNode} from "./AEG/CutNode";
-import {tree} from "./index";
+import {Point} from "../AEG/Point";
+import {AtomNode} from "../AEG/AtomNode";
+import {CutNode} from "../AEG/CutNode";
+import {tree} from "../index";
 import {offset} from "./DragMode";
 import {drawCut, drawAtom, redrawTree} from "./DrawUtils";
-import {legalColor, illegalColor} from "./Themes";
+import {legalColor, illegalColor} from "../Themes";
 import {alterAtom, alterCut} from "./EditModeUtils";
 
 //The initial point the user pressed down.

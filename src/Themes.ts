@@ -4,7 +4,7 @@
  * for the application from the CSS themes
  */
 import {tree} from "./index";
-import {redrawTree} from "./DrawUtils";
+import {redrawTree} from "./DrawModes/DrawUtils";
 
 const themeSelector: HTMLSelectElement = <HTMLSelectElement>document.getElementById("theme-select");
 

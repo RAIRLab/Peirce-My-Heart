@@ -4,12 +4,12 @@
  * @author James Oswald
  */
 
-import {Point} from "./AEG/Point";
-import {CutNode} from "./AEG/CutNode";
-import {Ellipse} from "./AEG/Ellipse";
-import {tree} from "./index";
+import {Point} from "../AEG/Point";
+import {CutNode} from "../AEG/CutNode";
+import {Ellipse} from "../AEG/Ellipse";
+import {tree} from "../index";
 import {offset} from "./DragMode";
-import {legalColor, illegalColor} from "./Themes";
+import {legalColor, illegalColor} from "../Themes";
 import {drawCut, redrawTree} from "./DrawUtils";
 
 const modeElm: HTMLSelectElement = <HTMLSelectElement>document.getElementById("mode");

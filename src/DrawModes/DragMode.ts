@@ -3,8 +3,8 @@
  * @author Dawn Moore
  */
 
-import {Point} from "./AEG/Point";
-import {tree} from "./index";
+import {Point} from "../AEG/Point";
+import {tree} from "../index";
 import {redrawTree} from "./DrawUtils";
 
 //Original point later points will be compared to.

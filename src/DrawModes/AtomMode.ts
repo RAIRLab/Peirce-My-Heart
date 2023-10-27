@@ -3,12 +3,12 @@
  * @author Dawn Moore
  */
 
-import {Point} from "./AEG/Point";
-import {AtomNode} from "./AEG/AtomNode";
-import {tree} from "./index";
+import {Point} from "../AEG/Point";
+import {AtomNode} from "../AEG/AtomNode";
+import {tree} from "../index";
 import {redrawTree} from "./DrawUtils";
 import {offset} from "./DragMode";
-import {legalColor, illegalColor} from "./Themes";
+import {legalColor, illegalColor} from "../Themes";
 import {drawAtom} from "./DrawUtils";
 
 //Setting Up Canvas

@@ -6,48 +6,54 @@
  */
 
 import {AEGTree} from "./AEG/AEGTree";
-import {cutMouseDown, cutMouseMove, cutMouseOut, cutMouseUp} from "./CutMode";
-import {atomKeyPress, atomMouseDown, atomMouseMove, atomMouseUp, atomMouseOut} from "./AtomMode";
+import {cutMouseDown, cutMouseMove, cutMouseOut, cutMouseUp} from "./DrawModes/CutMode";
+import {
+    atomKeyPress,
+    atomMouseDown,
+    atomMouseMove,
+    atomMouseUp,
+    atomMouseOut,
+} from "./DrawModes/AtomMode";
 import {saveFile, loadFile} from "./AEG-IO";
-import {redrawTree} from "./DrawUtils";
-import {dragMosueOut, dragMouseDown, dragMouseMove} from "./DragMode";
+import {redrawTree} from "./DrawModes/DrawUtils";
+import {dragMosueOut, dragMouseDown, dragMouseMove} from "./DrawModes/DragMode";
 import {
     moveSingleMouseDown,
     moveSingleMouseMove,
     moveSingleMouseUp,
     moveSingleMouseOut,
-} from "./MoveSingleMode";
+} from "./DrawModes/MoveSingleMode";
 import {
     moveMultiMouseDown,
     moveMultiMouseMove,
     moveMultiMouseUp,
     moveMultiMouseOut,
-} from "./MoveMultiMode";
+} from "./DrawModes/MoveMultiMode";
 import {
     copySingleMouseDown,
     copySingleMouseMove,
     copySingleMouseUp,
     copySingleMouseOut,
-} from "./CopySingleMode";
+} from "./DrawModes/CopySingleMode";
 import {
     copyMultiMouseDown,
     copyMultiMouseMove,
     copyMultiMouseUp,
     copyMultiMouseOut,
-} from "./CopyMultiMode";
+} from "./DrawModes/CopyMultiMode";
 import {
     deleteSingleMouseDown,
     deleteSingleMouseMove,
     deleteSingleMouseOut,
     deleteSingleMouseUp,
-} from "./DeleteSingleMode";
+} from "./DrawModes/DeleteSingleMode";
 
 import {
     deleteMultiMouseDown,
     deleteMultiMouseMove,
     deleteMultiMouseOut,
     deleteMultiMouseUp,
-} from "./DeleteMultiMode";
+} from "./DrawModes/DeleteMultiMode";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
