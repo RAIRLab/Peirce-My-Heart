@@ -55,7 +55,9 @@ export function moveMultiMouseMove(event: MouseEvent) {
 
         redrawTree(tree);
         if (currentNode instanceof CutNode) {
-            const color = validateChildren(currentNode, moveDifference) ? legalColor() : illegalColor()
+            const color = validateChildren(currentNode, moveDifference)
+                ? legalColor()
+                : illegalColor();
             drawAltered(currentNode, color, moveDifference);
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
