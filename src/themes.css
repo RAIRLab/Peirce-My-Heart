@@ -147,3 +147,27 @@
     --mode-btn-shadow: none;
     --mode-btn-press-shadow: inset 0px 0px 5px #ffffff; 
 }
+
+[data-theme="Peircing-the-Galaxy"] {
+    --global-background : #ffffff;
+    --p-text : #85d8ff;
+    --canvas-bg : #34034a;
+    --canvas-items : #ffffff;
+    --good-placement : #85d8ff;
+    --bad-placement : #f59696;
+    --header-border: 2px solid #000000;
+    --header-bg : #270968;
+    --toolbar-border: 2px solid #000000;
+    --toolbar-bg: #2b0962;
+    --subbar-border: 2px solid #000000;
+    --subbar-bg: #350953;
+    --sidebar-border: 2px solid #000000;
+    --sidebar-bg: #470d60;
+    --mode-btn-border: 2px solid #000000;
+    --mode-btn-bg: #6c2da2;;
+    --mode-btn-icon-color :#ffffff;
+    --mode-btn-radius: 25%;
+    --mode-btn-hover-bg: none;
+    --mode-btn-shadow: 1px 2px 1px #000000;
+    --mode-btn-press-shadow: inset 0px 0px 5px #000000;
+}
