@@ -65,35 +65,20 @@ export function shapesIntersect(
 
 /**
  * Method that checks if there is intersection between an ellipse and a rectangle
+ * Check for both vertical and horizontal intersection within the boundaries of the shapes.
  * @param ellipse The given ellipse
  * @param rectangle The given rectangle
- * @returns True, if the shapes intersect. Else, false.
+ * @returns True, if either vertical or horizontal intersection is present. Else, false.
  */
 function ellipseRectangleIntersection(ellipse: Ellipse, rectangle: Rectangle): boolean {
     //For ellipse-rectangle collision, check for intersection along the horizontal or vertical edges
     const corners = rectangle.getCorners();
     const wideCoords = getWidestCoordinates(ellipse);
 
-    let leftBound: number;
-    let rightBound: number;
-    let topBound: number;
-    let bottomBound: number;
-
-    if (ellipse.radiusX >= rectangle.width) {
-        leftBound = wideCoords[3].x;
-        rightBound = wideCoords[1].x;
-    } else {
-        leftBound = corners[0].x;
-        rightBound = corners[1].x;
-    }
-
-    if (ellipse.radiusY >= rectangle.height) {
-        topBound = wideCoords[0].y;
-        bottomBound = wideCoords[2].y;
-    } else {
-        topBound = corners[0].y;
-        bottomBound = corners[2].y;
-    }
+    const leftBound = ellipse.radiusX > rectangle.width ? wideCoords[3].x : corners[0].x;
+    const rightBound = ellipse.radiusX > rectangle.width ? wideCoords[1].x : corners[1].x;
+    const topBound = ellipse.radiusY >= rectangle.height ? wideCoords[0].y : corners[0].y;
+    const bottomBound = ellipse.radiusY >= rectangle.height ? wideCoords[2].y : corners[2].y;
 
     //Check for vertical edge intersection
     const leftEdgeUpperCurve = getCurvePoint(ellipse, corners[0].x, 1);
@@ -101,11 +86,14 @@ function ellipseRectangleIntersection(ellipse: Ellipse, rectangle: Rectangle): b
     const leftEdgeLowerCurve = getCurvePoint(ellipse, corners[0].x, -1);
     const rightEdgeLowerCurve = getCurvePoint(ellipse, corners[1].x, -1);
 
-    const verticalIntersection =
+    if (
         (topBound < leftEdgeUpperCurve && leftEdgeUpperCurve < bottomBound) ||
         (topBound < leftEdgeLowerCurve && leftEdgeLowerCurve < bottomBound) ||
         (topBound < rightEdgeUpperCurve && rightEdgeUpperCurve < bottomBound) ||
-        (topBound < rightEdgeLowerCurve && rightEdgeLowerCurve < bottomBound);
+        (topBound < rightEdgeLowerCurve && rightEdgeLowerCurve < bottomBound)
+    ) {
+        return true;
+    }
 
     //Check for horizontal edge intersection
     const a = -1 / Math.pow(ellipse.radiusX, 2);
@@ -129,13 +117,16 @@ function ellipseRectangleIntersection(ellipse: Ellipse, rectangle: Rectangle): b
     const bottomX2 = (-b - Math.sqrt(Math.pow(b, 2) - 4 * a * cBottom)) / (2 * a);
 
     //Horizontal intersection if the intersection point is within the bounds of the ellipse
-    const horizontalIntersection =
+    if (
         (!isNaN(topX1) && leftBound < topX1 && topX1 < rightBound) ||
         (!isNaN(topX2) && leftBound < topX2 && topX2 < rightBound) ||
         (!isNaN(bottomX1) && leftBound < bottomX1 && bottomX1 < rightBound) ||
-        (!isNaN(bottomX2) && leftBound < bottomX2 && bottomX2 < rightBound);
+        (!isNaN(bottomX2) && leftBound < bottomX2 && bottomX2 < rightBound)
+    ) {
+        return true;
+    }
 
-    return verticalIntersection || horizontalIntersection;
+    return false;
 }
 
 /**
