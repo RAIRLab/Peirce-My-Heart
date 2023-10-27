@@ -100,6 +100,7 @@
     --mode-btn-press-shadow: none; 
 }
 
+/* Ryan Theme */
 [data-theme="Peirced-from-Within"] {
     --dark-highlights : #B11D20;
     --p-text : #F5D51D;
@@ -124,6 +125,7 @@
     --mode-btn-press-shadow: none; 
 }
 
+/* Dawn Theme */
 [data-theme="Vampire-Core"] {
     --global-background : #ffffff;
     --p-text : #ffffff;
@@ -148,6 +150,7 @@
     --mode-btn-press-shadow: inset 0px 0px 5px #ffffff; 
 }
 
+/* Anusha Theme */
 [data-theme="Peircing-the-Galaxy"] {
     --global-background : #ffffff;
     --p-text : #85d8ff;
@@ -170,4 +173,29 @@
     --mode-btn-hover-bg: none;
     --mode-btn-shadow: 1px 2px 1px #000000;
     --mode-btn-press-shadow: inset 0px 0px 5px #000000;
+}
+
+/* Subrina Theme */
+[data-theme="Ocean-Pearl"] {
+    --global-background : #ffffff;
+    --p-text : #ffffff;
+    --canvas-bg : #e2b3ef;
+    --canvas-items : #5d95a3;
+    --good-placement : #ffffff;
+    --bad-placement : #8dc4d2;
+    --header-border: 2px solid #ffffff;
+    --header-bg : #8dc4d2;
+    --toolbar-border: 2px solid #ffffff;
+    --toolbar-bg: #8dc4d2;
+    --subbar-border: 2px solid #ffffff;
+    --subbar-bg: #8dc4d2;
+    --sidebar-border: 2px solid #ffffff;
+    --sidebar-bg: #8dc4d2;
+    --mode-btn-border: 2px solid #bb77ce;
+    --mode-btn-bg: #bb77ce;;
+    --mode-btn-icon-color :#ffffff;
+    --mode-btn-radius: 25%;
+    --mode-btn-hover-bg: none;
+    --mode-btn-shadow: none;
+    --mode-btn-press-shadow: inset 0px 0px 5px #ffffff; 
 }
