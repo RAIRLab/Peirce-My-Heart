@@ -147,3 +147,27 @@
     --mode-btn-shadow: none;
     --mode-btn-press-shadow: inset 0px 0px 5px #ffffff; 
 }
+
+[data-theme="Ocean-Pearl"] {
+    --global-background : #ffffff;
+    --p-text : #ffffff;
+    --canvas-bg : #e2b3ef;
+    --canvas-items : #5d95a3;
+    --good-placement : #ffffff;
+    --bad-placement : #8dc4d2;
+    --header-border: 2px solid #ffffff;
+    --header-bg : #8dc4d2;
+    --toolbar-border: 2px solid #ffffff;
+    --toolbar-bg: #8dc4d2;
+    --subbar-border: 2px solid #ffffff;
+    --subbar-bg: #8dc4d2;
+    --sidebar-border: 2px solid #ffffff;
+    --sidebar-bg: #8dc4d2;
+    --mode-btn-border: 2px solid #bb77ce;
+    --mode-btn-bg: #bb77ce;;
+    --mode-btn-icon-color :#ffffff;
+    --mode-btn-radius: 25%;
+    --mode-btn-hover-bg: none;
+    --mode-btn-shadow: none;
+    --mode-btn-press-shadow: inset 0px 0px 5px #ffffff; 
+}
