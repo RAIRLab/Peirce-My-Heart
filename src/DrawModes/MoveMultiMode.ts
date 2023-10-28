@@ -3,22 +3,14 @@
  * @author Dawn Moore
  */
 
-import {Point} from "./AEG/Point";
-import {AtomNode} from "./AEG/AtomNode";
-import {CutNode} from "./AEG/CutNode";
-import {redrawCut, tree} from "./index";
+import {Point} from "../AEG/Point";
+import {AtomNode} from "../AEG/AtomNode";
+import {CutNode} from "../AEG/CutNode";
+import {tree} from "../index";
 import {offset} from "./DragMode";
-import {drawAtom} from "./AtomMode";
-import {legalColor, illegalColor} from "./Themes";
+import {drawAtom, redrawTree} from "./DrawUtils";
+import {legalColor, illegalColor} from "../Themes";
 import {validateChildren, drawAltered, insertChildren, alterAtom} from "./EditModeUtils";
-
-//Setting Up Canvas
-const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
-const res: CanvasRenderingContext2D | null = canvas.getContext("2d");
-if (res === null) {
-    throw Error("2d rendering context not supported");
-}
-const ctx: CanvasRenderingContext2D = res;
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -61,22 +53,16 @@ export function moveMultiMouseMove(event: MouseEvent) {
             event.y - startingPoint.y
         );
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        redrawCut(tree.sheet, offset);
+        redrawTree(tree);
         if (currentNode instanceof CutNode) {
-            if (validateChildren(currentNode, moveDifference)) {
-                drawAltered(currentNode, legalColor(), moveDifference);
-            } else {
-                drawAltered(currentNode, illegalColor(), moveDifference);
-            }
+            const color = validateChildren(currentNode, moveDifference)
+                ? legalColor()
+                : illegalColor();
+            drawAltered(currentNode, color, moveDifference);
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
-
-            if (tree.canInsert(tempAtom)) {
-                drawAtom(tempAtom, legalColor(), true);
-            } else {
-                drawAtom(tempAtom, illegalColor(), true);
-            }
+            const color = tree.canInsert(tempAtom) ? legalColor() : illegalColor();
+            drawAtom(tempAtom, color, true);
         }
     }
 }
@@ -111,8 +97,7 @@ export function moveMultiMouseUp(event: MouseEvent) {
             }
         }
     }
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    redrawCut(tree.sheet, offset);
+    redrawTree(tree);
     legalNode = false;
 }
 
@@ -125,6 +110,5 @@ export function moveMultiMouseOut() {
         tree.insert(currentNode);
     }
     legalNode = false;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    redrawCut(tree.sheet, offset);
+    redrawTree(tree);
 }

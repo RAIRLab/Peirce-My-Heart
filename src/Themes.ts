@@ -3,16 +3,10 @@
  * This file provides basic utilities for extracting important colors
  * for the application from the CSS themes
  */
-import {tree, redrawCut} from "./index";
-import {offset} from "./DragMode";
+import {tree} from "./index";
+import {redrawTree} from "./DrawModes/DrawUtils";
 
-const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
 const themeSelector: HTMLSelectElement = <HTMLSelectElement>document.getElementById("theme-select");
-const res: CanvasRenderingContext2D | null = canvas.getContext("2d");
-if (res === null) {
-    throw Error("2d rendering context not supported");
-}
-const ctx: CanvasRenderingContext2D = res;
 
 /**
  * Computes the value of a variable from a CSS style sheet
@@ -42,8 +36,7 @@ function setTheme() {
         legalColorStr = cssVar("--good-placement");
         illegalColorStr = cssVar("--bad-placement");
         placedColorStr = cssVar("--canvas-items");
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        redrawCut(tree.sheet, offset);
+        redrawTree(tree);
     });
 }
 
