@@ -55,6 +55,13 @@ import {
     deleteMultiMouseUp,
 } from "./DrawModes/DeleteMultiMode";
 
+import {
+    resizeMouseDown,
+    resizeMouseMove,
+    resizeMouseUp,
+    resizeMouseOut,
+} from "./DrawModes/ResizeTool";
+
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
 canvas.width = window.innerWidth;
@@ -89,6 +96,7 @@ enum Mode {
     copyMultiMode,
     deleteSingleMode,
     deleteMultiMode,
+    resizeTool,
 }
 
 //Used to determine the current mode the program is in.
@@ -115,6 +123,7 @@ window.copySingleMode = Mode.copySingleMode;
 window.copyMultiMode = Mode.copyMultiMode;
 window.deleteSingleMode = Mode.deleteSingleMode;
 window.deleteMultiMode = Mode.deleteMultiMode;
+window.resizeTool = Mode.resizeTool;
 window.setMode = setMode;
 window.setHighlight = setHighlight;
 
@@ -131,6 +140,7 @@ declare global {
         copyMultiMode: Mode;
         deleteSingleMode: Mode;
         deleteMultiMode: Mode;
+        resizeTool: Mode;
         setMode: (state: Mode) => void;
         setHighlight: (event: string, id: string) => void;
     }
@@ -291,6 +301,9 @@ function mouseDownHandler(event: MouseEvent) {
         case Mode.deleteMultiMode:
             deleteMultiMouseDown(event);
             break;
+        case Mode.resizeTool:
+            resizeMouseDown(event);
+            break;
     }
     hasMouseDown = true;
 }
@@ -329,6 +342,9 @@ function mouseMoveHandler(event: MouseEvent) {
             case Mode.deleteMultiMode:
                 deleteMultiMouseMove(event);
                 break;
+            case Mode.resizeTool:
+                resizeMouseMove(event);
+                break;
         }
     }
 }
@@ -363,6 +379,9 @@ function mouseUpHandler(event: MouseEvent) {
             break;
         case Mode.deleteMultiMode:
             deleteMultiMouseUp(event);
+            break;
+        case Mode.resizeTool:
+            resizeMouseUp(event);
             break;
     }
     hasMouseDown = false;
@@ -400,6 +419,9 @@ function mouseOutHandler() {
             break;
         case Mode.deleteMultiMode:
             deleteMultiMouseOut();
+            break;
+        case Mode.resizeTool:
+            resizeMouseOut();
             break;
     }
     hasMouseIn = false;
