@@ -14,7 +14,7 @@ test("help", async ({page}) => {
 });
 
 test("A or B", async ({page}) => {
-    await page.goto("http://127.0.0.1:3000");
+    await page.goto("https://rairlab.github.io/Peirce-My-Heart/");
 
     const canvas = page.locator("canvas");
     await page.getByTitle("Cut Mode").click();
