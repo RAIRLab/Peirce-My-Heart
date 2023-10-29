@@ -58,8 +58,8 @@
     --p-text : var(--dark-highlights);
     --canvas-bg : #000000;
     --canvas-items : var(--dark-highlights);
-    --good-placement : #00FF00;
-    --bad-placement : #FF0000;
+    --good-placement : #00ff00;
+    --bad-placement : #ff0000;
     --header-border: 2px solid var(--dark-highlights);
     --header-bg : #000000;
     --toolbar-border: 2px solid var(--dark-highlights);
@@ -78,24 +78,124 @@
 }
 
 [data-theme="vs-code"] {
-    --p-text : rgb(220, 220, 170);
-    --canvas-bg : rgb(31, 31, 31);
-    --canvas-items : rgb(156, 220, 254);
-    --good-placement : rgb(115, 201, 145);
-    --bad-placement : rgb(244, 71, 71);
-    --header-border: 1px solid rgb(204, 204, 204);
-    --header-bg : rgb(43, 43, 43);
-    --toolbar-border: 1px solid rgb(204, 204, 204);
-    --toolbar-bg: rgb(43, 43, 43);
-    --subbar-border: 1px solid rgb(204, 204, 204);
-    --subbar-bg: rgb(43, 43, 43);
-    --sidebar-border: 1px solid rgb(204, 204, 204);
-    --sidebar-bg: rgb(43, 43, 43);
-    --mode-btn-border: 1px solid rgb(204, 204, 204);
-    --mode-btn-bg: rgb(43, 43, 43);
-    --mode-btn-icon-color : rgb(134, 134, 134);
+    --p-text : #dcdcaa;
+    --canvas-bg : #1f1f1f;
+    --canvas-items : #9cdcfe;
+    --good-placement : #73c991;
+    --bad-placement : #f44747;
+    --header-border: 1px solid #cccccc;
+    --header-bg : #2b2b2b;
+    --toolbar-border: 1px solid #cccccc;
+    --toolbar-bg: #2b2b2b;
+    --subbar-border: 1px solid #cccccc;
+    --subbar-bg: #2b2b2b;
+    --sidebar-border: 1px solid #cccccc;
+    --sidebar-bg: #2b2b2b;
+    --mode-btn-border: 1px solid #cccccc;
+    --mode-btn-bg: #2b2b2b;
+    --mode-btn-icon-color : #868686;
     --mode-btn-radius: 10%;
     --mode-btn-hover-bg: none;
     --mode-btn-shadow: none;
     --mode-btn-press-shadow: none; 
+}
+
+/* Ryan Theme */
+[data-theme="Peirced-from-Within"] {
+    --dark-highlights : #b11d20;
+    --p-text : #f5d51d;
+    --canvas-bg : #07140e;
+    --canvas-items : #f4f3cd;
+    --good-placement : #46ff00;
+    --bad-placement : #c60003;
+    --header-border: 1px solid #0a1e0a;
+    --header-bg : #151715;
+    --toolbar-border: 1px solid #02281c;
+    --toolbar-bg: #150f12;
+    --subbar-border: 1px solid #05281c;
+    --subbar-bg: #201412;
+    --sidebar-border: 1px solid #05281c;
+    --sidebar-bg: #05141d;
+    --mode-btn-border: 1px solid #05281c;
+    --mode-btn-bg: r#2b2b2b;
+    --mode-btn-icon-color : #868686;
+    --mode-btn-radius: 0%;
+    --mode-btn-hover-bg: none;
+    --mode-btn-shadow: none;
+    --mode-btn-press-shadow: none; 
+}
+
+/* Dawn Theme */
+[data-theme="Vampire-Core"] {
+    --global-background : #ffffff;
+    --p-text : #ffffff;
+    --canvas-bg : #a00404;
+    --canvas-items : #000000;
+    --good-placement : #ffffff;
+    --bad-placement : #e480c6;
+    --header-border: 2px solid #ffffff;
+    --header-bg : #000000;
+    --toolbar-border: 2px solid #ffffff;
+    --toolbar-bg: #000000;
+    --subbar-border: 2px solid #ffffff;
+    --subbar-bg: #000000;
+    --sidebar-border: 2px solid #ffffff;
+    --sidebar-bg: #000000;
+    --mode-btn-border: 2px solid #a00404;
+    --mode-btn-bg: #a00404;;
+    --mode-btn-icon-color :#ffffff;
+    --mode-btn-radius: 25%;
+    --mode-btn-hover-bg: none;
+    --mode-btn-shadow: none;
+    --mode-btn-press-shadow: inset 0px 0px 5px #ffffff; 
+}
+
+/* Anusha Theme */
+[data-theme="Peircing-the-Galaxy"] {
+    --global-background : #ffffff;
+    --p-text : #85d8ff;
+    --canvas-bg : #34034a;
+    --canvas-items : #ffffff;
+    --good-placement : #85d8ff;
+    --bad-placement : #f59696;
+    --header-border: 2px solid #000000;
+    --header-bg : #270968;
+    --toolbar-border: 2px solid #000000;
+    --toolbar-bg: #2b0962;
+    --subbar-border: 2px solid #000000;
+    --subbar-bg: #350953;
+    --sidebar-border: 2px solid #000000;
+    --sidebar-bg: #470d60;
+    --mode-btn-border: 2px solid #000000;
+    --mode-btn-bg: #6c2da2;;
+    --mode-btn-icon-color :#ffffff;
+    --mode-btn-radius: 25%;
+    --mode-btn-hover-bg: none;
+    --mode-btn-shadow: 1px 2px 1px #000000;
+    --mode-btn-press-shadow: inset 0px 0px 5px #000000;
+}
+
+/* Subrina Theme */
+[data-theme="Ocean-Pearl"] {
+    --global-background : #ffffff;
+    --p-text : #ffffff;
+    --canvas-bg : #e2b3ef;
+    --canvas-items : #5d95a3;
+    --good-placement : #ffffff;
+    --bad-placement : #8dc4d2;
+    --header-border: 2px solid #ffffff;
+    --header-bg : #8dc4d2;
+    --toolbar-border: 2px solid #ffffff;
+    --toolbar-bg: #8dc4d2;
+    --subbar-border: 2px solid #ffffff;
+    --subbar-bg: #8dc4d2;
+    --sidebar-border: 2px solid #ffffff;
+    --sidebar-bg: #8dc4d2;
+    --mode-btn-border: 2px solid #bb77ce;
+    --mode-btn-bg: #bb77ce;;
+    --mode-btn-icon-color :#ffffff;
+    --mode-btn-radius: 25%;
+    --mode-btn-hover-bg: none;
+    --mode-btn-shadow: none;
+    --mode-btn-press-shadow: inset 0px 0px 5px #ffffff; 
 }
