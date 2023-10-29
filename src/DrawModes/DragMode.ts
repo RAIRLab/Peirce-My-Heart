@@ -3,17 +3,9 @@
  * @author Dawn Moore
  */
 
-import {Point} from "./AEG/Point";
-import {tree} from "./index";
-import {redrawCut} from "./index";
-
-//Settings up Canvas
-const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
-const res: CanvasRenderingContext2D | null = canvas.getContext("2d");
-if (res === null) {
-    throw Error("2d rendering context not supported");
-}
-const ctx: CanvasRenderingContext2D = res;
+import {Point} from "../AEG/Point";
+import {tree} from "../index";
+import {redrawTree} from "./DrawUtils";
 
 //Original point later points will be compared to.
 let originPoint: Point;
@@ -40,8 +32,7 @@ export function dragMouseDown(event: MouseEvent) {
 export function dragMouseMove(event: MouseEvent) {
     if (!wasOut) {
         offset = new Point(event.x - originPoint.x, event.y - originPoint.y);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        redrawCut(tree.sheet, offset);
+        redrawTree(tree);
     }
 }
 
@@ -50,6 +41,5 @@ export function dragMouseMove(event: MouseEvent) {
  */
 export function dragMosueOut() {
     wasOut = true;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    redrawCut(tree.sheet, offset);
+    redrawTree(tree);
 }
