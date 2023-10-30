@@ -24,7 +24,7 @@ export default defineConfig({
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
         /* Base URL to use in actions like `await page.goto('/')`. */
-        baseURL: 'https://rairlab.github.io/Peirce-My-Heart/',
+        baseURL: 'http://127.0.0.1',
 
         /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
         trace: "on-first-retry",
@@ -71,7 +71,7 @@ export default defineConfig({
     //Run your local dev server before starting the tests
     webServer: {
         command: 'npm run server',
-        url: 'https://rairlab.github.io/Peirce-My-Heart/',
+        url: 'http://127.0.0.1',
         reuseExistingServer: !process.env.CI,
         stdout: 'pipe',
         stderr: 'pipe',

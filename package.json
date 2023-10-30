@@ -17,7 +17,7 @@
     "aegtest": "vitest run",
     "uitest": "playwright test --ui",
     "uitestHeadless": "playwright test",
-    "server": "http-server -p 0"
+    "server": "http-server -p 8081"
   },
   "repository": {
     "type": "git",
@@ -43,13 +43,11 @@
     "electron-packager": "^17.1.2",
     "gts": "^5.2.0",
     "http-server": "^14.1.1",
+    "playwright": "^1.39.0",
     "typedoc": "^0.25.2",
     "typescript": "~5.2.2",
     "vite": "^4.5.0",
     "vite-plugin-singlefile": "^0.13.5",
     "vitest": "^0.34.6"
-  },
-  "dependencies": {
-    "playwright": "^1.39.0"
   }
 }
