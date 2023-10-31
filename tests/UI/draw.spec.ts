@@ -1,7 +1,8 @@
 import {test, expect} from "@playwright/test";
 
 test("help", async ({page}) => {
-    await page.goto("https://rairlab.github.io/Peirce-My-Heart/");
+    //test on local site instead of production site
+    await page.goto("/");
 
     const canvas = page.locator("#canvas");
     await page.getByTitle("Cut Mode").click();
@@ -14,7 +15,8 @@ test("help", async ({page}) => {
 });
 
 test("A or B", async ({page}) => {
-    await page.goto("https://rairlab.github.io/Peirce-My-Heart/");
+    //test on local site instead of production site
+    await page.goto("/");
 
     const canvas = page.locator("canvas");
     await page.getByTitle("Cut Mode").click();
