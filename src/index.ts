@@ -125,7 +125,7 @@ declare global {
         atomMode: Mode;
         cutMode: Mode;
         dragMode: Mode;
-        saveMode: () => void;
+        saveMode: (slowDownload: Boolean) => void;
         loadMode: () => void;
         moveSingleMode: Mode;
         moveMultiMode: Mode;
@@ -185,8 +185,8 @@ function setMode(state: Mode) {
 /**
  * Calls the function to save the file.
  */
-async function saveMode() {
-    if ("showSaveFilePicker" in window) {
+async function saveMode(slowDownload: Boolean) {
+    if ("showSaveFilePicker" in window && slowDownload) {
         //Slow Download
         const saveHandle = await window.showSaveFilePicker({
             excludeAcceptAllOption: true,
@@ -207,7 +207,7 @@ async function saveMode() {
         //Quick Download
         const f = document.createElement("a");
         f.href = JSON.stringify(tree, null, "\t");
-        f.download = "AEGTree.json";
+        f.download = "AEG Tree.json";
         f.click();
     }
 }
@@ -252,7 +252,7 @@ async function loadMode() {
 function keyDownHandler(event: KeyboardEvent) {
     if (event.ctrlKey && event.key === "s") {
         event.preventDefault(); //prevents Chrome and such from saving the .html of the current webpage
-        saveMode();
+        saveMode(false);
     } else {
         switch (modeState) {
             case Mode.atomMode:
