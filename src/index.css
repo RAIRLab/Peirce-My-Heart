@@ -137,3 +137,54 @@ p {
     -webkit-user-select: none; 
     user-select: none; 
 }
+
+input[type="checkbox"] {
+    display: none;
+  }
+
+  .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+
+  .toggle-switch .switch-track {
+    background-color: #ccc;
+    border-radius: 34px;
+    display: block;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    transition: background-color 0.3s;
+  }
+
+  .toggle-switch .switch-thumb {
+    background-color: #fff;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    transition: transform 0.3s, background-color 0.3s;
+  }
+
+  input[type="checkbox"]:checked+.toggle-switch .switch-track {
+    background-color: #5aabed;
+  }
+  input[type="checkbox"]:checked+.toggle-switch .switch-thumb {
+    transform: translateX(26px);
+  }
+
+  p {
+    margin-top: 10px;
+  }
+
+  .toggle-switch+p::before {
+    content: "Draw mode";
+  }
+
+  input[type="checkbox"]:checked+.toggle-switch+p::before {
+    content: "Proof mode";
+  }
