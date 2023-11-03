@@ -138,9 +138,9 @@ p {
     user-select: none; 
 }
 
-input[type="checkbox"] {
+/* input[type="checkbox"] {
     display: none;
-}
+} */
 
 .toggle-switch {
   position: relative;
