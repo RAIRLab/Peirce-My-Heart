@@ -6,53 +6,55 @@
  */
 
 import {AEGTree} from "./AEG/AEGTree";
-import {CutNode} from "./AEG/CutNode";
-import {Ellipse} from "./AEG/Ellipse";
-import {AtomNode} from "./AEG/AtomNode";
-import {Point} from "./AEG/Point";
-import {cutMouseDown, cutMouseMove, cutMouseOut, cutMouseUp} from "./CutMode";
-import {atomKeyPress, atomMouseDown, atomMouseMove, atomMouseUp, atomMouseOut} from "./AtomMode";
-import {drawAtom} from "./AtomMode";
+import {cutMouseDown, cutMouseMove, cutMouseOut, cutMouseUp} from "./DrawModes/CutMode";
+import {
+    atomKeyPress,
+    atomMouseDown,
+    atomMouseMove,
+    atomMouseUp,
+    atomMouseOut,
+} from "./DrawModes/AtomMode";
 import {saveFile, loadFile} from "./AEG-IO";
-import {dragMosueOut, dragMouseDown, dragMouseMove, offset} from "./DragMode";
-import {placedColor} from "./Themes";
+import {redrawTree} from "./DrawModes/DrawUtils";
+import {dragMosueOut, dragMouseDown, dragMouseMove} from "./DrawModes/DragMode";
 import {
     moveSingleMouseDown,
     moveSingleMouseMove,
     moveSingleMouseUp,
     moveSingleMouseOut,
-} from "./MoveSingleMode";
+} from "./DrawModes/MoveSingleMode";
 import {
     moveMultiMouseDown,
     moveMultiMouseMove,
     moveMultiMouseUp,
     moveMultiMouseOut,
-} from "./MoveMultiMode";
+} from "./DrawModes/MoveMultiMode";
 import {
     copySingleMouseDown,
     copySingleMouseMove,
     copySingleMouseUp,
     copySingleMouseOut,
-} from "./CopySingleMode";
+} from "./DrawModes/CopySingleMode";
 import {
     copyMultiMouseDown,
     copyMultiMouseMove,
     copyMultiMouseUp,
     copyMultiMouseOut,
-} from "./CopyMultiMode";
+} from "./DrawModes/CopyMultiMode";
 import {
     deleteSingleMouseDown,
     deleteSingleMouseMove,
     deleteSingleMouseOut,
     deleteSingleMouseUp,
-} from "./DeleteSingleMode";
+} from "./DrawModes/DeleteSingleMode";
 
 import {
     deleteMultiMouseDown,
     deleteMultiMouseMove,
     deleteMultiMouseOut,
     deleteMultiMouseUp,
-} from "./DeleteMultiMode";
+} from "./DrawModes/DeleteMultiMode";
+import {toggleHandler} from "./ToggleModes";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -66,7 +68,6 @@ const ctx: CanvasRenderingContext2D = res;
 ctx.font = "35pt arial";
 
 //Global State
-const cutDisplay = <HTMLParagraphElement>document.getElementById("graphString");
 const cutTools = <HTMLParagraphElement>document.getElementById("cutTools");
 const atomTools = <HTMLParagraphElement>document.getElementById("atomTools");
 window.addEventListener("keydown", keyDownHandler);
@@ -79,7 +80,7 @@ canvas.addEventListener("mouseenter", mouseEnterHandler);
 /**
  * Enum to represent the current drawing mode the program is currently in.
  */
-enum Mode {
+export enum Mode {
     atomMode,
     cutMode,
     dragMode,
@@ -92,7 +93,8 @@ enum Mode {
 }
 
 //Used to determine the current mode the program is in.
-let modeState: Mode;
+//Modified via setState
+export let modeState: Mode | null = null;
 
 //Boolean value representing whether the mouse button is down. Assumed to not be down at the start.
 let hasMouseDown = false;
@@ -100,7 +102,7 @@ let hasMouseDown = false;
 //Boolean value representing whether the mouse is in the canvas. Assumed to be in at the start.
 let hasMouseIn = true;
 
-//The current tree representing the canvas.
+//The current tree on the the canvase, needs to be redrawn upon any updates.
 export let tree: AEGTree = new AEGTree();
 
 //Window Exports
@@ -117,6 +119,7 @@ window.deleteSingleMode = Mode.deleteSingleMode;
 window.deleteMultiMode = Mode.deleteMultiMode;
 window.setMode = setMode;
 window.setHighlight = setHighlight;
+window.toggleHandler = toggleHandler;
 
 declare global {
     interface Window {
@@ -133,6 +136,7 @@ declare global {
         deleteMultiMode: Mode;
         setMode: (state: Mode) => void;
         setHighlight: (event: string, id: string) => void;
+        toggleHandler: () => void;
     }
 }
 
@@ -163,7 +167,7 @@ modeButtons.forEach(button => {
     });
 });
 
-function setMode(state: Mode) {
+export function setMode(state: Mode | null) {
     modeState = state;
     cutTools.style.display = "none";
     atomTools.style.display = "none";
@@ -197,7 +201,6 @@ async function saveMode() {
                 },
             ],
         });
-
         saveFile(saveHandle, tree);
     } else {
         //Quick Download
@@ -233,12 +236,10 @@ async function loadMode() {
         const loadData = loadFile(aegData);
         if (loadData instanceof AEGTree) {
             tree = loadData;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            redrawCut(tree.sheet, offset);
+            redrawTree(tree);
         }
         //TODO: else popup error
     });
-
     reader.readAsText(file);
 }
 
@@ -408,46 +409,6 @@ function mouseOutHandler() {
 
 function mouseEnterHandler() {
     hasMouseIn = true;
-}
-
-/**
- * Iterates through the entire tree, if there are no children the for loop will not begin.
- * Sends any Atom children to redrawAtom.
- * @param incomingNode The CutNode to be iterated through
- * @param offset The difference between the actual graph and the current canvas
- */
-export function redrawCut(incomingNode: CutNode, offset: Point) {
-    cutDisplay.innerHTML = tree.toString();
-    for (let i = 0; incomingNode.children.length > i; i++) {
-        if (incomingNode.children[i] instanceof AtomNode) {
-            redrawAtom(<AtomNode>incomingNode.children[i]);
-        } else {
-            redrawCut(<CutNode>incomingNode.children[i], offset);
-        }
-    }
-    if (incomingNode.ellipse instanceof Ellipse) {
-        ctx.strokeStyle = placedColor();
-        ctx.beginPath();
-        ctx.ellipse(
-            incomingNode.ellipse.center.x + offset.x,
-            incomingNode.ellipse.center.y + offset.y,
-            incomingNode.ellipse.radiusX,
-            incomingNode.ellipse.radiusY,
-            0,
-            0,
-            2 * Math.PI
-        );
-        ctx.stroke();
-    }
-}
-
-/**
- * Redraws the given atom. Also redraws the the bounding box.
- * @param incomingNode The Atom Node to be redrawn
- * @param offset The difference between the actual graph and the current canvas
- */
-function redrawAtom(incomingNode: AtomNode) {
-    drawAtom(incomingNode, placedColor(), false);
 }
 
 /**
