@@ -25,51 +25,95 @@
     </header>
     <div id="sidebar" class="no-highlight" onmousedown="setHighlight('mousedown', 'sidebar')"
     onmouseleave="setHighlight('mouseleave', 'sidebar')">
-    <input type="checkbox" id="toggle">
-  <label class="toggle-switch" for="toggle">
-    <span class="switch-track"></span>
-    <span class="switch-thumb"></span>
-  </label>
-  <p></p>
-      <div class="row">
-        <a href="./aeg.html" title="About AEG" class="modeButton">
-          <i class="fa fa-info" aria-hidden="true"></i>
-        </a>
-        <button type="button" onclick= "setMode(dragMode)" title="Drag Mode" class="modeButton">
-          <i class="fa fa-hand-paper-o" aria-hidden="true"></i>
-        </button>
+      <input type="checkbox" id="toggle" oninput="toggleHandler()">
+      <label class="toggle-switch" for="toggle">
+        <span class="switch-track"></span>
+        <span class="switch-thumb"></span>
+      </label>
+      <p></p>
+      <div id="DrawButtons">
+        <div class="row">
+          <a href="./aeg.html" title="About AEG" class="modeButton">
+            <i class="fa fa-info" aria-hidden="true"></i>
+          </a>
+          <button type="button" onclick= "setMode(dragMode)" title="Drag Mode" class="modeButton">
+            <i class="fa fa-hand-paper-o" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="row">
+          <button type="button" onclick= "setMode(atomMode)" title="Atom Mode" class="modeButton">
+              <i class="fa fa-font" aria-hidden="true"></i>
+          </button>
+          <button type="button" onclick= "setMode(cutMode)" title="Cut Mode" class="modeButton">
+              <i class="fa fa-circle-o" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class = "row">
+          <button type="button" onclick="setMode(moveSingleMode)" title="Move Single Mode" class="modeButton">
+            <i class="fa fa-mouse-pointer" aria-hidden="true"></i>
+          </button>
+          <button type="button" onclick="setMode(moveMultiMode)" title="Move Multi Mode" class="modeButton">
+            <i class="fa fa-arrows" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class = "row">
+          <button type="button" onclick="setMode(copySingleMode)" title="Copy Single Mode" class="modeButton">
+            <i class="fa fa-file-o" aria-hidden="true"></i>
+          </button>
+          <button type="button" onclick="setMode(copyMultiMode)" title="Copy Multi Mode" class="modeButton">
+            <i class="fa fa-files-o" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class = "row">
+          <button type="button" onclick="setMode(deleteSingleMode)" title="Delete Single Mode" class="modeButton">
+            <i class="fa fa-trash-o" aria-hidden="true"></i>
+          </button>
+          <button type="button" onclick="setMode(deleteMultiMode)" title="Delete Multi Mode" class="modeButton">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+          </button>
+        </div>
       </div>
-      <div class="row">
-        <button type="button" onclick= "setMode(atomMode)" title="Atom Mode" class="modeButton">
-            <i class="fa fa-font" aria-hidden="true"></i>
-        </button>
-        <button type="button" onclick= "setMode(cutMode)" title="Cut Mode" class="modeButton">
+      <div id="ProofButtons">
+        <div class="row">
+          <button type="button" onclick="" title="Resize Single" class="modeButton">
+              <i class="fa fa-circle-o" aria-hidden="true"></i>
+          </button>
+          <button type="button" onclick="" title="Resize Multiple" class="modeButton">
+              <i class="fa fa-circle-o" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="row">
+          <button type="button" onclick="" title="Drag Single" class="modeButton">
+              <i class="fa fa-circle-o" aria-hidden="true"></i>
+          </button>
+          <button type="button" onclick="" title="Drag Multiple" class="modeButton">
+              <i class="fa fa-circle-o" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="row">
+          <button type="button" onclick="" title="Double Cut Insert" class="modeButton">
             <i class="fa fa-circle-o" aria-hidden="true"></i>
-        </button>
-      </div>
-      <div class = "row">
-        <button type="button" onclick="setMode(moveSingleMode)" title="Move Single Mode" class="modeButton">
-          <i class="fa fa-mouse-pointer" aria-hidden="true"></i>
-        </button>
-        <button type="button" onclick="setMode(moveMultiMode)" title="Move Multi Mode" class="modeButton">
-          <i class="fa fa-arrows" aria-hidden="true"></i>
-        </button>
-      </div>
-      <div class = "row">
-        <button type="button" onclick="setMode(copySingleMode)" title="Copy Single Mode" class="modeButton">
-          <i class="fa fa-file-o" aria-hidden="true"></i>
-        </button>
-        <button type="button" onclick="setMode(copyMultiMode)" title="Copy Multi Mode" class="modeButton">
-          <i class="fa fa-files-o" aria-hidden="true"></i>
-        </button>
-      </div>
-      <div class = "row">
-        <button type="button" onclick="setMode(deleteSingleMode)" title="Delete Single Mode" class="modeButton">
-          <i class="fa fa-trash-o" aria-hidden="true"></i>
-        </button>
-        <button type="button" onclick="setMode(deleteMultiMode)" title="Delete Multi Mode" class="modeButton">
-          <i class="fa fa-trash" aria-hidden="true"></i>
-        </button>
+          </button>
+          <button type="button" onclick="" title="Double Cut Erase" class="modeButton">
+            <i class="fa fa-circle-o" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="row">
+          <button type="button" onclick="" title="Insertion" class="modeButton">
+            <i class="fa fa-circle-o" aria-hidden="true"></i>
+          </button>
+          <button type="button" onclick="" title="Erasure" class="modeButton">
+            <i class="fa fa-circle-o" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="row">
+          <button type="button" onclick="" title="Iteration" class="modeButton">
+            <i class="fa fa-circle-o" aria-hidden="true"></i>
+          </button>
+          <button type="button" onclick="" title="Deiteration" class="modeButton">
+            <i class="fa fa-circle-o" aria-hidden="true"></i>
+          </button>
+        </div>
       </div>
     </div>
     <div id="toolbar" class="no-highlight" onmousedown="setHighlight('mousedown', 'toolbar')"
