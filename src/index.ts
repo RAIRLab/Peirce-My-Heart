@@ -54,7 +54,7 @@ import {
     deleteMultiMouseOut,
     deleteMultiMouseUp,
 } from "./DrawModes/DeleteMultiMode";
-import { toggleHandler } from "./ToggleModes";
+import {toggleHandler} from "./ToggleModes";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -420,4 +420,3 @@ function resizeHandler() {
 }
 
 window.onresize = resizeHandler;
-
