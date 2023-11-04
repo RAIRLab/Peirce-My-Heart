@@ -111,7 +111,7 @@ export function createEllipse(original: Point, current: Point): Ellipse {
  * @param ellipse The ellipse to be checked
  * @returns Whether the given ellipse is large enough to be legal
  */
-function ellipseLargeEnough(ellipse: Ellipse) {
+export function ellipseLargeEnough(ellipse: Ellipse) {
     if (ellipse.radiusX > 15 && ellipse.radiusY > 15) {
         return true;
     }
