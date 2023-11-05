@@ -54,6 +54,7 @@ import {
     deleteMultiMouseOut,
     deleteMultiMouseUp,
 } from "./DrawModes/DeleteMultiMode";
+import {toggleHandler} from "./ToggleModes";
 
 import {
     resizeMouseDown,
@@ -86,7 +87,7 @@ canvas.addEventListener("mouseenter", mouseEnterHandler);
 /**
  * Enum to represent the current drawing mode the program is currently in.
  */
-enum Mode {
+export enum Mode {
     atomMode,
     cutMode,
     dragMode,
@@ -100,7 +101,8 @@ enum Mode {
 }
 
 //Used to determine the current mode the program is in.
-let modeState: Mode;
+//Modified via setState
+export let modeState: Mode | null = null;
 
 //Boolean value representing whether the mouse button is down. Assumed to not be down at the start.
 let hasMouseDown = false;
@@ -108,7 +110,7 @@ let hasMouseDown = false;
 //Boolean value representing whether the mouse is in the canvas. Assumed to be in at the start.
 let hasMouseIn = true;
 
-//The current tree representing the canvas.
+//The current tree on the the canvase, needs to be redrawn upon any updates.
 export let tree: AEGTree = new AEGTree();
 
 //Window Exports
@@ -126,6 +128,7 @@ window.deleteMultiMode = Mode.deleteMultiMode;
 window.resizeTool = Mode.resizeTool;
 window.setMode = setMode;
 window.setHighlight = setHighlight;
+window.toggleHandler = toggleHandler;
 
 declare global {
     interface Window {
@@ -143,6 +146,7 @@ declare global {
         resizeTool: Mode;
         setMode: (state: Mode) => void;
         setHighlight: (event: string, id: string) => void;
+        toggleHandler: () => void;
     }
 }
 
@@ -173,7 +177,7 @@ modeButtons.forEach(button => {
     });
 });
 
-function setMode(state: Mode) {
+export function setMode(state: Mode | null) {
     modeState = state;
     cutTools.style.display = "none";
     atomTools.style.display = "none";
@@ -207,7 +211,6 @@ async function saveMode() {
                 },
             ],
         });
-
         saveFile(saveHandle, tree);
     } else {
         //Quick Download
@@ -247,7 +250,6 @@ async function loadMode() {
         }
         //TODO: else popup error
     });
-
     reader.readAsText(file);
 }
 
