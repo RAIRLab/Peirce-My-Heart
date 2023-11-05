@@ -54,6 +54,12 @@ import {
     deleteMultiMouseOut,
     deleteMultiMouseUp,
 } from "./DrawModes/DeleteMultiMode";
+import {
+    doubleCutInsertionMouseDown,
+    doubleCutInsertionMouseMove,
+    doubleCutInsertionMouseUp,
+    doubleCutInsertionMouseOut,
+} from "./ProofTools/DoubleCutInsertionTool";
 import {toggleHandler} from "./ToggleModes";
 
 import {
@@ -97,6 +103,7 @@ export enum Mode {
     copyMultiMode,
     deleteSingleMode,
     deleteMultiMode,
+    doubleCutInsertionTool,
     resizeTool,
 }
 
@@ -110,7 +117,7 @@ let hasMouseDown = false;
 //Boolean value representing whether the mouse is in the canvas. Assumed to be in at the start.
 let hasMouseIn = true;
 
-//The current tree on the the canvase, needs to be redrawn upon any updates.
+//The current tree on the the canvas, needs to be redrawn upon any updates.
 export let tree: AEGTree = new AEGTree();
 
 //Window Exports
@@ -125,6 +132,7 @@ window.copySingleMode = Mode.copySingleMode;
 window.copyMultiMode = Mode.copyMultiMode;
 window.deleteSingleMode = Mode.deleteSingleMode;
 window.deleteMultiMode = Mode.deleteMultiMode;
+window.doubleCutInsertionTool = Mode.doubleCutInsertionTool;
 window.resizeTool = Mode.resizeTool;
 window.setMode = setMode;
 window.setHighlight = setHighlight;
@@ -144,6 +152,7 @@ declare global {
         deleteSingleMode: Mode;
         deleteMultiMode: Mode;
         resizeTool: Mode;
+        doubleCutInsertionTool: Mode;
         setMode: (state: Mode) => void;
         setHighlight: (event: string, id: string) => void;
         toggleHandler: () => void;
@@ -187,6 +196,9 @@ export function setMode(state: Mode | null) {
             atomTools.style.display = "block";
             break;
         case Mode.cutMode:
+            cutTools.style.display = "block";
+            break;
+        case Mode.doubleCutInsertionTool:
             cutTools.style.display = "block";
             break;
     }
@@ -306,6 +318,9 @@ function mouseDownHandler(event: MouseEvent) {
         case Mode.resizeTool:
             resizeMouseDown(event);
             break;
+        case Mode.doubleCutInsertionTool:
+            doubleCutInsertionMouseDown(event);
+            break;
     }
     hasMouseDown = true;
 }
@@ -347,6 +362,9 @@ function mouseMoveHandler(event: MouseEvent) {
             case Mode.resizeTool:
                 resizeMouseMove(event);
                 break;
+            case Mode.doubleCutInsertionTool:
+                doubleCutInsertionMouseMove(event);
+                break;
         }
     }
 }
@@ -384,6 +402,9 @@ function mouseUpHandler(event: MouseEvent) {
             break;
         case Mode.resizeTool:
             resizeMouseUp(event);
+            break;
+        case Mode.doubleCutInsertionTool:
+            doubleCutInsertionMouseUp(event);
             break;
     }
     hasMouseDown = false;
@@ -424,6 +445,9 @@ function mouseOutHandler() {
             break;
         case Mode.resizeTool:
             resizeMouseOut();
+            break;
+        case Mode.doubleCutInsertionTool:
+            doubleCutInsertionMouseOut();
             break;
     }
     hasMouseIn = false;
