@@ -26,12 +26,7 @@ export function doubleCutDeletionMouseDown(event: MouseEvent) {
     const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = tree.getLowestNode(currentPoint);
 
-    if (currentNode instanceof CutNode && isDoubleCut(currentNode)) {
-        legalNode = true;
-        highlightDoubleCut(currentNode);
-    } else {
-        legalNode = false;
-    }
+    isLegal();
 }
 
 /**
@@ -44,12 +39,7 @@ export function doubleCutDeletionMouseMove(event: MouseEvent) {
     currentNode = tree.getLowestNode(currentPoint);
     redrawTree(tree);
 
-    if (currentNode instanceof CutNode && isDoubleCut(currentNode)) {
-        legalNode = true;
-        highlightDoubleCut(currentNode);
-    } else {
-        legalNode = false;
-    }
+    isLegal();
 }
 
 /**
@@ -103,5 +93,14 @@ function highlightDoubleCut(parentCut: CutNode) {
     drawCut(parentCut, illegalColor());
     if (parentCut.children[0] instanceof CutNode) {
         drawCut(parentCut.children[0], illegalColor());
+    }
+}
+
+function isLegal() {
+    if (currentNode instanceof CutNode && isDoubleCut(currentNode)) {
+        legalNode = true;
+        highlightDoubleCut(currentNode);
+    } else {
+        legalNode = false;
     }
 }
