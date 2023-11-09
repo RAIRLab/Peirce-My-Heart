@@ -60,6 +60,12 @@ import {
     doubleCutInsertionMouseUp,
     doubleCutInsertionMouseOut,
 } from "./ProofTools/DoubleCutInsertionTool";
+import {
+    doubleCutDeletionMouseDown,
+    doubleCutDeletionMouseMove,
+    doubleCutDeletionMouseUp,
+    doubleCutDeletionMouseOut,
+} from "./ProofTools/DoubleCutDeletionTool";
 import {toggleHandler} from "./ToggleModes";
 
 import {
@@ -105,6 +111,7 @@ export enum Mode {
     deleteMultiMode,
     doubleCutInsertionTool,
     resizeTool,
+    doubleCutDeletionTool,
 }
 
 //Used to determine the current mode the program is in.
@@ -134,6 +141,7 @@ window.deleteSingleMode = Mode.deleteSingleMode;
 window.deleteMultiMode = Mode.deleteMultiMode;
 window.doubleCutInsertionTool = Mode.doubleCutInsertionTool;
 window.resizeTool = Mode.resizeTool;
+window.doubleCutDeletionTool = Mode.doubleCutDeletionTool;
 window.setMode = setMode;
 window.setHighlight = setHighlight;
 window.toggleHandler = toggleHandler;
@@ -153,6 +161,7 @@ declare global {
         deleteMultiMode: Mode;
         resizeTool: Mode;
         doubleCutInsertionTool: Mode;
+        doubleCutDeletionTool: Mode;
         setMode: (state: Mode) => void;
         setHighlight: (event: string, id: string) => void;
         toggleHandler: () => void;
@@ -321,6 +330,9 @@ function mouseDownHandler(event: MouseEvent) {
         case Mode.doubleCutInsertionTool:
             doubleCutInsertionMouseDown(event);
             break;
+        case Mode.doubleCutDeletionTool:
+            doubleCutDeletionMouseDown(event);
+            break;
     }
     hasMouseDown = true;
 }
@@ -365,6 +377,9 @@ function mouseMoveHandler(event: MouseEvent) {
             case Mode.doubleCutInsertionTool:
                 doubleCutInsertionMouseMove(event);
                 break;
+            case Mode.doubleCutDeletionTool:
+                doubleCutDeletionMouseMove(event);
+                break;
         }
     }
 }
@@ -405,6 +420,9 @@ function mouseUpHandler(event: MouseEvent) {
             break;
         case Mode.doubleCutInsertionTool:
             doubleCutInsertionMouseUp(event);
+            break;
+        case Mode.doubleCutDeletionTool:
+            doubleCutDeletionMouseUp(event);
             break;
     }
     hasMouseDown = false;
@@ -448,6 +466,9 @@ function mouseOutHandler() {
             break;
         case Mode.doubleCutInsertionTool:
             doubleCutInsertionMouseOut();
+            break;
+        case Mode.doubleCutDeletionTool:
+            doubleCutDeletionMouseOut();
             break;
     }
     hasMouseIn = false;
