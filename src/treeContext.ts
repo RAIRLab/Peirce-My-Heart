@@ -22,6 +22,7 @@ export enum Tool {
     deleteMultiMode,
     toProofMode,
     doubleCutInsertionTool,
+    doubleCutDeletionTool,
 }
 
 export class treeContext {

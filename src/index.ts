@@ -67,6 +67,12 @@ import {
     doubleCutInsertionMouseUp,
     doubleCutInsertionMouseOut,
 } from "./ProofTools/DoubleCutInsertionTool";
+import {
+    doubleCutDeletionMouseDown,
+    doubleCutDeletionMouseMove,
+    doubleCutDeletionMouseUp,
+    doubleCutDeletionMouseOut,
+} from "./ProofTools/DoubleCutDeletionTool";
 import {toggleHandler} from "./ToggleModes";
 
 //Setting up Canvas
@@ -110,6 +116,7 @@ window.deleteSingleMode = Tool.deleteSingleMode;
 window.deleteMultiMode = Tool.deleteMultiMode;
 window.toProofMode = Tool.toProofMode;
 window.doubleCutInsertionTool = Tool.doubleCutInsertionTool;
+window.doubleCutDeletionTool = Tool.doubleCutDeletionTool;
 window.setMode = setMode;
 window.setHighlight = setHighlight;
 window.toggleHandler = toggleHandler;
@@ -129,6 +136,7 @@ declare global {
         deleteMultiMode: Tool;
         toProofMode: Tool;
         doubleCutInsertionTool: Tool;
+        doubleCutDeletionTool: Tool;
         setMode: (state: Tool) => void;
         setHighlight: (event: string, id: string) => void;
         toggleHandler: () => void;
@@ -297,6 +305,9 @@ function mouseDownHandler(event: MouseEvent) {
         case Tool.doubleCutInsertionTool:
             doubleCutInsertionMouseDown(event);
             break;
+        case Tool.doubleCutDeletionTool:
+            doubleCutDeletionMouseDown(event);
+            break;
         default:
             break;
     }
@@ -343,6 +354,9 @@ function mouseMoveHandler(event: MouseEvent) {
             case Tool.doubleCutInsertionTool:
                 doubleCutInsertionMouseMove(event);
                 break;
+            case Tool.doubleCutDeletionTool:
+                doubleCutDeletionMouseMove(event);
+                break;
             default:
                 break;
         }
@@ -385,6 +399,9 @@ function mouseUpHandler(event: MouseEvent) {
             break;
         case Tool.doubleCutInsertionTool:
             doubleCutInsertionMouseUp(event);
+            break;
+        case Tool.doubleCutDeletionTool:
+            doubleCutDeletionMouseUp(event);
             break;
         default:
             break;
@@ -430,6 +447,9 @@ function mouseOutHandler() {
             break;
         case Tool.doubleCutInsertionTool:
             doubleCutInsertionMouseOut();
+            break;
+        case Tool.doubleCutDeletionTool:
+            doubleCutDeletionMouseOut();
             break;
         default:
             break;
