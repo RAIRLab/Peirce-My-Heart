@@ -11,16 +11,37 @@ import {shapesOverlap, shapesIntersect} from "./AEGUtils";
  * @author Anusha Tiwari
  */
 export class AEGTree {
+    /**
+     * The sheet of the AEG Tree
+     */
     private internalSheet: CutNode;
 
+    /**
+     * Method to construct a new AEG Tree.
+     * @param sheet If an existing sheet is passed, deep copy it to construct a new AEG Tree
+     */
     public constructor(sheet?: CutNode) {
-        this.internalSheet = sheet ?? new CutNode(null);
+        //If we are constructing a new tree from a given sheet, deep copy the sheet and its children
+        //to ensure an entirely new tree is constructed.
+        this.internalSheet = new CutNode(null);
+        if (sheet instanceof CutNode) {
+            // this.internalSheet = new CutNode(sheet.ellipse);
+            if (sheet.children.length > 0) {
+                this.internalSheet.children = [...sheet.children];
+            }
+        }
     }
 
+    /**
+     * Accessor to get the sheet of the AEG Tree
+     */
     public get sheet(): CutNode {
         return this.internalSheet;
     }
 
+    /**
+     * Modifier to set the sheet of the AEG Tree
+     */
     public set sheet(sheet: CutNode) {
         this.internalSheet = sheet;
     }
@@ -187,6 +208,10 @@ export class AEGTree {
         }
     }
 
+    /**
+     * Method that returns a string representation of the AEG Tree
+     * @returns The structure formed by the cuts and atoms in this AEG Tree
+     */
     public toString(): string {
         return this.internalSheet.toFormulaString();
     }

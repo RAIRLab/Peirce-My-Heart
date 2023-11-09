@@ -9,7 +9,7 @@ import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {offset} from "./DragMode";
 import {drawAtom, drawCut, redrawTree} from "./DrawUtils";
-import {tree} from "../index";
+import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
 
 //The initial point the user pressed down.
@@ -30,9 +30,9 @@ let legalNode: boolean;
  */
 export function deleteSingleMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = tree.getLowestNode(startingPoint);
+    currentNode = treeContext.tree.getLowestNode(startingPoint);
 
-    if (currentNode !== tree.sheet && currentNode !== null) {
+    if (currentNode !== treeContext.tree.sheet && currentNode !== null) {
         legalNode = true;
         if (currentNode instanceof AtomNode) {
             drawAtom(currentNode, illegalColor(), true);
@@ -50,11 +50,11 @@ export function deleteSingleMouseDown(event: MouseEvent) {
  */
 export function deleteSingleMouseMove(event: MouseEvent) {
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
-    const newNode: CutNode | AtomNode | null = tree.getLowestNode(newPoint);
+    const newNode: CutNode | AtomNode | null = treeContext.tree.getLowestNode(newPoint);
     if (currentNode !== null && currentNode !== newNode) {
         legalNode = true;
-        redrawTree(tree);
-        if (newNode === tree.sheet || newNode === null) {
+        redrawTree(treeContext.tree);
+        if (newNode === treeContext.tree.sheet || newNode === null) {
             currentNode = null;
             legalNode = false;
         } else {
@@ -75,18 +75,18 @@ export function deleteSingleMouseMove(event: MouseEvent) {
 export function deleteSingleMouseUp(event: MouseEvent) {
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
     if (legalNode) {
-        const currentParent = tree.getLowestParent(newPoint);
+        const currentParent = treeContext.tree.getLowestParent(newPoint);
         if (currentParent !== null) {
             currentParent.remove(newPoint);
         }
         if (currentNode instanceof CutNode && currentNode.children.length !== 0) {
             //The cut node loses custody of its children so that those can still be redrawn.
             for (let i = 0; i < currentNode.children.length; i++) {
-                tree.insert(currentNode.children[i]);
+                treeContext.tree.insert(currentNode.children[i]);
             }
         }
     }
-    redrawTree(tree);
+    redrawTree(treeContext.tree);
     currentNode = null;
     legalNode = false;
 }

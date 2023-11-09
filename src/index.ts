@@ -6,6 +6,7 @@
  */
 
 import {AEGTree} from "./AEG/AEGTree";
+import {Tool, treeContext} from "./treeContext";
 import {cutMouseDown, cutMouseMove, cutMouseOut, cutMouseUp} from "./DrawModes/CutMode";
 import {
     atomKeyPress,
@@ -55,6 +56,12 @@ import {
     deleteMultiMouseUp,
 } from "./DrawModes/DeleteMultiMode";
 import {
+    toProofMouseDown,
+    toProofMouseMove,
+    toProofMouseUp,
+    toProofMouseOut,
+} from "./DrawModes/ToProofMode";
+import {
     doubleCutInsertionMouseDown,
     doubleCutInsertionMouseMove,
     doubleCutInsertionMouseUp,
@@ -83,67 +90,46 @@ canvas.addEventListener("mouseup", mouseUpHandler);
 canvas.addEventListener("mouseout", mouseOutHandler);
 canvas.addEventListener("mouseenter", mouseEnterHandler);
 
-/**
- * Enum to represent the current drawing mode the program is currently in.
- */
-export enum Mode {
-    atomMode,
-    cutMode,
-    dragMode,
-    moveSingleMode,
-    moveMultiMode,
-    copySingleMode,
-    copyMultiMode,
-    deleteSingleMode,
-    deleteMultiMode,
-    doubleCutInsertionTool,
-}
-
-//Used to determine the current mode the program is in.
-//Modified via setState
-export let modeState: Mode | null = null;
-
 //Boolean value representing whether the mouse button is down. Assumed to not be down at the start.
 let hasMouseDown = false;
 
 //Boolean value representing whether the mouse is in the canvas. Assumed to be in at the start.
 let hasMouseIn = true;
 
-//The current tree on the the canvas, needs to be redrawn upon any updates.
-export let tree: AEGTree = new AEGTree();
-
 //Window Exports
-window.atomMode = Mode.atomMode;
-window.cutMode = Mode.cutMode;
-window.dragMode = Mode.dragMode;
+window.atomMode = Tool.atomMode;
+window.cutMode = Tool.cutMode;
+window.dragMode = Tool.dragMode;
 window.saveMode = saveMode;
 window.loadMode = loadMode;
-window.moveSingleMode = Mode.moveSingleMode;
-window.moveMultiMode = Mode.moveMultiMode;
-window.copySingleMode = Mode.copySingleMode;
-window.copyMultiMode = Mode.copyMultiMode;
-window.deleteSingleMode = Mode.deleteSingleMode;
-window.deleteMultiMode = Mode.deleteMultiMode;
-window.doubleCutInsertionTool = Mode.doubleCutInsertionTool;
+window.moveSingleMode = Tool.moveSingleMode;
+window.moveMultiMode = Tool.moveMultiMode;
+window.copySingleMode = Tool.copySingleMode;
+window.copyMultiMode = Tool.copyMultiMode;
+window.deleteSingleMode = Tool.deleteSingleMode;
+window.deleteMultiMode = Tool.deleteMultiMode;
+window.toProofMode = Tool.toProofMode;
+window.doubleCutInsertionTool = Tool.doubleCutInsertionTool;
 window.setMode = setMode;
 window.setHighlight = setHighlight;
 window.toggleHandler = toggleHandler;
 
 declare global {
     interface Window {
-        atomMode: Mode;
-        cutMode: Mode;
-        dragMode: Mode;
+        atomMode: Tool;
+        cutMode: Tool;
+        dragMode: Tool;
         saveMode: () => void;
         loadMode: () => void;
-        moveSingleMode: Mode;
-        moveMultiMode: Mode;
-        copySingleMode: Mode;
-        copyMultiMode: Mode;
-        deleteSingleMode: Mode;
-        deleteMultiMode: Mode;
-        doubleCutInsertionTool: Mode;
-        setMode: (state: Mode) => void;
+        moveSingleMode: Tool;
+        moveMultiMode: Tool;
+        copySingleMode: Tool;
+        copyMultiMode: Tool;
+        deleteSingleMode: Tool;
+        deleteMultiMode: Tool;
+        toProofMode: Tool;
+        doubleCutInsertionTool: Tool;
+        setMode: (state: Tool) => void;
         setHighlight: (event: string, id: string) => void;
         toggleHandler: () => void;
     }
@@ -176,19 +162,19 @@ modeButtons.forEach(button => {
     });
 });
 
-export function setMode(state: Mode | null) {
-    modeState = state;
+export function setMode(state: Tool) {
+    treeContext.toolState = state;
     cutTools.style.display = "none";
     atomTools.style.display = "none";
 
-    switch (modeState) {
-        case Mode.atomMode:
+    switch (treeContext.toolState) {
+        case Tool.atomMode:
             atomTools.style.display = "block";
             break;
-        case Mode.cutMode:
+        case Tool.cutMode:
             cutTools.style.display = "block";
             break;
-        case Mode.doubleCutInsertionTool:
+        case Tool.doubleCutInsertionTool:
             cutTools.style.display = "block";
             break;
     }
@@ -213,11 +199,11 @@ async function saveMode() {
                 },
             ],
         });
-        saveFile(saveHandle, tree);
+        saveFile(saveHandle, treeContext.tree);
     } else {
         //Quick Download
         const f = document.createElement("a");
-        f.href = JSON.stringify(tree, null, "\t");
+        f.href = JSON.stringify(treeContext.tree, null, "\t");
         f.download = "AEGTree.json";
         f.click();
     }
@@ -247,8 +233,8 @@ async function loadMode() {
         const aegData = reader.result;
         const loadData = loadFile(aegData);
         if (loadData instanceof AEGTree) {
-            tree = loadData;
-            redrawTree(tree);
+            treeContext.tree = loadData;
+            redrawTree(treeContext.tree);
         }
         //TODO: else popup error
     });
@@ -264,8 +250,8 @@ function keyDownHandler(event: KeyboardEvent) {
         event.preventDefault(); //prevents Chrome and such from saving the .html of the current webpage
         saveMode();
     } else {
-        switch (modeState) {
-            case Mode.atomMode:
+        switch (treeContext.toolState) {
+            case Tool.atomMode:
                 atomKeyPress(event);
                 break;
         }
@@ -277,36 +263,41 @@ function keyDownHandler(event: KeyboardEvent) {
  * @param event The mouse down event
  */
 function mouseDownHandler(event: MouseEvent) {
-    switch (modeState) {
-        case Mode.cutMode:
+    switch (treeContext.toolState) {
+        case Tool.cutMode:
             cutMouseDown(event);
             break;
-        case Mode.atomMode:
+        case Tool.atomMode:
             atomMouseDown(event);
             break;
-        case Mode.dragMode:
+        case Tool.dragMode:
             dragMouseDown(event);
             break;
-        case Mode.moveSingleMode:
+        case Tool.moveSingleMode:
             moveSingleMouseDown(event);
             break;
-        case Mode.moveMultiMode:
+        case Tool.moveMultiMode:
             moveMultiMouseDown(event);
             break;
-        case Mode.copySingleMode:
+        case Tool.copySingleMode:
             copySingleMouseDown(event);
             break;
-        case Mode.copyMultiMode:
+        case Tool.copyMultiMode:
             copyMultiMouseDown(event);
             break;
-        case Mode.deleteSingleMode:
+        case Tool.deleteSingleMode:
             deleteSingleMouseDown(event);
             break;
-        case Mode.deleteMultiMode:
+        case Tool.deleteMultiMode:
             deleteMultiMouseDown(event);
             break;
-        case Mode.doubleCutInsertionTool:
+        case Tool.toProofMode:
+            toProofMouseDown(event);
+            break;
+        case Tool.doubleCutInsertionTool:
             doubleCutInsertionMouseDown(event);
+            break;
+        default:
             break;
     }
     hasMouseDown = true;
@@ -318,36 +309,41 @@ function mouseDownHandler(event: MouseEvent) {
  */
 function mouseMoveHandler(event: MouseEvent) {
     if (hasMouseDown && hasMouseIn) {
-        switch (modeState) {
-            case Mode.cutMode:
+        switch (treeContext.toolState) {
+            case Tool.cutMode:
                 cutMouseMove(event);
                 break;
-            case Mode.atomMode:
+            case Tool.atomMode:
                 atomMouseMove(event);
                 break;
-            case Mode.dragMode:
+            case Tool.dragMode:
                 dragMouseMove(event);
                 break;
-            case Mode.moveSingleMode:
+            case Tool.moveSingleMode:
                 moveSingleMouseMove(event);
                 break;
-            case Mode.moveMultiMode:
+            case Tool.moveMultiMode:
                 moveMultiMouseMove(event);
                 break;
-            case Mode.copySingleMode:
+            case Tool.copySingleMode:
                 copySingleMouseMove(event);
                 break;
-            case Mode.copyMultiMode:
+            case Tool.copyMultiMode:
                 copyMultiMouseMove(event);
                 break;
-            case Mode.deleteSingleMode:
+            case Tool.deleteSingleMode:
                 deleteSingleMouseMove(event);
                 break;
-            case Mode.deleteMultiMode:
+            case Tool.deleteMultiMode:
                 deleteMultiMouseMove(event);
                 break;
-            case Mode.doubleCutInsertionTool:
+            case Tool.toProofMode:
+                toProofMouseMove();
+                break;
+            case Tool.doubleCutInsertionTool:
                 doubleCutInsertionMouseMove(event);
+                break;
+            default:
                 break;
         }
     }
@@ -359,33 +355,38 @@ function mouseMoveHandler(event: MouseEvent) {
  * @param event The mouse up event
  */
 function mouseUpHandler(event: MouseEvent) {
-    switch (modeState) {
-        case Mode.cutMode:
+    switch (treeContext.toolState) {
+        case Tool.cutMode:
             cutMouseUp(event);
             break;
-        case Mode.atomMode:
+        case Tool.atomMode:
             atomMouseUp(event);
             break;
-        case Mode.moveSingleMode:
+        case Tool.moveSingleMode:
             moveSingleMouseUp(event);
             break;
-        case Mode.moveMultiMode:
+        case Tool.moveMultiMode:
             moveMultiMouseUp(event);
             break;
-        case Mode.copySingleMode:
+        case Tool.copySingleMode:
             copySingleMouseUp(event);
             break;
-        case Mode.copyMultiMode:
+        case Tool.copyMultiMode:
             copyMultiMouseUp(event);
             break;
-        case Mode.deleteSingleMode:
+        case Tool.deleteSingleMode:
             deleteSingleMouseUp(event);
             break;
-        case Mode.deleteMultiMode:
+        case Tool.deleteMultiMode:
             deleteMultiMouseUp(event);
             break;
-        case Mode.doubleCutInsertionTool:
+        case Tool.toProofMode:
+            toProofMouseUp();
+            break;
+        case Tool.doubleCutInsertionTool:
             doubleCutInsertionMouseUp(event);
+            break;
+        default:
             break;
     }
     hasMouseDown = false;
@@ -396,36 +397,41 @@ function mouseUpHandler(event: MouseEvent) {
  * Resets mouse down after use.
  */
 function mouseOutHandler() {
-    switch (modeState) {
-        case Mode.cutMode:
+    switch (treeContext.toolState) {
+        case Tool.cutMode:
             cutMouseOut();
             break;
-        case Mode.atomMode:
+        case Tool.atomMode:
             atomMouseOut();
             break;
-        case Mode.dragMode:
+        case Tool.dragMode:
             dragMosueOut();
             break;
-        case Mode.moveSingleMode:
+        case Tool.moveSingleMode:
             moveSingleMouseOut();
             break;
-        case Mode.moveMultiMode:
+        case Tool.moveMultiMode:
             moveMultiMouseOut();
             break;
-        case Mode.copySingleMode:
+        case Tool.copySingleMode:
             copySingleMouseOut();
             break;
-        case Mode.copyMultiMode:
+        case Tool.copyMultiMode:
             copyMultiMouseOut();
             break;
-        case Mode.deleteSingleMode:
+        case Tool.deleteSingleMode:
             deleteSingleMouseOut();
             break;
-        case Mode.deleteMultiMode:
+        case Tool.deleteMultiMode:
             deleteMultiMouseOut();
             break;
-        case Mode.doubleCutInsertionTool:
+        case Tool.toProofMode:
+            toProofMouseOut();
+            break;
+        case Tool.doubleCutInsertionTool:
             doubleCutInsertionMouseOut();
+            break;
+        default:
             break;
     }
     hasMouseIn = false;
