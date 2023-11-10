@@ -55,6 +55,19 @@ export class AtomNode {
     }
 
     /**
+     * Creates a deep copy of this AtomNode
+     * @returns A new AtomNode, which is a deep copy of this node
+     */
+    public copy(): AtomNode {
+        return new AtomNode(
+            this.internalIdentifier,
+            new Point(this.internalOrigin.x, this.internalOrigin.y),
+            this.internalWidth,
+            this.internalHeight
+        );
+    }
+
+    /**
      * Accessor to get the width of this Atom Node.
      * @returns The width of this Atom Node
      */

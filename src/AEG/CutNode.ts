@@ -33,6 +33,38 @@ export class CutNode {
     }
 
     /**
+     * Creates a deep copy of this CutNode
+     * @returns A new CutNode, which is a deep copy of this node
+     */
+    public copy(): CutNode {
+        let newEllipse: Ellipse | null;
+        const newChildren: (AtomNode | CutNode)[] = [];
+        if (this.ellipse !== null) {
+            newEllipse = new Ellipse(
+                new Point(this.ellipse.center.x, this.ellipse.center.y),
+                this.ellipse.radiusX,
+                this.ellipse.radiusY
+            );
+        } else {
+            newEllipse = null;
+        }
+
+        // Copy all the nested children individually
+        if (this.children.length > 0) {
+            for (let i = 0; i < this.children.length; i++) {
+                const newChild = this.children[i];
+                if (newChild instanceof AtomNode) {
+                    newChildren.push((newChild as AtomNode).copy());
+                } else {
+                    newChildren.push((newChild as CutNode).copy());
+                }
+            }
+        }
+
+        return new CutNode(newEllipse, newChildren);
+    }
+
+    /**
      * Accessor to get the bounding ellipse of the Cut Node.
      * @returns The bounding ellipse of this Cut Node
      * Returns null for Sheet of Assertion
@@ -44,7 +76,7 @@ export class CutNode {
     /**
      * Modifier to set the bounding ellipse of this Cut Node
      */
-    public set ellipse(ellipse: Ellipse) {
+    public set ellipse(ellipse: Ellipse | null) {
         this.internalEllipse = ellipse;
     }
 

@@ -13,8 +13,20 @@ import {shapesOverlap, shapesIntersect} from "./AEGUtils";
 export class AEGTree {
     private internalSheet: CutNode;
 
+    /**
+     * Constructs the sheet of assertion of the AEG tree
+     * @param sheet (OPTIONAL) An existing cut node which is to be used to construct the sheet of
+     * assertion of this AEG Tree
+     */
     public constructor(sheet?: CutNode) {
-        this.internalSheet = sheet ?? new CutNode(null);
+        if (sheet !== undefined) {
+            //If an existing cut node is passed, make a deep copy of it to copy over any children
+            this.internalSheet = sheet.copy();
+            //Ellipse of the sheet of assertion should be null
+            this.internalSheet.ellipse = null;
+        } else {
+            this.internalSheet = new CutNode(null);
+        }
     }
 
     public get sheet(): CutNode {
