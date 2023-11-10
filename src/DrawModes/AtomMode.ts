@@ -5,7 +5,7 @@
 
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
-import {tree} from "../index";
+import {treeContext} from "../treeContext";
 import {redrawTree} from "./DrawUtils";
 import {offset} from "./DragMode";
 import {legalColor, illegalColor} from "../Themes";
@@ -59,8 +59,8 @@ export function atomMouseDown(event: MouseEvent) {
         atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
     );
 
-    redrawTree(tree);
-    const color = tree.canInsert(currentAtom) ? legalColor() : illegalColor();
+    redrawTree(treeContext.tree);
+    const color = treeContext.tree.canInsert(currentAtom) ? legalColor() : illegalColor();
     drawAtom(currentAtom, color, true);
 }
 
@@ -76,9 +76,9 @@ export function atomMouseMove(event: MouseEvent) {
         atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
     );
 
-    redrawTree(tree);
+    redrawTree(treeContext.tree);
     if (!wasOut) {
-        if (tree.canInsert(currentAtom)) {
+        if (treeContext.tree.canInsert(currentAtom)) {
             drawAtom(currentAtom, legalColor(), true);
         } else {
             drawAtom(currentAtom, illegalColor(), true);
@@ -97,10 +97,10 @@ export function atomMouseUp(event: MouseEvent) {
         atomMetrics.width,
         atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
     );
-    if (tree.canInsert(currentAtom) && !wasOut) {
-        tree.insert(currentAtom);
+    if (treeContext.tree.canInsert(currentAtom) && !wasOut) {
+        treeContext.tree.insert(currentAtom);
     }
-    redrawTree(tree);
+    redrawTree(treeContext.tree);
 }
 
 /**
@@ -108,5 +108,5 @@ export function atomMouseUp(event: MouseEvent) {
  */
 export function atomMouseOut() {
     wasOut = true;
-    redrawTree(tree);
+    redrawTree(treeContext.tree);
 }

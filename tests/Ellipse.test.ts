@@ -1,5 +1,4 @@
 import {describe, expect, test} from "vitest";
-
 import {Ellipse} from "../src/AEG/Ellipse";
 import {Rectangle} from "../src/AEG/Rectangle";
 import {Point} from "../src/AEG/Point";

@@ -7,7 +7,7 @@
 import {Point} from "../AEG/Point";
 import {CutNode} from "../AEG/CutNode";
 import {Ellipse} from "../AEG/Ellipse";
-import {tree} from "../index";
+import {treeContext} from "../treeContext";
 import {offset} from "./DragMode";
 import {legalColor, illegalColor} from "../Themes";
 import {drawCut, redrawTree, drawGuidelines} from "./DrawUtils";
@@ -39,11 +39,11 @@ export function cutMouseDown(event: MouseEvent) {
 export function cutMouseMove(event: MouseEvent) {
     const newCut: CutNode = new CutNode(new Ellipse(new Point(0, 0), 0, 0));
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
-    redrawTree(tree);
+    redrawTree(treeContext.tree);
     newCut.ellipse = createEllipse(startingPoint, currentPoint);
 
     if (!wasOut) {
-        const legal = tree.canInsert(newCut) && ellipseLargeEnough(newCut.ellipse);
+        const legal = treeContext.tree.canInsert(newCut) && ellipseLargeEnough(newCut.ellipse);
         const color = legal ? legalColor() : illegalColor();
         drawCut(newCut, color);
 
@@ -61,10 +61,14 @@ export function cutMouseMove(event: MouseEvent) {
 export function cutMouseUp(event: MouseEvent) {
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
     const newCut: CutNode = new CutNode(createEllipse(startingPoint, currentPoint));
-    if (tree.canInsert(newCut) && !wasOut && ellipseLargeEnough(<Ellipse>newCut.ellipse)) {
-        tree.insert(newCut);
+    if (
+        treeContext.tree.canInsert(newCut) &&
+        !wasOut &&
+        ellipseLargeEnough(<Ellipse>newCut.ellipse)
+    ) {
+        treeContext.tree.insert(newCut);
     }
-    redrawTree(tree);
+    redrawTree(treeContext.tree);
 }
 
 /**
@@ -72,7 +76,7 @@ export function cutMouseUp(event: MouseEvent) {
  */
 export function cutMouseOut() {
     wasOut = true;
-    redrawTree(tree);
+    redrawTree(treeContext.tree);
 }
 
 /**
@@ -111,7 +115,7 @@ export function createEllipse(original: Point, current: Point): Ellipse {
  * @param ellipse The ellipse to be checked
  * @returns Whether the given ellipse is large enough to be legal
  */
-function ellipseLargeEnough(ellipse: Ellipse) {
+export function ellipseLargeEnough(ellipse: Ellipse) {
     if (ellipse.radiusX > 15 && ellipse.radiusY > 15) {
         return true;
     }

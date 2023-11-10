@@ -3,7 +3,7 @@
  * This file provides basic utilities for extracting important colors
  * for the application from the CSS themes
  */
-import {tree} from "./index";
+import {treeContext} from "./treeContext";
 import {redrawTree} from "./DrawModes/DrawUtils";
 
 const themeSelector: HTMLSelectElement = <HTMLSelectElement>document.getElementById("theme-select");
@@ -36,7 +36,7 @@ function setTheme() {
         legalColorStr = cssVar("--good-placement");
         illegalColorStr = cssVar("--bad-placement");
         placedColorStr = cssVar("--canvas-items");
-        redrawTree(tree);
+        redrawTree(treeContext.tree);
     });
 }
 
