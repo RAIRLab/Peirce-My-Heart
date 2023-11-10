@@ -7,7 +7,7 @@ import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {drawCut, redrawTree} from "../DrawModes/DrawUtils";
-import {tree} from "../index";
+import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
 import {offset} from "../DrawModes/DragMode";
 
@@ -24,7 +24,7 @@ let legalNode: boolean;
  */
 export function doubleCutDeletionMouseDown(event: MouseEvent) {
     const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = tree.getLowestNode(currentPoint);
+    currentNode = treeContext.tree.getLowestNode(currentPoint);
 
     isLegal();
 }
@@ -36,8 +36,8 @@ export function doubleCutDeletionMouseDown(event: MouseEvent) {
  */
 export function doubleCutDeletionMouseMove(event: MouseEvent) {
     const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = tree.getLowestNode(currentPoint);
-    redrawTree(tree);
+    currentNode = treeContext.tree.getLowestNode(currentPoint);
+    redrawTree(treeContext.tree);
 
     isLegal();
 }
@@ -50,17 +50,17 @@ export function doubleCutDeletionMouseMove(event: MouseEvent) {
 export function doubleCutDeletionMouseUp(event: MouseEvent) {
     const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
     if (legalNode && currentNode instanceof CutNode) {
-        const currentParent: CutNode | null = tree.getLowestParent(currentPoint);
+        const currentParent: CutNode | null = treeContext.tree.getLowestParent(currentPoint);
         const lowerCut: CutNode | AtomNode | null = currentNode.children[0];
 
         if (currentParent !== null && lowerCut instanceof CutNode) {
             currentParent.remove(currentPoint);
             for (let i = 0; i < lowerCut.children.length; i++) {
-                tree.insert(lowerCut.children[i]);
+                treeContext.tree.insert(lowerCut.children[i]);
             }
         }
     }
-    redrawTree(tree);
+    redrawTree(treeContext.tree);
 }
 
 /**
@@ -68,7 +68,7 @@ export function doubleCutDeletionMouseUp(event: MouseEvent) {
  */
 export function doubleCutDeletionMouseOut() {
     legalNode = false;
-    redrawTree(tree);
+    redrawTree(treeContext.tree);
 }
 
 /**
@@ -81,7 +81,7 @@ function isDoubleCut(currentCut: CutNode): Boolean {
     return (
         currentCut.children.length === 1 &&
         currentCut.children[0] instanceof CutNode &&
-        currentNode !== tree.sheet
+        currentNode !== treeContext.tree.sheet
     );
 }
 

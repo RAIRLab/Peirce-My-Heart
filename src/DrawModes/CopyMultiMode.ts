@@ -7,7 +7,7 @@
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {tree} from "../index";
+import {treeContext} from "../treeContext";
 import {offset} from "./DragMode";
 import {drawAtom, redrawTree} from "./DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
@@ -29,8 +29,8 @@ let legalNode: boolean;
  */
 export function copyMultiMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = tree.getLowestNode(startingPoint);
-    if (currentNode !== tree.sheet && currentNode !== null) {
+    currentNode = treeContext.tree.getLowestNode(startingPoint);
+    if (currentNode !== treeContext.tree.sheet && currentNode !== null) {
         legalNode = true;
     } else {
         legalNode = false;
@@ -50,7 +50,7 @@ export function copyMultiMouseMove(event: MouseEvent) {
             event.y - startingPoint.y
         );
 
-        redrawTree(tree);
+        redrawTree(treeContext.tree);
         if (currentNode instanceof CutNode) {
             const color = validateChildren(currentNode, moveDifference)
                 ? legalColor()
@@ -58,7 +58,7 @@ export function copyMultiMouseMove(event: MouseEvent) {
             drawAltered(currentNode, color, moveDifference);
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
-            const color = tree.canInsert(tempAtom) ? legalColor() : illegalColor();
+            const color = treeContext.tree.canInsert(tempAtom) ? legalColor() : illegalColor();
             drawAtom(tempAtom, color, true);
         }
     }
@@ -85,12 +85,12 @@ export function copyMultiMouseUp(event: MouseEvent) {
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
 
-            if (tree.canInsert(tempAtom)) {
-                tree.insert(tempAtom);
+            if (treeContext.tree.canInsert(tempAtom)) {
+                treeContext.tree.insert(tempAtom);
             }
         }
     }
-    redrawTree(tree);
+    redrawTree(treeContext.tree);
     legalNode = false;
 }
 
@@ -100,5 +100,5 @@ export function copyMultiMouseUp(event: MouseEvent) {
  */
 export function copyMultiMouseOut() {
     legalNode = false;
-    redrawTree(tree);
+    redrawTree(treeContext.tree);
 }

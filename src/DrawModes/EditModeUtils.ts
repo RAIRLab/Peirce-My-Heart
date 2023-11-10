@@ -6,7 +6,7 @@
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {tree} from "../index";
+import {treeContext} from "../treeContext";
 import {offset} from "./DragMode";
 import {Ellipse} from "../AEG/Ellipse";
 import {drawCut, drawAtom} from "./DrawUtils";
@@ -22,7 +22,7 @@ import {drawCut, drawAtom} from "./DrawUtils";
 export function validateChildren(incomingNode: CutNode, change: Point): boolean {
     if (incomingNode.ellipse !== null) {
         const tempCut: CutNode = alterCut(incomingNode, change);
-        if (!tree.canInsert(tempCut)) {
+        if (!treeContext.tree.canInsert(tempCut)) {
             return false;
         }
     }
@@ -39,7 +39,7 @@ export function validateChildren(incomingNode: CutNode, change: Point): boolean 
             let tempAtom = incomingNode.children[i] as AtomNode;
             tempAtom = alterAtom(tempAtom, change);
 
-            if (!tree.canInsert(tempAtom)) {
+            if (!treeContext.tree.canInsert(tempAtom)) {
                 return false;
             }
         }
@@ -81,7 +81,7 @@ export function drawAltered(incomingNode: CutNode | AtomNode, color: string, cha
 export function insertChildren(incomingNode: CutNode | AtomNode, change: Point) {
     if (incomingNode instanceof CutNode && incomingNode.ellipse !== null) {
         const tempCut: CutNode = alterCut(incomingNode, change);
-        tree.insert(tempCut);
+        treeContext.tree.insert(tempCut);
         //If this node has any children recurses to insert them with the same distance change
         if (incomingNode.children.length !== 0) {
             for (let i = 0; i < incomingNode.children.length; i++) {
@@ -91,7 +91,7 @@ export function insertChildren(incomingNode: CutNode | AtomNode, change: Point) 
     } else if (incomingNode instanceof AtomNode) {
         const tempAtom: AtomNode = alterAtom(incomingNode, change);
 
-        tree.insert(tempAtom);
+        treeContext.tree.insert(tempAtom);
     }
 }
 

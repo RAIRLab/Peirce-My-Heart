@@ -7,7 +7,7 @@
 import {Point} from "../AEG/Point";
 import {CutNode} from "../AEG/CutNode";
 import {Ellipse} from "../AEG/Ellipse";
-import {tree} from "../index";
+import {treeContext} from "../treeContext";
 import {offset} from "../DrawModes/DragMode";
 import {legalColor, illegalColor} from "../Themes";
 import {drawCut, redrawTree, drawGuidelines} from "../DrawModes/DrawUtils";
@@ -40,14 +40,14 @@ export function doubleCutInsertionMouseMove(event: MouseEvent) {
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
     const largeCut: CutNode = new CutNode(createEllipse(startingPoint, currentPoint));
     const smallCut: CutNode = new CutNode(calcSmallEllipse(<Ellipse>largeCut.ellipse));
-    redrawTree(tree);
+    redrawTree(treeContext.tree);
 
     if (!wasOut && largeCut.ellipse !== null && smallCut.ellipse !== null) {
         //If either ellipse is in an invalid position or too small it cannot be inserted
         const legal =
-            tree.canInsert(largeCut) &&
+            treeContext.tree.canInsert(largeCut) &&
             ellipseLargeEnough(largeCut.ellipse) &&
-            tree.canInsert(smallCut) &&
+            treeContext.tree.canInsert(smallCut) &&
             ellipseLargeEnough(smallCut.ellipse);
 
         const color = legal ? legalColor() : illegalColor();
@@ -74,17 +74,17 @@ export function doubleCutInsertionMouseUp(event: MouseEvent) {
     if (!wasOut && largeCut.ellipse !== null && smallCut.ellipse !== null) {
         //If either ellipse is in an invalid position or too small it cannot be inserted
         const legal =
-            tree.canInsert(largeCut) &&
+            treeContext.tree.canInsert(largeCut) &&
             ellipseLargeEnough(largeCut.ellipse) &&
-            tree.canInsert(smallCut) &&
+            treeContext.tree.canInsert(smallCut) &&
             ellipseLargeEnough(smallCut.ellipse);
 
         if (legal) {
-            tree.insert(largeCut);
-            tree.insert(smallCut);
+            treeContext.tree.insert(largeCut);
+            treeContext.tree.insert(smallCut);
         }
     }
-    redrawTree(tree);
+    redrawTree(treeContext.tree);
 }
 
 /**
@@ -92,7 +92,7 @@ export function doubleCutInsertionMouseUp(event: MouseEvent) {
  */
 export function doubleCutInsertionMouseOut() {
     wasOut = true;
-    redrawTree(tree);
+    redrawTree(treeContext.tree);
 }
 
 /**
