@@ -6,7 +6,7 @@
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {tree} from "../index";
+import {treeContext} from "../treeContext";
 import {offset} from "./DragMode";
 import {drawAtom, redrawTree} from "./DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
@@ -28,9 +28,9 @@ let legalNode: boolean;
  */
 export function moveMultiMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = tree.getLowestNode(startingPoint);
-    if (currentNode !== tree.sheet && currentNode !== null) {
-        const currentParent = tree.getLowestParent(startingPoint);
+    currentNode = treeContext.tree.getLowestNode(startingPoint);
+    if (currentNode !== treeContext.tree.sheet && currentNode !== null) {
+        const currentParent = treeContext.tree.getLowestParent(startingPoint);
         if (currentParent !== null) {
             currentParent.remove(startingPoint);
         }
@@ -53,7 +53,7 @@ export function moveMultiMouseMove(event: MouseEvent) {
             event.y - startingPoint.y
         );
 
-        redrawTree(tree);
+        redrawTree(treeContext.tree);
         if (currentNode instanceof CutNode) {
             const color = validateChildren(currentNode, moveDifference)
                 ? legalColor()
@@ -61,7 +61,7 @@ export function moveMultiMouseMove(event: MouseEvent) {
             drawAltered(currentNode, color, moveDifference);
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
-            const color = tree.canInsert(tempAtom) ? legalColor() : illegalColor();
+            const color = treeContext.tree.canInsert(tempAtom) ? legalColor() : illegalColor();
             drawAtom(tempAtom, color, true);
         }
     }
@@ -85,19 +85,19 @@ export function moveMultiMouseUp(event: MouseEvent) {
             if (validateChildren(currentNode, moveDifference)) {
                 insertChildren(currentNode, moveDifference);
             } else {
-                tree.insert(currentNode);
+                treeContext.tree.insert(currentNode);
             }
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
 
-            if (tree.canInsert(tempAtom)) {
-                tree.insert(tempAtom);
+            if (treeContext.tree.canInsert(tempAtom)) {
+                treeContext.tree.insert(tempAtom);
             } else {
-                tree.insert(currentNode);
+                treeContext.tree.insert(currentNode);
             }
         }
     }
-    redrawTree(tree);
+    redrawTree(treeContext.tree);
     legalNode = false;
 }
 
@@ -107,8 +107,8 @@ export function moveMultiMouseUp(event: MouseEvent) {
  */
 export function moveMultiMouseOut() {
     if (legalNode && currentNode !== null) {
-        tree.insert(currentNode);
+        treeContext.tree.insert(currentNode);
     }
     legalNode = false;
-    redrawTree(tree);
+    redrawTree(treeContext.tree);
 }

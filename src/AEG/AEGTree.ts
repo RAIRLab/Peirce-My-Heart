@@ -11,6 +11,9 @@ import {shapesOverlap, shapesIntersect} from "./AEGUtils";
  * @author Anusha Tiwari
  */
 export class AEGTree {
+    /**
+     * The sheet of the AEG Tree
+     */
     private internalSheet: CutNode;
 
     /**
@@ -33,6 +36,9 @@ export class AEGTree {
         return this.internalSheet;
     }
 
+    /**
+     * Modifier to set the sheet of the AEG Tree
+     */
     public set sheet(sheet: CutNode) {
         this.internalSheet = sheet;
     }
@@ -199,6 +205,10 @@ export class AEGTree {
         }
     }
 
+    /**
+     * Method that returns a string representation of the AEG Tree
+     * @returns The structure formed by the cuts and atoms in this AEG Tree
+     */
     public toString(): string {
         return this.internalSheet.toFormulaString();
     }
