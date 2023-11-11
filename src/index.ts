@@ -73,6 +73,12 @@ import {
     doubleCutDeletionMouseUp,
     doubleCutDeletionMouseOut,
 } from "./ProofTools/DoubleCutDeletionTool";
+import {
+    erasureMouseDown,
+    erasureMouseMove,
+    erasureMouseUp,
+    erasureMouseOut,
+} from "./ProofTools/ErasureTool";
 import {toggleHandler} from "./ToggleModes";
 
 //Setting up Canvas
@@ -117,6 +123,7 @@ window.deleteMultiMode = Tool.deleteMultiMode;
 window.toProofMode = Tool.toProofMode;
 window.doubleCutInsertionTool = Tool.doubleCutInsertionTool;
 window.doubleCutDeletionTool = Tool.doubleCutDeletionTool;
+window.erasureTool = Tool.erasureTool;
 window.setMode = setMode;
 window.setHighlight = setHighlight;
 window.toggleHandler = toggleHandler;
@@ -137,6 +144,7 @@ declare global {
         toProofMode: Tool;
         doubleCutInsertionTool: Tool;
         doubleCutDeletionTool: Tool;
+        erasureTool: Tool;
         setMode: (state: Tool) => void;
         setHighlight: (event: string, id: string) => void;
         toggleHandler: () => void;
@@ -308,6 +316,9 @@ function mouseDownHandler(event: MouseEvent) {
         case Tool.doubleCutDeletionTool:
             doubleCutDeletionMouseDown(event);
             break;
+        case Tool.erasureTool:
+            erasureMouseDown(event);
+            break;
         default:
             break;
     }
@@ -357,6 +368,9 @@ function mouseMoveHandler(event: MouseEvent) {
             case Tool.doubleCutDeletionTool:
                 doubleCutDeletionMouseMove(event);
                 break;
+            case Tool.erasureTool:
+                erasureMouseMove(event);
+                break;
             default:
                 break;
         }
@@ -402,6 +416,9 @@ function mouseUpHandler(event: MouseEvent) {
             break;
         case Tool.doubleCutDeletionTool:
             doubleCutDeletionMouseUp(event);
+            break;
+        case Tool.erasureTool:
+            erasureMouseUp(event);
             break;
         default:
             break;
@@ -450,6 +467,9 @@ function mouseOutHandler() {
             break;
         case Tool.doubleCutDeletionTool:
             doubleCutDeletionMouseOut();
+            break;
+        case Tool.erasureTool:
+            erasureMouseOut();
             break;
         default:
             break;

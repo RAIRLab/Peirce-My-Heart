@@ -191,6 +191,33 @@ export class CutNode {
     }
 
     /**
+     * Finds the level the given node is found at. If the node is found within a different node
+     * acts recursively and increments the level by one and calls this function again.
+     * @param incomingNode The node that is being searched for
+     * @param currentLevel The current level of the tree the recursion is at
+     * @returns The level in the tree it was found in
+     */
+    public getLevel(incomingNode: CutNode | AtomNode, currentLevel: number): number {
+        for (let i = 0; i < this.internalChildren.length; i++) {
+            //We have found the node as one of this node's children, which is one level more
+            if (this.internalChildren[i] === incomingNode) {
+                return currentLevel + 1;
+            } //If the current child is a cut that contains the node then call this function again
+            else if (
+                this.internalChildren[i] instanceof CutNode &&
+                (this.internalChildren[i] as CutNode).containsNode(incomingNode)
+            ) {
+                return (this.internalChildren[i] as CutNode).getLevel(
+                    incomingNode,
+                    currentLevel + 1
+                );
+            }
+        }
+
+        return -1;
+    }
+
+    /**
      * Removes the lowest node recognized by this CutNode containing the incoming Point.
      * @param incomingPoint The incoming Point
      * @returns True, if the node was successfully removed.

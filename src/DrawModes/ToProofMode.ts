@@ -77,7 +77,14 @@ export function toProofMouseMove() {
  */
 export function toProofMouseUp() {
     if (legalNode) {
-        treeContext.selectForProof.insert(selectedNode!);
+        //If the selected node is the tree, insert its children so we do not insert another tree.
+        if (selectedNode instanceof CutNode && selectedNode.ellipse === null) {
+            for (let i = 0; i < selectedNode.children.length; i++) {
+                treeContext.selectForProof.insert(selectedNode.children[i]);
+            }
+        } else {
+            treeContext.selectForProof.insert(selectedNode!);
+        }
         redrawTree(treeContext.tree);
         alert("Graph selected, you may now toggle to proof mode");
     }
