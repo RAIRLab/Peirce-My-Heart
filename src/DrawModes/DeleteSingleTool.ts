@@ -1,15 +1,16 @@
 /**
- * Contains logic for deleting multiple nodes.
+ * Contains logic for deleting one node.
  * @author Ryan Reilly
  * @author Dawn Moore
  */
+
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
+import {offset} from "./DragTool";
 import {drawAtom, drawCut, redrawTree} from "./DrawUtils";
 import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
-import {offset} from "./DragMode";
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -27,25 +28,30 @@ let legalNode: boolean;
  * currentNode is marked with the "illegal" color while the user holds it.
  * @param event The event from which we will get the Point
  */
-export function deleteMultiMouseDown(event: MouseEvent) {
+export function deleteSingleMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = treeContext.tree.getLowestNode(startingPoint);
 
     if (currentNode !== treeContext.tree.sheet && currentNode !== null) {
         legalNode = true;
-        highlightChildren(currentNode, illegalColor());
+        if (currentNode instanceof AtomNode) {
+            drawAtom(currentNode, illegalColor(), true);
+        } else {
+            drawCut(currentNode, illegalColor());
+        }
     }
 }
 
 /**
  * If the user clicks on a node to delete it, but moves their mouse away,
- * That node will not be deleted. If the mouse was moved farther down or higher in the tree,
- * The removal will update accordingly.
+ * The node will not be deleted. Whichever node lowest on the tree now contains the MouseEvent's
+ * Point will be set to the node to be deleted.
+ * @param event The mouse move event
  */
-export function deleteMultiMouseMove(event: MouseEvent) {
+export function deleteSingleMouseMove(event: MouseEvent) {
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
     const newNode: CutNode | AtomNode | null = treeContext.tree.getLowestNode(newPoint);
-    if (currentNode !== null && currentNode !== treeContext.tree.getLowestNode(newPoint)) {
+    if (currentNode !== null && currentNode !== newNode) {
         legalNode = true;
         redrawTree(treeContext.tree);
         if (newNode === treeContext.tree.sheet || newNode === null) {
@@ -53,7 +59,11 @@ export function deleteMultiMouseMove(event: MouseEvent) {
             legalNode = false;
         } else {
             currentNode = newNode;
-            highlightChildren(currentNode, illegalColor());
+            if (currentNode instanceof AtomNode) {
+                drawAtom(currentNode, illegalColor(), true);
+            } else {
+                drawCut(currentNode, illegalColor());
+            }
         }
     }
 }
@@ -62,39 +72,29 @@ export function deleteMultiMouseMove(event: MouseEvent) {
  * Removes currentNode and sets all data back to default values.
  * @param event The mouse up event
  */
-export function deleteMultiMouseUp(event: MouseEvent) {
+export function deleteSingleMouseUp(event: MouseEvent) {
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
     if (legalNode) {
         const currentParent = treeContext.tree.getLowestParent(newPoint);
         if (currentParent !== null) {
             currentParent.remove(newPoint);
         }
-        redrawTree(treeContext.tree);
-    }
-    currentNode = null;
-    legalNode = false;
-}
-
-/**
- * If the mouse is held down and the user leaves canvas, we reset fields back to default.
- */
-export function deleteMultiMouseOut() {
-    currentNode = null;
-    legalNode = false;
-}
-
-/**
- * Highlights all the children of the incoming node as the incoming color.
- * @param child The incoming node
- * @param color The incoming color
- */
-function highlightChildren(child: AtomNode | CutNode, color: string) {
-    if (child instanceof AtomNode) {
-        drawAtom(child, color, true);
-    } else if (child instanceof CutNode) {
-        drawCut(child, color);
-        for (let i = 0; i < child.children.length; i++) {
-            highlightChildren(child.children[i], color);
+        if (currentNode instanceof CutNode && currentNode.children.length !== 0) {
+            //The cut node loses custody of its children so that those can still be redrawn.
+            for (let i = 0; i < currentNode.children.length; i++) {
+                treeContext.tree.insert(currentNode.children[i]);
+            }
         }
     }
+    redrawTree(treeContext.tree);
+    currentNode = null;
+    legalNode = false;
+}
+
+/**
+ * If the mouse leaves the canvas, reset data back to defaults.
+ */
+export function deleteSingleMouseOut() {
+    currentNode = null;
+    legalNode = false;
 }

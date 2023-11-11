@@ -37,7 +37,7 @@ p {
     justify-content: space-around;
 }
 
-.modeButton {
+.toolButton {
     min-width: 2vw;
     min-height: 4vh;
     border: var(--mode-btn-border);
@@ -49,17 +49,17 @@ p {
     text-align: center;
 }
 
-.modeButton:active {
+.toolButton:active {
     transform: translateY(2px);
 }
 
-.modeButtonPressed {
+.toolButtonPressed {
     -webkit-box-shadow: var(--mode-btn-press-shadow); 
     -moz-box-shadow: var(--mode-btn-press-shadow); 
     box-shadow: var(--mode-btn-press-shadow); 
 }
 
-.modeButton:hover {
+.toolButton:hover {
   background-color: var(--mode-btn-hover-bg);
 }
 
