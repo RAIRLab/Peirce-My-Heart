@@ -6,7 +6,7 @@
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {tree} from "../index";
+import {treeContext} from "../treeContext";
 import {offset} from "./DragMode";
 import {drawCut, drawAtom, redrawTree} from "./DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
@@ -29,9 +29,9 @@ let legalNode: boolean;
  */
 export function moveSingleMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = tree.getLowestNode(startingPoint);
-    if (currentNode !== tree.sheet && currentNode !== null) {
-        const currentParent = tree.getLowestParent(startingPoint);
+    currentNode = treeContext.tree.getLowestNode(startingPoint);
+    if (currentNode !== treeContext.tree.sheet && currentNode !== null) {
+        const currentParent = treeContext.tree.getLowestParent(startingPoint);
         if (currentParent !== null) {
             currentParent.remove(startingPoint);
         }
@@ -39,7 +39,7 @@ export function moveSingleMouseDown(event: MouseEvent) {
         if (currentNode instanceof CutNode && currentNode.children.length !== 0) {
             //The cut node loses custody of its children so that those can still be redrawn.
             for (let i = 0; i < currentNode.children.length; i++) {
-                tree.insert(currentNode.children[i]);
+                treeContext.tree.insert(currentNode.children[i]);
             }
             currentNode.children = [];
         }
@@ -66,14 +66,14 @@ export function moveSingleMouseMove(event: MouseEvent) {
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = alterCut(currentNode, moveDifference);
 
-            redrawTree(tree);
-            const color = tree.canInsert(tempCut) ? legalColor() : illegalColor();
+            redrawTree(treeContext.tree);
+            const color = treeContext.tree.canInsert(tempCut) ? legalColor() : illegalColor();
             drawCut(tempCut, color);
         } //If the node is an atom, make a temporary atom and check legality, drawing that.
         else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
-            redrawTree(tree);
-            const color = tree.canInsert(tempAtom) ? legalColor() : illegalColor();
+            redrawTree(treeContext.tree);
+            const color = treeContext.tree.canInsert(tempAtom) ? legalColor() : illegalColor();
             drawAtom(tempAtom, color, true);
         }
     }
@@ -95,22 +95,22 @@ export function moveSingleMouseUp(event: MouseEvent) {
             const tempCut: CutNode = alterCut(currentNode, moveDifference);
 
             //If the new location is legal, insert the cut otherwise reinsert the cut we removed.
-            if (tree.canInsert(tempCut)) {
-                tree.insert(tempCut);
+            if (treeContext.tree.canInsert(tempCut)) {
+                treeContext.tree.insert(tempCut);
             } else {
-                tree.insert(currentNode);
+                treeContext.tree.insert(currentNode);
             }
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
 
             //If the new location is legal, insert the atom, if not reinsert the atom we removed.
-            if (tree.canInsert(tempAtom)) {
-                tree.insert(tempAtom);
+            if (treeContext.tree.canInsert(tempAtom)) {
+                treeContext.tree.insert(tempAtom);
             } else {
-                tree.insert(currentNode);
+                treeContext.tree.insert(currentNode);
             }
         }
-        redrawTree(tree);
+        redrawTree(treeContext.tree);
     }
     legalNode = false;
 }
@@ -121,8 +121,8 @@ export function moveSingleMouseUp(event: MouseEvent) {
  */
 export function moveSingleMouseOut() {
     if (legalNode && currentNode !== null) {
-        tree.insert(currentNode);
+        treeContext.tree.insert(currentNode);
     }
     legalNode = false;
-    redrawTree(tree);
+    redrawTree(treeContext.tree);
 }

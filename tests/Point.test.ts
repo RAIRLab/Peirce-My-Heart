@@ -1,5 +1,4 @@
 import {describe, expect, test} from "vitest";
-
 import {Point} from "../src/AEG/Point";
 
 /**
