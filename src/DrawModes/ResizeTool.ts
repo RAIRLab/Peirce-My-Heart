@@ -6,7 +6,7 @@ import {Point} from "../AEG/Point";
 import {Ellipse} from "../AEG/Ellipse";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {tree} from "../index";
+import {treeContext} from "../treeContext";
 import {offset} from "./DragMode";
 import {drawCut, redrawTree} from "./DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
@@ -21,6 +21,10 @@ let currentNode: CutNode | AtomNode | null = null;
 //Whether or not the node is allowed to be moved (not the sheet).
 let legalNode: boolean;
 
+//The direction the cut will move in. For x 1 means going to the right and -1 means left.
+//For y 1 means going down and -1 means going up.
+const direction: Point = new Point(1, 1);
+
 /**
  * Takes the point the user clicked and stores that for later use. If the lowest node containing
  * that point is not the sheet, then store that as currentNode and find that node's parent.
@@ -29,17 +33,18 @@ let legalNode: boolean;
  */
 export function resizeMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = tree.getLowestNode(startingPoint);
-    if (currentNode !== tree.sheet && currentNode instanceof CutNode) {
+    currentNode = treeContext.tree.getLowestNode(startingPoint);
+    if (currentNode !== treeContext.tree.sheet && currentNode instanceof CutNode) {
         legalNode = true;
-        const currentParent = tree.getLowestParent(startingPoint);
+        const currentParent = treeContext.tree.getLowestParent(startingPoint);
         if (currentParent !== null) {
             currentParent.remove(startingPoint);
         }
 
         for (let i = 0; i < currentNode.children.length; i++) {
-            tree.insert(currentNode.children[i]);
+            treeContext.tree.insert(currentNode.children[i]);
         }
+        determineDirection();
         currentNode.children = [];
     }
 }
@@ -60,8 +65,9 @@ export function resizeMouseMove(event: MouseEvent) {
             const tempCut: CutNode = resizeCut(currentNode, moveDifference);
             //This is just to make the lint stop yelling
             if (tempCut.ellipse !== null) {
-                redrawTree(tree);
-                const legal = tree.canInsert(tempCut) && ellipseLargeEnough(tempCut.ellipse);
+                redrawTree(treeContext.tree);
+                const legal =
+                    treeContext.tree.canInsert(tempCut) && ellipseLargeEnough(tempCut.ellipse);
                 const color = legal ? legalColor() : illegalColor();
                 drawCut(tempCut, color);
             }
@@ -85,14 +91,14 @@ export function resizeMouseUp(event: MouseEvent) {
             const tempCut: CutNode = resizeCut(currentNode, moveDifference);
             //This is just to make the lint stop yelling
             if (tempCut.ellipse !== null) {
-                if (tree.canInsert(tempCut) && ellipseLargeEnough(tempCut.ellipse)) {
-                    tree.insert(tempCut);
+                if (treeContext.tree.canInsert(tempCut) && ellipseLargeEnough(tempCut.ellipse)) {
+                    treeContext.tree.insert(tempCut);
                 } else {
-                    tree.insert(currentNode);
+                    treeContext.tree.insert(currentNode);
                 }
             }
         }
-        redrawTree(tree);
+        redrawTree(treeContext.tree);
         legalNode = false;
     }
 }
@@ -102,14 +108,15 @@ export function resizeMouseUp(event: MouseEvent) {
  */
 export function resizeMouseOut() {
     if (legalNode && currentNode !== null) {
-        tree.insert(currentNode);
+        treeContext.tree.insert(currentNode);
     }
     legalNode = false;
-    redrawTree(tree);
+    redrawTree(treeContext.tree);
 }
 
 /**
  * Makes a copy of original cut and changes the center and radii by the difference given.
+ * Alters the change to the center based on the direction that is being moved to.
  * @param originalCut The original cut that will be copied and altered
  * @param difference The change for the new cut
  * @returns The new altered cut
@@ -122,11 +129,45 @@ function resizeCut(originalCut: CutNode, difference: Point) {
                     originalCut.ellipse.center.x + difference.x - offset.x,
                     originalCut.ellipse.center.y + difference.y - offset.y
                 ),
-                originalCut.ellipse.radiusX + difference.x,
-                originalCut.ellipse.radiusY + difference.y
+                originalCut.ellipse.radiusX + difference.x * direction.x,
+                originalCut.ellipse.radiusY + difference.y * direction.y
             )
         );
     } else {
         throw new Error("Cannot alter the position of a cut without an ellipse.");
+    }
+}
+
+/**
+ * Determines which widest points the current point is closest to so that the resize
+ * can move in that direction.
+ * widestPoints[0] = leftmost widest point of the ellipse
+ * widestPoints[1] = topmost widest point of the ellipse
+ * widestPoints[2] = rightmost widest point of the ellipse
+ * widestPoints[3] = bottommost widest point of the ellipse
+ */
+function determineDirection() {
+    if (currentNode instanceof CutNode && (currentNode as CutNode).ellipse !== null) {
+        const currentEllipse: Ellipse = currentNode.ellipse as Ellipse;
+        const widestPoints: Point[] = [
+            new Point(currentEllipse.center.x - currentEllipse.radiusX, currentEllipse.center.y),
+            new Point(currentEllipse.center.x, currentEllipse.center.y - currentEllipse.radiusY),
+            new Point(currentEllipse.center.x + currentEllipse.radiusX, currentEllipse.center.y),
+            new Point(currentEllipse.center.x, currentEllipse.center.y + currentEllipse.radiusY),
+        ];
+
+        //If the current point is closer to the top or equal the direction is positive and going down
+        if (widestPoints[0].distance(startingPoint) >= widestPoints[2].distance(startingPoint)) {
+            direction.x = 1;
+        } else {
+            direction.x = -1;
+        }
+
+        //If the current point is closer to the left or equal the direction is positive and going right
+        if (widestPoints[1].distance(startingPoint) >= widestPoints[3].distance(startingPoint)) {
+            direction.y = 1;
+        } else {
+            direction.y = -1;
+        }
     }
 }
