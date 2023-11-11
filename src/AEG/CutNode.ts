@@ -346,6 +346,8 @@ export class CutNode {
         for (let i = 0; i < this.internalChildren.length; i++) {
             if (this.children[i] instanceof CutNode) {
                 newCut.children.push(this.children[i].copy());
+            } else if (this.children[i] instanceof AtomNode) {
+                newCut.children.push(this.children[i].copy());
             }
         }
         return newCut;
