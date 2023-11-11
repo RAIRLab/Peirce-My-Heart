@@ -237,6 +237,65 @@ export class CutNode {
     }
 
     /**
+     * Determines whether or not this cut and the given cut are equivalent.
+     * @param otherCut The other cut that is being compared to
+     * @returns Whether or not these cuts have all of the same nodes
+     */
+    public equals(otherCut: CutNode): boolean {
+        //Two empty cuts will always be equal
+        if (this.internalChildren.length === 0 && otherCut.children.length === 0) {
+            return true;
+        }
+
+        //These two cuts have different amount of children they cannot be the same cut
+        if (this.internalChildren.length !== otherCut.children.length) {
+            return false;
+        }
+
+        const foundChildren: boolean[] = [];
+        for (let i = 0; i < this.internalChildren.length; i++) {
+            foundChildren.push(false);
+        }
+
+        let j: number;
+        for (let i = 0; i < this.internalChildren.length; i++) {
+            j = 0;
+            //Compare this nodes current child to all of the children to see if it exists in it
+            while (!foundChildren[i] && j < otherCut.children.length) {
+                if (
+                    this.internalChildren[i] instanceof CutNode &&
+                    otherCut.children[j] instanceof CutNode
+                ) {
+                    //If the two subgraphs are equal then we have found this child
+                    foundChildren[i] = (this.internalChildren[i] as CutNode).equals(
+                        otherCut.children[j] as CutNode
+                    );
+                } //If both of these children are atom nodes with the same identifier then it's found
+                else if (
+                    this.internalChildren[i] instanceof AtomNode &&
+                    otherCut.children[j] instanceof AtomNode &&
+                    (this.internalChildren[i] as AtomNode).identifier ===
+                        (otherCut.children[j] as AtomNode).identifier
+                ) {
+                    foundChildren[j] = true;
+                }
+
+                j++;
+            }
+        }
+
+        //If any of the children were not found then that means it is not equal and is false.
+        for (let i = 0; i < foundChildren.length; i++) {
+            if (!foundChildren[i]) {
+                return false;
+            }
+        }
+
+        //An equal version of all children were found and both subgraphs are equivalent.
+        return true;
+    }
+
+    /**
      * Returns a string representation of this CutNode.
      * @returns The children and boundary box of this CutNode.
      */
@@ -280,5 +339,15 @@ export class CutNode {
             formulaString = "(" + formulaString + ")";
         }
         return formulaString;
+    }
+
+    public copy(): CutNode {
+        const newCut: CutNode = new CutNode(this.internalEllipse);
+        for (let i = 0; i < this.internalChildren.length; i++) {
+            if (this.children[i] instanceof CutNode) {
+                newCut.children.push(this.children[i].copy());
+            }
+        }
+        return newCut;
     }
 }

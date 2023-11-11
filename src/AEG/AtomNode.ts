@@ -150,4 +150,13 @@ export class AtomNode {
             this.internalHeight
         );
     }
+
+    public copy(): AtomNode {
+        return new AtomNode(
+            this.internalIdentifier,
+            this.internalOrigin,
+            this.internalHeight,
+            this.internalWidth
+        );
+    }
 }

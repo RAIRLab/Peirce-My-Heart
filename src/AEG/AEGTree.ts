@@ -105,6 +105,28 @@ export class AEGTree {
         return true;
     }
 
+    public proofCanInsert(
+        originalNode: CutNode | AtomNode,
+        incomingNode: CutNode | AtomNode
+    ): boolean {
+        const originalTree: AEGTree = this.copy();
+        const copiedTree: AEGTree = this.copy();
+        const originalCopy: CutNode | AtomNode = originalNode.copy();
+        const incomingCopy: CutNode | AtomNode = incomingNode.copy();
+
+        if (originalTree.canInsert(originalCopy) && copiedTree.canInsert(incomingCopy)) {
+            originalTree.insert(originalCopy);
+            copiedTree.insert(incomingCopy);
+            if (originalTree.equals(copiedTree)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Inserts a given node into this tree, if possible.
      * Throws an error otherwise.
@@ -214,5 +236,18 @@ export class AEGTree {
      */
     public toString(): string {
         return this.internalSheet.toFormulaString();
+    }
+
+    /**
+     * Determines if the two trees have all of the same subgraphs in any order.
+     * @param otherTree The other tree to be compared to
+     * @returns If the trees are equivalent
+     */
+    public equals(otherTree: AEGTree): boolean {
+        return this.internalSheet.equals(otherTree.sheet);
+    }
+
+    public copy(): AEGTree {
+        return new AEGTree(this.internalSheet);
     }
 }

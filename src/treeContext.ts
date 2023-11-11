@@ -23,6 +23,7 @@ export enum Tool {
     toProofMode,
     doubleCutInsertionTool,
     doubleCutDeletionTool,
+    proofMoveSingleTool,
 }
 
 export class treeContext {

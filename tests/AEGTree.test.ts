@@ -160,3 +160,29 @@ describe("AEGTree toString soliloquy:", () => {
         expect(treeThree.toString()).toStrictEqual("[((X ()) () Y)]");
     });
 });
+
+describe("AEGTree equals test:", () => {
+    const tree: AEGTree = new AEGTree();
+    const otherTree: AEGTree = new AEGTree();
+
+    const emptyTree: AEGTree = new AEGTree();
+    const otherEmptyTree: AEGTree = new AEGTree();
+
+    test("Empty Trees should be equal", () => {
+        expect(emptyTree.equals(otherEmptyTree)).toBeTruthy();
+    });
+
+    tree.insert(new AtomNode("A", new Point(5, 5), 0.1, 0.1));
+    tree.insert(new AtomNode("B", new Point(10, 10), 0.1, 0.1));
+    tree.insert(new AtomNode("C", new Point(15, 15), 0.1, 0.1));
+    tree.insert(new CutNode(new Ellipse(new Point(10, 10), 20, 20)));
+
+    otherTree.insert(new AtomNode("A", new Point(5, 5), 0.1, 0.1));
+    otherTree.insert(new AtomNode("B", new Point(10, 10), 0.1, 0.1));
+    otherTree.insert(new AtomNode("C", new Point(15, 15), 0.1, 0.1));
+    otherTree.insert(new CutNode(new Ellipse(new Point(10, 10), 20, 20)));
+
+    test("Two Trees with the same exact graph should be equal", () => {
+        expect(tree.equals(otherTree)).toBeTruthy();
+    });
+});
