@@ -75,6 +75,13 @@ import {
 } from "./ProofTools/DoubleCutDeletionTool";
 import {toggleHandler} from "./ToggleModes";
 
+import {
+    resizeMouseDown,
+    resizeMouseMove,
+    resizeMouseUp,
+    resizeMouseOut,
+} from "./DrawModes/ResizeTool";
+
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
 canvas.width = window.innerWidth;
@@ -116,6 +123,7 @@ window.deleteSingleTool = Tool.deleteSingleTool;
 window.deleteMultiTool = Tool.deleteMultiTool;
 window.toProofMode = Tool.toProofMode;
 window.doubleCutInsertionTool = Tool.doubleCutInsertionTool;
+window.resizeTool = Tool.resizeTool;
 window.doubleCutDeletionTool = Tool.doubleCutDeletionTool;
 window.setTool = setTool;
 window.setHighlight = setHighlight;
@@ -135,6 +143,7 @@ declare global {
         deleteSingleTool: Tool;
         deleteMultiTool: Tool;
         toProofMode: Tool;
+        resizeTool: Tool;
         doubleCutInsertionTool: Tool;
         doubleCutDeletionTool: Tool;
         setTool: (state: Tool) => void;
@@ -299,6 +308,9 @@ function mouseDownHandler(event: MouseEvent) {
         case Tool.deleteMultiTool:
             deleteMultiMouseDown(event);
             break;
+        case Tool.resizeTool:
+            resizeMouseDown(event);
+            break;
         case Tool.toProofMode:
             toProofMouseDown(event);
             break;
@@ -348,6 +360,9 @@ function mouseMoveHandler(event: MouseEvent) {
             case Tool.deleteMultiTool:
                 deleteMultiMouseMove(event);
                 break;
+            case Tool.resizeTool:
+                resizeMouseMove(event);
+                break;
             case Tool.toProofMode:
                 toProofMouseMove();
                 break;
@@ -393,6 +408,9 @@ function mouseUpHandler(event: MouseEvent) {
             break;
         case Tool.deleteMultiTool:
             deleteMultiMouseUp(event);
+            break;
+        case Tool.resizeTool:
+            resizeMouseUp(event);
             break;
         case Tool.toProofMode:
             toProofMouseUp();
@@ -441,6 +459,9 @@ function mouseOutHandler() {
             break;
         case Tool.deleteMultiTool:
             deleteMultiMouseOut();
+            break;
+        case Tool.resizeTool:
+            resizeMouseOut();
             break;
         case Tool.toProofMode:
             toProofMouseOut();
