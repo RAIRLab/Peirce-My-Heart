@@ -9,7 +9,7 @@ import {CutNode} from "../AEG/CutNode";
 import {redrawTree} from "../DrawModes/DrawUtils";
 import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
-import {offset} from "../DrawModes/DragMode";
+import {offset} from "../DrawModes/DragTool";
 import {highlightChildren} from "../DrawModes/EditModeUtils";
 
 //The node selected with the user mouse down.
