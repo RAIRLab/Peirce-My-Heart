@@ -199,9 +199,9 @@ export class CutNode {
      */
     public getLevel(incomingNode: CutNode | AtomNode, currentLevel: number): number {
         for (let i = 0; i < this.internalChildren.length; i++) {
-            //We have found the node as one of this node's children, which is one level more
+            //We have found the node as one of this node's children, return current level
             if (this.internalChildren[i] === incomingNode) {
-                return currentLevel + 1;
+                return currentLevel;
             } //If the current child is a cut that contains the node then call this function again
             else if (
                 this.internalChildren[i] instanceof CutNode &&
