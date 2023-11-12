@@ -8,7 +8,7 @@ import {Point} from "../AEG/Point";
 import {CutNode} from "../AEG/CutNode";
 import {Ellipse} from "../AEG/Ellipse";
 import {treeContext} from "../treeContext";
-import {offset} from "./DragMode";
+import {offset} from "./DragTool";
 import {legalColor, illegalColor} from "../Themes";
 import {drawCut, redrawTree, drawGuidelines} from "./DrawUtils";
 

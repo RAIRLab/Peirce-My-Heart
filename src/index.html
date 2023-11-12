@@ -33,89 +33,89 @@
       <p></p>
       <div id="DrawButtons">
         <div class="row">
-          <a href="./aeg.html" title="About AEG" class="modeButton">
+          <a href="./aeg.html" title="About AEG" class="toolButton">
             <i class="fa fa-info" aria-hidden="true"></i>
           </a>
-          <button type="button" onclick= "setMode(dragMode)" title="Drag Mode" class="modeButton">
+          <button type="button" onclick= "setTool(dragTool)" title="Drag Tool" class="toolButton">
             <i class="fa fa-hand-paper-o" aria-hidden="true"></i>
           </button>
         </div>
         <div class="row">
-          <button type="button" onclick= "setMode(atomMode)" title="Atom Mode" class="modeButton">
+          <button type="button" onclick= "setTool(atomTool)" title="Atom Tool" class="toolButton">
               <i class="fa fa-font" aria-hidden="true"></i>
           </button>
-          <button type="button" onclick= "setMode(cutMode)" title="Cut Mode" class="modeButton">
+          <button type="button" onclick= "setTool(cutTool)" title="Cut Tool" class="toolButton">
               <i class="fa fa-circle-o" aria-hidden="true"></i>
           </button>
         </div>
         <div class = "row">
-          <button type="button" onclick="setMode(moveSingleMode)" title="Move Single Mode" class="modeButton">
+          <button type="button" onclick="setTool(moveSingleTool)" title="Move Single Tool" class="toolButton">
             <i class="fa fa-mouse-pointer" aria-hidden="true"></i>
           </button>
-          <button type="button" onclick="setMode(moveMultiMode)" title="Move Multi Mode" class="modeButton">
+          <button type="button" onclick="setTool(moveMultiTool)" title="Move Multi Tool" class="toolButton">
             <i class="fa fa-arrows" aria-hidden="true"></i>
           </button>
         </div>
         <div class = "row">
-          <button type="button" onclick="setMode(copySingleMode)" title="Copy Single Mode" class="modeButton">
+          <button type="button" onclick="setTool(copySingleTool)" title="Copy Single Tool" class="toolButton">
             <i class="fa fa-file-o" aria-hidden="true"></i>
           </button>
-          <button type="button" onclick="setMode(copyMultiMode)" title="Copy Multi Mode" class="modeButton">
+          <button type="button" onclick="setTool(copyMultiTool)" title="Copy Multi Tool" class="toolButton">
             <i class="fa fa-files-o" aria-hidden="true"></i>
           </button>
         </div>
         <div class = "row">
-          <button type="button" onclick="setMode(deleteSingleMode)" title="Delete Single Mode" class="modeButton">
+          <button type="button" onclick="setTool(deleteSingleTool)" title="Delete Single Tool" class="toolButton">
             <i class="fa fa-trash-o" aria-hidden="true"></i>
           </button>
-          <button type="button" onclick="setMode(deleteMultiMode)" title="Delete Multi Mode" class="modeButton">
+          <button type="button" onclick="setTool(deleteMultiTool)" title="Delete Multi tool" class="toolButton">
             <i class="fa fa-trash" aria-hidden="true"></i>
           </button>
         </div>
         <div class="row">
-          <button type="button" onclick="setMode(toProofMode)" title="Select and Copy to Proof Mode" class="modeButton">
+          <button type="button" onclick="setTool(toProofMode)" title="Select and Copy to Proof Mode" class="toolButton">
             <i class="fa fa-share-square-o" aria-hidden="true"></i>
           </button>
         </div>
       </div>
       <div id="ProofButtons">
         <div class="row">
-          <button type="button" onclick="" title="Resize Single" class="modeButton">
+          <button type="button" onclick="" title="Resize Single" class="toolButton">
               <i class="fa fa-circle-o" aria-hidden="true"></i>
           </button>
-          <button type="button" onclick="" title="Resize Multiple" class="modeButton">
-              <i class="fa fa-circle-o" aria-hidden="true"></i>
-          </button>
-        </div>
-        <div class="row">
-          <button type="button" onclick="" title="Drag Single" class="modeButton">
-              <i class="fa fa-circle-o" aria-hidden="true"></i>
-          </button>
-          <button type="button" onclick="" title="Drag Multiple" class="modeButton">
+          <button type="button" onclick="" title="Resize Multiple" class="toolButton">
               <i class="fa fa-circle-o" aria-hidden="true"></i>
           </button>
         </div>
         <div class="row">
-          <button type="button" onclick="setMode(doubleCutInsertionTool)" title="Double Cut Insertion" class="modeButton">
+          <button type="button" onclick="" title="Drag Single" class="toolButton">
+              <i class="fa fa-circle-o" aria-hidden="true"></i>
+          </button>
+          <button type="button" onclick="" title="Drag Multiple" class="toolButton">
+              <i class="fa fa-circle-o" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="row">
+          <button type="button" onclick="setTool(doubleCutInsertionTool)" title="Double Cut Insertion" class="toolButton">
             <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
           </button>
-          <button type="button" onclick="setMode(doubleCutDeletionTool)" title="Double Cut Erase" class="modeButton">
+          <button type="button" onclick="setTool(doubleCutDeletionTool)" title="Double Cut Erase" class="toolButton">
             <i class="fa fa-times-circle" aria-hidden="true"></i>
           </button>
         </div>
         <div class="row">
-          <button type="button" onclick="" title="Insertion" class="modeButton">
+          <button type="button" onclick="" title="Insertion" class="toolButton">
             <i class="fa fa-circle-o" aria-hidden="true"></i>
           </button>
-          <button type="button" onclick="" title="Erasure" class="modeButton">
+          <button type="button" onclick="" title="Erasure" class="toolButton">
             <i class="fa fa-circle-o" aria-hidden="true"></i>
           </button>
         </div>
         <div class="row">
-          <button type="button" onclick="" title="Iteration" class="modeButton">
+          <button type="button" onclick="" title="Iteration" class="toolButton">
             <i class="fa fa-circle-o" aria-hidden="true"></i>
           </button>
-          <button type="button" onclick="" title="Deiteration" class="modeButton">
+          <button type="button" onclick="" title="Deiteration" class="toolButton">
             <i class="fa fa-circle-o" aria-hidden="true"></i>
           </button>
         </div>
@@ -139,9 +139,9 @@
             <option value="Vampire-Core">Vampire-Core</option>
             <option value="Peircing-the-Galaxy">Peircing-the-Galaxy</option>
             <option value="Ocean-Pearl">Ocean-Pearl</option>
-          </select><button type="button" onclick="saveMode()" title="Save File" class="modeButton">
+          </select><button type="button" onclick="saveMode()" title="Save File" class="toolButton">
             <i class="fa fa-floppy-o" aria-hidden="true"></i>
-          </button><button type="button" onclick="loadMode()" title="Load File" class="modeButton">
+          </button><button type="button" onclick="loadMode()" title="Load File" class="toolButton">
             <i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i>
           </button>
         </div>

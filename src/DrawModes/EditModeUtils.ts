@@ -7,7 +7,7 @@ import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
-import {offset} from "./DragMode";
+import {offset} from "./DragTool";
 import {Ellipse} from "../AEG/Ellipse";
 import {drawCut, drawAtom} from "./DrawUtils";
 
