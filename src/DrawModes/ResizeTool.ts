@@ -7,10 +7,10 @@ import {Ellipse} from "../AEG/Ellipse";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
-import {offset} from "./DragMode";
+import {offset} from "./DragTool";
 import {drawCut, redrawTree} from "./DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
-import {ellipseLargeEnough} from "./CutMode";
+import {ellipseLargeEnough} from "./CutTool";
 
 //The initial point the user pressed down.
 let startingPoint: Point;
