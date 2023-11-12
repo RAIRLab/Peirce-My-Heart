@@ -74,6 +74,7 @@ import {
     doubleCutDeletionMouseOut,
 } from "./ProofTools/DoubleCutDeletionTool";
 import {toggleHandler} from "./ToggleModes";
+import {ProofList} from "./AEG/ProofList";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -175,6 +176,12 @@ export function setMode(state: Tool) {
     cutTools.style.display = "none";
     atomTools.style.display = "none";
 
+    if (state <= 10) {
+        treeContext.modeState = "Draw";
+    } else {
+        treeContext.modeState = "Proof";
+    }
+
     switch (treeContext.toolState) {
         case Tool.atomMode:
             atomTools.style.display = "block";
@@ -192,11 +199,22 @@ export function setMode(state: Tool) {
  * Calls the function to save the file.
  */
 async function saveMode() {
+    let name: string;
+    let data: AEGTree | ProofList;
+
+    if (treeContext.modeState === "Draw") {
+        name = "AEG Tree";
+        data = treeContext.tree;
+    } else {
+        name = "Proof History";
+        data = treeContext.proofHistory;
+    }
+
+    //Slow Download
     if ("showSaveFilePicker" in window) {
-        //Slow Download
         const saveHandle = await window.showSaveFilePicker({
             excludeAcceptAllOption: true,
-            suggestedName: "AEG Tree",
+            suggestedName: name,
             startIn: "downloads",
             types: [
                 {
@@ -207,12 +225,12 @@ async function saveMode() {
                 },
             ],
         });
-        saveFile(saveHandle, treeContext.tree);
+        saveFile(saveHandle, data);
     } else {
         //Quick Download
         const f = document.createElement("a");
-        f.href = JSON.stringify(treeContext.tree, null, "\t");
-        f.download = "AEGTree.json";
+        f.href = JSON.stringify(data, null, "\t");
+        f.download = name + ".json";
         f.click();
     }
 }

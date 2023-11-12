@@ -10,6 +10,7 @@ import {drawCut, redrawTree} from "../DrawModes/DrawUtils";
 import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
 import {offset} from "../DrawModes/DragMode";
+import {ProofNode} from "../AEG/ProofNode";
 
 //The node selected with the user mouse down.
 let currentNode: CutNode | AtomNode | null = null;

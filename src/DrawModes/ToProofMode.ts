@@ -28,20 +28,24 @@ let legalNode: boolean;
  * @param event The MouseDown event while in copy to proof mode
  */
 export function toProofMouseDown(event: MouseEvent) {
+    //Reset our selectForProof tree to a blank AEG so that a new graph can be selected
     treeContext.selectForProof.sheet = new AEGTree().sheet;
+
     selectPoint = new Point(event.x, event.y);
     selectedNode = treeContext.tree.getLowestNode(selectPoint);
+
+    const tempTree = new AEGTree(treeContext.tree.sheet);
 
     if (selectedNode !== null) {
         legalNode = true;
 
         //Temporarily remove the selected part of the tree and highlight selected part only
-        if (selectedNode !== treeContext.tree.sheet) {
-            const tempParent = treeContext.tree.getLowestParent(selectPoint);
+        if (selectedNode !== tempTree.sheet) {
+            const tempParent = tempTree.getLowestParent(selectPoint);
             if (tempParent !== null) {
                 tempParent.remove(selectPoint);
             }
-            redrawTree(treeContext.tree);
+            redrawTree(tempTree);
         } else {
             //If the entire tree is selected, clear the canvas and redraw entire tree in legalColor.
             cleanCanvas();
@@ -54,10 +58,10 @@ export function toProofMouseDown(event: MouseEvent) {
             highlightNode(selectedNode, legalColor());
         }
 
-        //Add the selected part back into the tree
+        /* //Add the selected part back into the tree
         if (selectedNode !== treeContext.tree.sheet) {
             treeContext.tree.insert(selectedNode);
-        }
+        } */
     }
 }
 

@@ -5,6 +5,7 @@
  */
 import {loadFile} from "./AEG-IO";
 import {AEGTree} from "./AEG/AEGTree";
+import {ProofNode} from "./AEG/ProofNode";
 import {redrawTree} from "./DrawModes/DrawUtils";
 // import {setMode} from "./index";
 // import {selectedNode} from "./DrawModes/ToProofMode";
@@ -46,6 +47,7 @@ export function toggleHandler(): void {
             throw Error("invalid cached AEG");
         }
         treeContext.toolState = drawCachedTool;
+        redrawTree(treeContext.tree);
     } else {
         //Display the buttons for Proof Mode
         drawButtons.style.display = "none";
@@ -57,22 +59,28 @@ export function toggleHandler(): void {
 
         //Load in our saved proof structure and tool state
         const loadedProof = loadFile(proofCachedAEG);
+        let proofTree: AEGTree;
         if (loadedProof !== null) {
-            treeContext.tree.sheet = loadedProof.sheet;
+            proofTree = new AEGTree(loadedProof.sheet);
+            //treeContext.tree.sheet = loadedProof.sheet;
+
             //If the user selected something to be copied over from draw mode,
             //insert it into our existing proof structure
             for (let i = 0; i < treeContext.selectForProof.sheet.children.length; i++) {
                 const child = treeContext.selectForProof.sheet.children[i];
                 try {
-                    treeContext.tree.insert(child);
+                    proofTree.insert(child);
                 } catch (error) {
                     console.log("Could not insert " + child);
                 }
             }
+
+            treeContext.proofHistory.insertAtEnd(new ProofNode(proofTree));
         } else {
             //If there is no saved proof and the user selected something to be copied over from
             //draw mode, make that our proof structure
-            treeContext.tree.sheet = treeContext.selectForProof.sheet;
+            proofTree = new AEGTree(treeContext.selectForProof.sheet);
+            treeContext.proofHistory.insertAtEnd(new ProofNode(proofTree));
         }
 
         //Reset the state of our tools
@@ -80,6 +88,19 @@ export function toggleHandler(): void {
         //The selected node has been loaded in.
         //Reset it to avoid accidentally reloading it next time.
         treeContext.selectForProof.sheet = new AEGTree().sheet;
+
+        if (treeContext.proofHistory.head !== null) {
+            const currentProof = treeContext.proofHistory.getLastNode(
+                treeContext.proofHistory.head
+            ).tree;
+
+            if (currentProof !== null) {
+                redrawTree(currentProof);
+            }
+        } else {
+            treeContext.proofHistory.head = new ProofNode(new AEGTree());
+            redrawTree(treeContext.proofHistory.head.tree);
+        }
     }
-    redrawTree(treeContext.tree);
+    // redrawTree(treeContext.tree);
 }

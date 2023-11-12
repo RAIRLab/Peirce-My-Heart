@@ -3,6 +3,7 @@ import {AtomNode} from "./AEG/AtomNode";
 import {CutNode} from "./AEG/CutNode";
 import {Ellipse} from "./AEG/Ellipse";
 import {Point} from "./AEG/Point";
+import {ProofList} from "./AEG/ProofList";
 
 /**
  * Interface for an object describing Sheet of Assertion
@@ -38,8 +39,8 @@ interface atomObj {
  * @param handle The handler for the save file picker
  * @param aegData Serialized JSON string containing the AEG data
  */
-export async function saveFile(handle: FileSystemFileHandle, aegData: AEGTree) {
-    const data = JSON.stringify(aegData, null, "\t");
+export async function saveFile(handle: FileSystemFileHandle, saveData: AEGTree | ProofList) {
+    const data = JSON.stringify(saveData, null, "\t");
 
     const writable = await handle.createWritable();
     await writable.write(data);
