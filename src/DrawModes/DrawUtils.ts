@@ -8,7 +8,7 @@ import {CutNode} from "../AEG/CutNode";
 import {AtomNode} from "../AEG/AtomNode";
 import {Ellipse} from "../AEG/Ellipse";
 import {treeContext} from "../treeContext";
-import {offset} from "./DragMode";
+import {offset} from "./DragTool";
 import {placedColor} from "../Themes";
 import {AEGTree} from "../AEG/AEGTree";
 

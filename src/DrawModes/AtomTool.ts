@@ -7,7 +7,7 @@ import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {treeContext} from "../treeContext";
 import {redrawTree} from "./DrawUtils";
-import {offset} from "./DragMode";
+import {offset} from "./DragTool";
 import {legalColor, illegalColor} from "../Themes";
 import {drawAtom} from "./DrawUtils";
 

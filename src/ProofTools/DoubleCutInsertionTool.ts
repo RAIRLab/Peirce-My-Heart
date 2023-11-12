@@ -8,10 +8,10 @@ import {Point} from "../AEG/Point";
 import {CutNode} from "../AEG/CutNode";
 import {Ellipse} from "../AEG/Ellipse";
 import {treeContext} from "../treeContext";
-import {offset} from "../DrawModes/DragMode";
+import {offset} from "../DrawModes/DragTool";
 import {legalColor, illegalColor} from "../Themes";
 import {drawCut, redrawTree, drawGuidelines} from "../DrawModes/DrawUtils";
-import {ellipseLargeEnough, createEllipse} from "../DrawModes/CutMode";
+import {ellipseLargeEnough, createEllipse} from "../DrawModes/CutTool";
 
 const showRectElm: HTMLInputElement = <HTMLInputElement>document.getElementById("showRect");
 
