@@ -24,6 +24,7 @@ export enum Tool {
     toProofMode,
     doubleCutInsertionTool,
     doubleCutDeletionTool,
+    erasureTool,
 }
 
 export class treeContext {

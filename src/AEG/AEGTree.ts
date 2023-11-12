@@ -150,6 +150,15 @@ export class AEGTree {
     }
 
     /**
+     * Finds the depth of the node within the tree.
+     * @param incomingNode The node to be searched for
+     * @returns The level of the searched for node
+     */
+    public getLevel(incomingNode: CutNode | AtomNode): number {
+        return this.internalSheet.getLevel(incomingNode, 0);
+    }
+
+    /**
      * Removes the node containing this coordinate
      * @param incomingPoint The point indicating the node that must be removed
      * @returns True, if the node was successfully removed. Else, false
