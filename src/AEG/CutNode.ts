@@ -314,6 +314,10 @@ export class CutNode {
         return str;
     }
 
+    public isEmptySheet(): boolean {
+        return this.internalEllipse === null && this.internalChildren.length === 0;
+    }
+
     /**
      * Constructs a string representation of an AEGTree or a subtree.
      * () - cut

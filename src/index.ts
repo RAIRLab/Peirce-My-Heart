@@ -16,7 +16,7 @@ import {
     atomMouseOut,
 } from "./DrawModes/AtomTool";
 import {saveFile, loadFile} from "./AEG-IO";
-import {redrawTree} from "./DrawModes/DrawUtils";
+import {redrawProof, redrawTree} from "./DrawModes/DrawUtils";
 import {dragMosueOut, dragMouseDown, dragMouseMove} from "./DrawModes/DragTool";
 import {
     moveSingleMouseDown,
@@ -80,7 +80,6 @@ import {
     erasureMouseOut,
 } from "./ProofTools/ErasureTool";
 import {toggleHandler} from "./ToggleModes";
-import {ProofList} from "./AEG/ProofList";
 
 import {
     resizeMouseDown,
@@ -217,14 +216,14 @@ export function setTool(state: Tool) {
  */
 async function saveMode() {
     let name: string;
-    let data: AEGTree | ProofList;
+    let data: AEGTree | AEGTree[];
 
     if (treeContext.modeState === "Draw") {
         name = "AEG Tree";
         data = treeContext.tree;
     } else {
         name = "Proof History";
-        data = treeContext.proofHistory;
+        data = treeContext.proofHistory.toArray();
     }
 
     //Slow Download
@@ -274,10 +273,13 @@ async function loadMode() {
     const reader = new FileReader();
     reader.addEventListener("load", () => {
         const aegData = reader.result;
-        const loadData = loadFile(aegData);
-        if (loadData instanceof AEGTree) {
-            treeContext.tree = loadData;
+        const loadData = loadFile(treeContext.modeState, aegData);
+        if (treeContext.modeState === "Draw") {
+            treeContext.tree = loadData as AEGTree;
             redrawTree(treeContext.tree);
+        } else if (treeContext.modeState === "Proof") {
+            treeContext.proofHistory.rebuildFromArray(loadData as AEGTree[]);
+            redrawProof();
         }
         //TODO: else popup error
     });

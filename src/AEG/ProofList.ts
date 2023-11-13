@@ -17,8 +17,11 @@ export class ProofList {
     }
 
     public insertAtFirst(node: ProofNode) {
-        if (this.internalHead === null) {
-            this.internalHead = node;
+        //If the head and the node to be inserted in first are both empty sheets, skip the head by
+        //setting the next of the node to be inserted as the next of head
+        //This is to avoid having 2 consecutive empty sheets
+        if (this.internalHead.tree.sheet.isEmptySheet() && node.tree.sheet.isEmptySheet()) {
+            node.next = this.internalHead.next;
         } else {
             this.internalHead.previous = node;
             node.next = this.internalHead;
@@ -27,10 +30,13 @@ export class ProofList {
     }
 
     public insertAtEnd(node: ProofNode) {
-        if (this.internalHead === null) {
-            this.internalHead = node;
+        const lastNode = this.getLastNode(this.internalHead);
+        //If the head and the node to be inserted at end are both empty sheets, skip the node by
+        //setting the next of the last node as the next of the node to be inserted
+        //This is to avoid having 2 consecutive empty sheets
+        if (lastNode.tree.sheet.isEmptySheet() && node.tree.sheet.isEmptySheet()) {
+            lastNode.next = node.next;
         } else {
-            const lastNode = this.getLastNode(this.internalHead);
             lastNode.next = node;
             node.previous = lastNode;
         }
@@ -58,11 +64,41 @@ export class ProofList {
         }
     }
 
-    /* public toArray(): AEGTree[] {
-        const arr: AEGTree = []; //ERROR: Type 'never[]' is missing the following properties from type 'AEGTree': internalSheet, sheet, verify, verifyAEG, and 7 more
-        if (this.head === null) {
+    /**
+     * Convert our proof list into an ordered array
+     * @returns An array of AEG Trees, in order of the proof
+     */
+    public toArray(): AEGTree[] {
+        const arr: AEGTree[] = [];
+        arr.push(this.head.tree);
+
+        if (this.head.next === null) {
+            return arr;
+        } else {
+            let nextNode: ProofNode | null = this.head.next;
+            do {
+                arr.push(nextNode.tree);
+                nextNode = nextNode.next;
+            } while (nextNode !== null);
             return arr;
         }
+    }
 
-    } */
+    /**
+     * Builds a proof list from a given array of AEG Trees
+     * @param arr The array of AEG Trees in order, which will be used to construct our proof list
+     */
+    public rebuildFromArray(arr: AEGTree[] | null) {
+        if (arr !== null && arr.length !== 0) {
+            //Reset the proof list so that new list can be build
+            this.internalHead.tree = new AEGTree();
+            this.head.next = null;
+
+            let node: ProofNode;
+            arr.forEach(tree => {
+                node = new ProofNode(tree);
+                this.insertAtEnd(node);
+            });
+        }
+    }
 }
