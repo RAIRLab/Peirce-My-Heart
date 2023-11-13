@@ -7,7 +7,7 @@
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {offset} from "./DragMode";
+import {offset} from "./DragTool";
 import {drawAtom, drawCut, redrawTree} from "./DrawUtils";
 import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";

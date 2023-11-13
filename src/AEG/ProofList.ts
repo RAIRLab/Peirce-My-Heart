@@ -1,19 +1,19 @@
-//import {AEGTree} from "./AEGTree";
+import {AEGTree} from "./AEGTree";
 import {ProofNode} from "./ProofNode";
 
 export class ProofList {
-    private internalHead: ProofNode | null = null;
+    private internalHead: ProofNode = new ProofNode(new AEGTree());
 
-    public get head(): ProofNode | null {
+    public ProofList(node: ProofNode) {
+        this.internalHead = node;
+    }
+
+    public get head(): ProofNode {
         return this.internalHead;
     }
 
     public set head(node: ProofNode) {
         this.insertAtFirst(node);
-    }
-
-    public ProofList(node?: ProofNode) {
-        this.internalHead = node ?? null;
     }
 
     public insertAtFirst(node: ProofNode) {
@@ -39,14 +39,19 @@ export class ProofList {
     public getLastNode(currentNode: ProofNode): ProofNode {
         //If currentNode.next exists, recurse the function on currentNode.next to keep traversing
         //the list. Otherwise, return currentNode -> if it has no next, it is the last node of list
-        return currentNode.next ? this.getLastNode(currentNode.next) : currentNode;
+        if (currentNode.next === null) {
+            return currentNode;
+        } else {
+            return this.getLastNode(currentNode.next);
+        }
     }
 
     public deleteNode(node: ProofNode) {
         if (node.previous === null) {
             //If the node has no previous, it was the head node
             //Set the head at the next of the node to be deleted
-            this.internalHead = node.next;
+            //If there was no next, initialize the head as a new proof node
+            this.internalHead = node.next ?? new ProofNode(new AEGTree());
         } else {
             //Set the next of the node before this node to the node after this node
             node.previous.next = node.next;

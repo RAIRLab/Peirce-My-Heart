@@ -28,7 +28,7 @@ export class ProofNode {
      * @param prev (OPTIONAL) The AEG at the previous state of the proof
      */
     public constructor(tree?: AEGTree, next?: ProofNode, prev?: ProofNode) {
-        this.tree = tree ?? new AEGTree();
+        this.tree = new AEGTree(tree?.sheet);
         this.next = next ?? null;
         this.previous = prev ?? null;
     }

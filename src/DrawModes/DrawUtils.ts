@@ -8,9 +8,10 @@ import {CutNode} from "../AEG/CutNode";
 import {AtomNode} from "../AEG/AtomNode";
 import {Ellipse} from "../AEG/Ellipse";
 import {treeContext} from "../treeContext";
-import {offset} from "./DragMode";
+import {offset} from "./DragTool";
 import {placedColor} from "../Themes";
 import {AEGTree} from "../AEG/AEGTree";
+import {ProofNode} from "../AEG/ProofNode";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -142,4 +143,15 @@ function redrawCut(incomingNode: CutNode) {
  */
 function redrawAtom(incomingNode: AtomNode) {
     drawAtom(incomingNode, placedColor(), false);
+}
+
+export function redrawProof() {
+    //If this is the first step taken in the proof,
+    //set the current tree as the head of the proof history
+    if (treeContext.proofHistory.head === null) {
+        treeContext.proofHistory.head = new ProofNode(treeContext.tree);
+    }
+
+    //Get the last step in the history and draw its tree
+    redrawTree(treeContext.proofHistory.getLastNode(treeContext.proofHistory.head).tree);
 }

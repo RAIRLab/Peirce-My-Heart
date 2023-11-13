@@ -12,18 +12,20 @@ import {ProofList} from "./AEG/ProofList";
  */
 export enum Tool {
     none,
-    atomMode,
-    cutMode,
-    dragMode,
-    moveSingleMode,
-    moveMultiMode,
-    copySingleMode,
-    copyMultiMode,
-    deleteSingleMode,
-    deleteMultiMode,
+    atomTool,
+    cutTool,
+    dragTool,
+    moveSingleTool,
+    moveMultiTool,
+    copySingleTool,
+    copyMultiTool,
+    deleteSingleTool,
+    deleteMultiTool,
+    resizeTool,
     toProofMode,
     doubleCutInsertionTool,
     doubleCutDeletionTool,
+    erasureTool,
 }
 
 export class treeContext {

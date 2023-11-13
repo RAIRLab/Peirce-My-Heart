@@ -6,7 +6,7 @@
 import {loadFile} from "./AEG-IO";
 import {AEGTree} from "./AEG/AEGTree";
 import {ProofNode} from "./AEG/ProofNode";
-import {redrawTree} from "./DrawModes/DrawUtils";
+import {redrawProof, redrawTree} from "./DrawModes/DrawUtils";
 // import {setMode} from "./index";
 // import {selectedNode} from "./DrawModes/ToProofMode";
 import {Tool, treeContext} from "./treeContext";
@@ -89,18 +89,7 @@ export function toggleHandler(): void {
         //Reset it to avoid accidentally reloading it next time.
         treeContext.selectForProof.sheet = new AEGTree().sheet;
 
-        if (treeContext.proofHistory.head !== null) {
-            const currentProof = treeContext.proofHistory.getLastNode(
-                treeContext.proofHistory.head
-            ).tree;
-
-            if (currentProof !== null) {
-                redrawTree(currentProof);
-            }
-        } else {
-            treeContext.proofHistory.head = new ProofNode(new AEGTree());
-            redrawTree(treeContext.proofHistory.head.tree);
-        }
+        redrawProof();
     }
     // redrawTree(treeContext.tree);
 }

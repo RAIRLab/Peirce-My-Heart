@@ -6,17 +6,20 @@
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {drawCut, redrawTree} from "../DrawModes/DrawUtils";
+import {drawCut, redrawProof} from "../DrawModes/DrawUtils";
 import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
-import {offset} from "../DrawModes/DragMode";
+import {offset} from "../DrawModes/DragTool";
 import {ProofNode} from "../AEG/ProofNode";
+import {AEGTree} from "../AEG/AEGTree";
 
 //The node selected with the user mouse down.
 let currentNode: CutNode | AtomNode | null = null;
 
 //Whether or not the node is allowed to be moved (not the sheet).
 let legalNode: boolean;
+
+let currentProofTree: AEGTree;
 
 /**
  * Takes the current point and finds the lowest node containing that point.
@@ -25,7 +28,8 @@ let legalNode: boolean;
  */
 export function doubleCutDeletionMouseDown(event: MouseEvent) {
     const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = treeContext.tree.getLowestNode(currentPoint);
+    currentProofTree = treeContext.proofHistory.getLastNode(treeContext.proofHistory.head).tree;
+    currentNode = currentProofTree.getLowestNode(currentPoint);
 
     isLegal();
 }
@@ -37,8 +41,8 @@ export function doubleCutDeletionMouseDown(event: MouseEvent) {
  */
 export function doubleCutDeletionMouseMove(event: MouseEvent) {
     const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = treeContext.tree.getLowestNode(currentPoint);
-    redrawTree(treeContext.tree);
+    currentNode = currentProofTree.getLowestNode(currentPoint);
+    redrawProof();
 
     isLegal();
 }
@@ -49,19 +53,25 @@ export function doubleCutDeletionMouseMove(event: MouseEvent) {
  * @param event The event of a mouse up while the user is using double cut deletion
  */
 export function doubleCutDeletionMouseUp(event: MouseEvent) {
+    //Stores the tree of the previous proof so that we can perform double cut actions without
+    //altering that tree
+    const nextProof = new ProofNode(currentProofTree);
     const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
+
     if (legalNode && currentNode instanceof CutNode) {
-        const currentParent: CutNode | null = treeContext.tree.getLowestParent(currentPoint);
+        const currentParent: CutNode | null = nextProof.tree.getLowestParent(currentPoint);
         const lowerCut: CutNode | AtomNode | null = currentNode.children[0];
 
         if (currentParent !== null && lowerCut instanceof CutNode) {
             currentParent.remove(currentPoint);
             for (let i = 0; i < lowerCut.children.length; i++) {
-                treeContext.tree.insert(lowerCut.children[i]);
+                nextProof.tree.insert(lowerCut.children[i]);
             }
         }
+        treeContext.proofHistory.insertAtEnd(nextProof);
     }
-    redrawTree(treeContext.tree);
+
+    redrawProof();
 }
 
 /**
@@ -69,7 +79,7 @@ export function doubleCutDeletionMouseUp(event: MouseEvent) {
  */
 export function doubleCutDeletionMouseOut() {
     legalNode = false;
-    redrawTree(treeContext.tree);
+    redrawProof();
 }
 
 /**

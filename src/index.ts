@@ -7,54 +7,54 @@
 
 import {AEGTree} from "./AEG/AEGTree";
 import {Tool, treeContext} from "./treeContext";
-import {cutMouseDown, cutMouseMove, cutMouseOut, cutMouseUp} from "./DrawModes/CutMode";
+import {cutMouseDown, cutMouseMove, cutMouseOut, cutMouseUp} from "./DrawModes/CutTool";
 import {
     atomKeyPress,
     atomMouseDown,
     atomMouseMove,
     atomMouseUp,
     atomMouseOut,
-} from "./DrawModes/AtomMode";
+} from "./DrawModes/AtomTool";
 import {saveFile, loadFile} from "./AEG-IO";
 import {redrawTree} from "./DrawModes/DrawUtils";
-import {dragMosueOut, dragMouseDown, dragMouseMove} from "./DrawModes/DragMode";
+import {dragMosueOut, dragMouseDown, dragMouseMove} from "./DrawModes/DragTool";
 import {
     moveSingleMouseDown,
     moveSingleMouseMove,
     moveSingleMouseUp,
     moveSingleMouseOut,
-} from "./DrawModes/MoveSingleMode";
+} from "./DrawModes/MoveSingleTool";
 import {
     moveMultiMouseDown,
     moveMultiMouseMove,
     moveMultiMouseUp,
     moveMultiMouseOut,
-} from "./DrawModes/MoveMultiMode";
+} from "./DrawModes/MoveMultiTool";
 import {
     copySingleMouseDown,
     copySingleMouseMove,
     copySingleMouseUp,
     copySingleMouseOut,
-} from "./DrawModes/CopySingleMode";
+} from "./DrawModes/CopySingleTool";
 import {
     copyMultiMouseDown,
     copyMultiMouseMove,
     copyMultiMouseUp,
     copyMultiMouseOut,
-} from "./DrawModes/CopyMultiMode";
+} from "./DrawModes/CopyMultiTool";
 import {
     deleteSingleMouseDown,
     deleteSingleMouseMove,
     deleteSingleMouseOut,
     deleteSingleMouseUp,
-} from "./DrawModes/DeleteSingleMode";
+} from "./DrawModes/DeleteSingleTool";
 
 import {
     deleteMultiMouseDown,
     deleteMultiMouseMove,
     deleteMultiMouseOut,
     deleteMultiMouseUp,
-} from "./DrawModes/DeleteMultiMode";
+} from "./DrawModes/DeleteMultiTool";
 import {
     toProofMouseDown,
     toProofMouseMove,
@@ -73,8 +73,21 @@ import {
     doubleCutDeletionMouseUp,
     doubleCutDeletionMouseOut,
 } from "./ProofTools/DoubleCutDeletionTool";
+import {
+    erasureMouseDown,
+    erasureMouseMove,
+    erasureMouseUp,
+    erasureMouseOut,
+} from "./ProofTools/ErasureTool";
 import {toggleHandler} from "./ToggleModes";
 import {ProofList} from "./AEG/ProofList";
+
+import {
+    resizeMouseDown,
+    resizeMouseMove,
+    resizeMouseUp,
+    resizeMouseOut,
+} from "./DrawModes/ResizeTool";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -104,41 +117,45 @@ let hasMouseDown = false;
 let hasMouseIn = true;
 
 //Window Exports
-window.atomMode = Tool.atomMode;
-window.cutMode = Tool.cutMode;
-window.dragMode = Tool.dragMode;
+window.atomTool = Tool.atomTool;
+window.cutTool = Tool.cutTool;
+window.dragTool = Tool.dragTool;
 window.saveMode = saveMode;
 window.loadMode = loadMode;
-window.moveSingleMode = Tool.moveSingleMode;
-window.moveMultiMode = Tool.moveMultiMode;
-window.copySingleMode = Tool.copySingleMode;
-window.copyMultiMode = Tool.copyMultiMode;
-window.deleteSingleMode = Tool.deleteSingleMode;
-window.deleteMultiMode = Tool.deleteMultiMode;
+window.moveSingleTool = Tool.moveSingleTool;
+window.moveMultiTool = Tool.moveMultiTool;
+window.copySingleTool = Tool.copySingleTool;
+window.copyMultiTool = Tool.copyMultiTool;
+window.deleteSingleTool = Tool.deleteSingleTool;
+window.deleteMultiTool = Tool.deleteMultiTool;
 window.toProofMode = Tool.toProofMode;
 window.doubleCutInsertionTool = Tool.doubleCutInsertionTool;
+window.resizeTool = Tool.resizeTool;
 window.doubleCutDeletionTool = Tool.doubleCutDeletionTool;
-window.setMode = setMode;
+window.erasureTool = Tool.erasureTool;
+window.setTool = setTool;
 window.setHighlight = setHighlight;
 window.toggleHandler = toggleHandler;
 
 declare global {
     interface Window {
-        atomMode: Tool;
-        cutMode: Tool;
-        dragMode: Tool;
+        atomTool: Tool;
+        cutTool: Tool;
+        dragTool: Tool;
         saveMode: () => void;
         loadMode: () => void;
-        moveSingleMode: Tool;
-        moveMultiMode: Tool;
-        copySingleMode: Tool;
-        copyMultiMode: Tool;
-        deleteSingleMode: Tool;
-        deleteMultiMode: Tool;
+        moveSingleTool: Tool;
+        moveMultiTool: Tool;
+        copySingleTool: Tool;
+        copyMultiTool: Tool;
+        deleteSingleTool: Tool;
+        deleteMultiTool: Tool;
         toProofMode: Tool;
+        resizeTool: Tool;
         doubleCutInsertionTool: Tool;
         doubleCutDeletionTool: Tool;
-        setMode: (state: Tool) => void;
+        erasureTool: Tool;
+        setTool: (state: Tool) => void;
         setHighlight: (event: string, id: string) => void;
         toggleHandler: () => void;
     }
@@ -171,7 +188,7 @@ modeButtons.forEach(button => {
     });
 });
 
-export function setMode(state: Tool) {
+export function setTool(state: Tool) {
     treeContext.toolState = state;
     cutTools.style.display = "none";
     atomTools.style.display = "none";
@@ -183,10 +200,10 @@ export function setMode(state: Tool) {
     }
 
     switch (treeContext.toolState) {
-        case Tool.atomMode:
+        case Tool.atomTool:
             atomTools.style.display = "block";
             break;
-        case Tool.cutMode:
+        case Tool.cutTool:
             cutTools.style.display = "block";
             break;
         case Tool.doubleCutInsertionTool:
@@ -277,7 +294,7 @@ function keyDownHandler(event: KeyboardEvent) {
         saveMode();
     } else {
         switch (treeContext.toolState) {
-            case Tool.atomMode:
+            case Tool.atomTool:
                 atomKeyPress(event);
                 break;
         }
@@ -290,32 +307,35 @@ function keyDownHandler(event: KeyboardEvent) {
  */
 function mouseDownHandler(event: MouseEvent) {
     switch (treeContext.toolState) {
-        case Tool.cutMode:
+        case Tool.cutTool:
             cutMouseDown(event);
             break;
-        case Tool.atomMode:
+        case Tool.atomTool:
             atomMouseDown(event);
             break;
-        case Tool.dragMode:
+        case Tool.dragTool:
             dragMouseDown(event);
             break;
-        case Tool.moveSingleMode:
+        case Tool.moveSingleTool:
             moveSingleMouseDown(event);
             break;
-        case Tool.moveMultiMode:
+        case Tool.moveMultiTool:
             moveMultiMouseDown(event);
             break;
-        case Tool.copySingleMode:
+        case Tool.copySingleTool:
             copySingleMouseDown(event);
             break;
-        case Tool.copyMultiMode:
+        case Tool.copyMultiTool:
             copyMultiMouseDown(event);
             break;
-        case Tool.deleteSingleMode:
+        case Tool.deleteSingleTool:
             deleteSingleMouseDown(event);
             break;
-        case Tool.deleteMultiMode:
+        case Tool.deleteMultiTool:
             deleteMultiMouseDown(event);
+            break;
+        case Tool.resizeTool:
+            resizeMouseDown(event);
             break;
         case Tool.toProofMode:
             toProofMouseDown(event);
@@ -325,6 +345,9 @@ function mouseDownHandler(event: MouseEvent) {
             break;
         case Tool.doubleCutDeletionTool:
             doubleCutDeletionMouseDown(event);
+            break;
+        case Tool.erasureTool:
+            erasureMouseDown(event);
             break;
         default:
             break;
@@ -339,32 +362,35 @@ function mouseDownHandler(event: MouseEvent) {
 function mouseMoveHandler(event: MouseEvent) {
     if (hasMouseDown && hasMouseIn) {
         switch (treeContext.toolState) {
-            case Tool.cutMode:
+            case Tool.cutTool:
                 cutMouseMove(event);
                 break;
-            case Tool.atomMode:
+            case Tool.atomTool:
                 atomMouseMove(event);
                 break;
-            case Tool.dragMode:
+            case Tool.dragTool:
                 dragMouseMove(event);
                 break;
-            case Tool.moveSingleMode:
+            case Tool.moveSingleTool:
                 moveSingleMouseMove(event);
                 break;
-            case Tool.moveMultiMode:
+            case Tool.moveMultiTool:
                 moveMultiMouseMove(event);
                 break;
-            case Tool.copySingleMode:
+            case Tool.copySingleTool:
                 copySingleMouseMove(event);
                 break;
-            case Tool.copyMultiMode:
+            case Tool.copyMultiTool:
                 copyMultiMouseMove(event);
                 break;
-            case Tool.deleteSingleMode:
+            case Tool.deleteSingleTool:
                 deleteSingleMouseMove(event);
                 break;
-            case Tool.deleteMultiMode:
+            case Tool.deleteMultiTool:
                 deleteMultiMouseMove(event);
+                break;
+            case Tool.resizeTool:
+                resizeMouseMove(event);
                 break;
             case Tool.toProofMode:
                 toProofMouseMove();
@@ -374,6 +400,9 @@ function mouseMoveHandler(event: MouseEvent) {
                 break;
             case Tool.doubleCutDeletionTool:
                 doubleCutDeletionMouseMove(event);
+                break;
+            case Tool.erasureTool:
+                erasureMouseMove(event);
                 break;
             default:
                 break;
@@ -388,29 +417,32 @@ function mouseMoveHandler(event: MouseEvent) {
  */
 function mouseUpHandler(event: MouseEvent) {
     switch (treeContext.toolState) {
-        case Tool.cutMode:
+        case Tool.cutTool:
             cutMouseUp(event);
             break;
-        case Tool.atomMode:
+        case Tool.atomTool:
             atomMouseUp(event);
             break;
-        case Tool.moveSingleMode:
+        case Tool.moveSingleTool:
             moveSingleMouseUp(event);
             break;
-        case Tool.moveMultiMode:
+        case Tool.moveMultiTool:
             moveMultiMouseUp(event);
             break;
-        case Tool.copySingleMode:
+        case Tool.copySingleTool:
             copySingleMouseUp(event);
             break;
-        case Tool.copyMultiMode:
+        case Tool.copyMultiTool:
             copyMultiMouseUp(event);
             break;
-        case Tool.deleteSingleMode:
+        case Tool.deleteSingleTool:
             deleteSingleMouseUp(event);
             break;
-        case Tool.deleteMultiMode:
+        case Tool.deleteMultiTool:
             deleteMultiMouseUp(event);
+            break;
+        case Tool.resizeTool:
+            resizeMouseUp(event);
             break;
         case Tool.toProofMode:
             toProofMouseUp();
@@ -420,6 +452,9 @@ function mouseUpHandler(event: MouseEvent) {
             break;
         case Tool.doubleCutDeletionTool:
             doubleCutDeletionMouseUp(event);
+            break;
+        case Tool.erasureTool:
+            erasureMouseUp(event);
             break;
         default:
             break;
@@ -433,32 +468,35 @@ function mouseUpHandler(event: MouseEvent) {
  */
 function mouseOutHandler() {
     switch (treeContext.toolState) {
-        case Tool.cutMode:
+        case Tool.cutTool:
             cutMouseOut();
             break;
-        case Tool.atomMode:
+        case Tool.atomTool:
             atomMouseOut();
             break;
-        case Tool.dragMode:
+        case Tool.dragTool:
             dragMosueOut();
             break;
-        case Tool.moveSingleMode:
+        case Tool.moveSingleTool:
             moveSingleMouseOut();
             break;
-        case Tool.moveMultiMode:
+        case Tool.moveMultiTool:
             moveMultiMouseOut();
             break;
-        case Tool.copySingleMode:
+        case Tool.copySingleTool:
             copySingleMouseOut();
             break;
-        case Tool.copyMultiMode:
+        case Tool.copyMultiTool:
             copyMultiMouseOut();
             break;
-        case Tool.deleteSingleMode:
+        case Tool.deleteSingleTool:
             deleteSingleMouseOut();
             break;
-        case Tool.deleteMultiMode:
+        case Tool.deleteMultiTool:
             deleteMultiMouseOut();
+            break;
+        case Tool.resizeTool:
+            resizeMouseOut();
             break;
         case Tool.toProofMode:
             toProofMouseOut();
@@ -468,6 +506,9 @@ function mouseOutHandler() {
             break;
         case Tool.doubleCutDeletionTool:
             doubleCutDeletionMouseOut();
+            break;
+        case Tool.erasureTool:
+            erasureMouseOut();
             break;
         default:
             break;

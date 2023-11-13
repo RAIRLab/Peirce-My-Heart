@@ -1,6 +1,5 @@
 /**
- * File containing copy node movement event handlers.
- * @author Anusha Tiwari
+ * File containing multi node movement event handlers.
  * @author Dawn Moore
  */
 
@@ -8,7 +7,7 @@ import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
-import {offset} from "./DragMode";
+import {offset} from "./DragTool";
 import {drawAtom, redrawTree} from "./DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
 import {validateChildren, drawAltered, insertChildren, alterAtom} from "./EditModeUtils";
@@ -24,13 +23,17 @@ let legalNode: boolean;
 
 /**
  * Takes the starting point and sets the lowest node containing that point that is not the sheet to
- * the current node.
- * @param event The mouse down event while in copyMulti mode.
+ * the current node. Removes that node from its parent.
+ * @param event The mouse down event while in moveMulti mode.
  */
-export function copyMultiMouseDown(event: MouseEvent) {
+export function moveMultiMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = treeContext.tree.getLowestNode(startingPoint);
     if (currentNode !== treeContext.tree.sheet && currentNode !== null) {
+        const currentParent = treeContext.tree.getLowestParent(startingPoint);
+        if (currentParent !== null) {
+            currentParent.remove(startingPoint);
+        }
         legalNode = true;
     } else {
         legalNode = false;
@@ -41,9 +44,9 @@ export function copyMultiMouseDown(event: MouseEvent) {
  * If the node selected was legal, draws the node with the difference between the starting position
  * and the current position by altering the point of origin. If the node was a cut node also draws
  * all of the children with the same change in location.
- * @param event The mouse move event while in copyMulti mode
+ * @param event The mouse move event while in moveMulti mode
  */
-export function copyMultiMouseMove(event: MouseEvent) {
+export function moveMultiMouseMove(event: MouseEvent) {
     if (legalNode) {
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
@@ -66,12 +69,12 @@ export function copyMultiMouseMove(event: MouseEvent) {
 
 /**
  * If the current node is a cut node, and all of its children are in a legal position places it
- * in the current position. If it is not in a legal position, copy failed and nothing is inserted.
- * If the current node is an atom node and is in a legal position inserts it in the tree, otherwise
- * copy failed and nothing is inserted.
- * @param event the mouse up event while in copyMulti mode
+ * in the current position. If it is not in a legal position returns the original node to the tree.
+ * If the current node is an atom node and is in a legal position adds it to the tree, otherwise
+ * readds the original node in the original place.
+ * @param event the mouse up event while in moveMulti mode
  */
-export function copyMultiMouseUp(event: MouseEvent) {
+export function moveMultiMouseUp(event: MouseEvent) {
     if (legalNode) {
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
@@ -81,12 +84,16 @@ export function copyMultiMouseUp(event: MouseEvent) {
         if (currentNode instanceof CutNode) {
             if (validateChildren(currentNode, moveDifference)) {
                 insertChildren(currentNode, moveDifference);
+            } else {
+                treeContext.tree.insert(currentNode);
             }
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
 
             if (treeContext.tree.canInsert(tempAtom)) {
                 treeContext.tree.insert(tempAtom);
+            } else {
+                treeContext.tree.insert(currentNode);
             }
         }
     }
@@ -95,10 +102,13 @@ export function copyMultiMouseUp(event: MouseEvent) {
 }
 
 /**
- * If the mouse is moved outside of the canvas, sets wasOut to true.
+ * If the current node is a legal node returns it to the original position.
  * Redraws the canvas to clear any drawings not part of the tree.
  */
-export function copyMultiMouseOut() {
+export function moveMultiMouseOut() {
+    if (legalNode && currentNode !== null) {
+        treeContext.tree.insert(currentNode);
+    }
     legalNode = false;
     redrawTree(treeContext.tree);
 }
