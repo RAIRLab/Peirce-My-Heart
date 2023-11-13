@@ -20,9 +20,11 @@ export enum Tool {
     copyMultiTool,
     deleteSingleTool,
     deleteMultiTool,
+    resizeTool,
     toProofMode,
     doubleCutInsertionTool,
     doubleCutDeletionTool,
+    erasureTool,
 }
 
 export class treeContext {

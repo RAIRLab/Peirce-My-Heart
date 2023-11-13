@@ -136,3 +136,19 @@ export function alterAtom(originalAtom: AtomNode, difference: Point) {
         originalAtom.height
     );
 }
+
+/**
+ * Highlights all the children of the incoming node as the incoming color.
+ * @param child The incoming node
+ * @param color The incoming color
+ */
+export function highlightChildren(child: AtomNode | CutNode, color: string) {
+    if (child instanceof AtomNode) {
+        drawAtom(child, color, true);
+    } else if (child instanceof CutNode) {
+        drawCut(child, color);
+        for (let i = 0; i < child.children.length; i++) {
+            highlightChildren(child.children[i], color);
+        }
+    }
+}
