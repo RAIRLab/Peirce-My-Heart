@@ -88,9 +88,9 @@ export function erasureMouseOut() {
 function isLegal() {
     //If the node is not the tree, is not null, and is even it is legal
     if (
-        currentNode !== treeContext.tree.sheet &&
+        currentNode !== currentProofTree.sheet &&
         currentNode !== null &&
-        treeContext.tree.getLevel(currentNode) % 2 === 0
+        currentProofTree.getLevel(currentNode) % 2 === 0
     ) {
         legalNode = true;
         highlightChildren(currentNode, illegalColor());

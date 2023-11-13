@@ -92,7 +92,7 @@ function isDoubleCut(currentCut: CutNode): Boolean {
     return (
         currentCut.children.length === 1 &&
         currentCut.children[0] instanceof CutNode &&
-        currentNode !== treeContext.tree.sheet
+        currentNode !== currentProofTree.sheet
     );
 }
 
