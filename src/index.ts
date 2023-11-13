@@ -73,7 +73,20 @@ import {
     doubleCutDeletionMouseUp,
     doubleCutDeletionMouseOut,
 } from "./ProofTools/DoubleCutDeletionTool";
+import {
+    erasureMouseDown,
+    erasureMouseMove,
+    erasureMouseUp,
+    erasureMouseOut,
+} from "./ProofTools/ErasureTool";
 import {toggleHandler} from "./ToggleModes";
+
+import {
+    resizeMouseDown,
+    resizeMouseMove,
+    resizeMouseUp,
+    resizeMouseOut,
+} from "./DrawModes/ResizeTool";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -116,7 +129,9 @@ window.deleteSingleTool = Tool.deleteSingleTool;
 window.deleteMultiTool = Tool.deleteMultiTool;
 window.toProofMode = Tool.toProofMode;
 window.doubleCutInsertionTool = Tool.doubleCutInsertionTool;
+window.resizeTool = Tool.resizeTool;
 window.doubleCutDeletionTool = Tool.doubleCutDeletionTool;
+window.erasureTool = Tool.erasureTool;
 window.setTool = setTool;
 window.setHighlight = setHighlight;
 window.toggleHandler = toggleHandler;
@@ -135,8 +150,10 @@ declare global {
         deleteSingleTool: Tool;
         deleteMultiTool: Tool;
         toProofMode: Tool;
+        resizeTool: Tool;
         doubleCutInsertionTool: Tool;
         doubleCutDeletionTool: Tool;
+        erasureTool: Tool;
         setTool: (state: Tool) => void;
         setHighlight: (event: string, id: string) => void;
         toggleHandler: () => void;
@@ -299,6 +316,9 @@ function mouseDownHandler(event: MouseEvent) {
         case Tool.deleteMultiTool:
             deleteMultiMouseDown(event);
             break;
+        case Tool.resizeTool:
+            resizeMouseDown(event);
+            break;
         case Tool.toProofMode:
             toProofMouseDown(event);
             break;
@@ -307,6 +327,9 @@ function mouseDownHandler(event: MouseEvent) {
             break;
         case Tool.doubleCutDeletionTool:
             doubleCutDeletionMouseDown(event);
+            break;
+        case Tool.erasureTool:
+            erasureMouseDown(event);
             break;
         default:
             break;
@@ -348,6 +371,9 @@ function mouseMoveHandler(event: MouseEvent) {
             case Tool.deleteMultiTool:
                 deleteMultiMouseMove(event);
                 break;
+            case Tool.resizeTool:
+                resizeMouseMove(event);
+                break;
             case Tool.toProofMode:
                 toProofMouseMove();
                 break;
@@ -356,6 +382,9 @@ function mouseMoveHandler(event: MouseEvent) {
                 break;
             case Tool.doubleCutDeletionTool:
                 doubleCutDeletionMouseMove(event);
+                break;
+            case Tool.erasureTool:
+                erasureMouseMove(event);
                 break;
             default:
                 break;
@@ -394,6 +423,9 @@ function mouseUpHandler(event: MouseEvent) {
         case Tool.deleteMultiTool:
             deleteMultiMouseUp(event);
             break;
+        case Tool.resizeTool:
+            resizeMouseUp(event);
+            break;
         case Tool.toProofMode:
             toProofMouseUp();
             break;
@@ -402,6 +434,9 @@ function mouseUpHandler(event: MouseEvent) {
             break;
         case Tool.doubleCutDeletionTool:
             doubleCutDeletionMouseUp(event);
+            break;
+        case Tool.erasureTool:
+            erasureMouseUp(event);
             break;
         default:
             break;
@@ -442,6 +477,9 @@ function mouseOutHandler() {
         case Tool.deleteMultiTool:
             deleteMultiMouseOut();
             break;
+        case Tool.resizeTool:
+            resizeMouseOut();
+            break;
         case Tool.toProofMode:
             toProofMouseOut();
             break;
@@ -450,6 +488,9 @@ function mouseOutHandler() {
             break;
         case Tool.doubleCutDeletionTool:
             doubleCutDeletionMouseOut();
+            break;
+        case Tool.erasureTool:
+            erasureMouseOut();
             break;
         default:
             break;

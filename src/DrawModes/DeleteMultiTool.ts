@@ -6,10 +6,11 @@
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {drawAtom, drawCut, redrawTree} from "./DrawUtils";
+import {redrawTree} from "./DrawUtils";
 import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
 import {offset} from "./DragTool";
+import {highlightChildren} from "./EditModeUtils";
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -81,20 +82,4 @@ export function deleteMultiMouseUp(event: MouseEvent) {
 export function deleteMultiMouseOut() {
     currentNode = null;
     legalNode = false;
-}
-
-/**
- * Highlights all the children of the incoming node as the incoming color.
- * @param child The incoming node
- * @param color The incoming color
- */
-function highlightChildren(child: AtomNode | CutNode, color: string) {
-    if (child instanceof AtomNode) {
-        drawAtom(child, color, true);
-    } else if (child instanceof CutNode) {
-        drawCut(child, color);
-        for (let i = 0; i < child.children.length; i++) {
-            highlightChildren(child.children[i], color);
-        }
-    }
 }
