@@ -57,12 +57,7 @@ export function atomMouseDown(event: MouseEvent) {
     mEvent = event;
     atomMetrics = ctx.measureText(identifier);
     wasOut = false;
-    const currentAtom = new AtomNode(
-        identifier,
-        new Point(event.clientX - offset.x, event.clientY - offset.y),
-        atomMetrics.width,
-        atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
-    );
+    const currentAtom = createAtom(event);
 
     redrawTree(treeContext.tree);
     const color = treeContext.tree.canInsert(currentAtom) ? legalColor() : illegalColor();
@@ -75,12 +70,7 @@ export function atomMouseDown(event: MouseEvent) {
  */
 export function atomMouseMove(event: MouseEvent) {
     mEvent = event;
-    const currentAtom = new AtomNode(
-        identifier,
-        new Point(event.clientX - offset.x, event.clientY - offset.y),
-        atomMetrics.width,
-        atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
-    );
+    const currentAtom = createAtom(event);
 
     redrawTree(treeContext.tree);
     if (!wasOut) {
@@ -97,12 +87,7 @@ export function atomMouseMove(event: MouseEvent) {
  * @param event The mouse up event
  */
 export function atomMouseUp(event: MouseEvent) {
-    const currentAtom = new AtomNode(
-        identifier,
-        new Point(event.clientX - offset.x, event.clientY - offset.y),
-        atomMetrics.width,
-        atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
-    );
+    const currentAtom = createAtom(event);
     if (treeContext.tree.canInsert(currentAtom) && !wasOut) {
         treeContext.tree.insert(currentAtom);
     }
@@ -117,4 +102,13 @@ export function atomMouseOut() {
     wasOut = true;
     redrawTree(treeContext.tree);
     mEvent = new MouseEvent("mousedown");
+}
+
+function createAtom(event: MouseEvent): AtomNode {
+    return new AtomNode(
+        identifier,
+        new Point(event.clientX - offset.x, event.clientY - offset.y),
+        atomMetrics.width,
+        atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
+    );
 }
