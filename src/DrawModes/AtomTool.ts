@@ -28,6 +28,9 @@ let atomMetrics: TextMetrics;
 //Tracks if the mouse has ever left canvas disallowing future movements.
 let wasOut: boolean;
 
+//Current MouseEvent
+let mEvent: MouseEvent = new MouseEvent("mousedown");
+
 let identifier = "A";
 atomDisplay.innerHTML = identifier;
 
@@ -41,6 +44,7 @@ export function atomKeyPress(event: KeyboardEvent) {
         identifier = event.key;
         atomDisplay.innerHTML = identifier;
     }
+    atomMouseDown(mEvent);
 }
 
 /**
@@ -50,6 +54,7 @@ export function atomKeyPress(event: KeyboardEvent) {
  * @returns Whether or not the mouse event took place
  */
 export function atomMouseDown(event: MouseEvent) {
+    mEvent = event;
     atomMetrics = ctx.measureText(identifier);
     wasOut = false;
     const currentAtom = new AtomNode(
@@ -69,6 +74,7 @@ export function atomMouseDown(event: MouseEvent) {
  * @param event The mouse move event
  */
 export function atomMouseMove(event: MouseEvent) {
+    mEvent = event;
     const currentAtom = new AtomNode(
         identifier,
         new Point(event.clientX - offset.x, event.clientY - offset.y),
@@ -101,6 +107,7 @@ export function atomMouseUp(event: MouseEvent) {
         treeContext.tree.insert(currentAtom);
     }
     redrawTree(treeContext.tree);
+    mEvent = new MouseEvent("mousedown");
 }
 
 /**
@@ -109,4 +116,5 @@ export function atomMouseUp(event: MouseEvent) {
 export function atomMouseOut() {
     wasOut = true;
     redrawTree(treeContext.tree);
+    mEvent = new MouseEvent("mousedown");
 }
