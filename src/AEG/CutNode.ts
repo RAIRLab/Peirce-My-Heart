@@ -264,6 +264,13 @@ export class CutNode {
     }
 
     /**
+     * Removes all of this CutNode's children.
+     */
+    public clear() {
+        this.internalChildren = [];
+    }
+
+    /**
      * Returns a string representation of this CutNode.
      * @returns The children and boundary box of this CutNode.
      */
