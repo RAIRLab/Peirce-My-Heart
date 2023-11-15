@@ -28,7 +28,7 @@ let currentProofTree: AEGTree;
  */
 export function doubleCutDeletionMouseDown(event: MouseEvent) {
     const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
-    currentProofTree = treeContext.proofHistory.getLastNode(treeContext.proofHistory.head).tree;
+    currentProofTree = treeContext.proofHistory[treeContext.proofHistory.length - 1].tree;
     currentNode = currentProofTree.getLowestNode(currentPoint);
 
     isLegal();
@@ -55,7 +55,7 @@ export function doubleCutDeletionMouseMove(event: MouseEvent) {
 export function doubleCutDeletionMouseUp(event: MouseEvent) {
     //Stores the tree of the previous proof so that we can perform double cut actions without
     //altering that tree
-    const nextProof = new ProofNode(currentProofTree);
+    const nextProof = new ProofNode(currentProofTree, "Double Cut Deletion");
     const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
 
     if (legalNode && currentNode instanceof CutNode) {
@@ -68,7 +68,7 @@ export function doubleCutDeletionMouseUp(event: MouseEvent) {
                 nextProof.tree.insert(lowerCut.children[i]);
             }
         }
-        treeContext.proofHistory.insertAtEnd(nextProof);
+        treeContext.proofHistory.push(nextProof);
     }
 
     redrawProof();

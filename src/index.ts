@@ -60,7 +60,7 @@ import {
     toProofMouseMove,
     toProofMouseUp,
     toProofMouseOut,
-} from "./DrawModes/ToProofMode";
+} from "./DrawModes/copyFromDraw";
 import {
     doubleCutInsertionMouseDown,
     doubleCutInsertionMouseMove,
@@ -87,6 +87,7 @@ import {
     resizeMouseUp,
     resizeMouseOut,
 } from "./DrawModes/ResizeTool";
+import {ProofNode} from "./AEG/ProofNode";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -216,14 +217,14 @@ export function setTool(state: Tool) {
  */
 async function saveMode() {
     let name: string;
-    let data: AEGTree | AEGTree[];
+    let data: AEGTree | ProofNode[];
 
     if (treeContext.modeState === "Draw") {
         name = "AEG Tree";
         data = treeContext.tree;
     } else {
         name = "Proof History";
-        data = treeContext.proofHistory.toArray();
+        data = treeContext.proofHistory;
     }
 
     //Slow Download
@@ -274,11 +275,11 @@ async function loadMode() {
     reader.addEventListener("load", () => {
         const aegData = reader.result;
         const loadData = loadFile(treeContext.modeState, aegData);
-        if (treeContext.modeState === "Draw") {
+        if (loadData !== null && treeContext.modeState === "Draw") {
             treeContext.tree = loadData as AEGTree;
             redrawTree(treeContext.tree);
-        } else if (treeContext.modeState === "Proof") {
-            treeContext.proofHistory.rebuildFromArray(loadData as AEGTree[]);
+        } else if (loadData !== null && treeContext.modeState === "Proof") {
+            treeContext.proofHistory = loadData as ProofNode[];
             redrawProof();
         }
         //TODO: else popup error
@@ -395,7 +396,7 @@ function mouseMoveHandler(event: MouseEvent) {
                 resizeMouseMove(event);
                 break;
             case Tool.toProofMode:
-                toProofMouseMove();
+                toProofMouseMove(event);
                 break;
             case Tool.doubleCutInsertionTool:
                 doubleCutInsertionMouseMove(event);

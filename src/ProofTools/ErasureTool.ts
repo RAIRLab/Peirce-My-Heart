@@ -29,7 +29,7 @@ let currentProofTree: AEGTree;
  */
 export function erasureMouseDown(event: MouseEvent) {
     const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
-    currentProofTree = treeContext.proofHistory.getLastNode(treeContext.proofHistory.head).tree;
+    currentProofTree = treeContext.proofHistory[treeContext.proofHistory.length - 1].tree;
     currentNode = currentProofTree.getLowestNode(currentPoint);
 
     isLegal();
@@ -57,7 +57,7 @@ export function erasureMouseUp(event: MouseEvent) {
     if (legalNode) {
         //Stores the tree of the previous proof so that we can perform double cut actions without
         //altering that tree
-        const nextProof = new ProofNode(currentProofTree);
+        const nextProof = new ProofNode(currentProofTree, "Erasure");
 
         const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
         const currentParent = nextProof.tree.getLowestParent(currentPoint);
@@ -65,7 +65,7 @@ export function erasureMouseUp(event: MouseEvent) {
             currentParent.remove(currentPoint);
         }
 
-        treeContext.proofHistory.insertAtEnd(nextProof);
+        treeContext.proofHistory.push(nextProof);
         redrawProof();
     }
 

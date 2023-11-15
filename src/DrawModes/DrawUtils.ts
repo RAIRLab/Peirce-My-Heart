@@ -11,7 +11,6 @@ import {treeContext} from "../treeContext";
 import {offset} from "./DragTool";
 import {placedColor} from "../Themes";
 import {AEGTree} from "../AEG/AEGTree";
-import {ProofNode} from "../AEG/ProofNode";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -148,10 +147,26 @@ function redrawAtom(incomingNode: AtomNode) {
 export function redrawProof() {
     //If this is the first step taken in the proof,
     //set the current tree as the head of the proof history
-    if (treeContext.proofHistory.head === null) {
-        treeContext.proofHistory.head = new ProofNode(treeContext.tree);
+    let tree: AEGTree;
+    if (treeContext.proofHistory.length === 0) {
+        tree = new AEGTree();
+    } else {
+        tree = treeContext.proofHistory[treeContext.proofHistory.length - 1].tree;
     }
 
-    //Get the last step in the history and draw its tree
-    redrawTree(treeContext.proofHistory.getLastNode(treeContext.proofHistory.head).tree);
+    redrawTree(tree);
+}
+
+/**
+ * Helper function to highlight the specific selected node
+ */
+export function highlightNode(child: AtomNode | CutNode, color: string) {
+    if (child instanceof AtomNode) {
+        drawAtom(child, color, true);
+    } else if (child instanceof CutNode) {
+        drawCut(child, color);
+        for (let i = 0; i < child.children.length; i++) {
+            highlightNode(child.children[i], color);
+        }
+    }
 }

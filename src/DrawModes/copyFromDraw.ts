@@ -7,19 +7,22 @@ import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
-// import {offset} from "./DragMode";
-import {drawAtom, drawCut, cleanCanvas, redrawTree} from "./DrawUtils";
+import {offset} from "./DragTool";
+import {drawAtom, drawCut, cleanCanvas, redrawTree, highlightNode} from "./DrawUtils";
 import {legalColor} from "../Themes";
 import {AEGTree} from "../AEG/AEGTree";
 
 //The initial point the user pressed down.
-let selectPoint: Point;
+let startingPoint: Point;
 
 //The current node and its children we will be moving.
 let selectedNode: CutNode | AtomNode | null = null;
 
 //Whether or not the node is allowed to be selected.
 let legalNode: boolean;
+
+//A deep copy of the global tree
+const tempTree = new AEGTree(treeContext.tree.sheet);
 
 /**
  * Handles the MouseDown event while in copy to proof mode.
@@ -31,48 +34,23 @@ export function toProofMouseDown(event: MouseEvent) {
     //Reset our selectForProof tree to a blank AEG so that a new graph can be selected
     treeContext.selectForProof.sheet = new AEGTree().sheet;
 
-    selectPoint = new Point(event.x, event.y);
-    selectedNode = treeContext.tree.getLowestNode(selectPoint);
+    startingPoint = new Point(event.x - offset.x, event.y - offset.y);
+    selectedNode = treeContext.tree.getLowestNode(startingPoint);
 
-    const tempTree = new AEGTree(treeContext.tree.sheet);
-
-    if (selectedNode !== null) {
-        legalNode = true;
-
-        //Temporarily remove the selected part of the tree and highlight selected part only
-        if (selectedNode !== tempTree.sheet) {
-            const tempParent = tempTree.getLowestParent(selectPoint);
-            if (tempParent !== null) {
-                tempParent.remove(selectPoint);
-            }
-            redrawTree(tempTree);
-        } else {
-            //If the entire tree is selected, clear the canvas and redraw entire tree in legalColor.
-            cleanCanvas();
-        }
-
-        //Highlight the selected part by redrawing in legalColor
-        if (selectedNode instanceof AtomNode) {
-            drawAtom(selectedNode, legalColor(), true);
-        } else {
-            highlightNode(selectedNode, legalColor());
-        }
-
-        /* //Add the selected part back into the tree
-        if (selectedNode !== treeContext.tree.sheet) {
-            treeContext.tree.insert(selectedNode);
-        } */
-    }
+    isLegal();
 }
 
 /**
  * Handles the MouseMove event while in copy to proof mode.
  * Currently MouseMove does not allow for node selection. (Can be changed as per team review)
  */
-export function toProofMouseMove() {
-    selectedNode = null;
-    legalNode = false;
+export function toProofMouseMove(event: MouseEvent) {
     redrawTree(treeContext.tree);
+
+    const movePoint: Point = new Point(event.x - offset.x, event.y - offset.y);
+    selectedNode = treeContext.tree.getLowestNode(movePoint);
+
+    isLegal();
 }
 
 /**
@@ -104,16 +82,28 @@ export function toProofMouseOut() {
     redrawTree(treeContext.tree);
 }
 
-/**
- * Helper function to highlight the specific selected node
- */
-function highlightNode(child: AtomNode | CutNode, color: string) {
-    if (child instanceof AtomNode) {
-        drawAtom(child, color, true);
-    } else if (child instanceof CutNode) {
-        drawCut(child, color);
-        for (let i = 0; i < child.children.length; i++) {
-            highlightNode(child.children[i], color);
+function isLegal() {
+    if (selectedNode !== null) {
+        legalNode = true;
+
+        //Temporarily remove the selected part of the tree and highlight selected part only
+        //NEED TREE EQUALITY DONE TO COMPARE DEEP COPY
+        if (selectedNode !== tempTree.sheet) {
+            const tempParent = tempTree.getLowestParent(startingPoint);
+            if (tempParent !== null) {
+                tempParent.remove(startingPoint);
+            }
+            redrawTree(tempTree);
+        } else {
+            //If the entire tree is selected, clear the canvas and redraw entire tree in legalColor.
+            cleanCanvas();
+        }
+
+        //Highlight the selected part by redrawing in legalColor
+        if (selectedNode instanceof AtomNode) {
+            drawAtom(selectedNode, legalColor(), true);
+        } else {
+            highlightNode(selectedNode, legalColor());
         }
     }
 }

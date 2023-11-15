@@ -3,7 +3,7 @@ import {AtomNode} from "./AEG/AtomNode";
 import {CutNode} from "./AEG/CutNode";
 import {Ellipse} from "./AEG/Ellipse";
 import {Point} from "./AEG/Point";
-import {ProofList} from "./AEG/ProofList";
+import {ProofNode} from "./AEG/ProofNode";
 
 /**
  * Interface for an object describing Sheet of Assertion
@@ -34,12 +34,17 @@ interface atomObj {
     internalOrigin: {x: number; y: number};
 }
 
+interface nodeObj {
+    tree: sheetObj;
+    appliedRule: string;
+}
+
 /**
  * Function that creates and saves a file containing the given AEG data
  * @param handle The handler for the save file picker
  * @param aegData Serialized JSON string containing the AEG data
  */
-export async function saveFile(handle: FileSystemFileHandle, saveData: AEGTree | AEGTree[]) {
+export async function saveFile(handle: FileSystemFileHandle, saveData: AEGTree | ProofNode[]) {
     const data = JSON.stringify(saveData, null, "\t");
 
     const writable = await handle.createWritable();
@@ -59,7 +64,7 @@ export async function saveFile(handle: FileSystemFileHandle, saveData: AEGTree |
 export function loadFile(
     mode: "Draw" | "Proof",
     fileData: string | ArrayBuffer | null
-): AEGTree | AEGTree[] | null {
+): AEGTree | ProofNode[] | null {
     if (typeof fileData === "string") {
         const data = JSON.parse(fileData);
 
@@ -69,11 +74,10 @@ export function loadFile(
             return toTree(childData);
         } else {
             //Construct the tree at every step of the proof and store them in an array
-            const arr: AEGTree[] = [];
-            data.forEach((tree: object) => {
-                const childData: (atomObj | cutObj)[] = (tree as sheetObj).internalSheet
-                    .internalChildren;
-                arr.push(toTree(childData));
+            const arr: ProofNode[] = [];
+            data.forEach((node: nodeObj) => {
+                const childData: (atomObj | cutObj)[] = node.tree.internalSheet.internalChildren;
+                arr.push(new ProofNode(toTree(childData), node.appliedRule));
             });
 
             return arr;

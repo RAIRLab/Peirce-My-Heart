@@ -31,7 +31,7 @@ let currentProofTree: AEGTree;
  */
 export function doubleCutInsertionMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.clientX - offset.x, event.clientY - offset.y);
-    currentProofTree = treeContext.proofHistory.getLastNode(treeContext.proofHistory.head).tree;
+    currentProofTree = treeContext.proofHistory[treeContext.proofHistory.length - 1].tree;
     wasOut = false;
 }
 
@@ -73,14 +73,14 @@ export function doubleCutInsertionMouseMove(event: MouseEvent) {
  */
 export function doubleCutInsertionMouseUp(event: MouseEvent) {
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
-    currentProofTree = treeContext.proofHistory.getLastNode(treeContext.proofHistory.head).tree;
+    currentProofTree = treeContext.proofHistory[treeContext.proofHistory.length - 1].tree;
 
     const largeCut: CutNode = new CutNode(createEllipse(startingPoint, currentPoint));
     const smallCut: CutNode = new CutNode(calcSmallEllipse(<Ellipse>largeCut.ellipse));
 
     //Stores the tree of the previous proof so that we can perform double cut actions without
     //altering that tree
-    const nextProof = new ProofNode(currentProofTree);
+    const nextProof = new ProofNode(currentProofTree, "Double Cut Insertion");
 
     if (!wasOut && largeCut.ellipse !== null && smallCut.ellipse !== null) {
         //If either ellipse is in an invalid position or too small it cannot be inserted
@@ -93,7 +93,7 @@ export function doubleCutInsertionMouseUp(event: MouseEvent) {
         if (legal) {
             nextProof.tree.insert(largeCut);
             nextProof.tree.insert(smallCut);
-            treeContext.proofHistory.insertAtEnd(nextProof);
+            treeContext.proofHistory.push(nextProof);
         }
     }
     redrawProof();

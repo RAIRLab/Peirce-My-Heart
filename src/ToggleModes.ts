@@ -37,7 +37,7 @@ export function toggleHandler(): void {
         treeContext.modeState = "Draw";
 
         //cache the proof tree and tool state so that we can load it back in when we toggle again
-        proofCachedAEG = JSON.stringify(treeContext.proofHistory.toArray());
+        proofCachedAEG = JSON.stringify(treeContext.proofHistory);
         proofCachedTool = treeContext.toolState;
 
         //Load in our saved draw tree and tool state
@@ -60,12 +60,12 @@ export function toggleHandler(): void {
         drawCachedTool = treeContext.toolState;
 
         //Load in our saved proof structure and tool state
-        const loadedProof = loadFile(treeContext.modeState, proofCachedAEG) as AEGTree[] | null;
+        const loadedProof = loadFile(treeContext.modeState, proofCachedAEG) as ProofNode[] | null;
         if (loadedProof !== null) {
-            treeContext.proofHistory.rebuildFromArray(loadedProof);
+            treeContext.proofHistory = loadedProof;
             //Construct the next tree from the last tree in the proof
             const nextTree = new AEGTree(
-                treeContext.proofHistory.getLastNode(treeContext.proofHistory.head).tree.sheet
+                treeContext.proofHistory[treeContext.proofHistory.length - 1].tree.sheet
             );
 
             //If the user selected something to be copied over from draw mode,
@@ -80,13 +80,13 @@ export function toggleHandler(): void {
                     }
                 }
 
-                treeContext.proofHistory.insertAtEnd(new ProofNode(nextTree));
+                treeContext.proofHistory.push(new ProofNode(nextTree));
             }
         } else {
             //If there is no saved proof and the user selected something to be copied over from
             //draw mode, make that our proof structure
             const proofTree = new AEGTree(treeContext.selectForProof.sheet);
-            treeContext.proofHistory.insertAtEnd(new ProofNode(proofTree));
+            treeContext.proofHistory.push(new ProofNode(proofTree));
         }
 
         //Reset the state of our tools
