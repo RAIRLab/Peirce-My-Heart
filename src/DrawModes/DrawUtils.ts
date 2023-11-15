@@ -7,8 +7,8 @@ import {Point} from "../AEG/Point";
 import {CutNode} from "../AEG/CutNode";
 import {AtomNode} from "../AEG/AtomNode";
 import {Ellipse} from "../AEG/Ellipse";
-import {tree} from "../index";
-import {offset} from "./DragMode";
+import {treeContext} from "../treeContext";
+import {offset} from "./DragTool";
 import {placedColor} from "../Themes";
 import {AEGTree} from "../AEG/AEGTree";
 
@@ -35,20 +35,22 @@ atomCheckBoxes.addEventListener("input", checkBoxRedraw);
  * @param color the line color of the ellipse
  */
 export function drawCut(thisCut: CutNode, color: string) {
-    ctx.strokeStyle = color;
     const ellipse: Ellipse = <Ellipse>thisCut.ellipse;
-    const center: Point = ellipse.center;
-    ctx.beginPath();
-    ctx.ellipse(
-        center.x + offset.x,
-        center.y + offset.y,
-        ellipse.radiusX,
-        ellipse.radiusY,
-        0,
-        0,
-        2 * Math.PI
-    );
-    ctx.stroke();
+    if (ellipse !== null) {
+        ctx.strokeStyle = color;
+        const center: Point = ellipse.center;
+        ctx.beginPath();
+        ctx.ellipse(
+            center.x + offset.x,
+            center.y + offset.y,
+            ellipse.radiusX,
+            ellipse.radiusY,
+            0,
+            0,
+            2 * Math.PI
+        );
+        ctx.stroke();
+    }
 }
 
 /**
@@ -87,7 +89,11 @@ export function drawGuidelines(original: Point, current: Point, color: string) {
  * When the checkbox for showing all bounding boxes is checked redraws the canvas showing the boxes.
  */
 function checkBoxRedraw() {
-    redrawTree(tree);
+    redrawTree(treeContext.tree);
+}
+
+export function cleanCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 /**
@@ -95,7 +101,7 @@ function checkBoxRedraw() {
  */
 export function redrawTree(tree: AEGTree) {
     cutDisplay.innerHTML = tree.toString();
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    cleanCanvas();
     redrawCut(tree.sheet);
 }
 

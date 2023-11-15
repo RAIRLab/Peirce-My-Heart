@@ -5,7 +5,7 @@ test("help", async ({page}) => {
     await page.goto("/");
 
     const canvas = page.locator("#canvas");
-    await page.getByTitle("Cut Mode").click();
+    await page.getByTitle("Cut Tool").click();
     await canvas.dragTo(canvas, {
         sourcePosition: {x: 200, y: 200},
         targetPosition: {x: 300, y: 300},
@@ -19,7 +19,7 @@ test("A or B", async ({page}) => {
     await page.goto("/");
 
     const canvas = page.locator("canvas");
-    await page.getByTitle("Cut Mode").click();
+    await page.getByTitle("Cut Tool").click();
 
     await canvas.dragTo(canvas, {
         sourcePosition: {x: 100, y: 150},
@@ -46,19 +46,19 @@ test("A or B", async ({page}) => {
         targetPosition: {x: 450, y: 450},
     });
 
-    await page.getByTitle("Atom Mode").click();
+    await page.getByTitle("Atom Tool").click();
 
     await canvas.click({
         position: {x: 350, y: 350},
     });
 
-    await page.getByTitle("Atom Mode").press("B");
+    await page.getByTitle("Atom Tool").press("B");
 
     await canvas.click({
         position: {x: 700, y: 500},
     });
 
-    await page.getByTitle("Atom Mode").press("C");
+    await page.getByTitle("Atom Tool").press("C");
 
     await canvas.click({
         position: {x: 350, y: 400},
@@ -74,21 +74,21 @@ test("A or B", async ({page}) => {
     //await download.saveAs("./" + download.suggestedFilename());
 
     //All of these should fail, and the canvas should remain the same.
-    await page.getByTitle("Cut Mode").click();
+    await page.getByTitle("Cut Tool").click();
 
     await canvas.dragTo(canvas, {
         sourcePosition: {x: 300, y: 300},
         targetPosition: {x: 600, y: 600},
     });
 
-    await page.getByTitle("Atom Mode").click();
+    await page.getByTitle("Atom Tool").click();
 
-    await page.getByTitle("Atom Mode").press("D");
+    await page.getByTitle("Atom Tool").press("D");
     await canvas.click({
         position: {x: 350, y: 350},
     });
 
-    await page.getByTitle("Atom Mode").press("E");
+    await page.getByTitle("Atom Tool").press("E");
     await canvas.click({
         position: {x: 550, y: 550},
     });

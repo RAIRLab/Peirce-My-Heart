@@ -7,8 +7,8 @@
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {tree} from "../index";
-import {offset} from "./DragMode";
+import {treeContext} from "../treeContext";
+import {offset} from "./DragTool";
 import {drawCut, drawAtom, redrawTree} from "./DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
 import {alterAtom, alterCut} from "./EditModeUtils";
@@ -29,8 +29,8 @@ let legalNode: boolean;
  */
 export function copySingleMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
-    const realNode: CutNode | AtomNode | null = tree.getLowestNode(startingPoint);
-    if (realNode !== tree.sheet && realNode !== null) {
+    const realNode: CutNode | AtomNode | null = treeContext.tree.getLowestNode(startingPoint);
+    if (realNode !== treeContext.tree.sheet && realNode !== null) {
         if (realNode instanceof CutNode) {
             //The cut node loses custody of its children because those do not copy over during
             //copy single mode
@@ -62,15 +62,15 @@ export function copySingleMouseMove(event: MouseEvent) {
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = alterCut(currentNode, moveDifference);
 
-            redrawTree(tree);
-            const color = tree.canInsert(tempCut) ? legalColor() : illegalColor();
+            redrawTree(treeContext.tree);
+            const color = treeContext.tree.canInsert(tempCut) ? legalColor() : illegalColor();
             drawCut(tempCut, color);
         } //If the node is an atom, make a temporary atom and check legality, drawing that.
         else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
 
-            redrawTree(tree);
-            const color = tree.canInsert(tempAtom) ? legalColor() : illegalColor();
+            redrawTree(treeContext.tree);
+            const color = treeContext.tree.canInsert(tempAtom) ? legalColor() : illegalColor();
             drawAtom(tempAtom, color, true);
         }
     }
@@ -92,18 +92,18 @@ export function copySingleMouseUp(event: MouseEvent) {
             const tempCut: CutNode = alterCut(currentNode, moveDifference);
 
             //If the new location is legal, insert the copied cut.
-            if (tree.canInsert(tempCut)) {
-                tree.insert(tempCut);
+            if (treeContext.tree.canInsert(tempCut)) {
+                treeContext.tree.insert(tempCut);
             }
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
 
             //If the new location is legal, insert the copied atom.
-            if (tree.canInsert(tempAtom)) {
-                tree.insert(tempAtom);
+            if (treeContext.tree.canInsert(tempAtom)) {
+                treeContext.tree.insert(tempAtom);
             }
         }
-        redrawTree(tree);
+        redrawTree(treeContext.tree);
     }
     legalNode = false;
 }
@@ -114,5 +114,5 @@ export function copySingleMouseUp(event: MouseEvent) {
  */
 export function copySingleMouseOut() {
     legalNode = false;
-    redrawTree(tree);
+    redrawTree(treeContext.tree);
 }

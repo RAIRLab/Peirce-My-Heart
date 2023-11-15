@@ -65,20 +65,58 @@ export function shapesIntersect(
 
 /**
  * Method that checks if there is intersection between an ellipse and a rectangle
+ * Check for both vertical and horizontal intersection within the boundaries of the shapes.
  * @param ellipse The given ellipse
  * @param rectangle The given rectangle
- * @returns True, if the shapes intersect. Else, false.
+ * @returns True, if either vertical or horizontal intersection is present. Else, false.
  */
 function ellipseRectangleIntersection(ellipse: Ellipse, rectangle: Rectangle): boolean {
-    //For ellipse-rectangle collision, check if points on the ellipse are
-    //within the rectangle
-    const points: Point[] = getEllipsePoints(ellipse);
-    for (let i = 0; i < points.length; i++) {
-        if (pointInRect(rectangle, points[i])) {
-            return true;
-        }
+    //For ellipse-rectangle collision, check for intersection along the horizontal or vertical edges
+    const corners = rectangle.getCorners();
+
+    //Check for vertical edge intersection
+    const leftEdgeUpperCurve = getCurvePoint(ellipse, corners[0].x, 1);
+    const rightEdgeUpperCurve = getCurvePoint(ellipse, corners[1].x, 1);
+    const leftEdgeLowerCurve = getCurvePoint(ellipse, corners[0].x, -1);
+    const rightEdgeLowerCurve = getCurvePoint(ellipse, corners[1].x, -1);
+
+    if (
+        (corners[0].y < leftEdgeUpperCurve && leftEdgeUpperCurve < corners[2].y) ||
+        (corners[0].y < leftEdgeLowerCurve && leftEdgeLowerCurve < corners[2].y) ||
+        (corners[0].y < rightEdgeUpperCurve && rightEdgeUpperCurve < corners[2].y) ||
+        (corners[0].y < rightEdgeLowerCurve && rightEdgeLowerCurve < corners[2].y)
+    ) {
+        return true;
     }
-    return false;
+
+    //Check for horizontal edge intersection
+    const a = -1 / Math.pow(ellipse.radiusX, 2);
+    const b = (2 * ellipse.center.x) / Math.pow(ellipse.radiusX, 2);
+
+    //c with height of the top edge
+    const cTop =
+        -Math.pow(ellipse.center.x, 2) / Math.pow(ellipse.radiusX, 2) +
+        1 -
+        Math.pow((corners[0].y - ellipse.center.y) / ellipse.radiusY, 2);
+
+    //c with height of the bottom edge
+    const cBottom =
+        -Math.pow(ellipse.center.x, 2) / Math.pow(ellipse.radiusX, 2) +
+        1 -
+        Math.pow((corners[2].y - ellipse.center.y) / ellipse.radiusY, 2);
+
+    const topX1 = (-b + Math.sqrt(Math.pow(b, 2) - 4 * a * cTop)) / (2 * a);
+    const topX2 = (-b - Math.sqrt(Math.pow(b, 2) - 4 * a * cTop)) / (2 * a);
+    const bottomX1 = (-b + Math.sqrt(Math.pow(b, 2) - 4 * a * cBottom)) / (2 * a);
+    const bottomX2 = (-b - Math.sqrt(Math.pow(b, 2) - 4 * a * cBottom)) / (2 * a);
+
+    //Horizontal intersection if the intersection point is within the bounds of the ellipse
+    return (
+        (!isNaN(topX1) && corners[0].x < topX1 && topX1 < corners[1].x) ||
+        (!isNaN(topX2) && corners[0].x < topX2 && topX2 < corners[1].x) ||
+        (!isNaN(bottomX1) && corners[0].x < bottomX1 && bottomX1 < corners[1].x) ||
+        (!isNaN(bottomX2) && corners[0].x < bottomX2 && bottomX2 < corners[1].x)
+    );
 }
 
 /**
@@ -255,12 +293,13 @@ export function getEllipsePoints(ellipse: Ellipse): Point[] {
 }
 
 /**
- * Method that returns a point on the curve of the given ellipse for a given x coordinate
+ * Method that returns the y coordinate of a point on the curve of the given ellipse for a given
+ * x coordinate
  * @param ellipse The given ellipse
  * @param x The x coordinate of the point
  * @param curveHalf Flag signifying the curve of the ellipse.
  * 1 for top curve, -1 for bottom curve
- * @returns A point along the curve
+ * @returns The y-coordinate of the point with the given x coordinate along the specified curve
  */
 function getCurvePoint(ellipse: Ellipse, x: number, curveHalf: number): number {
     if (ellipse.radiusX === 0 || ellipse.radiusY === 0) {

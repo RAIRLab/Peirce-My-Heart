@@ -6,10 +6,11 @@
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {drawAtom, drawCut, redrawTree} from "./DrawUtils";
-import {tree} from "../index";
+import {redrawTree} from "./DrawUtils";
+import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
-import {offset} from "./DragMode";
+import {offset} from "./DragTool";
+import {highlightChildren} from "./EditModeUtils";
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -29,9 +30,9 @@ let legalNode: boolean;
  */
 export function deleteMultiMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = tree.getLowestNode(startingPoint);
+    currentNode = treeContext.tree.getLowestNode(startingPoint);
 
-    if (currentNode !== tree.sheet && currentNode !== null) {
+    if (currentNode !== treeContext.tree.sheet && currentNode !== null) {
         legalNode = true;
         highlightChildren(currentNode, illegalColor());
     }
@@ -44,11 +45,11 @@ export function deleteMultiMouseDown(event: MouseEvent) {
  */
 export function deleteMultiMouseMove(event: MouseEvent) {
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
-    const newNode: CutNode | AtomNode | null = tree.getLowestNode(newPoint);
-    if (currentNode !== null && currentNode !== tree.getLowestNode(newPoint)) {
+    const newNode: CutNode | AtomNode | null = treeContext.tree.getLowestNode(newPoint);
+    if (currentNode !== null && currentNode !== treeContext.tree.getLowestNode(newPoint)) {
         legalNode = true;
-        redrawTree(tree);
-        if (newNode === tree.sheet || newNode === null) {
+        redrawTree(treeContext.tree);
+        if (newNode === treeContext.tree.sheet || newNode === null) {
             currentNode = null;
             legalNode = false;
         } else {
@@ -65,11 +66,11 @@ export function deleteMultiMouseMove(event: MouseEvent) {
 export function deleteMultiMouseUp(event: MouseEvent) {
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
     if (legalNode) {
-        const currentParent = tree.getLowestParent(newPoint);
+        const currentParent = treeContext.tree.getLowestParent(newPoint);
         if (currentParent !== null) {
             currentParent.remove(newPoint);
         }
-        redrawTree(tree);
+        redrawTree(treeContext.tree);
     }
     currentNode = null;
     legalNode = false;
@@ -81,20 +82,4 @@ export function deleteMultiMouseUp(event: MouseEvent) {
 export function deleteMultiMouseOut() {
     currentNode = null;
     legalNode = false;
-}
-
-/**
- * Highlights all the children of the incoming node as the incoming color.
- * @param child The incoming node
- * @param color The incoming color
- */
-function highlightChildren(child: AtomNode | CutNode, color: string) {
-    if (child instanceof AtomNode) {
-        drawAtom(child, color, true);
-    } else if (child instanceof CutNode) {
-        drawCut(child, color);
-        for (let i = 0; i < child.children.length; i++) {
-            highlightChildren(child.children[i], color);
-        }
-    }
 }
