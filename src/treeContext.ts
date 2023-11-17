@@ -25,6 +25,8 @@ export enum Tool {
     doubleCutInsertionTool,
     doubleCutDeletionTool,
     erasureTool,
+    proofMoveSingle,
+    proofMoveMulti,
 }
 
 export class treeContext {

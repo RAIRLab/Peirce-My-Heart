@@ -87,6 +87,18 @@ import {
     resizeMouseUp,
     resizeMouseOut,
 } from "./DrawModes/ResizeTool";
+import {
+    proofMoveSingleMouseDown,
+    proofMoveSingleMouseMove,
+    proofMoveSingleMouseOut,
+    proofMoveSingleMouseUp,
+} from "./ProofTools/ProofMoveSingleTool";
+import {
+    proofMoveMultiMouseDown,
+    proofMoveMultiMouseMove,
+    proofMoveMultiMouseOut,
+    proofMoveMultiMouseUp,
+} from "./ProofTools/ProofMoveMultiTool";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -132,6 +144,8 @@ window.doubleCutInsertionTool = Tool.doubleCutInsertionTool;
 window.resizeTool = Tool.resizeTool;
 window.doubleCutDeletionTool = Tool.doubleCutDeletionTool;
 window.erasureTool = Tool.erasureTool;
+window.proofMoveSingle = Tool.proofMoveSingle;
+window.proofMoveMulti = Tool.proofMoveMulti;
 window.setTool = setTool;
 window.setHighlight = setHighlight;
 window.toggleHandler = toggleHandler;
@@ -154,6 +168,8 @@ declare global {
         doubleCutInsertionTool: Tool;
         doubleCutDeletionTool: Tool;
         erasureTool: Tool;
+        proofMoveSingle: Tool;
+        proofMoveMulti: Tool;
         setTool: (state: Tool) => void;
         setHighlight: (event: string, id: string) => void;
         toggleHandler: () => void;
@@ -331,6 +347,12 @@ function mouseDownHandler(event: MouseEvent) {
         case Tool.erasureTool:
             erasureMouseDown(event);
             break;
+        case Tool.proofMoveSingle:
+            proofMoveSingleMouseDown(event);
+            break;
+        case Tool.proofMoveMulti:
+            proofMoveMultiMouseDown(event);
+            break;
         default:
             break;
     }
@@ -386,6 +408,12 @@ function mouseMoveHandler(event: MouseEvent) {
             case Tool.erasureTool:
                 erasureMouseMove(event);
                 break;
+            case Tool.proofMoveSingle:
+                proofMoveSingleMouseMove(event);
+                break;
+            case Tool.proofMoveMulti:
+                proofMoveMultiMouseMove(event);
+                break;
             default:
                 break;
         }
@@ -437,6 +465,12 @@ function mouseUpHandler(event: MouseEvent) {
             break;
         case Tool.erasureTool:
             erasureMouseUp(event);
+            break;
+        case Tool.proofMoveSingle:
+            proofMoveSingleMouseUp(event);
+            break;
+        case Tool.proofMoveMulti:
+            proofMoveMultiMouseUp(event);
             break;
         default:
             break;
@@ -491,6 +525,12 @@ function mouseOutHandler() {
             break;
         case Tool.erasureTool:
             erasureMouseOut();
+            break;
+        case Tool.proofMoveSingle:
+            proofMoveSingleMouseOut();
+            break;
+        case Tool.proofMoveMulti:
+            proofMoveMultiMouseOut();
             break;
         default:
             break;
