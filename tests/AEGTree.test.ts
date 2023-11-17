@@ -77,7 +77,7 @@ describe("AEGTree canInsert soliloquy:", () => {
     });
 
     //Should be impossible, just wanted a case written to express the thought. Currently throws an error if not skipped
-    test.skip("Tree should not be able to insert another Sheet of Assertion.", () => {
+    test.fails("Tree should not be able to insert another Sheet of Assertion.", () => {
         expect(tree.canInsert(new CutNode(null))).toBeFalsy();
     });
 });
