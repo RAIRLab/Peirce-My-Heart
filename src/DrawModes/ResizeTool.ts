@@ -57,8 +57,8 @@ export function resizeMouseDown(event: MouseEvent) {
 export function resizeMouseMove(event: MouseEvent) {
     if (legalNode) {
         const moveDifference: Point = new Point(
-            (event.x - startingPoint.x) / 2,
-            (event.y - startingPoint.y) / 2
+            (event.x - offset.x - startingPoint.x) / 2,
+            (event.y - offset.y - startingPoint.y) / 2
         );
 
         if (currentNode instanceof CutNode) {
@@ -83,8 +83,8 @@ export function resizeMouseMove(event: MouseEvent) {
 export function resizeMouseUp(event: MouseEvent) {
     if (legalNode) {
         const moveDifference: Point = new Point(
-            (event.x - startingPoint.x) / 2,
-            (event.y - startingPoint.y) / 2
+            (event.x - offset.x - startingPoint.x) / 2,
+            (event.y - offset.y - startingPoint.y) / 2
         );
 
         if (currentNode instanceof CutNode) {
@@ -126,8 +126,8 @@ function resizeCut(originalCut: CutNode, difference: Point) {
         return new CutNode(
             new Ellipse(
                 new Point(
-                    originalCut.ellipse.center.x + difference.x - offset.x,
-                    originalCut.ellipse.center.y + difference.y - offset.y
+                    originalCut.ellipse.center.x + difference.x,
+                    originalCut.ellipse.center.y + difference.y
                 ),
                 originalCut.ellipse.radiusX + difference.x * direction.x,
                 originalCut.ellipse.radiusY + difference.y * direction.y
