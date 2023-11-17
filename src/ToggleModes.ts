@@ -68,7 +68,7 @@ export function toggleHandler(): void {
         const loadedProof = loadFile(treeContext.modeState, proofCachedAEG) as ProofNode[] | null;
         if (loadedProof !== null) {
             treeContext.proofHistory = loadedProof;
-            //Construct the next tree from the last tree in the proof
+            /* //Construct the next tree from the last tree in the proof
             const nextTree = new AEGTree(
                 treeContext.proofHistory[treeContext.proofHistory.length - 1].tree.sheet
             );
@@ -86,12 +86,12 @@ export function toggleHandler(): void {
                 }
 
                 treeContext.proofHistory.push(new ProofNode(nextTree));
-            }
+            } */
         } else {
-            //If there is no saved proof and the user selected something to be copied over from
+            /* //If there is no saved proof and the user selected something to be copied over from
             //draw mode, make that our proof structure
             const proofTree = new AEGTree(treeContext.selectForProof.sheet);
-            treeContext.proofHistory.push(new ProofNode(proofTree));
+            treeContext.proofHistory.push(new ProofNode(proofTree)); */
         }
 
         //Reset the state of our tools

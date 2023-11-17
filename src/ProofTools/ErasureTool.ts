@@ -29,7 +29,7 @@ let currentProofTree: AEGTree;
  */
 export function erasureMouseDown(event: MouseEvent) {
     const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
-    currentProofTree = treeContext.proofHistory[treeContext.proofHistory.length - 1].tree;
+    currentProofTree = treeContext.getLastProofStep().tree;
     currentNode = currentProofTree.getLowestNode(currentPoint);
 
     isLegal();

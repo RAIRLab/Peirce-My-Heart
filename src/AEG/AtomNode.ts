@@ -163,4 +163,14 @@ export class AtomNode {
             this.internalHeight
         );
     }
+
+    /**
+     * Method that checks if an atom node is equal to another atom node
+     * The are equal if they represent the same proposition
+     * @param otherAtom The other atom node we are checking against for equality
+     * @returns True, if they are equal (the same). Else, false
+     */
+    public isEqualTo(otherAtom: AtomNode): boolean {
+        return this.identifier === otherAtom.identifier;
+    }
 }

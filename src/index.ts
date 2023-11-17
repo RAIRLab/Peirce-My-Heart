@@ -74,6 +74,12 @@ import {
     doubleCutDeletionMouseOut,
 } from "./ProofTools/DoubleCutDeletionTool";
 import {
+    insertionMouseDown,
+    insertionMouseMove,
+    insertionMouseOut,
+    insertionMouseUp,
+} from "./ProofTools/InsertionTools";
+import {
     erasureMouseDown,
     erasureMouseMove,
     erasureMouseUp,
@@ -136,6 +142,7 @@ window.copyFromDrawTool = Tool.copyFromDrawTool;
 window.doubleCutInsertionTool = Tool.doubleCutInsertionTool;
 window.resizeTool = Tool.resizeTool;
 window.doubleCutDeletionTool = Tool.doubleCutDeletionTool;
+window.insertionTool = Tool.insertionTool;
 window.erasureTool = Tool.erasureTool;
 window.setTool = setTool;
 window.setHighlight = setHighlight;
@@ -158,6 +165,7 @@ declare global {
         resizeTool: Tool;
         doubleCutInsertionTool: Tool;
         doubleCutDeletionTool: Tool;
+        insertionTool: Tool;
         erasureTool: Tool;
         setTool: (state: Tool) => void;
         setHighlight: (event: string, id: string) => void;
@@ -361,6 +369,9 @@ function mouseDownHandler(event: MouseEvent) {
         case Tool.doubleCutDeletionTool:
             doubleCutDeletionMouseDown(event);
             break;
+        case Tool.insertionTool:
+            insertionMouseDown(event);
+            break;
         case Tool.erasureTool:
             erasureMouseDown(event);
             break;
@@ -416,6 +427,9 @@ function mouseMoveHandler(event: MouseEvent) {
             case Tool.doubleCutDeletionTool:
                 doubleCutDeletionMouseMove(event);
                 break;
+            case Tool.insertionTool:
+                insertionMouseMove(event);
+                break;
             case Tool.erasureTool:
                 erasureMouseMove(event);
                 break;
@@ -467,6 +481,9 @@ function mouseUpHandler(event: MouseEvent) {
             break;
         case Tool.doubleCutDeletionTool:
             doubleCutDeletionMouseUp(event);
+            break;
+        case Tool.insertionTool:
+            insertionMouseUp(event);
             break;
         case Tool.erasureTool:
             erasureMouseUp(event);
@@ -521,6 +538,9 @@ function mouseOutHandler() {
             break;
         case Tool.doubleCutDeletionTool:
             doubleCutDeletionMouseOut();
+            break;
+        case Tool.insertionTool:
+            insertionMouseOut();
             break;
         case Tool.erasureTool:
             erasureMouseOut();

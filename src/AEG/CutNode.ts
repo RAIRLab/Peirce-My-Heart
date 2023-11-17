@@ -344,4 +344,57 @@ export class CutNode {
         }
         return formulaString;
     }
+
+    /**
+     * Method that checks if a cut node is equal to another cut node
+     * The are equal if they represent the same graph
+     * @param otherCut The other cut node we are checking against for equality
+     * @returns True, if they are equal (the same). Else, false
+     */
+    public isEqualTo(otherCut: CutNode): boolean {
+        //For 2 cuts to be equal, they must have the same number of children
+        if (this.children.length === otherCut.children.length) {
+            if (this.children.length === 0) {
+                //If they do not have children, they are empty cuts
+                //Empty cuts are always equal
+                return true;
+            }
+            //If they have the same number of children, they should be the same children
+            //Make a deep copy and get the list of children of each cut
+            const thisChildren = this.copy().children;
+            const otherChildren = otherCut.copy().children;
+
+            //Iterate through the children of a cut and see if the other cut has the same child
+            //If they have the same child, remove it from the lists and continue
+            //If a child is not present in both, they are not equal
+            for (let i = 0; i < thisChildren.length; i++) {
+                for (let j = 0; j < otherChildren.length; j++) {
+                    if (
+                        (thisChildren[i] instanceof AtomNode &&
+                            otherChildren[j] instanceof AtomNode &&
+                            (thisChildren[i] as AtomNode).isEqualTo(
+                                otherChildren[j] as AtomNode
+                            )) ||
+                        (thisChildren[i] instanceof CutNode &&
+                            otherChildren[j] instanceof CutNode &&
+                            (thisChildren[i] as CutNode).isEqualTo(otherChildren[j] as CutNode))
+                    ) {
+                        thisChildren.splice(i, 1);
+                        otherChildren.splice(j, 1);
+                        i--;
+                        break;
+                    }
+
+                    if (j === otherChildren.length - 1) {
+                        //Checked all children but a match was not found. The nodes are not equal
+                        return false;
+                    }
+                }
+            }
+            //Check if all the children have been matched and returned
+            return thisChildren.length === 0 && otherChildren.length === 0;
+        }
+
+        return false;
+    }
 }

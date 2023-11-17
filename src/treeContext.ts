@@ -25,6 +25,7 @@ export enum Tool {
     copyFromDrawTool,
     doubleCutInsertionTool,
     doubleCutDeletionTool,
+    insertionTool,
     erasureTool,
 }
 
@@ -43,4 +44,12 @@ export class treeContext {
 
     //An indicator of the mode that we are currently on
     public static modeState: "Draw" | "Proof" = "Draw";
+
+    public static getLastProofStep(): ProofNode {
+        if (treeContext.proofHistory.length === 0) {
+            treeContext.proofHistory.push(new ProofNode(new AEGTree()));
+        }
+
+        return treeContext.proofHistory[treeContext.proofHistory.length - 1];
+    }
 }

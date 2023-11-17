@@ -52,7 +52,7 @@ export function copyMultiMouseMove(event: MouseEvent) {
 
         redrawTree(treeContext.tree);
         if (currentNode instanceof CutNode) {
-            const color = validateChildren(currentNode, moveDifference)
+            const color = validateChildren(treeContext.tree, currentNode, moveDifference)
                 ? legalColor()
                 : illegalColor();
             drawAltered(currentNode, color, moveDifference);
@@ -79,7 +79,7 @@ export function copyMultiMouseUp(event: MouseEvent) {
         );
 
         if (currentNode instanceof CutNode) {
-            if (validateChildren(currentNode, moveDifference)) {
+            if (validateChildren(treeContext.tree, currentNode, moveDifference)) {
                 insertChildren(currentNode, moveDifference);
             }
         } else if (currentNode instanceof AtomNode) {

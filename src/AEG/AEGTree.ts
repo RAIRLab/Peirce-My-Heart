@@ -214,6 +214,18 @@ export class AEGTree {
         }
     }
 
+    public isEqualTo(otherTree: AEGTree): boolean {
+        //For 2 trees to be equal, they must have the same number of children
+        if (this.sheet.children.length === otherTree.sheet.children.length) {
+            if (this.sheet.children.length === 0) {
+                //Both trees are empty trees => they are equal
+                return true;
+            }
+            return this.sheet.isEqualTo(otherTree.sheet);
+        }
+        return false;
+    }
+
     /**
      * Method that returns a string representation of the AEG Tree
      * @returns The structure formed by the cuts and atoms in this AEG Tree

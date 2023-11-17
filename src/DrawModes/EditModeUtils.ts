@@ -10,6 +10,7 @@ import {treeContext} from "../treeContext";
 import {offset} from "./DragTool";
 import {Ellipse} from "../AEG/Ellipse";
 import {drawCut, drawAtom} from "./DrawUtils";
+import {AEGTree} from "../AEG/AEGTree";
 
 /**
  * Checks the validity of the incoming node and all of its children. If the child is a cut node uses
@@ -19,10 +20,10 @@ import {drawCut, drawAtom} from "./DrawUtils";
  * @param change The difference between the original position and the new position
  * @returns If all nodes are in a valid position returns true, if any node is not returns false
  */
-export function validateChildren(incomingNode: CutNode, change: Point): boolean {
+export function validateChildren(tree: AEGTree, incomingNode: CutNode, change: Point): boolean {
     if (incomingNode.ellipse !== null) {
         const tempCut: CutNode = alterCut(incomingNode, change);
-        if (!treeContext.tree.canInsert(tempCut)) {
+        if (!tree.canInsert(tempCut)) {
             return false;
         }
     }
@@ -31,7 +32,7 @@ export function validateChildren(incomingNode: CutNode, change: Point): boolean 
         if (
             incomingNode.children[i] instanceof CutNode &&
             (incomingNode.children[i] as CutNode).ellipse !== null &&
-            !validateChildren(incomingNode.children[i] as CutNode, change)
+            !validateChildren(tree, incomingNode.children[i] as CutNode, change)
         ) {
             //If any of this node's children are in an invalid location return false for all of them.
             return false;
@@ -39,7 +40,7 @@ export function validateChildren(incomingNode: CutNode, change: Point): boolean 
             let tempAtom = incomingNode.children[i] as AtomNode;
             tempAtom = alterAtom(tempAtom, change);
 
-            if (!treeContext.tree.canInsert(tempAtom)) {
+            if (!tree.canInsert(tempAtom)) {
                 return false;
             }
         }

@@ -33,6 +33,7 @@ const selectString = <HTMLParagraphElement>document.getElementById("selectionStr
  */
 export function copyFromDrawMouseDown(event: MouseEvent) {
     tempTree = new AEGTree(treeContext.tree.sheet);
+    treeContext.tree.isEqualTo(tempTree);
     //Reset our selectForProof tree to a blank AEG so that a new graph can be selected
     treeContext.selectForProof = new AEGTree();
 
