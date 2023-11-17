@@ -23,6 +23,7 @@ ctx.font = "35pt arial";
 
 //Tree string displayed on webpage
 const cutDisplay = <HTMLParagraphElement>document.getElementById("graphString");
+const proofString = <HTMLParagraphElement>document.getElementById("proofString");
 
 //HTML bounding box check
 const atomCheckBox = <HTMLInputElement>document.getElementById("atomBox");
@@ -154,7 +155,9 @@ export function redrawProof() {
         tree = treeContext.proofHistory[treeContext.proofHistory.length - 1].tree;
     }
 
-    redrawTree(tree);
+    cleanCanvas();
+    proofString.innerHTML = tree.toString();
+    redrawCut(tree.sheet);
 }
 
 /**

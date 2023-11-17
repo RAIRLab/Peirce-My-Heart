@@ -8,12 +8,12 @@ import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "./DragTool";
-import {drawAtom, drawCut, cleanCanvas, redrawTree, highlightNode} from "./DrawUtils";
+import {drawAtom, cleanCanvas, redrawTree, highlightNode} from "./DrawUtils";
 import {legalColor} from "../Themes";
 import {AEGTree} from "../AEG/AEGTree";
 
 //The initial point the user pressed down.
-let startingPoint: Point;
+let currentPoint: Point;
 
 //The current node and its children we will be moving.
 let selectedNode: CutNode | AtomNode | null = null;
@@ -22,20 +22,22 @@ let selectedNode: CutNode | AtomNode | null = null;
 let legalNode: boolean;
 
 //A deep copy of the global tree
-const tempTree = new AEGTree(treeContext.tree.sheet);
+let tempTree: AEGTree;
 
+const selectString = <HTMLParagraphElement>document.getElementById("selectionString");
 /**
  * Handles the MouseDown event while in copy to proof mode.
  * Gets the lowest node on the tree at the point identified by the MouseDown event.
  * If it is a legal selection, highlights the node.
  * @param event The MouseDown event while in copy to proof mode
  */
-export function toProofMouseDown(event: MouseEvent) {
+export function copyFromDrawMouseDown(event: MouseEvent) {
+    tempTree = new AEGTree(treeContext.tree.sheet);
     //Reset our selectForProof tree to a blank AEG so that a new graph can be selected
-    treeContext.selectForProof.sheet = new AEGTree().sheet;
+    treeContext.selectForProof = new AEGTree();
 
-    startingPoint = new Point(event.x - offset.x, event.y - offset.y);
-    selectedNode = treeContext.tree.getLowestNode(startingPoint);
+    currentPoint = new Point(event.x - offset.x, event.y - offset.y);
+    selectedNode = treeContext.tree.getLowestNode(currentPoint);
 
     isLegal();
 }
@@ -44,11 +46,11 @@ export function toProofMouseDown(event: MouseEvent) {
  * Handles the MouseMove event while in copy to proof mode.
  * Currently MouseMove does not allow for node selection. (Can be changed as per team review)
  */
-export function toProofMouseMove(event: MouseEvent) {
+export function copyFromDrawMouseMove(event: MouseEvent) {
     redrawTree(treeContext.tree);
 
-    const movePoint: Point = new Point(event.x - offset.x, event.y - offset.y);
-    selectedNode = treeContext.tree.getLowestNode(movePoint);
+    currentPoint = new Point(event.x - offset.x, event.y - offset.y);
+    selectedNode = treeContext.tree.getLowestNode(currentPoint);
 
     isLegal();
 }
@@ -57,7 +59,7 @@ export function toProofMouseMove(event: MouseEvent) {
  * Handles the MouseUp event while in copy to proof mode.
  * MouseUp displays an alert stating that a legal node has been selected
  */
-export function toProofMouseUp() {
+export function copyFromDrawMouseUp() {
     if (legalNode) {
         //If the selected node is the tree, insert its children so we do not insert another tree.
         if (selectedNode instanceof CutNode && selectedNode.ellipse === null) {
@@ -67,6 +69,9 @@ export function toProofMouseUp() {
         } else {
             treeContext.selectForProof.insert(selectedNode!);
         }
+        /* if (selectedNode !== null) {
+            treeContext.selectForProof.insert(selectedNode);
+        } */
         redrawTree(treeContext.tree);
         alert("Graph selected, you may now toggle to proof mode");
     }
@@ -76,26 +81,35 @@ export function toProofMouseUp() {
  * Handles the MouseOut event of when the mouse moves outside the canvas while in copy to proof mode.
  * On MouseOut, the selection is cancelled.
  */
-export function toProofMouseOut() {
+export function copyFromDrawMouseOut() {
     selectedNode = null;
     legalNode = false;
     redrawTree(treeContext.tree);
 }
 
 function isLegal() {
+    const tree = new AEGTree();
+    let removed = false;
+
     if (selectedNode !== null) {
+        tree.insert(selectedNode);
+
         legalNode = true;
+        const tempParent = tempTree.getLowestParent(currentPoint);
 
         //Temporarily remove the selected part of the tree and highlight selected part only
         //NEED TREE EQUALITY DONE TO COMPARE DEEP COPY
-        if (selectedNode !== tempTree.sheet) {
-            const tempParent = tempTree.getLowestParent(startingPoint);
+        if (
+            selectedNode instanceof AtomNode ||
+            (selectedNode instanceof CutNode && selectedNode.ellipse !== null)
+        ) {
             if (tempParent !== null) {
-                tempParent.remove(startingPoint);
+                tempParent.remove(currentPoint);
+                removed = true;
             }
             redrawTree(tempTree);
         } else {
-            //If the entire tree is selected, clear the canvas and redraw entire tree in legalColor.
+            //If the sheet is selected, clear the canvas so that entire tree is highlighted cleanly
             cleanCanvas();
         }
 
@@ -105,5 +119,12 @@ function isLegal() {
         } else {
             highlightNode(selectedNode, legalColor());
         }
+
+        if (removed) {
+            tempTree.insert(selectedNode);
+        }
+    } else {
+        legalNode = false;
     }
+    selectString.innerHTML = tree.toString();
 }

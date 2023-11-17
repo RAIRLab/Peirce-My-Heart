@@ -76,7 +76,7 @@
           <button type="button" onclick="setTool(resizeTool)" title="Resize Single Mode" class="toolButton">
             <i class="fa fa-arrows-alt" aria-hidden="true"></i>
           </button>
-          <button type="button" onclick="setTool(toProofMode)" title="Select and Copy to Proof Mode" class="toolButton">
+          <button type="button" onclick="setTool(copyFromDrawTool)" title="Select and Copy to Proof Mode" class="toolButton">
             <i class="fa fa-share-square-o" aria-hidden="true"></i>
           </button>
         </div>
@@ -129,6 +129,7 @@
       <div id="genericTools">
         <div class="toolSetting">
           <p id="graphString"></p>
+          <p id="proofString"></p>
         </div>
         <div class="fileButton">
           <div class="toolSetting">
@@ -178,6 +179,11 @@
           <input id="atomBoxes" type="checkbox" title="Show atomBoxes"/>
         </div>
       </div>
+      <div id="toProofTools" class="toolSetting">
+        <p>Selected subgraph: </p>
+        <p id="selectionString"></p>
+      </div>
+      
     </div>
     <canvas id="canvas"></canvas>
   </body>

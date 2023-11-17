@@ -56,10 +56,10 @@ import {
     deleteMultiMouseUp,
 } from "./DrawModes/DeleteMultiTool";
 import {
-    toProofMouseDown,
-    toProofMouseMove,
-    toProofMouseUp,
-    toProofMouseOut,
+    copyFromDrawMouseDown,
+    copyFromDrawMouseMove,
+    copyFromDrawMouseUp,
+    copyFromDrawMouseOut,
 } from "./DrawModes/copyFromDraw";
 import {
     doubleCutInsertionMouseDown,
@@ -103,6 +103,10 @@ ctx.font = "35pt arial";
 //Global State
 const cutTools = <HTMLParagraphElement>document.getElementById("cutTools");
 const atomTools = <HTMLParagraphElement>document.getElementById("atomTools");
+export const treeString = <HTMLParagraphElement>document.getElementById("graphString");
+export const proofString = <HTMLParagraphElement>document.getElementById("proofString");
+const selectionDisplay = <HTMLParagraphElement>document.getElementById("toProofTools");
+
 window.addEventListener("keydown", keyDownHandler);
 canvas.addEventListener("mousedown", mouseDownHandler);
 canvas.addEventListener("mousemove", mouseMoveHandler);
@@ -128,7 +132,7 @@ window.copySingleTool = Tool.copySingleTool;
 window.copyMultiTool = Tool.copyMultiTool;
 window.deleteSingleTool = Tool.deleteSingleTool;
 window.deleteMultiTool = Tool.deleteMultiTool;
-window.toProofMode = Tool.toProofMode;
+window.copyFromDrawTool = Tool.copyFromDrawTool;
 window.doubleCutInsertionTool = Tool.doubleCutInsertionTool;
 window.resizeTool = Tool.resizeTool;
 window.doubleCutDeletionTool = Tool.doubleCutDeletionTool;
@@ -150,7 +154,7 @@ declare global {
         copyMultiTool: Tool;
         deleteSingleTool: Tool;
         deleteMultiTool: Tool;
-        toProofMode: Tool;
+        copyFromDrawTool: Tool;
         resizeTool: Tool;
         doubleCutInsertionTool: Tool;
         doubleCutDeletionTool: Tool;
@@ -192,11 +196,16 @@ export function setTool(state: Tool) {
     treeContext.toolState = state;
     cutTools.style.display = "none";
     atomTools.style.display = "none";
+    treeString.style.display = "none";
+    proofString.style.display = "none";
+    selectionDisplay.style.display = "none";
 
-    if (state <= 10) {
+    if (state <= 11) {
         treeContext.modeState = "Draw";
+        treeString.style.display = "block";
     } else {
         treeContext.modeState = "Proof";
+        proofString.style.display = "block";
     }
 
     switch (treeContext.toolState) {
@@ -205,6 +214,9 @@ export function setTool(state: Tool) {
             break;
         case Tool.cutTool:
             cutTools.style.display = "block";
+            break;
+        case Tool.copyFromDrawTool:
+            selectionDisplay.style.display = "block";
             break;
         case Tool.doubleCutInsertionTool:
             cutTools.style.display = "block";
@@ -340,8 +352,8 @@ function mouseDownHandler(event: MouseEvent) {
         case Tool.resizeTool:
             resizeMouseDown(event);
             break;
-        case Tool.toProofMode:
-            toProofMouseDown(event);
+        case Tool.copyFromDrawTool:
+            copyFromDrawMouseDown(event);
             break;
         case Tool.doubleCutInsertionTool:
             doubleCutInsertionMouseDown(event);
@@ -395,8 +407,8 @@ function mouseMoveHandler(event: MouseEvent) {
             case Tool.resizeTool:
                 resizeMouseMove(event);
                 break;
-            case Tool.toProofMode:
-                toProofMouseMove(event);
+            case Tool.copyFromDrawTool:
+                copyFromDrawMouseMove(event);
                 break;
             case Tool.doubleCutInsertionTool:
                 doubleCutInsertionMouseMove(event);
@@ -447,8 +459,8 @@ function mouseUpHandler(event: MouseEvent) {
         case Tool.resizeTool:
             resizeMouseUp(event);
             break;
-        case Tool.toProofMode:
-            toProofMouseUp();
+        case Tool.copyFromDrawTool:
+            copyFromDrawMouseUp();
             break;
         case Tool.doubleCutInsertionTool:
             doubleCutInsertionMouseUp(event);
@@ -501,8 +513,8 @@ function mouseOutHandler() {
         case Tool.resizeTool:
             resizeMouseOut();
             break;
-        case Tool.toProofMode:
-            toProofMouseOut();
+        case Tool.copyFromDrawTool:
+            copyFromDrawMouseOut();
             break;
         case Tool.doubleCutInsertionTool:
             doubleCutInsertionMouseOut();

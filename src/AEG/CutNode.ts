@@ -305,7 +305,7 @@ export class CutNode {
         if (this.internalEllipse === null) {
             str = "Sheet of Assertion of the AEG Tree";
         } else {
-            str = "A cut node with boundary box of " + this.internalEllipse.toString();
+            str = "A cut node with " + this.internalEllipse.toString();
         }
 
         if (this.internalChildren.length > 0) {

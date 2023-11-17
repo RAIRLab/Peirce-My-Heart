@@ -22,7 +22,7 @@ export enum Tool {
     deleteSingleTool,
     deleteMultiTool,
     resizeTool,
-    toProofMode,
+    copyFromDrawTool,
     doubleCutInsertionTool,
     doubleCutDeletionTool,
     erasureTool,

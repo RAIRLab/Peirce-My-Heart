@@ -7,6 +7,7 @@ import {loadFile} from "./AEG-IO";
 import {AEGTree} from "./AEG/AEGTree";
 import {ProofNode} from "./AEG/ProofNode";
 import {redrawProof, redrawTree} from "./DrawModes/DrawUtils";
+import {treeString, proofString} from ".";
 // import {setMode} from "./index";
 // import {selectedNode} from "./DrawModes/ToProofMode";
 import {Tool, treeContext} from "./treeContext";
@@ -33,7 +34,9 @@ export function toggleHandler(): void {
     if (drawMode) {
         //Display the buttons for Draw Mode
         drawButtons.style.display = "block";
+        treeString.style.display = "block";
         proofButtons.style.display = "none";
+        proofString.style.display = "none";
         treeContext.modeState = "Draw";
 
         //cache the proof tree and tool state so that we can load it back in when we toggle again
@@ -52,7 +55,9 @@ export function toggleHandler(): void {
     } else {
         //Display the buttons for Proof Mode
         drawButtons.style.display = "none";
+        treeString.style.display = "none";
         proofButtons.style.display = "block";
+        proofString.style.display = "block";
         treeContext.modeState = "Proof";
 
         //cache the draw tree and tool state so that we can load it back in when we toggle again
