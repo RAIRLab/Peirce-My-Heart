@@ -111,7 +111,7 @@ export function proofMoveSingleMouseOut() {
     redrawTree(treeContext.tree);
 }
 
-function isLegal(currentNode: CutNode | AtomNode, currentPoint: Point): Boolean {
+function isLegal(currentNode: CutNode | AtomNode, currentPoint: Point): boolean {
     if (
         currentParent === treeContext.tree.getLowestNode(currentPoint) &&
         treeContext.tree.canInsert(currentNode)

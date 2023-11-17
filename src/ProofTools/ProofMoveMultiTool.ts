@@ -18,6 +18,9 @@ let startingPoint: Point;
 //The current node and its children we will be moving.
 let currentNode: CutNode | AtomNode | null = null;
 
+//The parent of the node we removed.
+let currentParent: CutNode | null = null;
+
 //Whether or not the node is allowed to be moved (not the sheet).
 let legalNode: boolean;
 
@@ -25,7 +28,7 @@ export function proofMoveMultiMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = treeContext.tree.getLowestNode(startingPoint);
     if (currentNode !== treeContext.tree.sheet && currentNode !== null) {
-        const currentParent = treeContext.tree.getLowestParent(startingPoint);
+        currentParent = treeContext.tree.getLowestParent(startingPoint);
         if (currentParent !== null) {
             currentParent.remove(startingPoint);
         }
@@ -44,13 +47,23 @@ export function proofMoveMultiMouseMove(event: MouseEvent) {
 
         redrawTree(treeContext.tree);
         if (currentNode instanceof CutNode) {
-            const color = validateChildren(currentNode, moveDifference)
+            const color = isLegal(
+                currentNode,
+                new Point(event.x - offset.x, event.y - offset.y),
+                moveDifference
+            )
                 ? legalColor()
                 : illegalColor();
             drawAltered(currentNode, color, moveDifference);
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
-            const color = treeContext.tree.canInsert(tempAtom) ? legalColor() : illegalColor();
+            const color = isLegal(
+                currentNode,
+                new Point(event.x - offset.x, event.y - offset.y),
+                moveDifference
+            )
+                ? legalColor()
+                : illegalColor();
             drawAtom(tempAtom, color, true);
         }
     }
@@ -64,7 +77,13 @@ export function proofMoveMultiMouseUp(event: MouseEvent) {
         );
 
         if (currentNode instanceof CutNode) {
-            if (validateChildren(currentNode, moveDifference)) {
+            if (
+                isLegal(
+                    currentNode,
+                    new Point(event.x - offset.x, event.y - offset.y),
+                    moveDifference
+                )
+            ) {
                 insertChildren(currentNode, moveDifference);
             } else {
                 treeContext.tree.insert(currentNode);
@@ -72,7 +91,13 @@ export function proofMoveMultiMouseUp(event: MouseEvent) {
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
 
-            if (treeContext.tree.canInsert(tempAtom)) {
+            if (
+                isLegal(
+                    currentNode,
+                    new Point(event.x - offset.x, event.y - offset.y),
+                    moveDifference
+                )
+            ) {
                 treeContext.tree.insert(tempAtom);
             } else {
                 treeContext.tree.insert(currentNode);
@@ -89,4 +114,25 @@ export function proofMoveMultiMouseOut() {
     }
     legalNode = false;
     redrawTree(treeContext.tree);
+}
+
+function isLegal(currentNode: CutNode | AtomNode, currentPoint: Point, difference: Point): boolean {
+    if (
+        currentNode instanceof CutNode &&
+        currentParent === treeContext.tree.getLowestNode(currentPoint)
+    ) {
+        if (validateChildren(currentNode, difference)) {
+            return true;
+        } else {
+            return false;
+        }
+    } else if (currentNode instanceof AtomNode) {
+        if (treeContext.tree.canInsert(currentNode)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    return false;
 }
