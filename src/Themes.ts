@@ -3,16 +3,10 @@
  * This file provides basic utilities for extracting important colors
  * for the application from the CSS themes
  */
-import {tree, redrawCut} from "./index";
-import {offset} from "./DragMode";
+import {treeContext} from "./treeContext";
+import {redrawTree} from "./DrawModes/DrawUtils";
 
-const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
 const themeSelector: HTMLSelectElement = <HTMLSelectElement>document.getElementById("theme-select");
-const res: CanvasRenderingContext2D | null = canvas.getContext("2d");
-if (res === null) {
-    throw Error("2d rendering context not supported");
-}
-const ctx: CanvasRenderingContext2D = res;
 
 /**
  * Computes the value of a variable from a CSS style sheet
@@ -35,15 +29,14 @@ function setTheme() {
     so that the new styles have been applied by the time this code runs.
     Due to how primitive the library is, there is no way to check for this
     automatically other than an even more complicated solution like observing putting new colors
-    on elements, this seems to wait just long enough that the library hanler finishes first.
+    on elements, this seems to wait just long enough that the library handler finishes first.
     https://stackoverflow.com/questions/47860455/how-to-ensure-an-eventlistener-is-executed-last
     */
     setTimeout(() => {
         legalColorStr = cssVar("--good-placement");
         illegalColorStr = cssVar("--bad-placement");
         placedColorStr = cssVar("--canvas-items");
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        redrawCut(tree.sheet, offset);
+        redrawTree(treeContext.tree);
     });
 }
 

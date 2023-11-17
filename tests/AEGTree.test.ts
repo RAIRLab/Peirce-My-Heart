@@ -1,5 +1,4 @@
 import {describe, test, expect} from "vitest";
-
 import {AtomNode} from "../src/AEG/AtomNode";
 import {CutNode} from "../src/AEG/CutNode";
 import {Point} from "../src/AEG/Point";

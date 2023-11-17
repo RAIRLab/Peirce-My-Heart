@@ -3,23 +3,14 @@
  * @author Dawn Moore
  */
 
-import {Point} from "./AEG/Point";
-import {AtomNode} from "./AEG/AtomNode";
-import {CutNode} from "./AEG/CutNode";
-import {redrawCut, tree} from "./index";
-import {offset} from "./DragMode";
-import {drawCut} from "./CutMode";
-import {drawAtom} from "./AtomMode";
-import {legalColor, illegalColor} from "./Themes";
+import {Point} from "../AEG/Point";
+import {AtomNode} from "../AEG/AtomNode";
+import {CutNode} from "../AEG/CutNode";
+import {treeContext} from "../treeContext";
+import {offset} from "./DragTool";
+import {drawCut, drawAtom, redrawTree} from "./DrawUtils";
+import {legalColor, illegalColor} from "../Themes";
 import {alterAtom, alterCut} from "./EditModeUtils";
-
-//Settings up Canvas
-const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
-const res: CanvasRenderingContext2D | null = canvas.getContext("2d");
-if (res === null) {
-    throw Error("2d rendering context not supported");
-}
-const ctx: CanvasRenderingContext2D = res;
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -38,9 +29,9 @@ let legalNode: boolean;
  */
 export function moveSingleMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = tree.getLowestNode(startingPoint);
-    if (currentNode !== tree.sheet && currentNode !== null) {
-        const currentParent = tree.getLowestParent(startingPoint);
+    currentNode = treeContext.tree.getLowestNode(startingPoint);
+    if (currentNode !== treeContext.tree.sheet && currentNode !== null) {
+        const currentParent = treeContext.tree.getLowestParent(startingPoint);
         if (currentParent !== null) {
             currentParent.remove(startingPoint);
         }
@@ -48,7 +39,7 @@ export function moveSingleMouseDown(event: MouseEvent) {
         if (currentNode instanceof CutNode && currentNode.children.length !== 0) {
             //The cut node loses custody of its children so that those can still be redrawn.
             for (let i = 0; i < currentNode.children.length; i++) {
-                tree.insert(currentNode.children[i]);
+                treeContext.tree.insert(currentNode.children[i]);
             }
             currentNode.children = [];
         }
@@ -75,26 +66,15 @@ export function moveSingleMouseMove(event: MouseEvent) {
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = alterCut(currentNode, moveDifference);
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            redrawCut(tree.sheet, offset);
-
-            if (tree.canInsert(tempCut)) {
-                drawCut(tempCut, legalColor());
-            } else {
-                drawCut(tempCut, illegalColor());
-            }
+            redrawTree(treeContext.tree);
+            const color = treeContext.tree.canInsert(tempCut) ? legalColor() : illegalColor();
+            drawCut(tempCut, color);
         } //If the node is an atom, make a temporary atom and check legality, drawing that.
         else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            redrawCut(tree.sheet, offset);
-
-            if (tree.canInsert(tempAtom)) {
-                drawAtom(tempAtom, legalColor(), true);
-            } else {
-                drawAtom(tempAtom, illegalColor(), true);
-            }
+            redrawTree(treeContext.tree);
+            const color = treeContext.tree.canInsert(tempAtom) ? legalColor() : illegalColor();
+            drawAtom(tempAtom, color, true);
         }
     }
 }
@@ -115,23 +95,22 @@ export function moveSingleMouseUp(event: MouseEvent) {
             const tempCut: CutNode = alterCut(currentNode, moveDifference);
 
             //If the new location is legal, insert the cut otherwise reinsert the cut we removed.
-            if (tree.canInsert(tempCut)) {
-                tree.insert(tempCut);
+            if (treeContext.tree.canInsert(tempCut)) {
+                treeContext.tree.insert(tempCut);
             } else {
-                tree.insert(currentNode);
+                treeContext.tree.insert(currentNode);
             }
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
 
             //If the new location is legal, insert the atom, if not reinsert the atom we removed.
-            if (tree.canInsert(tempAtom)) {
-                tree.insert(tempAtom);
+            if (treeContext.tree.canInsert(tempAtom)) {
+                treeContext.tree.insert(tempAtom);
             } else {
-                tree.insert(currentNode);
+                treeContext.tree.insert(currentNode);
             }
         }
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        redrawCut(tree.sheet, offset);
+        redrawTree(treeContext.tree);
     }
     legalNode = false;
 }
@@ -142,9 +121,8 @@ export function moveSingleMouseUp(event: MouseEvent) {
  */
 export function moveSingleMouseOut() {
     if (legalNode && currentNode !== null) {
-        tree.insert(currentNode);
+        treeContext.tree.insert(currentNode);
     }
     legalNode = false;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    redrawCut(tree.sheet, offset);
+    redrawTree(treeContext.tree);
 }

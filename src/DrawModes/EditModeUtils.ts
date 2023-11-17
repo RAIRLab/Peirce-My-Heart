@@ -3,14 +3,13 @@
  * @author Dawn Moore
  */
 
-import {Point} from "./AEG/Point";
-import {AtomNode} from "./AEG/AtomNode";
-import {CutNode} from "./AEG/CutNode";
-import {tree} from "./index";
-import {offset} from "./DragMode";
-import {Ellipse} from "./AEG/Ellipse";
-import {drawCut} from "./CutMode";
-import {drawAtom} from "./AtomMode";
+import {Point} from "../AEG/Point";
+import {AtomNode} from "../AEG/AtomNode";
+import {CutNode} from "../AEG/CutNode";
+import {treeContext} from "../treeContext";
+import {offset} from "./DragTool";
+import {Ellipse} from "../AEG/Ellipse";
+import {drawCut, drawAtom} from "./DrawUtils";
 
 /**
  * Checks the validity of the incoming node and all of its children. If the child is a cut node uses
@@ -23,7 +22,7 @@ import {drawAtom} from "./AtomMode";
 export function validateChildren(incomingNode: CutNode, change: Point): boolean {
     if (incomingNode.ellipse !== null) {
         const tempCut: CutNode = alterCut(incomingNode, change);
-        if (!tree.canInsert(tempCut)) {
+        if (!treeContext.tree.canInsert(tempCut)) {
             return false;
         }
     }
@@ -40,7 +39,7 @@ export function validateChildren(incomingNode: CutNode, change: Point): boolean 
             let tempAtom = incomingNode.children[i] as AtomNode;
             tempAtom = alterAtom(tempAtom, change);
 
-            if (!tree.canInsert(tempAtom)) {
+            if (!treeContext.tree.canInsert(tempAtom)) {
                 return false;
             }
         }
@@ -82,7 +81,7 @@ export function drawAltered(incomingNode: CutNode | AtomNode, color: string, cha
 export function insertChildren(incomingNode: CutNode | AtomNode, change: Point) {
     if (incomingNode instanceof CutNode && incomingNode.ellipse !== null) {
         const tempCut: CutNode = alterCut(incomingNode, change);
-        tree.insert(tempCut);
+        treeContext.tree.insert(tempCut);
         //If this node has any children recurses to insert them with the same distance change
         if (incomingNode.children.length !== 0) {
             for (let i = 0; i < incomingNode.children.length; i++) {
@@ -92,7 +91,7 @@ export function insertChildren(incomingNode: CutNode | AtomNode, change: Point) 
     } else if (incomingNode instanceof AtomNode) {
         const tempAtom: AtomNode = alterAtom(incomingNode, change);
 
-        tree.insert(tempAtom);
+        treeContext.tree.insert(tempAtom);
     }
 }
 
@@ -136,4 +135,20 @@ export function alterAtom(originalAtom: AtomNode, difference: Point) {
         originalAtom.width,
         originalAtom.height
     );
+}
+
+/**
+ * Highlights all the children of the incoming node as the incoming color.
+ * @param child The incoming node
+ * @param color The incoming color
+ */
+export function highlightChildren(child: AtomNode | CutNode, color: string) {
+    if (child instanceof AtomNode) {
+        drawAtom(child, color, true);
+    } else if (child instanceof CutNode) {
+        drawCut(child, color);
+        for (let i = 0; i < child.children.length; i++) {
+            highlightChildren(child.children[i], color);
+        }
+    }
 }
