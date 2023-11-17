@@ -168,6 +168,13 @@ export class AEGTree {
     }
 
     /**
+     * Removes all of the sheet's children.
+     */
+    public clear() {
+        this.internalSheet.clear();
+    }
+
+    /**
      * Determines if the incoming node's boundaries intersect the other node's boundaries.
      * @param incomingNode the incoming node
      * @param otherNode the other node
