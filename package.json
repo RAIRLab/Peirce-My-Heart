@@ -38,8 +38,8 @@
   "devDependencies": {
     "@playwright/test": "^1.39.0",
     "@types/node": "20.9.0",
-    "@types/wicg-file-system-access": "^2023.10.2",
-    "electron": "^27.0.3",
+    "@types/wicg-file-system-access": "^2023.10.3",
+    "electron": "^27.0.4",
     "electron-packager": "^17.1.2",
     "gts": "^5.2.0",
     "http-server": "^14.1.1",
