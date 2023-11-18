@@ -19,7 +19,7 @@ export class AEGTree {
     /**
      * Constructs the sheet of assertion of the AEG tree
      * @param sheet (OPTIONAL) An existing cut node which is to be used to construct the sheet of
-     * assertion of this AEG Tree
+     * assertion of this AEG Tree. If given, creates a new tree with a deep copy of this node.
      */
     public constructor(sheet?: CutNode) {
         if (sheet !== undefined) {
@@ -221,6 +221,12 @@ export class AEGTree {
         }
     }
 
+    /**
+     * Method that checks if an AEG Tree is equal to another AEG Tree. Trees are equal if they have
+     * the same children, irrespective of the ordering of nodes within a level
+     * @param otherTree The tree we want to check for equality with
+     * @returns True, if the trees are equal. Else, false
+     */
     public isEqualTo(otherTree: AEGTree): boolean {
         //For 2 trees to be equal, they must have the same number of children
         if (this.sheet.children.length === otherTree.sheet.children.length) {

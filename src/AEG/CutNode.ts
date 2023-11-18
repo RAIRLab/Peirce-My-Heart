@@ -353,8 +353,8 @@ export class CutNode {
     }
 
     /**
-     * Method that checks if a cut node is equal to another cut node
-     * The are equal if they represent the same graph
+     * Method that checks if a cut node is equal to another cut node. The are equal if they have
+     * the same children, irrespective of the ordering of nodes within a level
      * @param otherCut The other cut node we are checking against for equality
      * @returns True, if they are equal (the same). Else, false
      */

@@ -87,12 +87,12 @@ export function toggleHandler(): void {
 
                 treeContext.proofHistory.push(new ProofNode(nextTree));
             } */
-        } else {
-            /* //If there is no saved proof and the user selected something to be copied over from
+        } /* else {
+            //If there is no saved proof and the user selected something to be copied over from
             //draw mode, make that our proof structure
             const proofTree = new AEGTree(treeContext.selectForProof.sheet);
-            treeContext.proofHistory.push(new ProofNode(proofTree)); */
-        }
+            treeContext.proofHistory.push(new ProofNode(proofTree));
+        } */
 
         //Reset the state of our tools
         treeContext.toolState = proofCachedTool;

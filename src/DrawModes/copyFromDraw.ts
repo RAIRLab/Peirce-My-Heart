@@ -33,9 +33,8 @@ const selectString = <HTMLParagraphElement>document.getElementById("selectionStr
  */
 export function copyFromDrawMouseDown(event: MouseEvent) {
     tempTree = new AEGTree(treeContext.tree.sheet);
-    treeContext.tree.isEqualTo(tempTree);
     //Reset our selectForProof tree to a blank AEG so that a new graph can be selected
-    treeContext.selectForProof = new AEGTree();
+    treeContext.selectForProof.sheet = new AEGTree().sheet;
 
     currentPoint = new Point(event.x - offset.x, event.y - offset.y);
     selectedNode = treeContext.tree.getLowestNode(currentPoint);
@@ -48,12 +47,14 @@ export function copyFromDrawMouseDown(event: MouseEvent) {
  * Currently MouseMove does not allow for node selection. (Can be changed as per team review)
  */
 export function copyFromDrawMouseMove(event: MouseEvent) {
-    redrawTree(treeContext.tree);
+    if (legalNode) {
+        redrawTree(treeContext.tree);
 
-    currentPoint = new Point(event.x - offset.x, event.y - offset.y);
-    selectedNode = treeContext.tree.getLowestNode(currentPoint);
+        currentPoint = new Point(event.x - offset.x, event.y - offset.y);
+        selectedNode = treeContext.tree.getLowestNode(currentPoint);
 
-    isLegal();
+        isLegal();
+    }
 }
 
 /**
@@ -61,21 +62,22 @@ export function copyFromDrawMouseMove(event: MouseEvent) {
  * MouseUp displays an alert stating that a legal node has been selected
  */
 export function copyFromDrawMouseUp() {
-    if (legalNode) {
-        //If the selected node is the tree, insert its children so we do not insert another tree.
+    if (legalNode && selectedNode !== null) {
+        //If the selected node is the tree, insert its children only
         if (selectedNode instanceof CutNode && selectedNode.ellipse === null) {
             for (let i = 0; i < selectedNode.children.length; i++) {
                 treeContext.selectForProof.insert(selectedNode.children[i]);
             }
         } else {
-            treeContext.selectForProof.insert(selectedNode!);
-        }
-        /* if (selectedNode !== null) {
             treeContext.selectForProof.insert(selectedNode);
-        } */
+        }
+
+        console.log("selected: " + treeContext.selectForProof.toString());
         redrawTree(treeContext.tree);
-        alert("Graph selected, you may now toggle to proof mode");
     }
+
+    selectedNode = null;
+    legalNode = false;
 }
 
 /**
@@ -89,27 +91,29 @@ export function copyFromDrawMouseOut() {
 }
 
 function isLegal() {
+    //A tree which will contain our selected node so that it can be displayed on the sub bar
     const tree = new AEGTree();
     let removed = false;
 
     if (selectedNode !== null) {
-        tree.insert(selectedNode);
-
         legalNode = true;
-        const tempParent = tempTree.getLowestParent(currentPoint);
 
         //Temporarily remove the selected part of the tree and highlight selected part only
-        //NEED TREE EQUALITY DONE TO COMPARE DEEP COPY
+        //If the sheet has been selected, clear the canvas and redraw the entire tree
         if (
             selectedNode instanceof AtomNode ||
-            (selectedNode instanceof CutNode && selectedNode.ellipse !== null)
+            !(selectedNode as CutNode).isEqualTo(tempTree.sheet)
         ) {
+            tree.insert(selectedNode);
+            const tempParent = tempTree.getLowestParent(currentPoint);
+            //Remove the selected node from the tree so that it can be highlighted cleanly
             if (tempParent !== null) {
                 tempParent.remove(currentPoint);
                 removed = true;
             }
             redrawTree(tempTree);
         } else {
+            tree.sheet = selectedNode as CutNode;
             //If the sheet is selected, clear the canvas so that entire tree is highlighted cleanly
             cleanCanvas();
         }
@@ -121,6 +125,7 @@ function isLegal() {
             highlightNode(selectedNode, legalColor());
         }
 
+        //If something was removed, add it back kin
         if (removed) {
             tempTree.insert(selectedNode);
         }
