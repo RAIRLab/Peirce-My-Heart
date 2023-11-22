@@ -94,6 +94,12 @@ import {
     resizeMouseOut,
 } from "./DrawModes/ResizeTool";
 import {ProofNode} from "./AEG/ProofNode";
+import {
+    pasteInProofMouseDown,
+    pasteInProofMouseMove,
+    pasteInProofMouseOut,
+    pasteInProofMouseUp,
+} from "./ProofTools/pasteInProof";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -139,6 +145,7 @@ window.copyMultiTool = Tool.copyMultiTool;
 window.deleteSingleTool = Tool.deleteSingleTool;
 window.deleteMultiTool = Tool.deleteMultiTool;
 window.copyFromDrawTool = Tool.copyFromDrawTool;
+window.pasteInProofTool = Tool.pasteInProofTool;
 window.doubleCutInsertionTool = Tool.doubleCutInsertionTool;
 window.resizeTool = Tool.resizeTool;
 window.doubleCutDeletionTool = Tool.doubleCutDeletionTool;
@@ -162,6 +169,7 @@ declare global {
         deleteSingleTool: Tool;
         deleteMultiTool: Tool;
         copyFromDrawTool: Tool;
+        pasteInProofTool: Tool;
         resizeTool: Tool;
         doubleCutInsertionTool: Tool;
         doubleCutDeletionTool: Tool;
@@ -363,6 +371,9 @@ function mouseDownHandler(event: MouseEvent) {
         case Tool.copyFromDrawTool:
             copyFromDrawMouseDown(event);
             break;
+        case Tool.pasteInProofTool:
+            pasteInProofMouseDown();
+            break;
         case Tool.doubleCutInsertionTool:
             doubleCutInsertionMouseDown(event);
             break;
@@ -421,6 +432,9 @@ function mouseMoveHandler(event: MouseEvent) {
             case Tool.copyFromDrawTool:
                 copyFromDrawMouseMove(event);
                 break;
+            case Tool.pasteInProofTool:
+                pasteInProofMouseMove();
+                break;
             case Tool.doubleCutInsertionTool:
                 doubleCutInsertionMouseMove(event);
                 break;
@@ -475,6 +489,9 @@ function mouseUpHandler(event: MouseEvent) {
             break;
         case Tool.copyFromDrawTool:
             copyFromDrawMouseUp();
+            break;
+        case Tool.pasteInProofTool:
+            pasteInProofMouseUp();
             break;
         case Tool.doubleCutInsertionTool:
             doubleCutInsertionMouseUp(event);
@@ -532,6 +549,9 @@ function mouseOutHandler() {
             break;
         case Tool.copyFromDrawTool:
             copyFromDrawMouseOut();
+            break;
+        case Tool.pasteInProofTool:
+            pasteInProofMouseOut();
             break;
         case Tool.doubleCutInsertionTool:
             doubleCutInsertionMouseOut();

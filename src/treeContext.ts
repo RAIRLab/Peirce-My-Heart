@@ -23,6 +23,7 @@ export enum Tool {
     deleteMultiTool,
     resizeTool,
     copyFromDrawTool,
+    pasteInProofTool,
     doubleCutInsertionTool,
     doubleCutDeletionTool,
     insertionTool,
@@ -47,7 +48,7 @@ export class treeContext {
 
     public static getLastProofStep(): ProofNode {
         if (treeContext.proofHistory.length === 0) {
-            treeContext.proofHistory.push(new ProofNode(new AEGTree()));
+            return new ProofNode(new AEGTree());
         }
 
         return treeContext.proofHistory[treeContext.proofHistory.length - 1];

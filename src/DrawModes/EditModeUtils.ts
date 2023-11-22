@@ -78,21 +78,23 @@ export function drawAltered(incomingNode: CutNode | AtomNode, color: string, cha
  * is a cut node that has children calls this function on each of its children.
  * @param incomingNode The current node to be inserted
  * @param change The difference between the original position and the new position
+ * @param tree The tree we want to insert the node in. By default, inserts in global draw tree.
  */
-export function insertChildren(incomingNode: CutNode | AtomNode, change: Point) {
+export function insertChildren(incomingNode: CutNode | AtomNode, change: Point, tree?: AEGTree) {
+    const insertTree = tree ? tree : treeContext.tree;
     if (incomingNode instanceof CutNode && incomingNode.ellipse !== null) {
         const tempCut: CutNode = alterCut(incomingNode, change);
-        treeContext.tree.insert(tempCut);
+        insertTree.insert(tempCut);
         //If this node has any children recurses to insert them with the same distance change
         if (incomingNode.children.length !== 0) {
             for (let i = 0; i < incomingNode.children.length; i++) {
-                insertChildren(incomingNode.children[i], change);
+                insertChildren(incomingNode.children[i], change, tree);
             }
         }
     } else if (incomingNode instanceof AtomNode) {
         const tempAtom: AtomNode = alterAtom(incomingNode, change);
 
-        treeContext.tree.insert(tempAtom);
+        insertTree.insert(tempAtom);
     }
 }
 

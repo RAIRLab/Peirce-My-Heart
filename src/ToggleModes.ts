@@ -8,8 +8,6 @@ import {AEGTree} from "./AEG/AEGTree";
 import {ProofNode} from "./AEG/ProofNode";
 import {redrawProof, redrawTree} from "./DrawModes/DrawUtils";
 import {treeString, proofString} from ".";
-// import {setMode} from "./index";
-// import {selectedNode} from "./DrawModes/ToProofMode";
 import {Tool, treeContext} from "./treeContext";
 
 //Flag to signify the mode we are in
@@ -96,9 +94,6 @@ export function toggleHandler(): void {
 
         //Reset the state of our tools
         treeContext.toolState = proofCachedTool;
-        //The selected node has been loaded in.
-        //Reset it to avoid accidentally reloading it next time.
-        treeContext.selectForProof.sheet = new AEGTree().sheet;
 
         redrawProof();
     }

@@ -72,7 +72,6 @@ export function copyFromDrawMouseUp() {
             treeContext.selectForProof.insert(selectedNode);
         }
 
-        console.log("selected: " + treeContext.selectForProof.toString());
         redrawTree(treeContext.tree);
     }
 

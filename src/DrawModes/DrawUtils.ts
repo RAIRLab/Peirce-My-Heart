@@ -100,10 +100,10 @@ export function cleanCanvas() {
 /**
  * Resets the canvas and begins the recursive method of drawing the current tree.
  */
-export function redrawTree(tree: AEGTree) {
+export function redrawTree(tree: AEGTree, color?: string) {
     cutDisplay.innerHTML = tree.toString();
     cleanCanvas();
-    redrawCut(tree.sheet);
+    redrawCut(tree.sheet, color);
 }
 
 /**
@@ -112,7 +112,7 @@ export function redrawTree(tree: AEGTree) {
  * @param incomingNode The CutNode to be iterated through
  * @param offset The difference between the actual graph and the current canvas
  */
-function redrawCut(incomingNode: CutNode) {
+function redrawCut(incomingNode: CutNode, color?: string) {
     for (let i = 0; incomingNode.children.length > i; i++) {
         if (incomingNode.children[i] instanceof AtomNode) {
             redrawAtom(<AtomNode>incomingNode.children[i]);
@@ -121,7 +121,7 @@ function redrawCut(incomingNode: CutNode) {
         }
     }
     if (incomingNode.ellipse instanceof Ellipse) {
-        ctx.strokeStyle = placedColor();
+        ctx.strokeStyle = color ? color : placedColor();
         ctx.beginPath();
         ctx.ellipse(
             incomingNode.ellipse.center.x + offset.x,
@@ -165,7 +165,7 @@ export function redrawProof() {
  */
 export function highlightNode(child: AtomNode | CutNode, color: string) {
     if (child instanceof AtomNode) {
-        drawAtom(child, color, true);
+        drawAtom(child, color, false);
     } else if (child instanceof CutNode) {
         drawCut(child, color);
         for (let i = 0; i < child.children.length; i++) {
