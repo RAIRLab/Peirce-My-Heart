@@ -196,11 +196,11 @@ function setHighlight(event: string, id: string) {
 }
 
 //Active mode button stays pressed down until another mode button is clicked
-const modeButtons = document.querySelectorAll(".modeButton");
-modeButtons.forEach(button => {
+const toolButtons = document.querySelectorAll(".toolButton");
+toolButtons.forEach(button => {
     button.addEventListener("click", () => {
-        button.classList.toggle("modeButtonPressed");
-        modeButtons.forEach(otherButton => {
+        button.classList.add("modeButtonPressed");
+        toolButtons.forEach(otherButton => {
             if (otherButton !== button) {
                 otherButton.classList.remove("modeButtonPressed");
             }
