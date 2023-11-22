@@ -146,6 +146,24 @@ export class AEGTree {
         return this.internalSheet.getLowestParent(incomingPoint);
     }
 
+    public getParent(incomingNode: CutNode | AtomNode): CutNode | null {
+        if (!this.internalSheet.containsNode(incomingNode)) {
+            return null;
+        }
+
+        let corner: Point | null = null;
+        if (incomingNode instanceof CutNode && incomingNode.ellipse !== null) {
+            corner = incomingNode.ellipse.boundingBox.startVertex;
+        } else if (incomingNode instanceof AtomNode) {
+            corner = incomingNode.calcRect().startVertex;
+        }
+
+        if (corner !== null) {
+            return this.internalSheet.getLowestParent(corner);
+        }
+        return null;
+    }
+
     /**
      * Finds the depth of the node within the tree.
      * @param incomingNode The node to be searched for
