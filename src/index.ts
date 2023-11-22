@@ -199,10 +199,10 @@ function setHighlight(event: string, id: string) {
 const toolButtons = document.querySelectorAll(".toolButton");
 toolButtons.forEach(button => {
     button.addEventListener("click", () => {
-        button.classList.add("modeButtonPressed");
+        button.classList.add("toolButtonPressed");
         toolButtons.forEach(otherButton => {
             if (otherButton !== button) {
-                otherButton.classList.remove("modeButtonPressed");
+                otherButton.classList.remove("toolButtonPressed");
             }
         });
     });
