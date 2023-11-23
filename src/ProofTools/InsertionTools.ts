@@ -201,4 +201,6 @@ function calculatePoint(event: MouseEvent, node: CutNode | AtomNode): Point | un
     } else if (node instanceof AtomNode) {
         return new Point(event.x - node.origin.x - offset.x, event.y - node.origin.y - offset.y);
     }
+
+    return undefined;
 }
