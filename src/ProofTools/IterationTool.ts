@@ -111,23 +111,23 @@ export function iterationMouseOut() {
  * @returns Whether or not this location is legal
  */
 function isLegal(moveDifference: Point, currentPoint: Point): boolean {
-    let legal = false;
-    if (currentParent !== null && currentParent.containsPoint(currentPoint)) {
-        if (
-            currentNode instanceof CutNode &&
+    //If the current parent exists and contains our current point then checks whether the node
+    //Is an atom or cut for their own individual legality check.
+    return (
+        currentParent !== null &&
+        currentParent.containsPoint(currentPoint) &&
+        //If the currentNode is a cut, then it is legal if it and all if it's children can be placed
+        //legally, and if the node we have selected out not be inserted over something else.
+        ((currentNode instanceof CutNode &&
             validateChildren(currentNode, moveDifference) &&
-            insertChildless(treeContext.tree.sheet, alterCut(currentNode, moveDifference).ellipse!)
-        ) {
-            legal = true;
-        } else if (
-            currentNode instanceof AtomNode &&
-            treeContext.tree.canInsert(alterAtom(currentNode, moveDifference))
-        ) {
-            legal = true;
-        }
-    }
-
-    return legal;
+            insertChildless(
+                treeContext.tree.sheet,
+                alterCut(currentNode, moveDifference).ellipse!
+            )) ||
+            //AtomNodes are legal if they can be inserted in their current location.
+            (currentNode instanceof AtomNode &&
+                treeContext.tree.canInsert(alterAtom(currentNode, moveDifference))))
+    );
 }
 
 /**
