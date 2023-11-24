@@ -4,13 +4,20 @@
  */
 
 import {Point} from "../AEG/Point";
+import {Ellipse} from "../AEG/Ellipse";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "../DrawModes/DragTool";
 import {drawAtom, redrawTree} from "../DrawModes/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
-import {validateChildren, drawAltered, insertChildren, alterAtom} from "../DrawModes/EditModeUtils";
+import {
+    validateChildren,
+    drawAltered,
+    insertChildren,
+    alterAtom,
+    alterCut,
+} from "../DrawModes/EditModeUtils";
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -116,7 +123,11 @@ export function iterationMouseOut() {
  */
 function isLegal(moveDifference: Point, currentPoint: Point): boolean {
     if (currentParent !== null && currentParent.containsPoint(currentPoint)) {
-        if (currentNode instanceof CutNode && validateChildren(currentNode, moveDifference)) {
+        if (
+            currentNode instanceof CutNode &&
+            validateChildren(currentNode, moveDifference) &&
+            insertChildless(treeContext.tree.sheet, alterCut(currentNode, moveDifference).ellipse!)
+        ) {
             return true;
         } else if (
             currentNode instanceof AtomNode &&
@@ -129,4 +140,34 @@ function isLegal(moveDifference: Point, currentPoint: Point): boolean {
     }
 
     return false;
+}
+
+/**
+ * Determines if the current location and shape of the ellipse would have any children in
+ * it's current position, acts recursively for cut nodes starting with the sheet.
+ * @param currentNode The current node we are checking in the recursive function starting with the sheet
+ * @param currentEllipse The ellipse of the altered cut node we are trying to place
+ * @returns Whether or not the node would have any children
+ */
+function insertChildless(currentNode: CutNode, currentEllipse: Ellipse): boolean {
+    for (let i = 0; i < currentNode.children.length; i++) {
+        if (currentNode.children[i] instanceof CutNode) {
+            //So long as the ellipse is not null, and either our current cut or any of it's
+            //Children have a child that is contained by our ellipse then it is false
+            if (
+                (currentNode.children[i] as CutNode).ellipse instanceof Ellipse &&
+                (currentEllipse.contains((currentNode.children[i] as CutNode).ellipse!) ||
+                    !insertChildless(currentNode.children[i] as CutNode, currentEllipse))
+            ) {
+                return false;
+            }
+        } else if (
+            currentNode.children[i] instanceof AtomNode &&
+            currentEllipse.contains((currentNode.children[i] as AtomNode).calcRect())
+        ) {
+            return false;
+        }
+    }
+
+    return true;
 }
