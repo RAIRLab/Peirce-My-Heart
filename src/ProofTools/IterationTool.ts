@@ -117,7 +117,7 @@ function isLegal(moveDifference: Point, currentPoint: Point): boolean {
         currentParent !== null &&
         currentParent.containsPoint(currentPoint) &&
         //If the currentNode is a cut, then it is legal if it and all if it's children can be placed
-        //legally, and if the node we have selected out not be inserted over something else.
+        //legally, and if the node we have selected can not be inserted over something else.
         ((currentNode instanceof CutNode &&
             validateChildren(currentNode, moveDifference) &&
             insertChildless(
