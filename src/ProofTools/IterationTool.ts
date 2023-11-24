@@ -42,11 +42,7 @@ export function iterationMouseDown(event: MouseEvent) {
     currentParent = treeContext.tree.getLowestParent(startingPoint);
 
     //So long as we have obtained a node that isn't the sheet we are allowed to select this.
-    if (currentNode !== treeContext.tree.sheet && currentNode !== null) {
-        legalNode = true;
-    } else {
-        legalNode = false;
-    }
+    legalNode = currentNode !== treeContext.tree.sheet && currentNode !== null;
 }
 
 /**
@@ -63,16 +59,12 @@ export function iterationMouseMove(event: MouseEvent) {
         );
 
         redrawTree(treeContext.tree);
+        const currentPoint = new Point(event.x - offset.x, event.y - offset.y);
+        const color = isLegal(moveDifference, currentPoint) ? legalColor() : illegalColor();
         if (currentNode instanceof CutNode) {
-            const color = isLegal(moveDifference, new Point(event.x - offset.x, event.y - offset.y))
-                ? legalColor()
-                : illegalColor();
             drawAltered(currentNode, color, moveDifference);
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
-            const color = isLegal(moveDifference, new Point(event.x - offset.x, event.y - offset.y))
-                ? legalColor()
-                : illegalColor();
             drawAtom(tempAtom, color, true);
         }
     }
@@ -90,14 +82,11 @@ export function iterationMouseUp(event: MouseEvent) {
             event.y - startingPoint.y
         );
 
-        if (currentNode instanceof CutNode) {
-            if (isLegal(moveDifference, new Point(event.x - offset.x, event.y - offset.y))) {
+        if (isLegal(moveDifference, new Point(event.x - offset.x, event.y - offset.y))) {
+            if (currentNode instanceof CutNode) {
                 insertChildren(currentNode, moveDifference);
-            }
-        } else if (currentNode instanceof AtomNode) {
-            const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
-
-            if (isLegal(moveDifference, new Point(event.x - offset.x, event.y - offset.y))) {
+            } else if (currentNode instanceof AtomNode) {
+                const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
                 treeContext.tree.insert(tempAtom);
             }
         }
@@ -122,24 +111,23 @@ export function iterationMouseOut() {
  * @returns Whether or not this location is legal
  */
 function isLegal(moveDifference: Point, currentPoint: Point): boolean {
+    let legal = false;
     if (currentParent !== null && currentParent.containsPoint(currentPoint)) {
         if (
             currentNode instanceof CutNode &&
             validateChildren(currentNode, moveDifference) &&
             insertChildless(treeContext.tree.sheet, alterCut(currentNode, moveDifference).ellipse!)
         ) {
-            return true;
+            legal = true;
         } else if (
             currentNode instanceof AtomNode &&
             treeContext.tree.canInsert(alterAtom(currentNode, moveDifference))
         ) {
-            return true;
-        } else {
-            return false;
+            legal = true;
         }
     }
 
-    return false;
+    return legal;
 }
 
 /**
