@@ -31,7 +31,7 @@ let currentProofTree: AEGTree;
  */
 export function doubleCutInsertionMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.clientX - offset.x, event.clientY - offset.y);
-    currentProofTree = treeContext.proofHistory[treeContext.proofHistory.length - 1].tree;
+    currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
     wasOut = false;
 }
 
@@ -73,7 +73,7 @@ export function doubleCutInsertionMouseMove(event: MouseEvent) {
  */
 export function doubleCutInsertionMouseUp(event: MouseEvent) {
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
-    currentProofTree = treeContext.proofHistory[treeContext.proofHistory.length - 1].tree;
+    currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
 
     const largeCut: CutNode = new CutNode(createEllipse(startingPoint, currentPoint));
     const smallCut: CutNode = new CutNode(calcSmallEllipse(<Ellipse>largeCut.ellipse));

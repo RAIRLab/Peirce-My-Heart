@@ -57,47 +57,78 @@ export function insertionMouseDown(event: MouseEvent) {
                 : currentTree.getLowestNode(startingPoint);
 
         if (newPoint) {
-            //Create a temporary node with the altered values of the location we are placing it on
+            //Create a temporary node with the altered values of the new node at the location we
+            //are placing it on
             const newNode =
                 currentGraphs[0] instanceof AtomNode
                     ? alterAtom(currentGraphs[0], newPoint)
                     : alterCut(currentGraphs[0], newPoint);
 
             //If the node being placed is not contained within the parent node at the given position,
-            //get the parent of that node. Repeat this until we find the actual parent that contains
-            //the new node
-            while (currentParent !== null && !(currentParent as CutNode).containsNode(newNode)) {
-                currentParent = currentTree.getParent(currentParent);
-            }
-            //According to rule of insertion, we can insert 1 graph at a time only on odd levels ->
-            //check to ensure that the new point where we are pasting is on an odd level.
-            //For the placement to be an odd level, its parent must be on an even level
-            if (
-                currentParent !== null &&
-                currentParent instanceof CutNode &&
-                currentParent.ellipse !== null &&
-                currentTree.getLevel(currentParent) % 2 === 0
-            ) {
-                //Check if the node can be placed at that position, and draw it accordingly
-                let color = "";
-                if (currentGraphs[0] instanceof CutNode) {
-                    color = validateChildren(currentTree, currentGraphs[0], newPoint)
-                        ? legalColor()
-                        : illegalColor();
-                } else if (currentGraphs[0] instanceof AtomNode) {
-                    const tempAtom: AtomNode = alterAtom(currentGraphs[0], newPoint);
-                    color = currentTree.canInsert(tempAtom) ? legalColor() : illegalColor();
-                }
-                legalPlace = color === legalColor() ? true : false;
-                drawAltered(currentGraphs[0], color, newPoint);
-            } else {
+            //it is being placed in a position which will result in adoption of nodes. This is
+            //considered illegal -> mark it as such
+            if (currentParent !== null && !(currentParent as CutNode).containsNode(newNode)) {
                 legalPlace = false;
                 drawAltered(currentGraphs[0], illegalColor(), newPoint);
+            } else {
+                //According to rule of insertion, we can insert 1 graph at a time only on odd levels.
+                //Check to ensure that the new point where we are pasting is on an odd level (for
+                //the placement to be an odd level, its parent must be on an even level).
+                if (
+                    currentParent !== null &&
+                    currentParent instanceof CutNode &&
+                    currentParent.ellipse !== null &&
+                    currentTree.getLevel(currentParent) % 2 === 0
+                ) {
+                    //Insertion also does not allow for adoption of nodes, so check to make sure we are
+                    //not adopting any children of the node we are being placed in
+                    if (newNode instanceof CutNode) {
+                        for (let i = 0; i < currentParent.children.length; i++) {
+                            if (newNode.containsNode(currentParent.children[i])) {
+                                legalPlace = false;
+                                break;
+                            }
+
+                            //The new node does not contain any of the children of the node it is
+                            //being placed in - this is a legal placement
+                            if (i === currentParent.children.length - 1) {
+                                legalPlace = true;
+                            }
+                        }
+                    } else {
+                        //An atom node cannot contain any other nodes. This node is being placed
+                        //at the right level
+                        legalPlace = true;
+                    }
+
+                    if (legalPlace) {
+                        //We have confirmed that the node can be placed at this level without
+                        //adopting any existing nodes. However, we still need to check for any
+                        //collisions within this level
+                        let color = "";
+                        if (currentGraphs[0] instanceof CutNode) {
+                            color = validateChildren(currentTree, currentGraphs[0], newPoint)
+                                ? legalColor()
+                                : illegalColor();
+                        } else if (currentGraphs[0] instanceof AtomNode) {
+                            const tempAtom: AtomNode = alterAtom(currentGraphs[0], newPoint);
+                            color = currentTree.canInsert(tempAtom) ? legalColor() : illegalColor();
+                        }
+                        legalPlace = color === legalColor() ? true : false;
+                        drawAltered(currentGraphs[0], color, newPoint);
+                    } else {
+                        drawAltered(currentGraphs[0], illegalColor(), newPoint);
+                    }
+                } else {
+                    legalPlace = false;
+                    drawAltered(currentGraphs[0], illegalColor(), newPoint);
+                }
             }
         }
     } else {
         legalPlace = false;
         legalNode = false;
+        drawAltered(currentGraphs[0], illegalColor(), startingPoint);
     }
 }
 
@@ -105,49 +136,88 @@ export function insertionMouseMove(event: MouseEvent) {
     if (legalNode) {
         const movePoint: Point = new Point(event.x - offset.x, event.y - offset.y);
 
+        //Reset the canvas by redrawing our current proof structure
         redrawProof();
 
         if (treeContext.proofHistory.length > 0 && currentGraphs.length === 1) {
             const newPoint = calculatePoint(event, currentGraphs[0]);
+
+            //Get node we have clicked to insert within. If the node is an atom node, get its parent
             currentParent =
                 currentTree.getLowestNode(movePoint) instanceof AtomNode
                     ? currentTree.getLowestParent(movePoint)
                     : currentTree.getLowestNode(movePoint);
 
+            //Create a temporary node with the altered values of the new node at the location we
+            //are placing it on
             if (newPoint) {
                 const newNode =
                     currentGraphs[0] instanceof AtomNode
                         ? alterAtom(currentGraphs[0], newPoint)
                         : alterCut(currentGraphs[0], newPoint);
 
-                while (
-                    currentParent !== null &&
-                    !(currentParent as CutNode).containsNode(newNode)
-                ) {
-                    currentParent = currentTree.getParent(currentParent);
-                }
-
-                if (
-                    currentParent !== null &&
-                    currentParent instanceof CutNode &&
-                    currentParent.ellipse !== null &&
-                    currentTree.getLevel(currentParent) % 2 === 0
-                ) {
-                    let color = "";
-                    if (currentGraphs[0] instanceof CutNode) {
-                        color = validateChildren(currentTree, currentGraphs[0], newPoint)
-                            ? legalColor()
-                            : illegalColor();
-                    } else if (currentGraphs[0] instanceof AtomNode) {
-                        const tempAtom: AtomNode = alterAtom(currentGraphs[0], newPoint);
-                        color = currentTree.canInsert(tempAtom) ? legalColor() : illegalColor();
-                    }
-
-                    legalPlace = color === legalColor() ? true : false;
-                    drawAltered(currentGraphs[0], color, newPoint);
-                } else {
+                //If the node being placed is not contained within the parent node at the given
+                //position, it is being placed in a position which will result in adoption of nodes.
+                //This is considered illegal -> mark it as such
+                if (currentParent !== null && !(currentParent as CutNode).containsNode(newNode)) {
                     legalPlace = false;
                     drawAltered(currentGraphs[0], illegalColor(), newPoint);
+                } else {
+                    //According to rule of insertion, we can insert 1 graph at a time only on odd
+                    //levels. Check to ensure that the new point where we are pasting is on an odd
+                    //level (for the placement to be an odd level, its parent must be on an even
+                    //level).
+                    if (
+                        currentParent !== null &&
+                        currentParent instanceof CutNode &&
+                        currentParent.ellipse !== null &&
+                        currentTree.getLevel(currentParent) % 2 === 0
+                    ) {
+                        //Insertion also does not allow for adoption of nodes, so check to make
+                        //sure we are not adopting any children of the node we are being placed in
+                        if (newNode instanceof CutNode) {
+                            for (let i = 0; i < currentParent.children.length; i++) {
+                                if (newNode.containsNode(currentParent.children[i])) {
+                                    legalPlace = false;
+                                    break;
+                                }
+
+                                //The new node does not contain any of the children of the node it is
+                                //being placed in - this is a legal placement
+                                if (i === currentParent.children.length - 1) {
+                                    legalPlace = true;
+                                }
+                            }
+                        } else {
+                            //An atom node cannot contain any other nodes. This node is being placed
+                            //at the right level
+                            legalPlace = true;
+                        }
+
+                        if (legalPlace) {
+                            //We have confirmed that the node can be placed at this level without
+                            //adopting any existing nodes. However, we still need to check for any
+                            //collisions within this level
+                            let color = "";
+                            if (currentGraphs[0] instanceof CutNode) {
+                                color = validateChildren(currentTree, currentGraphs[0], newPoint)
+                                    ? legalColor()
+                                    : illegalColor();
+                            } else if (currentGraphs[0] instanceof AtomNode) {
+                                const tempAtom: AtomNode = alterAtom(currentGraphs[0], newPoint);
+                                color = currentTree.canInsert(tempAtom)
+                                    ? legalColor()
+                                    : illegalColor();
+                            }
+                            legalPlace = color === legalColor() ? true : false;
+                            drawAltered(currentGraphs[0], color, newPoint);
+                        } else {
+                            drawAltered(currentGraphs[0], illegalColor(), newPoint);
+                        }
+                    } else {
+                        legalPlace = false;
+                        drawAltered(currentGraphs[0], illegalColor(), newPoint);
+                    }
                 }
             }
         } else {

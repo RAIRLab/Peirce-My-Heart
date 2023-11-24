@@ -251,7 +251,11 @@ async function saveMode() {
         name = "AEG Tree";
         data = treeContext.tree;
     } else {
-        name = "Proof History";
+        name =
+            treeContext.proofHistory[0].tree.toString() +
+            // " - " +
+            "\u2192" +
+            treeContext.getLastProofStep().tree.toString();
         data = treeContext.proofHistory;
     }
 
