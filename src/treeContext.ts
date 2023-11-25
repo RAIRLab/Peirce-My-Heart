@@ -28,6 +28,7 @@ export enum Tool {
     doubleCutDeletionTool,
     insertionTool,
     erasureTool,
+    iterationTool,
 }
 
 export class treeContext {

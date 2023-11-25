@@ -141,7 +141,7 @@ function redrawCut(incomingNode: CutNode, color?: string) {
  * @param incomingNode The Atom Node to be redrawn
  * @param offset The difference between the actual graph and the current canvas
  */
-function redrawAtom(incomingNode: AtomNode) {
+export function redrawAtom(incomingNode: AtomNode) {
     drawAtom(incomingNode, placedColor(), false);
 }
 
