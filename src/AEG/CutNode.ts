@@ -33,6 +33,38 @@ export class CutNode {
     }
 
     /**
+     * Creates a deep copy of this CutNode
+     * @returns A new CutNode, which is a deep copy of this node
+     */
+    public copy(): CutNode {
+        let newEllipse: Ellipse | null;
+        const newChildren: (AtomNode | CutNode)[] = [];
+        if (this.ellipse !== null) {
+            newEllipse = new Ellipse(
+                new Point(this.ellipse.center.x, this.ellipse.center.y),
+                this.ellipse.radiusX,
+                this.ellipse.radiusY
+            );
+        } else {
+            newEllipse = null;
+        }
+
+        // Copy all the nested children individually
+        if (this.children.length > 0) {
+            for (let i = 0; i < this.children.length; i++) {
+                const newChild = this.children[i];
+                if (newChild instanceof AtomNode) {
+                    newChildren.push((newChild as AtomNode).copy());
+                } else {
+                    newChildren.push((newChild as CutNode).copy());
+                }
+            }
+        }
+
+        return new CutNode(newEllipse, newChildren);
+    }
+
+    /**
      * Accessor to get the bounding ellipse of the Cut Node.
      * @returns The bounding ellipse of this Cut Node
      * Returns null for Sheet of Assertion
@@ -44,7 +76,7 @@ export class CutNode {
     /**
      * Modifier to set the bounding ellipse of this Cut Node
      */
-    public set ellipse(ellipse: Ellipse) {
+    public set ellipse(ellipse: Ellipse | null) {
         this.internalEllipse = ellipse;
     }
 
@@ -289,6 +321,10 @@ export class CutNode {
         return str;
     }
 
+    public isEmptySheet(): boolean {
+        return this.internalEllipse === null && this.internalChildren.length === 0;
+    }
+
     /**
      * Constructs a string representation of an AEGTree or a subtree.
      * () - cut
@@ -314,5 +350,58 @@ export class CutNode {
             formulaString = "(" + formulaString + ")";
         }
         return formulaString;
+    }
+
+    /**
+     * Method that checks if a cut node is equal to another cut node. The are equal if they have
+     * the same children, irrespective of the ordering of nodes within a level
+     * @param otherCut The other cut node we are checking against for equality
+     * @returns True, if they are equal (the same). Else, false
+     */
+    public isEqualTo(otherCut: CutNode): boolean {
+        //For 2 cuts to be equal, they must have the same number of children
+        if (this.children.length === otherCut.children.length) {
+            if (this.children.length === 0) {
+                //If they do not have children, they are empty cuts
+                //Empty cuts are always equal
+                return true;
+            }
+            //If they have the same number of children, they should be the same children
+            //Make a deep copy and get the list of children of each cut
+            const thisChildren = this.copy().children;
+            const otherChildren = otherCut.copy().children;
+
+            //Iterate through the children of a cut and see if the other cut has the same child
+            //If they have the same child, remove it from the lists and continue
+            //If a child is not present in both, they are not equal
+            for (let i = 0; i < thisChildren.length; i++) {
+                for (let j = 0; j < otherChildren.length; j++) {
+                    if (
+                        (thisChildren[i] instanceof AtomNode &&
+                            otherChildren[j] instanceof AtomNode &&
+                            (thisChildren[i] as AtomNode).isEqualTo(
+                                otherChildren[j] as AtomNode
+                            )) ||
+                        (thisChildren[i] instanceof CutNode &&
+                            otherChildren[j] instanceof CutNode &&
+                            (thisChildren[i] as CutNode).isEqualTo(otherChildren[j] as CutNode))
+                    ) {
+                        thisChildren.splice(i, 1);
+                        otherChildren.splice(j, 1);
+                        i--;
+                        break;
+                    }
+
+                    if (j === otherChildren.length - 1) {
+                        //Checked all children but a match was not found. The nodes are not equal
+                        return false;
+                    }
+                }
+            }
+            //Check if all the children have been matched and returned
+            return thisChildren.length === 0 && otherChildren.length === 0;
+        }
+
+        return false;
     }
 }
