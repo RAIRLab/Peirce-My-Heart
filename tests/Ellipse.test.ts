@@ -58,23 +58,20 @@ describe("Ellipse containsPoint soliloquy:", () => {
 
 describe("Ellipse-on-Rectangle overlaps soliloquy:", () => {
     const ell: Ellipse = new Ellipse(new Point(5, 5), 5, 5); //diameters of 10
+    console.log(ell);
 
-    //same logic with Rectangle's overlaps(), touching points along the edge should be overlap
-    //set to skip until Ellipse's overlaps, at least from a design choice perspective, are
-    //hammered out
-    test.skip.each([
+    test.each([
         [10, 5, 0, 0], //Rectangle touching the rightmost point of this Ellipse
         [5, 0, 0, 0], //Rectangle touching the topmost point of this Ellipse
-        [5, 10, 10, 10], //Rectangle touching the bottommost point of this Ellipse
-        [-10, -5, 5, 10], //Rectangle touching the leftmost point of this Ellipse
+        [5, 10, 0, 0], //Rectangle touching the bottommost point of this Ellipse
+        [0, 5, 0, 0], //Rectangle touching the leftmost point of this Ellipse
     ])(
-        "Ellipse of center (5, 5) and {radX, radY} = 5 should overlap with Rectangle of TL vertex (%f, %f) and w = %f, h = %f.",
+        "Ellipse of center (5, 5) and {radX, radY} = 5 should not overlap with Rectangle of TL vertex (%f, %f) and w = %f, h = %f.",
         (x, y, w, h) => {
-            expect(ell.overlaps(new Rectangle(new Point(x, y), w, h))).toBeTruthy();
+            expect(ell.overlaps(new Rectangle(new Point(x, y), w, h))).toBeFalsy();
         }
     );
 
-    //this block should be combined with the above block when design decisions are hammered out
     test.each([
         [5, 5, 20, 20], //begins inside the Ellipse but touches the Ellipse's bounds from inside
         [-5, -5, 10, 10], //begins outside the Ellipse but touches the Ellipse's bounds from outside

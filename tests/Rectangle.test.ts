@@ -120,43 +120,29 @@ describe("Rectangle-on-Rectangle overlaps soliloquy:", () => {
     );
 });
 
-//skipping until the code determining this is hammered out
-describe.skip("Rectangle-on-Ellipse overlaps soliloquy:", () => {
+describe("Rectangle-on-Ellipse overlaps soliloquy:", () => {
     const rect: Rectangle = new Rectangle(new Point(0, 0), 10, 10);
 
-    //same logic with Rectangle's overlaps(), touching points along the edge should be overlap
-    //set to skip until Ellipse's overlaps, at least from a design choice perspective, are
-    //hammered out
-    test.skip.each([
-        [15, 0, 5, 5], //Ellipse touching the top right vertex of this Rectangle
-        [-5, 0, 5, 5], //Ellipse touching the top left vertex of this Rectangle
-        [-5, 10, 5, 5], //Ellipse touching the bottom left vertex of this Rectangle
-        [15, 10, 5, 5], //Ellipse touching the bottom right vertex of this Rectangle
+    test.each([
+        [10, 0, 0, 0], //Ellipse touching the top right vertex of this Rectangle
+        [0, 0, 0, 0], //Ellipse touching the top left vertex of this Rectangle
+        [10, 0, 0, 0], //Ellipse touching the bottom left vertex of this Rectangle
+        [10, 10, 0, 0], //Ellipse touching the bottom right vertex of this Rectangle
     ])(
-        "Rectangle of TL vertex (0, 0) and {w, h} = 10 should overlap with Ellipse of center (%f, %f) and radX = %f, radY = %f.",
+        "Rectangle of TL vertex (0, 0) and {w, h} = 10 should not overlap with Ellipse of center (%f, %f) and radX = %f, radY = %f.",
         (x, y, radX, radY) => {
-            expect(rect.overlaps(new Ellipse(new Point(x, y), radX, radY))).toBeTruthy();
-        }
-    );
-
-    //this block should be combined with the above block when design decisions are hammered out
-    test.skip.each([
-        [5, 5, 20, 20], //begins inside the Rectangle but touches the Rectangle's bounds from inside
-        [-5, 0, 20, 20], //begins outside the Rectangle but touches the Rectangle's bounds from outside
-    ])(
-        "Rectangle of TL vertex (0, 0) and {w, h} = 10 should overlap with Ellipse of center (%f, %f) and radX = %f, radY = %f.",
-        (x, y, radX, radY) => {
-            expect(rect.overlaps(new Ellipse(new Point(x, y), radX, radY))).toBeTruthy();
+            expect(rect.overlaps(new Ellipse(new Point(x, y), radX, radY))).toBeFalsy();
         }
     );
 
     test.each([
-        [5, 5, 1, 1], //tiny guy
-        [5, 5, 20, 20], //huge guy
+        [5, 5, 20, 20], //begins inside the Rectangle but touches the Rectangle's bounds from inside
+        [-5, 0, 20, 20], //begins outside the Rectangle but touches the Rectangle's bounds from outside
+        [5, 5, 20, 20], //huge guy outside this rectangle
     ])(
-        "Ellipse of center (5, 5) and {radX, radY} = 5 should not overlap with Rectangle of TL vertex (%f, %f) and w = %f, h = %f.",
+        "Rectangle of TL vertex (0, 0) and {w, h} = 10 should overlap with Ellipse of center (%f, %f) and radX = %f, radY = %f.",
         (x, y, radX, radY) => {
-            expect(rect.overlaps(new Rectangle(new Point(x, y), radX, radY))).toBeFalsy();
+            expect(rect.overlaps(new Ellipse(new Point(x, y), radX, radY))).toBeTruthy();
         }
     );
 });

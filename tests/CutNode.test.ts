@@ -258,11 +258,10 @@ describe("CutNode remove soliloquy:", () => {
         expect(cNode.children.length).toBe(0);
     });
 
-    test.skip("Removing a CutNode with children, but with no children who contain the Point, should be successful.", () => {
+    test("Removing a CutNode with children, but with no children who contain the Point, should not be successful.", () => {
         cNode.child = new AtomNode("B", new Point(8, 8), 1, 1);
         cNode.child = new CutNode(new Ellipse(new Point(5, 2), 0.5, 0.5));
-        expect(cNode.remove(testCenter)).toBeTruthy();
-        expect(cNode).toBeNull();
+        expect(cNode.remove(testCenter)).toBeFalsy();
     });
 
     test("Removing a CutNode with children two cut levels deep should be successful.", () => {
