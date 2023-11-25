@@ -128,6 +128,33 @@ describe("AEGTree remove soliloquy:", () => {
     });
 });
 
+describe("AEGTree clear soliloquy:", () => {
+    const tree: AEGTree = new AEGTree();
+
+    test("Empty AEGTree should have no children after clear call.", () => {
+        tree.clear();
+        expect(tree.sheet.children.length).toBe(0);
+    });
+
+    tree.insert(new AtomNode("C", origin, 1, 1));
+
+    test("AEGTree with one child should have no children after clear call.", () => {
+        tree.clear();
+        expect(tree.sheet.children.length).toBe(0);
+    });
+
+    const tree2: AEGTree = new AEGTree();
+
+    tree2.insert(new AtomNode("C", origin, 2, 2));
+    tree2.insert(new AtomNode("P", new Point(origin.x + 5, origin.y + 5), 3, 3));
+    tree2.insert(new CutNode(testEllipse));
+
+    test("AEGTree with several children should have no children after clear call.", () => {
+        tree2.clear();
+        expect(tree2.sheet.children.length).toBe(0);
+    });
+});
+
 describe("AEGTree toString soliloquy:", () => {
     const tree: AEGTree = new AEGTree();
 

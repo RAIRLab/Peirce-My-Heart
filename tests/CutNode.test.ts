@@ -4,6 +4,7 @@ import {AtomNode} from "../src/AEG/AtomNode";
 import {Ellipse} from "../src/AEG/Ellipse";
 import {Point} from "../src/AEG/Point";
 
+const origin = new Point(0, 0);
 const testCenter = new Point(5, 5);
 const testEllipse = new Ellipse(testCenter, 5, 5);
 
@@ -287,6 +288,31 @@ describe("CutNode remove soliloquy:", () => {
 
         expect(cNode.remove(testCenter)).toBeTruthy();
         expect(childCutThreeDeep.children.length).toBe(0);
+    });
+});
+
+describe("CutNode clear soliloquy:", () => {
+    const cNode: CutNode = new CutNode(testEllipse);
+
+    test("CutNode with no children should have no children after clear call.", () => {
+        cNode.clear();
+        expect(cNode.children.length).toBe(0);
+    });
+
+    cNode.child = new AtomNode("C", origin, 3, 3);
+
+    test("CutNode with one child should have no children after clear call.", () => {
+        cNode.clear();
+        expect(cNode.children.length).toBe(0);
+    });
+
+    cNode.child = new AtomNode("C", origin, 1, 1);
+    cNode.child = new AtomNode("P", origin, 3, 3);
+    cNode.child = new CutNode(testEllipse);
+
+    test("CutNode with several children should have no children after clear call.", () => {
+        cNode.clear();
+        expect(cNode.children.length).toBe(0);
     });
 });
 
