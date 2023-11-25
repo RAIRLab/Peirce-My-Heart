@@ -17,7 +17,7 @@
     
     
     
-    <script type="module" crossorigin src="/Peirce-My-Heart/assets/index-13e24113.js"></script>
+    <script type="module" crossorigin src="/Peirce-My-Heart/assets/index-b33c1e98.js"></script>
     <link rel="stylesheet" href="/Peirce-My-Heart/assets/index-ec6bb0a8.css">
     <link rel="stylesheet" href="/Peirce-My-Heart/assets/themes-62f77642.css">
   </head>
@@ -79,7 +79,7 @@
           <button type="button" onclick="setTool(resizeTool)" title="Resize Single Mode" class="toolButton">
             <i class="fa fa-arrows-alt" aria-hidden="true"></i>
           </button>
-          <button type="button" onclick="setTool(toProofMode)" title="Select and Copy to Proof Mode" class="toolButton">
+          <button type="button" onclick="setTool(copyFromDrawTool)" title="Select to copy for Proof Mode" class="toolButton">
             <i class="fa fa-share-square-o" aria-hidden="true"></i>
           </button>
         </div>
@@ -89,8 +89,8 @@
           <button type="button" onclick="" title="Resize Single" class="toolButton">
               <i class="fa fa-arrows-alt" aria-hidden="true"></i>
           </button>
-          <button type="button" onclick="" title="Resize Multiple" class="toolButton">
-              <i class="fa fa-circle-o" aria-hidden="true"></i>
+          <button type="button" onclick="setTool(pasteInProofTool)" title="Paste graph from Draw Mode" class="toolButton">
+              <i class="fa fa-files-o" aria-hidden="true"></i>
           </button>
         </div>
         <div class="row">
@@ -110,7 +110,7 @@
           </button>
         </div>
         <div class="row">
-          <button type="button" onclick="" title="Insertion" class="toolButton">
+          <button type="button" onclick="setTool(insertionTool)" title="Insertion" class="toolButton">
             <i class="fa fa-plus" aria-hidden="true"></i>
           </button>
           <button type="button" onclick="setTool(erasureTool)" title="Erasure" class="toolButton">
@@ -132,6 +132,7 @@
       <div id="genericTools">
         <div class="toolSetting">
           <p id="graphString"></p>
+          <p id="proofString"></p>
         </div>
         <div class="fileButton">
           <div class="toolSetting">
@@ -181,6 +182,11 @@
           <input id="atomBoxes" type="checkbox" title="Show atomBoxes"/>
         </div>
       </div>
+      <div id="toProofTools" class="toolSetting">
+        <p>Selected subgraph: </p>
+        <p id="selectionString"></p>
+      </div>
+      
     </div>
     <canvas id="canvas"></canvas>
   </body>
