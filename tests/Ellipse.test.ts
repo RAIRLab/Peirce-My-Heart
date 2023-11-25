@@ -58,7 +58,6 @@ describe("Ellipse containsPoint soliloquy:", () => {
 
 describe("Ellipse-on-Rectangle overlaps soliloquy:", () => {
     const ell: Ellipse = new Ellipse(new Point(5, 5), 5, 5); //diameters of 10
-    console.log(ell);
 
     test.each([
         [10, 5, 0, 0], //Rectangle touching the rightmost point of this Ellipse
