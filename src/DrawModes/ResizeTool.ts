@@ -3,7 +3,8 @@
  */
 
 import {Point} from "../AEG/Point";
-import {Ellipse} from "../AEG/Ellipse";
+import {determineDirection} from "./DrawUtils";
+import {resizeCut} from "./EditModeUtils";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
@@ -112,67 +113,4 @@ export function resizeMouseOut() {
     }
     legalNode = false;
     redrawTree(treeContext.tree);
-}
-
-/**
- * Makes a copy of original cut and changes the center and radii by the difference given.
- * Alters the change to the center based on the direction that is being moved to.
- * @param originalCut The original cut that will be copied and altered
- * @param difference The change for the new cut
- * @param direction the direction the radius will be expanding towards
- * @returns The new altered cut
- */
-export function resizeCut(originalCut: CutNode, difference: Point, direction: Point) {
-    if (originalCut.ellipse !== null) {
-        return new CutNode(
-            new Ellipse(
-                new Point(
-                    originalCut.ellipse.center.x + difference.x,
-                    originalCut.ellipse.center.y + difference.y
-                ),
-                originalCut.ellipse.radiusX + difference.x * direction.x,
-                originalCut.ellipse.radiusY + difference.y * direction.y
-            )
-        );
-    } else {
-        throw new Error("Cannot alter the position of a cut without an ellipse.");
-    }
-}
-
-/**
- * Determines which widest points the current point is closest to so that the resize
- * can move in that direction.
- * widestPoints[0] = leftmost widest point of the ellipse
- * widestPoints[1] = topmost widest point of the ellipse
- * widestPoints[2] = rightmost widest point of the ellipse
- * widestPoints[3] = bottommost widest point of the ellipse
- * @returns The new direction for x and y
- */
-export function determineDirection(currentNode: CutNode, startingPoint: Point): Point {
-    const newDirection = new Point(1, 1);
-    if (currentNode instanceof CutNode && (currentNode as CutNode).ellipse !== null) {
-        const currentEllipse: Ellipse = currentNode.ellipse as Ellipse;
-        const widestPoints: Point[] = [
-            new Point(currentEllipse.center.x - currentEllipse.radiusX, currentEllipse.center.y),
-            new Point(currentEllipse.center.x, currentEllipse.center.y - currentEllipse.radiusY),
-            new Point(currentEllipse.center.x + currentEllipse.radiusX, currentEllipse.center.y),
-            new Point(currentEllipse.center.x, currentEllipse.center.y + currentEllipse.radiusY),
-        ];
-
-        //If the current point is closer to the top or equal the direction is positive and going down
-        if (widestPoints[0].distance(startingPoint) >= widestPoints[2].distance(startingPoint)) {
-            newDirection.x = 1;
-        } else {
-            newDirection.x = -1;
-        }
-
-        //If the current point is closer to the left or equal the direction is positive and going right
-        if (widestPoints[1].distance(startingPoint) >= widestPoints[3].distance(startingPoint)) {
-            newDirection.y = 1;
-        } else {
-            newDirection.y = -1;
-        }
-    }
-
-    return newDirection;
 }

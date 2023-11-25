@@ -13,6 +13,7 @@ import {drawCut, drawAtom, redrawTree} from "../DrawModes/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
 import {alterAtom, alterCut} from "../DrawModes/EditModeUtils";
 import {ProofNode} from "../AEG/ProofNode";
+import {isMoveLegal} from "./ProofMoveUtils";
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -74,12 +75,12 @@ export function proofMoveSingleMouseMove(event: MouseEvent) {
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = alterCut(currentNode, moveDifference);
 
-            const color = isLegal(tempCut) ? legalColor() : illegalColor();
+            const color = isMoveLegal(currentProofTree, tempCut) ? legalColor() : illegalColor();
             drawCut(tempCut, color);
         } //If the node is an atom, make a temporary atom and check legality, drawing that.
         else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
-            const color = isLegal(tempAtom) ? legalColor() : illegalColor();
+            const color = isMoveLegal(currentProofTree, tempAtom) ? legalColor() : illegalColor();
             drawAtom(tempAtom, color, true);
         }
     }
@@ -104,7 +105,7 @@ export function proofMoveSingleMouseUp(event: MouseEvent) {
             const tempCut: CutNode = alterCut(currentNode, moveDifference);
 
             //If the new location is legal, insert the cut otherwise reinsert the cut we removed.
-            if (isLegal(tempCut)) {
+            if (isMoveLegal(currentProofTree, tempCut)) {
                 nextStep.tree.insert(tempCut);
             } else {
                 nextStep.tree.insert(currentNode);
@@ -113,7 +114,7 @@ export function proofMoveSingleMouseUp(event: MouseEvent) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
 
             //If the new location is legal, insert the atom, if not reinsert the atom we removed.
-            if (isLegal(tempAtom)) {
+            if (isMoveLegal(currentProofTree, tempAtom)) {
                 nextStep.tree.insert(tempAtom);
             } else {
                 nextStep.tree.insert(currentNode);
@@ -135,29 +136,4 @@ export function proofMoveSingleMouseOut() {
     }
     legalNode = false;
     redrawTree(treeContext.getLastProofStep().tree);
-}
-
-/**
- * Determines if the current node can be inserted in a position that is not overlapping with anything
- * and it being inserted would result in a graph that would equal one another.
- * @param currentNode The node that will be checked for legality
- * @returns Whether or no the node is in a legal position
- */
-function isLegal(currentNode: CutNode | AtomNode): boolean {
-    return (
-        currentProofTree.canInsert(currentNode) &&
-        proofCanInsert(new AEGTree(currentProofTree.sheet), currentNode)
-    );
-}
-
-/**
- * Inserts a copy of our current node into a copy of our current tree and compares this to a copy
- * of the original tree.
- * @param tree A copy of the current tree without the current node
- * @param currentNode The node that will be checked for legality
- * @returns Whether or not the two graphs are equal
- */
-export function proofCanInsert(tree: AEGTree, currentNode: CutNode | AtomNode): boolean {
-    tree.insert(currentNode.copy());
-    return tree.isEqualTo(new AEGTree(treeContext.getLastProofStep().tree.sheet));
 }

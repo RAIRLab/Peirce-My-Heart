@@ -206,3 +206,28 @@ export function highlightChildren(child: AtomNode | CutNode, color: string) {
         }
     }
 }
+
+/**
+ * Makes a copy of original cut and changes the center and radii by the difference given.
+ * Alters the change to the center based on the direction that is being moved to.
+ * @param originalCut The original cut that will be copied and altered
+ * @param difference The change for the new cut
+ * @param direction the direction the radius will be expanding towards
+ * @returns The new altered cut
+ */
+export function resizeCut(originalCut: CutNode, difference: Point, direction: Point) {
+    if (originalCut.ellipse !== null) {
+        return new CutNode(
+            new Ellipse(
+                new Point(
+                    originalCut.ellipse.center.x + difference.x,
+                    originalCut.ellipse.center.y + difference.y
+                ),
+                originalCut.ellipse.radiusX + difference.x * direction.x,
+                originalCut.ellipse.radiusY + difference.y * direction.y
+            )
+        );
+    } else {
+        throw new Error("Cannot alter the position of a cut without an ellipse.");
+    }
+}

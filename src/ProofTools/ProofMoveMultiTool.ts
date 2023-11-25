@@ -14,7 +14,7 @@ import {offset} from "../DrawModes/DragTool";
 import {drawAtom, redrawTree} from "../DrawModes/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
 import {drawAltered, alterAtom, alterCutChildren} from "../DrawModes/EditModeUtils";
-import {proofCanInsert} from "./ProofMoveSingleTool";
+import {isMoveLegal} from "./ProofMoveUtils";
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -68,11 +68,11 @@ export function proofMoveMultiMouseMove(event: MouseEvent) {
         redrawTree(currentProofTree);
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = alterCutChildren(currentNode, moveDifference);
-            const color = isLegal(tempCut) ? legalColor() : illegalColor();
+            const color = isMoveLegal(currentProofTree, tempCut) ? legalColor() : illegalColor();
             drawAltered(currentNode, color, moveDifference);
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
-            const color = isLegal(tempAtom) ? legalColor() : illegalColor();
+            const color = isMoveLegal(currentProofTree, tempAtom) ? legalColor() : illegalColor();
             drawAtom(tempAtom, color, true);
         }
     }
@@ -96,7 +96,7 @@ export function proofMoveMultiMouseUp(event: MouseEvent) {
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = alterCutChildren(currentNode, moveDifference);
 
-            if (isLegal(tempCut)) {
+            if (isMoveLegal(currentProofTree, tempCut)) {
                 nextStep.tree.insert(tempCut);
             } else {
                 nextStep.tree.insert(currentNode);
@@ -104,7 +104,7 @@ export function proofMoveMultiMouseUp(event: MouseEvent) {
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
 
-            if (isLegal(tempAtom)) {
+            if (isMoveLegal(currentProofTree, tempAtom)) {
                 nextStep.tree.insert(tempAtom);
             } else {
                 nextStep.tree.insert(currentNode);
@@ -126,11 +126,4 @@ export function proofMoveMultiMouseOut() {
     }
     legalNode = false;
     redrawTree(treeContext.getLastProofStep().tree);
-}
-
-function isLegal(currentNode: CutNode | AtomNode): boolean {
-    return (
-        currentProofTree.canInsert(currentNode) &&
-        proofCanInsert(new AEGTree(currentProofTree.sheet), currentNode)
-    );
 }
