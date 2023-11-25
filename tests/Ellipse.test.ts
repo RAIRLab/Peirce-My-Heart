@@ -94,6 +94,31 @@ describe("Ellipse-on-Ellipse overlaps soliloquy:", () => {
     test("Any Ellipse should overlap an Ellipse with the same measurements.", () => {
         expect(testEllipse.overlaps(testEllipse)).toBeTruthy();
     });
+
+    test.each([
+        [testCenter.x + 5, testCenter.y + 5, 1, 1],
+        [testCenter.x + 5, testCenter.y - 5, 1, 1],
+        [testCenter.x - 5, testCenter.y - 5, 1, 1],
+        [testCenter.x - 5, testCenter.y + 5, 1, 1],
+    ])(
+        "Ellipse of center = (5, 5) and {radX, radY} = 5 should not overlap Ellipse with center (%f, %f) and radX = %f and radY = %f",
+        (x, y, radX, radY) => {
+            expect(testEllipse.overlaps(new Ellipse(new Point(x, y), radX, radY))).toBeFalsy();
+        }
+    );
+
+    test.each([
+        [testCenter.x, testCenter.y, 10, 10],
+        [testCenter.x + 5, testCenter.y + 5, 5, 5],
+        [testCenter.x + 5, testCenter.y - 5, 5, 5],
+        [testCenter.x - 5, testCenter.y - 5, 5, 5],
+        [testCenter.x - 5, testCenter.y + 5, 5, 5],
+    ])(
+        "Ellipse of center = (5, 5) and {radX, radY} = 5 should overlap Ellipse with center (%f, %f) and radX = %f and radY = %f",
+        (x, y, radX, radY) => {
+            expect(testEllipse.overlaps(new Ellipse(new Point(x, y), radX, radY))).toBeTruthy();
+        }
+    );
 });
 
 describe("Ellipse-on-Rectangle contains soliloquy:", () => {
