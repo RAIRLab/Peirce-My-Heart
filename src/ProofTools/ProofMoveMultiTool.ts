@@ -3,6 +3,7 @@
  * @author Dawn Moore
  */
 
+import {AEGTree} from "../AEG/AEGTree";
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
@@ -24,11 +25,15 @@ let currentParent: CutNode | null = null;
 //Whether or not the node is allowed to be moved (not the sheet).
 let legalNode: boolean;
 
+//The tree of the current proof step
+let currentProofTree: AEGTree;
+
 export function proofMoveMultiMouseDown(event: MouseEvent) {
+    currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = treeContext.tree.getLowestNode(startingPoint);
-    if (currentNode !== treeContext.tree.sheet && currentNode !== null) {
-        currentParent = treeContext.tree.getLowestParent(startingPoint);
+    currentNode = currentProofTree.getLowestNode(startingPoint);
+    if (currentNode !== currentProofTree.sheet && currentNode !== null) {
+        currentParent = currentProofTree.getLowestParent(startingPoint);
         if (currentParent !== null) {
             currentParent.remove(startingPoint);
         }
@@ -45,7 +50,7 @@ export function proofMoveMultiMouseMove(event: MouseEvent) {
             event.y - startingPoint.y
         );
 
-        redrawTree(treeContext.tree);
+        redrawTree(currentProofTree);
         if (currentNode instanceof CutNode) {
             const color = isLegal(
                 currentNode,
@@ -86,7 +91,7 @@ export function proofMoveMultiMouseUp(event: MouseEvent) {
             ) {
                 insertChildren(currentNode, moveDifference);
             } else {
-                treeContext.tree.insert(currentNode);
+                currentProofTree.insert(currentNode);
             }
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
@@ -98,36 +103,36 @@ export function proofMoveMultiMouseUp(event: MouseEvent) {
                     moveDifference
                 )
             ) {
-                treeContext.tree.insert(tempAtom);
+                currentProofTree.insert(tempAtom);
             } else {
-                treeContext.tree.insert(currentNode);
+                currentProofTree.insert(currentNode);
             }
         }
     }
-    redrawTree(treeContext.tree);
+    redrawTree(currentProofTree);
     legalNode = false;
 }
 
 export function proofMoveMultiMouseOut() {
     if (legalNode && currentNode !== null) {
-        treeContext.tree.insert(currentNode);
+        currentProofTree.insert(currentNode);
     }
     legalNode = false;
-    redrawTree(treeContext.tree);
+    redrawTree(currentProofTree);
 }
 
 function isLegal(currentNode: CutNode | AtomNode, currentPoint: Point, difference: Point): boolean {
     if (
         currentNode instanceof CutNode &&
-        currentParent === treeContext.tree.getLowestNode(currentPoint)
+        currentParent === currentProofTree.getLowestNode(currentPoint)
     ) {
-        if (validateChildren(currentNode, difference)) {
+        if (validateChildren(currentProofTree, currentNode, difference)) {
             return true;
         } else {
             return false;
         }
     } else if (currentNode instanceof AtomNode) {
-        if (treeContext.tree.canInsert(currentNode)) {
+        if (currentProofTree.canInsert(currentNode)) {
             return true;
         } else {
             return false;
