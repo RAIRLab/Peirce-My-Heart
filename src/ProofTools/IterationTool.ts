@@ -9,7 +9,7 @@ import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "../DrawModes/DragTool";
-import {drawAtom, redrawTree} from "../DrawModes/DrawUtils";
+import {drawAtom, redrawProof} from "../DrawModes/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
 import {
     validateChildren,
@@ -18,6 +18,8 @@ import {
     alterAtom,
     alterCut,
 } from "../DrawModes/EditModeUtils";
+import {AEGTree} from "../AEG/AEGTree";
+import {ProofNode} from "../AEG/ProofNode";
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -31,18 +33,25 @@ let currentParent: CutNode | null = null;
 //Whether or not the node is allowed to be moved (not the sheet).
 let legalNode: boolean;
 
+//The tree of the current proof step
+let currentProofTree: AEGTree;
+
 /**
  * Sets the starting point for future use as well as obtaining the lowest node containing this point.
  * Also obtains the parent of this lowest point for future use as well.
  * @param event The mouse down event while using the iteration tool
  */
 export function iterationMouseDown(event: MouseEvent) {
+    //Make a deep copy of the tree of our latest proof step. Our iteration actions will be performed
+    //on this structure, but they should all be on a new step - we do not want to make any changes
+    //on the existing step
+    currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = treeContext.tree.getLowestNode(startingPoint);
-    currentParent = treeContext.tree.getLowestParent(startingPoint);
+    currentNode = currentProofTree.getLowestNode(startingPoint);
+    currentParent = currentProofTree.getLowestParent(startingPoint);
 
     //So long as we have obtained a node that isn't the sheet we are allowed to select this.
-    legalNode = currentNode !== treeContext.tree.sheet && currentNode !== null;
+    legalNode = currentNode !== currentProofTree.sheet && currentNode !== null;
 }
 
 /**
@@ -58,7 +67,7 @@ export function iterationMouseMove(event: MouseEvent) {
             event.y - startingPoint.y
         );
 
-        redrawTree(treeContext.tree);
+        redrawProof();
         const currentPoint = new Point(event.x - offset.x, event.y - offset.y);
         const color = isLegal(moveDifference, currentPoint) ? legalColor() : illegalColor();
         if (currentNode instanceof CutNode) {
@@ -84,14 +93,16 @@ export function iterationMouseUp(event: MouseEvent) {
 
         if (isLegal(moveDifference, new Point(event.x - offset.x, event.y - offset.y))) {
             if (currentNode instanceof CutNode) {
-                insertChildren(currentNode, moveDifference);
+                insertChildren(currentNode, moveDifference, currentProofTree);
             } else if (currentNode instanceof AtomNode) {
                 const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
-                treeContext.tree.insert(tempAtom);
+                currentProofTree.insert(tempAtom);
             }
+            //Iteration is a new step -> push a new node in the proof, signifying it as such
+            treeContext.proofHistory.push(new ProofNode(currentProofTree, "Iteration"));
         }
     }
-    redrawTree(treeContext.tree);
+    redrawProof();
     legalNode = false;
 }
 
@@ -100,7 +111,7 @@ export function iterationMouseUp(event: MouseEvent) {
  */
 export function iterationMouseOut() {
     legalNode = false;
-    redrawTree(treeContext.tree);
+    redrawProof();
 }
 
 /**
@@ -119,14 +130,14 @@ function isLegal(moveDifference: Point, currentPoint: Point): boolean {
         //If the currentNode is a cut, then it is legal if it and all if it's children can be placed
         //legally, and if the node we have selected can not be inserted over something else.
         ((currentNode instanceof CutNode &&
-            validateChildren(currentNode, moveDifference) &&
+            validateChildren(currentProofTree, currentNode, moveDifference) &&
             insertChildless(
-                treeContext.tree.sheet,
+                currentProofTree.sheet,
                 alterCut(currentNode, moveDifference).ellipse!
             )) ||
             //AtomNodes are legal if they can be inserted in their current location.
             (currentNode instanceof AtomNode &&
-                treeContext.tree.canInsert(alterAtom(currentNode, moveDifference))))
+                currentProofTree.canInsert(alterAtom(currentNode, moveDifference))))
     );
 }
 
