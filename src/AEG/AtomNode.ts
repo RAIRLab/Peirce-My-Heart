@@ -55,6 +55,19 @@ export class AtomNode {
     }
 
     /**
+     * Creates a deep copy of this AtomNode
+     * @returns A new AtomNode, which is a deep copy of this node
+     */
+    public copy(): AtomNode {
+        return new AtomNode(
+            this.internalIdentifier,
+            new Point(this.internalOrigin.x, this.internalOrigin.y),
+            this.internalWidth,
+            this.internalHeight
+        );
+    }
+
+    /**
      * Accessor to get the width of this Atom Node.
      * @returns The width of this Atom Node
      */
@@ -149,5 +162,15 @@ export class AtomNode {
             this.internalWidth,
             this.internalHeight
         );
+    }
+
+    /**
+     * Method that checks if an atom node is equal to another atom node. The are equal if they
+     * represent the same proposition.
+     * @param otherAtom The other atom node we are checking against for equality
+     * @returns True, if they are equal (the same). Else, false
+     */
+    public isEqualTo(otherAtom: AtomNode): boolean {
+        return this.identifier === otherAtom.identifier;
     }
 }

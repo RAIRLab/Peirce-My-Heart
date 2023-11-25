@@ -23,6 +23,7 @@ ctx.font = "35pt arial";
 
 //Tree string displayed on webpage
 const cutDisplay = <HTMLParagraphElement>document.getElementById("graphString");
+const proofString = <HTMLParagraphElement>document.getElementById("proofString");
 
 //HTML bounding box check
 const atomCheckBox = <HTMLInputElement>document.getElementById("atomBox");
@@ -99,10 +100,10 @@ export function cleanCanvas() {
 /**
  * Resets the canvas and begins the recursive method of drawing the current tree.
  */
-export function redrawTree(tree: AEGTree) {
+export function redrawTree(tree: AEGTree, color?: string) {
     cutDisplay.innerHTML = tree.toString();
     cleanCanvas();
-    redrawCut(tree.sheet);
+    redrawCut(tree.sheet, color);
 }
 
 /**
@@ -111,7 +112,7 @@ export function redrawTree(tree: AEGTree) {
  * @param incomingNode The CutNode to be iterated through
  * @param offset The difference between the actual graph and the current canvas
  */
-function redrawCut(incomingNode: CutNode) {
+function redrawCut(incomingNode: CutNode, color?: string) {
     for (let i = 0; incomingNode.children.length > i; i++) {
         if (incomingNode.children[i] instanceof AtomNode) {
             redrawAtom(<AtomNode>incomingNode.children[i]);
@@ -120,7 +121,7 @@ function redrawCut(incomingNode: CutNode) {
         }
     }
     if (incomingNode.ellipse instanceof Ellipse) {
-        ctx.strokeStyle = placedColor();
+        ctx.strokeStyle = color ? color : placedColor();
         ctx.beginPath();
         ctx.ellipse(
             incomingNode.ellipse.center.x + offset.x,
@@ -140,6 +141,35 @@ function redrawCut(incomingNode: CutNode) {
  * @param incomingNode The Atom Node to be redrawn
  * @param offset The difference between the actual graph and the current canvas
  */
-function redrawAtom(incomingNode: AtomNode) {
+export function redrawAtom(incomingNode: AtomNode) {
     drawAtom(incomingNode, placedColor(), false);
+}
+
+export function redrawProof() {
+    //If this is the first step taken in the proof,
+    //set the current tree as the head of the proof history
+    let tree: AEGTree;
+    if (treeContext.proofHistory.length === 0) {
+        tree = new AEGTree();
+    } else {
+        tree = treeContext.proofHistory[treeContext.proofHistory.length - 1].tree;
+    }
+
+    cleanCanvas();
+    proofString.innerHTML = tree.toString();
+    redrawCut(tree.sheet);
+}
+
+/**
+ * Helper function to highlight the specific selected node
+ */
+export function highlightNode(child: AtomNode | CutNode, color: string) {
+    if (child instanceof AtomNode) {
+        drawAtom(child, color, false);
+    } else if (child instanceof CutNode) {
+        drawCut(child, color);
+        for (let i = 0; i < child.children.length; i++) {
+            highlightNode(child.children[i], color);
+        }
+    }
 }
