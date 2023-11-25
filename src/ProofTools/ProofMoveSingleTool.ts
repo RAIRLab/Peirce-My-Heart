@@ -121,7 +121,7 @@ export function proofMoveSingleMouseUp(event: MouseEvent) {
         }
 
         treeContext.proofHistory.push(nextProof);
-        redrawTree(treeContext.getLastProofStep().tree);
+        redrawTree(nextProof.tree);
     }
     legalNode = false;
 }
@@ -134,7 +134,7 @@ export function proofMoveSingleMouseOut() {
         currentProofTree.insert(currentNode);
     }
     legalNode = false;
-    redrawTree(currentProofTree);
+    redrawTree(treeContext.getLastProofStep().tree);
 }
 
 /**
@@ -146,7 +146,7 @@ export function proofMoveSingleMouseOut() {
 function isLegal(currentNode: CutNode | AtomNode): boolean {
     return (
         currentProofTree.canInsert(currentNode) &&
-        proofInsert(new AEGTree(currentProofTree.sheet), currentNode)
+        proofCanInsert(new AEGTree(currentProofTree.sheet), currentNode)
     );
 }
 
@@ -157,7 +157,7 @@ function isLegal(currentNode: CutNode | AtomNode): boolean {
  * @param currentNode The node that will be checked for legality
  * @returns Whether or not the two graphs are equal
  */
-function proofInsert(tree: AEGTree, currentNode: CutNode | AtomNode): boolean {
+export function proofCanInsert(tree: AEGTree, currentNode: CutNode | AtomNode): boolean {
     tree.insert(currentNode.copy());
     return tree.isEqualTo(new AEGTree(treeContext.getLastProofStep().tree.sheet));
 }

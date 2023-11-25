@@ -1,9 +1,11 @@
 /**
- * MORE MOVE
+ * A tool to allow for the movement for an atom or a cut and all of it's children so long as the
+ * meaning of the proof remains the same.
  * @author Dawn Moore
  */
 
 import {AEGTree} from "../AEG/AEGTree";
+import {ProofNode} from "../AEG/ProofNode";
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
@@ -11,7 +13,8 @@ import {treeContext} from "../treeContext";
 import {offset} from "../DrawModes/DragTool";
 import {drawAtom, redrawTree} from "../DrawModes/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
-import {validateChildren, drawAltered, insertChildren, alterAtom} from "../DrawModes/EditModeUtils";
+import {drawAltered, alterAtom, alterCutChildren} from "../DrawModes/EditModeUtils";
+import {proofCanInsert} from "./ProofMoveSingleTool";
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -28,10 +31,16 @@ let legalNode: boolean;
 //The tree of the current proof step
 let currentProofTree: AEGTree;
 
+/**
+ * Retrieves the current location on the window and the lowest node on the tree containing that point
+ * If this node is not the sheet then it can be moved, we find it's parent and remove it from that.
+ * @param event The mouse down event while using move multiple tool in proof mode
+ */
 export function proofMoveMultiMouseDown(event: MouseEvent) {
     currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = currentProofTree.getLowestNode(startingPoint);
+
     if (currentNode !== currentProofTree.sheet && currentNode !== null) {
         currentParent = currentProofTree.getLowestParent(startingPoint);
         if (currentParent !== null) {
@@ -43,6 +52,12 @@ export function proofMoveMultiMouseDown(event: MouseEvent) {
     }
 }
 
+/**
+ * Calculates the difference in x and y between the starting and current mouse locations.
+ * Creates a temporary node with the respective changes to all potential children in their
+ * respective positions and draws that to show movement.
+ * @param event The mouse move event while using move multiple tool in proof mode
+ */
 export function proofMoveMultiMouseMove(event: MouseEvent) {
     if (legalNode) {
         const moveDifference: Point = new Point(
@@ -52,92 +67,70 @@ export function proofMoveMultiMouseMove(event: MouseEvent) {
 
         redrawTree(currentProofTree);
         if (currentNode instanceof CutNode) {
-            const color = isLegal(
-                currentNode,
-                new Point(event.x - offset.x, event.y - offset.y),
-                moveDifference
-            )
-                ? legalColor()
-                : illegalColor();
+            const tempCut: CutNode = alterCutChildren(currentNode, moveDifference);
+            const color = isLegal(tempCut) ? legalColor() : illegalColor();
             drawAltered(currentNode, color, moveDifference);
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
-            const color = isLegal(
-                currentNode,
-                new Point(event.x - offset.x, event.y - offset.y),
-                moveDifference
-            )
-                ? legalColor()
-                : illegalColor();
+            const color = isLegal(tempAtom) ? legalColor() : illegalColor();
             drawAtom(tempAtom, color, true);
         }
     }
 }
 
+/**
+ * Calculates the difference in x and y between the starting and current mouse locations.
+ * If the node's new position (and any of it's children if it has any) is considered legal then
+ * insert it, otherwise insert the original node before it was moved.
+ * Add this current tree to the proof history for it to be used later.
+ * @param event The mouse up event while using move multiple tool in proof mode
+ */
 export function proofMoveMultiMouseUp(event: MouseEvent) {
     if (legalNode) {
+        const nextProof = new ProofNode(currentProofTree, "Multi Movement");
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
             event.y - startingPoint.y
         );
 
         if (currentNode instanceof CutNode) {
-            if (
-                isLegal(
-                    currentNode,
-                    new Point(event.x - offset.x, event.y - offset.y),
-                    moveDifference
-                )
-            ) {
-                insertChildren(currentNode, moveDifference);
+            const tempCut: CutNode = alterCutChildren(currentNode, moveDifference);
+
+            if (isLegal(tempCut)) {
+                nextProof.tree.insert(tempCut);
             } else {
-                currentProofTree.insert(currentNode);
+                nextProof.tree.insert(currentNode);
             }
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
 
-            if (
-                isLegal(
-                    currentNode,
-                    new Point(event.x - offset.x, event.y - offset.y),
-                    moveDifference
-                )
-            ) {
-                currentProofTree.insert(tempAtom);
+            if (isLegal(tempAtom)) {
+                nextProof.tree.insert(tempAtom);
             } else {
-                currentProofTree.insert(currentNode);
+                nextProof.tree.insert(currentNode);
             }
         }
+
+        treeContext.proofHistory.push(nextProof);
+        redrawTree(nextProof.tree);
     }
-    redrawTree(currentProofTree);
     legalNode = false;
 }
 
+/**
+ * If the mouse leaves the canvas then reinsert our current node if it is legal and reset the canvas.
+ */
 export function proofMoveMultiMouseOut() {
     if (legalNode && currentNode !== null) {
         currentProofTree.insert(currentNode);
     }
     legalNode = false;
-    redrawTree(currentProofTree);
+    redrawTree(treeContext.getLastProofStep().tree);
 }
 
-function isLegal(currentNode: CutNode | AtomNode, currentPoint: Point, difference: Point): boolean {
-    if (
-        currentNode instanceof CutNode &&
-        currentParent === currentProofTree.getLowestNode(currentPoint)
-    ) {
-        if (validateChildren(currentProofTree, currentNode, difference)) {
-            return true;
-        } else {
-            return false;
-        }
-    } else if (currentNode instanceof AtomNode) {
-        if (currentProofTree.canInsert(currentNode)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    return false;
+function isLegal(currentNode: CutNode | AtomNode): boolean {
+    return (
+        currentProofTree.canInsert(currentNode) &&
+        proofCanInsert(new AEGTree(currentProofTree.sheet), currentNode)
+    );
 }
