@@ -10,8 +10,10 @@ import {Ellipse} from "../AEG/Ellipse";
 import {treeContext} from "../treeContext";
 import {offset} from "../DrawModes/DragTool";
 import {legalColor, illegalColor} from "../Themes";
-import {drawCut, redrawTree, drawGuidelines} from "../DrawModes/DrawUtils";
+import {drawCut, redrawProof, drawGuidelines} from "../DrawModes/DrawUtils";
 import {ellipseLargeEnough, createEllipse} from "../DrawModes/CutTool";
+import {ProofNode} from "../AEG/ProofNode";
+import {AEGTree} from "../AEG/AEGTree";
 
 const showRectElm: HTMLInputElement = <HTMLInputElement>document.getElementById("showRect");
 
@@ -21,12 +23,15 @@ let startingPoint: Point;
 //Tracks if the mouse has ever left canvas disallowing future movements.
 let wasOut: boolean;
 
+let currentProofTree: AEGTree;
+
 /**
  * Records the current point on the canvas.
  * @param event The double cut event while using the double cut insertion tool
  */
 export function doubleCutInsertionMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.clientX - offset.x, event.clientY - offset.y);
+    currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
     wasOut = false;
 }
 
@@ -40,14 +45,14 @@ export function doubleCutInsertionMouseMove(event: MouseEvent) {
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
     const largeCut: CutNode = new CutNode(createEllipse(startingPoint, currentPoint));
     const smallCut: CutNode = new CutNode(calcSmallEllipse(<Ellipse>largeCut.ellipse));
-    redrawTree(treeContext.tree);
+    redrawProof();
 
     if (!wasOut && largeCut.ellipse !== null && smallCut.ellipse !== null) {
         //If either ellipse is in an invalid position or too small it cannot be inserted
         const legal =
-            treeContext.tree.canInsert(largeCut) &&
+            currentProofTree.canInsert(largeCut) &&
             ellipseLargeEnough(largeCut.ellipse) &&
-            treeContext.tree.canInsert(smallCut) &&
+            currentProofTree.canInsert(smallCut) &&
             ellipseLargeEnough(smallCut.ellipse);
 
         const color = legal ? legalColor() : illegalColor();
@@ -68,23 +73,30 @@ export function doubleCutInsertionMouseMove(event: MouseEvent) {
  */
 export function doubleCutInsertionMouseUp(event: MouseEvent) {
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
+    currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
+
     const largeCut: CutNode = new CutNode(createEllipse(startingPoint, currentPoint));
     const smallCut: CutNode = new CutNode(calcSmallEllipse(<Ellipse>largeCut.ellipse));
+
+    //Stores the tree of the previous proof so that we can perform double cut actions without
+    //altering that tree
+    const nextProof = new ProofNode(currentProofTree, "Double Cut Insertion");
 
     if (!wasOut && largeCut.ellipse !== null && smallCut.ellipse !== null) {
         //If either ellipse is in an invalid position or too small it cannot be inserted
         const legal =
-            treeContext.tree.canInsert(largeCut) &&
+            currentProofTree.canInsert(largeCut) &&
             ellipseLargeEnough(largeCut.ellipse) &&
-            treeContext.tree.canInsert(smallCut) &&
+            currentProofTree.canInsert(smallCut) &&
             ellipseLargeEnough(smallCut.ellipse);
 
         if (legal) {
-            treeContext.tree.insert(largeCut);
-            treeContext.tree.insert(smallCut);
+            nextProof.tree.insert(largeCut);
+            nextProof.tree.insert(smallCut);
+            treeContext.proofHistory.push(nextProof);
         }
     }
-    redrawTree(treeContext.tree);
+    redrawProof();
 }
 
 /**
@@ -92,7 +104,7 @@ export function doubleCutInsertionMouseUp(event: MouseEvent) {
  */
 export function doubleCutInsertionMouseOut() {
     wasOut = true;
-    redrawTree(treeContext.tree);
+    redrawProof();
 }
 
 /**

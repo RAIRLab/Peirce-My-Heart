@@ -16,7 +16,7 @@ import {
     atomMouseOut,
 } from "./DrawModes/AtomTool";
 import {saveFile, loadFile} from "./AEG-IO";
-import {redrawTree} from "./DrawModes/DrawUtils";
+import {redrawProof, redrawTree} from "./DrawModes/DrawUtils";
 import {dragMosueOut, dragMouseDown, dragMouseMove} from "./DrawModes/DragTool";
 import {
     moveSingleMouseDown,
@@ -56,11 +56,11 @@ import {
     deleteMultiMouseUp,
 } from "./DrawModes/DeleteMultiTool";
 import {
-    toProofMouseDown,
-    toProofMouseMove,
-    toProofMouseUp,
-    toProofMouseOut,
-} from "./DrawModes/ToProofMode";
+    copyFromDrawMouseDown,
+    copyFromDrawMouseMove,
+    copyFromDrawMouseUp,
+    copyFromDrawMouseOut,
+} from "./DrawModes/copyFromDraw";
 import {
     doubleCutInsertionMouseDown,
     doubleCutInsertionMouseMove,
@@ -74,6 +74,12 @@ import {
     doubleCutDeletionMouseOut,
 } from "./ProofTools/DoubleCutDeletionTool";
 import {
+    insertionMouseDown,
+    insertionMouseMove,
+    insertionMouseOut,
+    insertionMouseUp,
+} from "./ProofTools/InsertionTools";
+import {
     erasureMouseDown,
     erasureMouseMove,
     erasureMouseUp,
@@ -86,6 +92,13 @@ import {
     resizeMouseUp,
     resizeMouseOut,
 } from "./DrawModes/ResizeTool";
+import {ProofNode} from "./AEG/ProofNode";
+import {
+    pasteInProofMouseDown,
+    pasteInProofMouseMove,
+    pasteInProofMouseOut,
+    pasteInProofMouseUp,
+} from "./ProofTools/pasteInProof";
 import {
     iterationMouseDown,
     iterationMouseMove,
@@ -107,6 +120,10 @@ ctx.font = "35pt arial";
 //Global State
 const cutTools = <HTMLParagraphElement>document.getElementById("cutTools");
 const atomTools = <HTMLParagraphElement>document.getElementById("atomTools");
+export const treeString = <HTMLParagraphElement>document.getElementById("graphString");
+export const proofString = <HTMLParagraphElement>document.getElementById("proofString");
+const selectionDisplay = <HTMLParagraphElement>document.getElementById("toProofTools");
+
 window.addEventListener("keydown", keyDownHandler);
 canvas.addEventListener("mousedown", mouseDownHandler);
 canvas.addEventListener("mousemove", mouseMoveHandler);
@@ -132,10 +149,12 @@ window.copySingleTool = Tool.copySingleTool;
 window.copyMultiTool = Tool.copyMultiTool;
 window.deleteSingleTool = Tool.deleteSingleTool;
 window.deleteMultiTool = Tool.deleteMultiTool;
-window.toProofMode = Tool.toProofMode;
+window.copyFromDrawTool = Tool.copyFromDrawTool;
+window.pasteInProofTool = Tool.pasteInProofTool;
 window.doubleCutInsertionTool = Tool.doubleCutInsertionTool;
 window.resizeTool = Tool.resizeTool;
 window.doubleCutDeletionTool = Tool.doubleCutDeletionTool;
+window.insertionTool = Tool.insertionTool;
 window.erasureTool = Tool.erasureTool;
 window.iterationTool = Tool.iterationTool;
 window.setTool = setTool;
@@ -155,10 +174,12 @@ declare global {
         copyMultiTool: Tool;
         deleteSingleTool: Tool;
         deleteMultiTool: Tool;
-        toProofMode: Tool;
+        copyFromDrawTool: Tool;
+        pasteInProofTool: Tool;
         resizeTool: Tool;
         doubleCutInsertionTool: Tool;
         doubleCutDeletionTool: Tool;
+        insertionTool: Tool;
         erasureTool: Tool;
         iterationTool: Tool;
         setTool: (state: Tool) => void;
@@ -182,13 +203,13 @@ function setHighlight(event: string, id: string) {
 }
 
 //Active mode button stays pressed down until another mode button is clicked
-const modeButtons = document.querySelectorAll(".modeButton");
-modeButtons.forEach(button => {
+const toolButtons = document.querySelectorAll(".toolButton");
+toolButtons.forEach(button => {
     button.addEventListener("click", () => {
-        button.classList.toggle("modeButtonPressed");
-        modeButtons.forEach(otherButton => {
+        button.classList.add("toolButtonPressed");
+        toolButtons.forEach(otherButton => {
             if (otherButton !== button) {
-                otherButton.classList.remove("modeButtonPressed");
+                otherButton.classList.remove("toolButtonPressed");
             }
         });
     });
@@ -198,6 +219,17 @@ export function setTool(state: Tool) {
     treeContext.toolState = state;
     cutTools.style.display = "none";
     atomTools.style.display = "none";
+    treeString.style.display = "none";
+    proofString.style.display = "none";
+    selectionDisplay.style.display = "none";
+
+    if (state <= 11) {
+        treeContext.modeState = "Draw";
+        treeString.style.display = "block";
+    } else {
+        treeContext.modeState = "Proof";
+        proofString.style.display = "block";
+    }
 
     switch (treeContext.toolState) {
         case Tool.atomTool:
@@ -205,6 +237,9 @@ export function setTool(state: Tool) {
             break;
         case Tool.cutTool:
             cutTools.style.display = "block";
+            break;
+        case Tool.copyFromDrawTool:
+            selectionDisplay.style.display = "block";
             break;
         case Tool.doubleCutInsertionTool:
             cutTools.style.display = "block";
@@ -216,11 +251,26 @@ export function setTool(state: Tool) {
  * Calls the function to save the file.
  */
 async function saveMode() {
+    let name: string;
+    let data: AEGTree | ProofNode[];
+
+    if (treeContext.modeState === "Draw") {
+        name = "AEG Tree";
+        data = treeContext.tree;
+    } else {
+        name =
+            treeContext.proofHistory[0].tree.toString() +
+            // " - " +
+            "\u2192" +
+            treeContext.getLastProofStep().tree.toString();
+        data = treeContext.proofHistory;
+    }
+
+    //Slow Download
     if ("showSaveFilePicker" in window) {
-        //Slow Download
         const saveHandle = await window.showSaveFilePicker({
             excludeAcceptAllOption: true,
-            suggestedName: "AEG Tree",
+            suggestedName: name,
             startIn: "downloads",
             types: [
                 {
@@ -231,12 +281,12 @@ async function saveMode() {
                 },
             ],
         });
-        saveFile(saveHandle, treeContext.tree);
+        saveFile(saveHandle, data);
     } else {
         //Quick Download
         const f = document.createElement("a");
-        f.href = JSON.stringify(treeContext.tree, null, "\t");
-        f.download = "AEGTree.json";
+        f.href = JSON.stringify(data, null, "\t");
+        f.download = name + ".json";
         f.click();
     }
 }
@@ -263,12 +313,18 @@ async function loadMode() {
     const reader = new FileReader();
     reader.addEventListener("load", () => {
         const aegData = reader.result;
-        const loadData = loadFile(aegData);
-        if (loadData instanceof AEGTree) {
-            treeContext.tree = loadData;
-            redrawTree(treeContext.tree);
+        if (typeof aegData === "string") {
+            const loadData = loadFile(treeContext.modeState, aegData);
+            if (treeContext.modeState === "Draw") {
+                treeContext.tree = loadData as AEGTree;
+                redrawTree(treeContext.tree);
+            } else if (treeContext.modeState === "Proof") {
+                treeContext.proofHistory = loadData as ProofNode[];
+                redrawProof();
+            }
+        } else {
+            throw Error("Loading failed because reading the file was unsuccessful");
         }
-        //TODO: else popup error
     });
     reader.readAsText(file);
 }
@@ -326,14 +382,20 @@ function mouseDownHandler(event: MouseEvent) {
         case Tool.resizeTool:
             resizeMouseDown(event);
             break;
-        case Tool.toProofMode:
-            toProofMouseDown(event);
+        case Tool.copyFromDrawTool:
+            copyFromDrawMouseDown(event);
+            break;
+        case Tool.pasteInProofTool:
+            pasteInProofMouseDown();
             break;
         case Tool.doubleCutInsertionTool:
             doubleCutInsertionMouseDown(event);
             break;
         case Tool.doubleCutDeletionTool:
             doubleCutDeletionMouseDown(event);
+            break;
+        case Tool.insertionTool:
+            insertionMouseDown(event);
             break;
         case Tool.erasureTool:
             erasureMouseDown(event);
@@ -384,14 +446,20 @@ function mouseMoveHandler(event: MouseEvent) {
             case Tool.resizeTool:
                 resizeMouseMove(event);
                 break;
-            case Tool.toProofMode:
-                toProofMouseMove();
+            case Tool.copyFromDrawTool:
+                copyFromDrawMouseMove(event);
+                break;
+            case Tool.pasteInProofTool:
+                pasteInProofMouseMove();
                 break;
             case Tool.doubleCutInsertionTool:
                 doubleCutInsertionMouseMove(event);
                 break;
             case Tool.doubleCutDeletionTool:
                 doubleCutDeletionMouseMove(event);
+                break;
+            case Tool.insertionTool:
+                insertionMouseMove(event);
                 break;
             case Tool.erasureTool:
                 erasureMouseMove(event);
@@ -439,14 +507,20 @@ function mouseUpHandler(event: MouseEvent) {
         case Tool.resizeTool:
             resizeMouseUp(event);
             break;
-        case Tool.toProofMode:
-            toProofMouseUp();
+        case Tool.copyFromDrawTool:
+            copyFromDrawMouseUp();
+            break;
+        case Tool.pasteInProofTool:
+            pasteInProofMouseUp();
             break;
         case Tool.doubleCutInsertionTool:
             doubleCutInsertionMouseUp(event);
             break;
         case Tool.doubleCutDeletionTool:
             doubleCutDeletionMouseUp(event);
+            break;
+        case Tool.insertionTool:
+            insertionMouseUp(event);
             break;
         case Tool.erasureTool:
             erasureMouseUp(event);
@@ -496,14 +570,20 @@ function mouseOutHandler() {
         case Tool.resizeTool:
             resizeMouseOut();
             break;
-        case Tool.toProofMode:
-            toProofMouseOut();
+        case Tool.copyFromDrawTool:
+            copyFromDrawMouseOut();
+            break;
+        case Tool.pasteInProofTool:
+            pasteInProofMouseOut();
             break;
         case Tool.doubleCutInsertionTool:
             doubleCutInsertionMouseOut();
             break;
         case Tool.doubleCutDeletionTool:
             doubleCutDeletionMouseOut();
+            break;
+        case Tool.insertionTool:
+            insertionMouseOut();
             break;
         case Tool.erasureTool:
             erasureMouseOut();

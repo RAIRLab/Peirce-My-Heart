@@ -3,6 +3,7 @@ import {AtomNode} from "./AEG/AtomNode";
 import {CutNode} from "./AEG/CutNode";
 import {Ellipse} from "./AEG/Ellipse";
 import {Point} from "./AEG/Point";
+import {ProofNode} from "./AEG/ProofNode";
 
 /**
  * Interface for an object describing Sheet of Assertion
@@ -33,13 +34,18 @@ interface atomObj {
     internalOrigin: {x: number; y: number};
 }
 
+interface nodeObj {
+    tree: sheetObj;
+    appliedRule: string;
+}
+
 /**
  * Function that creates and saves a file containing the given AEG data
  * @param handle The handler for the save file picker
  * @param aegData Serialized JSON string containing the AEG data
  */
-export async function saveFile(handle: FileSystemFileHandle, aegData: AEGTree) {
-    const data = JSON.stringify(aegData, null, "\t");
+export async function saveFile(handle: FileSystemFileHandle, saveData: AEGTree | ProofNode[]) {
+    const data = JSON.stringify(saveData, null, "\t");
 
     const writable = await handle.createWritable();
     await writable.write(data);
@@ -48,33 +54,54 @@ export async function saveFile(handle: FileSystemFileHandle, aegData: AEGTree) {
 
 /**
  * Function that takes in data read from a file and converts it into a valid AEG representation.
+ * @param mode The mode we are in (Draw mode or proof mode)
  * @param fileData The data read from a file.
- * @returns An AEG representation of the data.
+ * @returns If in draw mode, returns an AEG representation of the data.
+ * If in proof mode, constructs an array of AEGs read from the file.
+ * This can be used to build the proof list
  * Returns null if an error occurred
  */
-export function loadFile(fileData: string | ArrayBuffer | null): AEGTree | null {
-    if (typeof fileData === "string") {
-        const data: sheetObj = JSON.parse(fileData);
-        const childData: (atomObj | cutObj)[] = data.internalSheet.internalChildren;
+export function loadFile(mode: "Draw" | "Proof", fileData: string): AEGTree | ProofNode[] {
+    const data = JSON.parse(fileData);
 
-        const tree: AEGTree = new AEGTree();
-        const children: (AtomNode | CutNode)[] = [];
+    if (mode === "Draw") {
+        const childData: (atomObj | cutObj)[] = (data as sheetObj).internalSheet.internalChildren;
+        return toTree(childData);
+    } else {
+        //Construct the tree at every step of the proof and store them in an array
+        const arr: ProofNode[] = [];
 
-        childData.forEach(child => {
-            if (Object.prototype.hasOwnProperty.call(child, "internalEllipse")) {
-                //make cut
-                children.push(toCut(child as cutObj));
-            } else {
-                //Make atom
-                children.push(toAtom(child as atomObj));
-            }
-        });
+        let node: nodeObj;
+        for (node of data) {
+            const childData: (atomObj | cutObj)[] = node.tree.internalSheet.internalChildren;
+            arr.push(new ProofNode(toTree(childData), node.appliedRule));
+        }
 
-        tree.sheet.children = children;
-        return tree;
+        return arr;
+    }
+}
+
+/**
+ * Constructs an AEG from the array of JSON objects parsed from our file data.
+ * @param childData The array of objects which should be filled in as children of the tree.
+ * @returns An AEG Tree representation of our data.
+ */
+function toTree(childData: (atomObj | cutObj)[]): AEGTree {
+    const tree: AEGTree = new AEGTree();
+    const children: (AtomNode | CutNode)[] = [];
+
+    for (const child of childData) {
+        if (Object.prototype.hasOwnProperty.call(child, "internalEllipse")) {
+            //make cut
+            children.push(toCut(child as cutObj));
+        } else {
+            //Make atom
+            children.push(toAtom(child as atomObj));
+        }
     }
 
-    return null;
+    tree.sheet.children = children;
+    return tree;
 }
 
 /**
@@ -91,13 +118,13 @@ function toCut(data: cutObj): CutNode {
 
     const children: (AtomNode | CutNode)[] = [];
 
-    data.internalChildren.forEach(child => {
+    for (const child of data.internalChildren) {
         if ("internalEllipse" in child) {
             children.push(toCut(child));
         } else {
             children.push(toAtom(child));
         }
-    });
+    }
 
     return new CutNode(ellipse, children);
 }
