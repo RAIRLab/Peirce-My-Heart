@@ -146,24 +146,6 @@ export class AEGTree {
         return this.internalSheet.getLowestParent(incomingPoint);
     }
 
-    public getParent(incomingNode: CutNode | AtomNode): CutNode | null {
-        if (!this.internalSheet.containsNode(incomingNode)) {
-            return null;
-        }
-
-        let corner: Point | null = null;
-        if (incomingNode instanceof CutNode && incomingNode.ellipse !== null) {
-            corner = incomingNode.ellipse.boundingBox.startVertex;
-        } else if (incomingNode instanceof AtomNode) {
-            corner = incomingNode.calcRect().startVertex;
-        }
-
-        if (corner !== null) {
-            return this.internalSheet.getLowestParent(corner);
-        }
-        return null;
-    }
-
     /**
      * Finds the depth of the node within the tree.
      * @param incomingNode The node to be searched for
@@ -246,15 +228,8 @@ export class AEGTree {
      * @returns True, if the trees are equal. Else, false
      */
     public isEqualTo(otherTree: AEGTree): boolean {
-        //For 2 trees to be equal, they must have the same number of children
-        if (this.sheet.children.length === otherTree.sheet.children.length) {
-            if (this.sheet.children.length === 0) {
-                //Both trees are empty trees => they are equal
-                return true;
-            }
-            return this.sheet.isEqualTo(otherTree.sheet);
-        }
-        return false;
+        //For 2 trees to be equal, their sheet of assertion must be equal
+        return this.sheet.isEqualTo(otherTree.sheet);
     }
 
     /**

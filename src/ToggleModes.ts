@@ -42,7 +42,10 @@ export function toggleHandler(): void {
         proofCachedTool = treeContext.toolState;
 
         //Load in our saved draw tree and tool state
-        const loadedAEG = loadFile(treeContext.modeState, drawCachedAEG) as AEGTree | null;
+        let loadedAEG: AEGTree | null = null;
+        if (drawCachedAEG !== null) {
+            loadedAEG = loadFile(treeContext.modeState, drawCachedAEG) as AEGTree | null;
+        }
         if (loadedAEG !== null) {
             treeContext.tree.sheet = loadedAEG.sheet;
         } else {
@@ -63,38 +66,15 @@ export function toggleHandler(): void {
         drawCachedTool = treeContext.toolState;
 
         //Load in our saved proof structure and tool state
-        const loadedProof = loadFile(treeContext.modeState, proofCachedAEG) as ProofNode[] | null;
+        let loadedProof: ProofNode[] | null = null;
+        if (proofCachedAEG !== null) {
+            loadedProof = loadFile(treeContext.modeState, proofCachedAEG) as ProofNode[] | null;
+        }
         if (loadedProof !== null) {
             treeContext.proofHistory = loadedProof;
-            /* //Construct the next tree from the last tree in the proof
-            const nextTree = new AEGTree(
-                treeContext.proofHistory[treeContext.proofHistory.length - 1].tree.sheet
-            );
-
-            //If the user selected something to be copied over from draw mode,
-            //insert it into the next tree
-            if (treeContext.selectForProof.sheet.children.length > 0) {
-                for (let i = 0; i < treeContext.selectForProof.sheet.children.length; i++) {
-                    const child = treeContext.selectForProof.sheet.children[i];
-                    try {
-                        nextTree.insert(child);
-                    } catch (error) {
-                        console.log("Could not insert " + child);
-                    }
-                }
-
-                treeContext.proofHistory.push(new ProofNode(nextTree));
-            } */
-        } /* else {
-            //If there is no saved proof and the user selected something to be copied over from
-            //draw mode, make that our proof structure
-            const proofTree = new AEGTree(treeContext.selectForProof.sheet);
-            treeContext.proofHistory.push(new ProofNode(proofTree));
-        } */
-
+        }
         //Reset the state of our tools
         treeContext.toolState = proofCachedTool;
-
         redrawProof();
     }
 }

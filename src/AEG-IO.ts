@@ -61,30 +61,24 @@ export async function saveFile(handle: FileSystemFileHandle, saveData: AEGTree |
  * This can be used to build the proof list
  * Returns null if an error occurred
  */
-export function loadFile(
-    mode: "Draw" | "Proof",
-    fileData: string | ArrayBuffer | null
-): AEGTree | ProofNode[] | null {
-    if (typeof fileData === "string") {
-        const data = JSON.parse(fileData);
+export function loadFile(mode: "Draw" | "Proof", fileData: string): AEGTree | ProofNode[] {
+    const data = JSON.parse(fileData);
 
-        if (mode === "Draw") {
-            const childData: (atomObj | cutObj)[] = (data as sheetObj).internalSheet
-                .internalChildren;
-            return toTree(childData);
-        } else {
-            //Construct the tree at every step of the proof and store them in an array
-            const arr: ProofNode[] = [];
-            data.forEach((node: nodeObj) => {
-                const childData: (atomObj | cutObj)[] = node.tree.internalSheet.internalChildren;
-                arr.push(new ProofNode(toTree(childData), node.appliedRule));
-            });
+    if (mode === "Draw") {
+        const childData: (atomObj | cutObj)[] = (data as sheetObj).internalSheet.internalChildren;
+        return toTree(childData);
+    } else {
+        //Construct the tree at every step of the proof and store them in an array
+        const arr: ProofNode[] = [];
 
-            return arr;
+        let node: nodeObj;
+        for (node of data) {
+            const childData: (atomObj | cutObj)[] = node.tree.internalSheet.internalChildren;
+            arr.push(new ProofNode(toTree(childData), node.appliedRule));
         }
-    }
 
-    return null;
+        return arr;
+    }
 }
 
 /**
@@ -96,7 +90,7 @@ function toTree(childData: (atomObj | cutObj)[]): AEGTree {
     const tree: AEGTree = new AEGTree();
     const children: (AtomNode | CutNode)[] = [];
 
-    childData.forEach(child => {
+    for (const child of childData) {
         if (Object.prototype.hasOwnProperty.call(child, "internalEllipse")) {
             //make cut
             children.push(toCut(child as cutObj));
@@ -104,7 +98,7 @@ function toTree(childData: (atomObj | cutObj)[]): AEGTree {
             //Make atom
             children.push(toAtom(child as atomObj));
         }
-    });
+    }
 
     tree.sheet.children = children;
     return tree;
@@ -124,13 +118,13 @@ function toCut(data: cutObj): CutNode {
 
     const children: (AtomNode | CutNode)[] = [];
 
-    data.internalChildren.forEach(child => {
+    for (const child of data.internalChildren) {
         if ("internalEllipse" in child) {
             children.push(toCut(child));
         } else {
             children.push(toAtom(child));
         }
-    });
+    }
 
     return new CutNode(ellipse, children);
 }

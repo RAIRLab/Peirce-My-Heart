@@ -306,15 +306,18 @@ async function loadMode() {
     const reader = new FileReader();
     reader.addEventListener("load", () => {
         const aegData = reader.result;
-        const loadData = loadFile(treeContext.modeState, aegData);
-        if (loadData !== null && treeContext.modeState === "Draw") {
-            treeContext.tree = loadData as AEGTree;
-            redrawTree(treeContext.tree);
-        } else if (loadData !== null && treeContext.modeState === "Proof") {
-            treeContext.proofHistory = loadData as ProofNode[];
-            redrawProof();
+        if (typeof aegData === "string") {
+            const loadData = loadFile(treeContext.modeState, aegData);
+            if (treeContext.modeState === "Draw") {
+                treeContext.tree = loadData as AEGTree;
+                redrawTree(treeContext.tree);
+            } else if (treeContext.modeState === "Proof") {
+                treeContext.proofHistory = loadData as ProofNode[];
+                redrawProof();
+            }
+        } else {
+            throw Error("Loading failed because reading the file was unsuccessful");
         }
-        //TODO: else popup error
     });
     reader.readAsText(file);
 }

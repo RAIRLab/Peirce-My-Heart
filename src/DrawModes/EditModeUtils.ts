@@ -99,6 +99,20 @@ export function insertChildren(incomingNode: CutNode | AtomNode, change: Point, 
 }
 
 /**
+ * Takes a node object and alters it accordingly based on the type of node
+ * @param node The node to be altered
+ * @param difference The difference on how far the node should move
+ * @returns The new altered version of the node
+ */
+export function alterNode(node: AtomNode | CutNode, difference: Point) {
+    if (node instanceof AtomNode) {
+        return alterAtom(node, difference);
+    }
+
+    return alterCut(node as CutNode, difference);
+}
+
+/**
  * Takes a cut object and changes the center point of the ellipse by the difference.
  * If the cut does not have an ellipse throws and error.
  * @param originalCut The original cut to be altered
@@ -125,8 +139,8 @@ export function alterCut(originalCut: CutNode, difference: Point): CutNode {
 /**
  * Takes an atom object and changes the origin point by the difference.
  * @param originalAtom The Atom to be altered
- * @param difference The difference on how far the center should move
- * @returns The new altered version of the cut
+ * @param difference The difference on how far the atom should move
+ * @returns The new altered version of the atom
  */
 export function alterAtom(originalAtom: AtomNode, difference: Point) {
     return new AtomNode(
