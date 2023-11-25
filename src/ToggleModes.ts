@@ -5,9 +5,9 @@
  */
 import {loadFile} from "./AEG-IO";
 import {AEGTree} from "./AEG/AEGTree";
-import {redrawTree} from "./DrawModes/DrawUtils";
-// import {setMode} from "./index";
-// import {selectedNode} from "./DrawModes/ToProofMode";
+import {ProofNode} from "./AEG/ProofNode";
+import {redrawProof, redrawTree} from "./DrawModes/DrawUtils";
+import {treeString, proofString} from ".";
 import {Tool, treeContext} from "./treeContext";
 
 //Flag to signify the mode we are in
@@ -32,54 +32,49 @@ export function toggleHandler(): void {
     if (drawMode) {
         //Display the buttons for Draw Mode
         drawButtons.style.display = "block";
+        treeString.style.display = "block";
         proofButtons.style.display = "none";
+        proofString.style.display = "none";
+        treeContext.modeState = "Draw";
 
         //cache the proof tree and tool state so that we can load it back in when we toggle again
-        proofCachedAEG = JSON.stringify(treeContext.tree);
+        proofCachedAEG = JSON.stringify(treeContext.proofHistory);
         proofCachedTool = treeContext.toolState;
 
         //Load in our saved draw tree and tool state
-        const loadedAEG = loadFile(drawCachedAEG);
+        let loadedAEG: AEGTree | null = null;
+        if (drawCachedAEG !== null) {
+            loadedAEG = loadFile(treeContext.modeState, drawCachedAEG) as AEGTree | null;
+        }
         if (loadedAEG !== null) {
             treeContext.tree.sheet = loadedAEG.sheet;
         } else {
             throw Error("invalid cached AEG");
         }
         treeContext.toolState = drawCachedTool;
+        redrawTree(treeContext.tree);
     } else {
         //Display the buttons for Proof Mode
         drawButtons.style.display = "none";
+        treeString.style.display = "none";
         proofButtons.style.display = "block";
+        proofString.style.display = "block";
+        treeContext.modeState = "Proof";
 
         //cache the draw tree and tool state so that we can load it back in when we toggle again
         drawCachedAEG = JSON.stringify(treeContext.tree);
         drawCachedTool = treeContext.toolState;
 
         //Load in our saved proof structure and tool state
-        const loadedProof = loadFile(proofCachedAEG);
-        if (loadedProof !== null) {
-            treeContext.tree.sheet = loadedProof.sheet;
-            //If the user selected something to be copied over from draw mode,
-            //insert it into our existing proof structure
-            for (let i = 0; i < treeContext.selectForProof.sheet.children.length; i++) {
-                const child = treeContext.selectForProof.sheet.children[i];
-                try {
-                    treeContext.tree.insert(child);
-                } catch (error) {
-                    console.log("Could not insert " + child);
-                }
-            }
-        } else {
-            //If there is no saved proof and the user selected something to be copied over from
-            //draw mode, make that our proof structure
-            treeContext.tree.sheet = treeContext.selectForProof.sheet;
+        let loadedProof: ProofNode[] | null = null;
+        if (proofCachedAEG !== null) {
+            loadedProof = loadFile(treeContext.modeState, proofCachedAEG) as ProofNode[] | null;
         }
-
+        if (loadedProof !== null) {
+            treeContext.proofHistory = loadedProof;
+        }
         //Reset the state of our tools
         treeContext.toolState = proofCachedTool;
-        //The selected node has been loaded in.
-        //Reset it to avoid accidentally reloading it next time.
-        treeContext.selectForProof.sheet = new AEGTree().sheet;
+        redrawProof();
     }
-    redrawTree(treeContext.tree);
 }
