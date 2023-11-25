@@ -7,9 +7,11 @@ import {Point} from "../src/AEG/Point";
  * Contains comprehensive tests on the Ellipse class.
  * @author Ryan Reilly
  */
-describe("Ellipse constructor soliloquy:", () => {
-    const center: Point = new Point(10, 10);
 
+const testCenter: Point = new Point(5, 5);
+const testEllipse: Ellipse = new Ellipse(testCenter, 5, 5);
+
+describe("Ellipse constructor soliloquy:", () => {
     test.fails.each([
         [-1, 1],
         [1, -1],
@@ -19,16 +21,14 @@ describe("Ellipse constructor soliloquy:", () => {
         [Infinity, -Infinity],
         [-Infinity, -Infinity],
     ])(
-        "Constructions with top center (10, 10), radX = %f, radY = %f should throw errors.",
+        "Constructions with center (10, 10), radX = %f, radY = %f should throw errors.",
         (radX, radY) => {
-            new Ellipse(center, radX, radY);
+            new Ellipse(testCenter, radX, radY);
         }
     );
 });
 
 describe("Ellipse containsPoint soliloquy:", () => {
-    const ell: Ellipse = new Ellipse(new Point(5, 5), 5, 5); //diameters of 10
-
     test.each([
         [0, 0], //we probably should not have our Ellipses be Rectangles. These would be the corners
         [0, 10],
@@ -41,7 +41,7 @@ describe("Ellipse containsPoint soliloquy:", () => {
         [100, 100], //arbitrary Points that shouldn't be within
         [200, 200],
     ])("Ellipse of center (5, 5), {radX, radY} = 5 should not contain Point (%f, %f).", (x, y) => {
-        expect(ell.containsPoint(new Point(x, y))).toBeFalsy();
+        expect(testEllipse.containsPoint(new Point(x, y))).toBeFalsy();
     });
 
     test.each([
@@ -52,13 +52,11 @@ describe("Ellipse containsPoint soliloquy:", () => {
         [5.1, 5.1],
         [4.9, 9.9],
     ])("Ellipse of center (5, 5), {radX, radY} = 5 should contain Point (%f, %f).", (x, y) => {
-        expect(ell.containsPoint(new Point(x, y))).toBeTruthy();
+        expect(testEllipse.containsPoint(new Point(x, y))).toBeTruthy();
     });
 });
 
 describe("Ellipse-on-Rectangle overlaps soliloquy:", () => {
-    const ell: Ellipse = new Ellipse(new Point(5, 5), 5, 5); //diameters of 10
-
     test.each([
         [10, 5, 0, 0], //Rectangle touching the rightmost point of this Ellipse
         [5, 0, 0, 0], //Rectangle touching the topmost point of this Ellipse
@@ -67,7 +65,7 @@ describe("Ellipse-on-Rectangle overlaps soliloquy:", () => {
     ])(
         "Ellipse of center (5, 5) and {radX, radY} = 5 should not overlap with Rectangle of TL vertex (%f, %f) and w = %f, h = %f.",
         (x, y, w, h) => {
-            expect(ell.overlaps(new Rectangle(new Point(x, y), w, h))).toBeFalsy();
+            expect(testEllipse.overlaps(new Rectangle(new Point(x, y), w, h))).toBeFalsy();
         }
     );
 
@@ -77,7 +75,7 @@ describe("Ellipse-on-Rectangle overlaps soliloquy:", () => {
     ])(
         "Ellipse of center (5, 5) and {radX, radY} = 5 should overlap with Rectangle of TL vertex (%f, %f) and w = %f, h = %f.",
         (x, y, w, h) => {
-            expect(ell.overlaps(new Rectangle(new Point(x, y), w, h))).toBeTruthy();
+            expect(testEllipse.overlaps(new Rectangle(new Point(x, y), w, h))).toBeTruthy();
         }
     );
 
@@ -87,44 +85,36 @@ describe("Ellipse-on-Rectangle overlaps soliloquy:", () => {
     ])(
         "Ellipse of center (5, 5) and {radX, radY} = 5 should not overlap with Rectangle of TL vertex (%f, %f) and w = %f, h = %f.",
         (x, y, w, h) => {
-            expect(ell.overlaps(new Rectangle(new Point(x, y), w, h))).toBeFalsy();
+            expect(testEllipse.overlaps(new Rectangle(new Point(x, y), w, h))).toBeFalsy();
         }
     );
 });
 
 describe("Ellipse-on-Ellipse overlaps soliloquy:", () => {
-    const ell: Ellipse = new Ellipse(new Point(5, 5), 5, 5); //diameters of 10
-
     test("Any Ellipse should overlap an Ellipse with the same measurements.", () => {
-        expect(ell.overlaps(ell)).toBeTruthy();
+        expect(testEllipse.overlaps(testEllipse)).toBeTruthy();
     });
 });
 
 describe("Ellipse-on-Rectangle contains soliloquy:", () => {
-    const ell: Ellipse = new Ellipse(new Point(5, 5), 5, 5); //diameters of 10
-
     test.each([
         [5, 0, 10, 10], //begins at the Ellipse's topmost point but top right corner is outside
         [5, 5, 10, 10], //begins at Ellipse's center but bottom right corner is outside
     ])(
         "Ellipse of center (5, 5) and {radX, radY} = 5 should not contain Rectangle of TL vertex (%f, %f) and w = %f, h = %f.",
         (x, y, w, h) => {
-            expect(ell.contains(new Rectangle(new Point(x, y), w, h))).toBeFalsy();
+            expect(testEllipse.contains(new Rectangle(new Point(x, y), w, h))).toBeFalsy();
         }
     );
 });
 
 describe("Ellipse-on-Ellipse contains soliloquy:", () => {
-    const ell: Ellipse = new Ellipse(new Point(5, 5), 5, 5); //diameters of 10
-
     test("Any Ellipse should not contain an Ellipse with the same measurements.", () => {
-        expect(ell.contains(ell)).toBeFalsy();
+        expect(testEllipse.contains(testEllipse)).toBeFalsy();
     });
 });
 
 describe("Ellipse toString soliloquy:", () => {
-    const ell: Ellipse = new Ellipse(new Point(5, 5), 5, 5);
-
     const expectedString =
         "An ellipse with Center at: (5, 5), Horizontal radius: 5, Vertical radius: 5, Bounding box: Rectangle with top left vertex at: (0, 0), w: 10, h: 10";
 
@@ -133,7 +123,7 @@ describe("Ellipse toString soliloquy:", () => {
             expectedString +
             ".",
         () => {
-            expect(ell.toString()).toBe(expectedString);
+            expect(testEllipse.toString()).toBe(expectedString);
         }
     );
 });
