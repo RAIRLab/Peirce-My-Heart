@@ -80,13 +80,18 @@ import {
     erasureMouseOut,
 } from "./ProofTools/ErasureTool";
 import {toggleHandler} from "./ToggleModes";
-
 import {
     resizeMouseDown,
     resizeMouseMove,
     resizeMouseUp,
     resizeMouseOut,
 } from "./DrawModes/ResizeTool";
+import {
+    iterationMouseDown,
+    iterationMouseMove,
+    iterationMouseUp,
+    iterationMouseOut,
+} from "./ProofTools/IterationTool";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -132,6 +137,7 @@ window.doubleCutInsertionTool = Tool.doubleCutInsertionTool;
 window.resizeTool = Tool.resizeTool;
 window.doubleCutDeletionTool = Tool.doubleCutDeletionTool;
 window.erasureTool = Tool.erasureTool;
+window.iterationTool = Tool.iterationTool;
 window.setTool = setTool;
 window.setHighlight = setHighlight;
 window.toggleHandler = toggleHandler;
@@ -154,6 +160,7 @@ declare global {
         doubleCutInsertionTool: Tool;
         doubleCutDeletionTool: Tool;
         erasureTool: Tool;
+        iterationTool: Tool;
         setTool: (state: Tool) => void;
         setHighlight: (event: string, id: string) => void;
         toggleHandler: () => void;
@@ -331,6 +338,9 @@ function mouseDownHandler(event: MouseEvent) {
         case Tool.erasureTool:
             erasureMouseDown(event);
             break;
+        case Tool.iterationTool:
+            iterationMouseDown(event);
+            break;
         default:
             break;
     }
@@ -386,6 +396,9 @@ function mouseMoveHandler(event: MouseEvent) {
             case Tool.erasureTool:
                 erasureMouseMove(event);
                 break;
+            case Tool.iterationTool:
+                iterationMouseMove(event);
+                break;
             default:
                 break;
         }
@@ -437,6 +450,9 @@ function mouseUpHandler(event: MouseEvent) {
             break;
         case Tool.erasureTool:
             erasureMouseUp(event);
+            break;
+        case Tool.iterationTool:
+            iterationMouseUp(event);
             break;
         default:
             break;
@@ -491,6 +507,9 @@ function mouseOutHandler() {
             break;
         case Tool.erasureTool:
             erasureMouseOut();
+            break;
+        case Tool.iterationTool:
+            iterationMouseOut();
             break;
         default:
             break;
