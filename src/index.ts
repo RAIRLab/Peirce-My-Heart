@@ -117,6 +117,12 @@ import {
     iterationMouseUp,
     iterationMouseOut,
 } from "./ProofTools/IterationTool";
+import {
+    proofResizeMouseDown,
+    proofResizeMouseMove,
+    proofResizeMouseUp,
+    proofResizeMouseOut,
+} from "./ProofTools/ProofResizeTool";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -168,8 +174,9 @@ window.resizeTool = Tool.resizeTool;
 window.doubleCutDeletionTool = Tool.doubleCutDeletionTool;
 window.insertionTool = Tool.insertionTool;
 window.erasureTool = Tool.erasureTool;
-window.proofMoveSingle = Tool.proofMoveSingle;
-window.proofMoveMulti = Tool.proofMoveMulti;
+window.proofMoveSingleTool = Tool.proofMoveSingleTool;
+window.proofMoveMultiTool = Tool.proofMoveMultiTool;
+window.proofResizeTool = Tool.proofResizeTool;
 window.iterationTool = Tool.iterationTool;
 window.setTool = setTool;
 window.setHighlight = setHighlight;
@@ -195,8 +202,9 @@ declare global {
         doubleCutDeletionTool: Tool;
         insertionTool: Tool;
         erasureTool: Tool;
-        proofMoveSingle: Tool;
-        proofMoveMulti: Tool;
+        proofMoveSingleTool: Tool;
+        proofMoveMultiTool: Tool;
+        proofResizeTool: Tool;
         iterationTool: Tool;
         setTool: (state: Tool) => void;
         setHighlight: (event: string, id: string) => void;
@@ -416,11 +424,14 @@ function mouseDownHandler(event: MouseEvent) {
         case Tool.erasureTool:
             erasureMouseDown(event);
             break;
-        case Tool.proofMoveSingle:
+        case Tool.proofMoveSingleTool:
             proofMoveSingleMouseDown(event);
             break;
-        case Tool.proofMoveMulti:
+        case Tool.proofMoveMultiTool:
             proofMoveMultiMouseDown(event);
+            break;
+        case Tool.proofResizeTool:
+            proofResizeMouseDown(event);
             break;
         case Tool.iterationTool:
             iterationMouseDown(event);
@@ -486,11 +497,14 @@ function mouseMoveHandler(event: MouseEvent) {
             case Tool.erasureTool:
                 erasureMouseMove(event);
                 break;
-            case Tool.proofMoveSingle:
+            case Tool.proofMoveSingleTool:
                 proofMoveSingleMouseMove(event);
                 break;
-            case Tool.proofMoveMulti:
+            case Tool.proofMoveMultiTool:
                 proofMoveMultiMouseMove(event);
+                break;
+            case Tool.proofResizeTool:
+                proofResizeMouseMove(event);
                 break;
             case Tool.iterationTool:
                 iterationMouseMove(event);
@@ -553,11 +567,14 @@ function mouseUpHandler(event: MouseEvent) {
         case Tool.erasureTool:
             erasureMouseUp(event);
             break;
-        case Tool.proofMoveSingle:
+        case Tool.proofMoveSingleTool:
             proofMoveSingleMouseUp(event);
             break;
-        case Tool.proofMoveMulti:
+        case Tool.proofMoveMultiTool:
             proofMoveMultiMouseUp(event);
+            break;
+        case Tool.proofResizeTool:
+            proofResizeMouseUp(event);
             break;
         case Tool.iterationTool:
             iterationMouseUp(event);
@@ -622,11 +639,14 @@ function mouseOutHandler() {
         case Tool.erasureTool:
             erasureMouseOut();
             break;
-        case Tool.proofMoveSingle:
+        case Tool.proofMoveSingleTool:
             proofMoveSingleMouseOut();
             break;
-        case Tool.proofMoveMulti:
+        case Tool.proofMoveMultiTool:
             proofMoveMultiMouseOut();
+            break;
+        case Tool.proofResizeTool:
+            proofResizeMouseOut();
             break;
         case Tool.iterationTool:
             iterationMouseOut();

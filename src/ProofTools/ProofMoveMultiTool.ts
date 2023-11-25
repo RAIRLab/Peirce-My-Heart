@@ -87,7 +87,7 @@ export function proofMoveMultiMouseMove(event: MouseEvent) {
  */
 export function proofMoveMultiMouseUp(event: MouseEvent) {
     if (legalNode) {
-        const nextProof = new ProofNode(currentProofTree, "Multi Movement");
+        const nextStep = new ProofNode(currentProofTree, "Multi Movement");
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
             event.y - startingPoint.y
@@ -97,22 +97,22 @@ export function proofMoveMultiMouseUp(event: MouseEvent) {
             const tempCut: CutNode = alterCutChildren(currentNode, moveDifference);
 
             if (isLegal(tempCut)) {
-                nextProof.tree.insert(tempCut);
+                nextStep.tree.insert(tempCut);
             } else {
-                nextProof.tree.insert(currentNode);
+                nextStep.tree.insert(currentNode);
             }
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
 
             if (isLegal(tempAtom)) {
-                nextProof.tree.insert(tempAtom);
+                nextStep.tree.insert(tempAtom);
             } else {
-                nextProof.tree.insert(currentNode);
+                nextStep.tree.insert(currentNode);
             }
         }
 
-        treeContext.proofHistory.push(nextProof);
-        redrawTree(nextProof.tree);
+        treeContext.proofHistory.push(nextStep);
+        redrawTree(nextStep.tree);
     }
     legalNode = false;
 }

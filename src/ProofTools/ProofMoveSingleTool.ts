@@ -94,7 +94,7 @@ export function proofMoveSingleMouseMove(event: MouseEvent) {
  */
 export function proofMoveSingleMouseUp(event: MouseEvent) {
     if (legalNode) {
-        const nextProof = new ProofNode(currentProofTree, "Single Movement");
+        const nextStep = new ProofNode(currentProofTree, "Single Movement");
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
             event.y - startingPoint.y
@@ -105,23 +105,23 @@ export function proofMoveSingleMouseUp(event: MouseEvent) {
 
             //If the new location is legal, insert the cut otherwise reinsert the cut we removed.
             if (isLegal(tempCut)) {
-                nextProof.tree.insert(tempCut);
+                nextStep.tree.insert(tempCut);
             } else {
-                nextProof.tree.insert(currentNode);
+                nextStep.tree.insert(currentNode);
             }
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
 
             //If the new location is legal, insert the atom, if not reinsert the atom we removed.
             if (isLegal(tempAtom)) {
-                nextProof.tree.insert(tempAtom);
+                nextStep.tree.insert(tempAtom);
             } else {
-                nextProof.tree.insert(currentNode);
+                nextStep.tree.insert(currentNode);
             }
         }
 
-        treeContext.proofHistory.push(nextProof);
-        redrawTree(nextProof.tree);
+        treeContext.proofHistory.push(nextStep);
+        redrawTree(nextStep.tree);
     }
     legalNode = false;
 }

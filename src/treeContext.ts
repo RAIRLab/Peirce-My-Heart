@@ -28,8 +28,9 @@ export enum Tool {
     doubleCutDeletionTool,
     insertionTool,
     erasureTool,
-    proofMoveSingle,
-    proofMoveMulti,
+    proofMoveSingleTool,
+    proofMoveMultiTool,
+    proofResizeTool,
     iterationTool,
 }
 

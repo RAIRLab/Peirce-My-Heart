@@ -23,7 +23,7 @@ let legalNode: boolean;
 
 //The direction the cut will move in. For x 1 means going to the right and -1 means left.
 //For y 1 means going down and -1 means going up.
-const direction: Point = new Point(1, 1);
+let direction: Point = new Point(1, 1);
 
 /**
  * Takes the point the user clicked and stores that for later use. If the lowest node containing
@@ -34,7 +34,7 @@ const direction: Point = new Point(1, 1);
 export function resizeMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = treeContext.tree.getLowestNode(startingPoint);
-    if (currentNode !== treeContext.tree.sheet && currentNode instanceof CutNode) {
+    if (currentNode instanceof CutNode && currentNode.ellipse !== null) {
         legalNode = true;
         const currentParent = treeContext.tree.getLowestParent(startingPoint);
         if (currentParent !== null) {
@@ -44,7 +44,7 @@ export function resizeMouseDown(event: MouseEvent) {
         for (let i = 0; i < currentNode.children.length; i++) {
             treeContext.tree.insert(currentNode.children[i]);
         }
-        determineDirection();
+        direction = determineDirection(currentNode, startingPoint);
         currentNode.children = [];
     }
 }
@@ -62,7 +62,7 @@ export function resizeMouseMove(event: MouseEvent) {
         );
 
         if (currentNode instanceof CutNode) {
-            const tempCut: CutNode = resizeCut(currentNode, moveDifference);
+            const tempCut: CutNode = resizeCut(currentNode, moveDifference, direction);
             //This is just to make the lint stop yelling
             if (tempCut.ellipse !== null) {
                 redrawTree(treeContext.tree);
@@ -88,7 +88,7 @@ export function resizeMouseUp(event: MouseEvent) {
         );
 
         if (currentNode instanceof CutNode) {
-            const tempCut: CutNode = resizeCut(currentNode, moveDifference);
+            const tempCut: CutNode = resizeCut(currentNode, moveDifference, direction);
             //This is just to make the lint stop yelling
             if (tempCut.ellipse !== null) {
                 if (treeContext.tree.canInsert(tempCut) && ellipseLargeEnough(tempCut.ellipse)) {
@@ -119,9 +119,10 @@ export function resizeMouseOut() {
  * Alters the change to the center based on the direction that is being moved to.
  * @param originalCut The original cut that will be copied and altered
  * @param difference The change for the new cut
+ * @param direction the direction the radius will be expanding towards
  * @returns The new altered cut
  */
-function resizeCut(originalCut: CutNode, difference: Point) {
+export function resizeCut(originalCut: CutNode, difference: Point, direction: Point) {
     if (originalCut.ellipse !== null) {
         return new CutNode(
             new Ellipse(
@@ -145,8 +146,10 @@ function resizeCut(originalCut: CutNode, difference: Point) {
  * widestPoints[1] = topmost widest point of the ellipse
  * widestPoints[2] = rightmost widest point of the ellipse
  * widestPoints[3] = bottommost widest point of the ellipse
+ * @returns The new direction for x and y
  */
-function determineDirection() {
+export function determineDirection(currentNode: CutNode, startingPoint: Point): Point {
+    const newDirection = new Point(1, 1);
     if (currentNode instanceof CutNode && (currentNode as CutNode).ellipse !== null) {
         const currentEllipse: Ellipse = currentNode.ellipse as Ellipse;
         const widestPoints: Point[] = [
@@ -158,16 +161,18 @@ function determineDirection() {
 
         //If the current point is closer to the top or equal the direction is positive and going down
         if (widestPoints[0].distance(startingPoint) >= widestPoints[2].distance(startingPoint)) {
-            direction.x = 1;
+            newDirection.x = 1;
         } else {
-            direction.x = -1;
+            newDirection.x = -1;
         }
 
         //If the current point is closer to the left or equal the direction is positive and going right
         if (widestPoints[1].distance(startingPoint) >= widestPoints[3].distance(startingPoint)) {
-            direction.y = 1;
+            newDirection.y = 1;
         } else {
-            direction.y = -1;
+            newDirection.y = -1;
         }
     }
+
+    return newDirection;
 }
