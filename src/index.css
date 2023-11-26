@@ -124,6 +124,17 @@ p {
     float: left;
 }
 
+#proofHistoryBar {
+  box-sizing: border-box;
+  border: var(--sidebar-border);
+  border-top: 0px;
+  padding-top: 3px;
+  background-color: var(--sidebar-bg);
+  height: 100vh;
+  min-width: 6vw;
+  float: left; 
+}
+
 #canvas {
     position: absolute;
     top: 0px;
@@ -193,4 +204,24 @@ input[type="checkbox"]:checked+.toggle-switch+p::before {
 
 #DrawButtons {
   display: block;
+}
+
+.proofNodeButton {
+  min-width: 2vw;
+  min-height: 4vh;
+  border: var(--mode-btn-border);
+  background-color: var(--mode-btn-bg);
+  margin: 2px;
+  border-radius: 50%;
+  box-shadow: var(--mode-btn-shadow);
+  color: var(--mode-btn-icon-color);
+  text-align: center;
+}
+
+#proofNodeText {
+  min-width: 2vw;
+  min-height: 4vh;
+  margin: 2px;
+  color: var(--p-text);
+  text-align: center;
 }
