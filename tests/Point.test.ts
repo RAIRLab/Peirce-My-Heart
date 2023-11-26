@@ -16,9 +16,12 @@ describe("Point constructor soliloquy: ", () => {
         [-10.1, 10.1, "(-10.1, 10.1)"],
         [10.1, -10.1, "(10.1, -10.1)"],
         [-10.1, -10.1, "(-10.1, -10.1)"],
-    ])("Should create a Point with (%f, %f).", (x, y, expectedString) => {
-        expect(new Point(x, y).toString()).toBe(expectedString);
-    });
+    ])(
+        "Constructions with positive and negative integers and positive and negative reals should create a Point with (%f, %f).",
+        (x, y, expectedString) => {
+            expect(new Point(x, y).toString()).toBe(expectedString);
+        }
+    );
 
     test.fails.each([
         [NaN, NaN],
@@ -26,7 +29,7 @@ describe("Point constructor soliloquy: ", () => {
         [-Infinity, Infinity],
         [Infinity, -Infinity],
         [-Infinity, -Infinity],
-    ])("All these constructions should throw an error.", (x, y) => {
+    ])("Point constructions with NaN and infinities should throw an error.", (x, y) => {
         const point: Point = new Point(x, y);
         point.x = 0; //only so ts doesn't yell at me
     });
@@ -42,7 +45,7 @@ describe("Point set soliloquy:", () => {
         [-10.1, 10.1, "(-10.1, 10.1)"],
         [10.1, -10.1, "(10.1, -10.1)"],
         [-10.1, -10.1, "(-10.1, -10.1)"],
-    ])("Should set the Point to (%f, %f).", (x, y, expectedString) => {
+    ])("Setters should set the Point's x and y to (%f, %f).", (x, y, expectedString) => {
         expect(new Point(x, y).toString()).toBe(expectedString);
     });
 
@@ -53,7 +56,7 @@ describe("Point set soliloquy:", () => {
         [-Infinity, Infinity],
         [Infinity, -Infinity],
         [-Infinity, -Infinity],
-    ])("Set attempt on (%f, %f) should throw an error.", (x, y) => {
+    ])("Setting NaN and infinities should throw an error.", (x, y) => {
         pt.set(x, y);
     });
 });
@@ -64,7 +67,7 @@ describe("Point distance soliloquy:", () => {
         [origin, new Point(10, 10), Math.sqrt(200)],
         [origin, new Point(-10, 10), Math.sqrt(200)],
         [origin, new Point(-10, -10), Math.sqrt(200)],
-    ])("Distance between %o, %o, should be %i", (p1, p2, expected) => {
+    ])("Calculated distance between %o, %o, should be %i", (p1, p2, expected) => {
         expect(p1.distance(p2)).toBe(expected);
     });
 });
@@ -75,7 +78,7 @@ describe("Point distance soliloquy (float):", () => {
         [origin, new Point(-0.00000000001, -0.0000000000001), 0],
         [origin, new Point(-0.0000000000001, -0.0000000000001), 0],
         [origin, new Point(0.0000000000000000000000000000000000000000000001, 0.000000000000001), 0],
-    ])("Distance between %o, %o, should be nearly %i", (p1, p2, expected) => {
+    ])("Calculated distance between %o, %o, should be nearly %i", (p1, p2, expected) => {
         expect(p1.distance(p2)).toBeCloseTo(expected);
     });
 });
