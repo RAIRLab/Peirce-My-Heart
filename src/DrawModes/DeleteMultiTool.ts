@@ -32,7 +32,7 @@ export function deleteMultiMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = treeContext.tree.getLowestNode(startingPoint);
 
-    if (currentNode !== treeContext.tree.sheet && currentNode !== null) {
+    if (currentNode !== null) {
         legalNode = true;
         highlightChildren(currentNode, illegalColor());
     }
@@ -49,7 +49,7 @@ export function deleteMultiMouseMove(event: MouseEvent) {
     if (currentNode !== null && currentNode !== treeContext.tree.getLowestNode(newPoint)) {
         legalNode = true;
         redrawTree(treeContext.tree);
-        if (newNode === treeContext.tree.sheet || newNode === null) {
+        if (newNode === null) {
             currentNode = null;
             legalNode = false;
         } else {
@@ -69,6 +69,8 @@ export function deleteMultiMouseUp(event: MouseEvent) {
         const currentParent = treeContext.tree.getLowestParent(newPoint);
         if (currentParent !== null) {
             currentParent.remove(newPoint);
+        } else {
+            treeContext.tree.clear();
         }
         redrawTree(treeContext.tree);
     }

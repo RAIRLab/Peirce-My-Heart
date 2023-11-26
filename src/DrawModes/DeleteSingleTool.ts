@@ -32,7 +32,7 @@ export function deleteSingleMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = treeContext.tree.getLowestNode(startingPoint);
 
-    if (currentNode !== treeContext.tree.sheet && currentNode !== null) {
+    if (currentNode !== null) {
         legalNode = true;
         if (currentNode instanceof AtomNode) {
             drawAtom(currentNode, illegalColor(), true);
@@ -54,7 +54,7 @@ export function deleteSingleMouseMove(event: MouseEvent) {
     if (currentNode !== null && currentNode !== newNode) {
         legalNode = true;
         redrawTree(treeContext.tree);
-        if (newNode === treeContext.tree.sheet || newNode === null) {
+        if (newNode === null) {
             currentNode = null;
             legalNode = false;
         } else {
@@ -79,7 +79,11 @@ export function deleteSingleMouseUp(event: MouseEvent) {
         if (currentParent !== null) {
             currentParent.remove(newPoint);
         }
-        if (currentNode instanceof CutNode && currentNode.children.length !== 0) {
+        if (
+            currentNode !== treeContext.tree.sheet &&
+            currentNode instanceof CutNode &&
+            currentNode.children.length !== 0
+        ) {
             //The cut node loses custody of its children so that those can still be redrawn.
             for (let i = 0; i < currentNode.children.length; i++) {
                 treeContext.tree.insert(currentNode.children[i]);

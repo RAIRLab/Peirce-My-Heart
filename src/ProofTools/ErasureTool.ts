@@ -6,17 +6,21 @@
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {redrawTree} from "../DrawModes/DrawUtils";
+import {redrawProof} from "../DrawModes/DrawUtils";
 import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
 import {offset} from "../DrawModes/DragTool";
 import {highlightChildren} from "../DrawModes/EditModeUtils";
+import {ProofNode} from "../AEG/ProofNode";
+import {AEGTree} from "../AEG/AEGTree";
 
 //The node selected with the user mouse down.
 let currentNode: CutNode | AtomNode | null = null;
 
 //Whether or not the node is allowed to be moved (not the sheet).
 let legalNode: boolean;
+
+let currentProofTree: AEGTree;
 
 /**
  * Captures the current location, and the node linked with that location.
@@ -25,7 +29,8 @@ let legalNode: boolean;
  */
 export function erasureMouseDown(event: MouseEvent) {
     const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = treeContext.tree.getLowestNode(currentPoint);
+    currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
+    currentNode = currentProofTree.getLowestNode(currentPoint);
 
     isLegal();
 }
@@ -37,9 +42,9 @@ export function erasureMouseDown(event: MouseEvent) {
  */
 export function erasureMouseMove(event: MouseEvent) {
     const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = treeContext.tree.getLowestNode(currentPoint);
+    currentNode = currentProofTree.getLowestNode(currentPoint);
 
-    redrawTree(treeContext.tree);
+    redrawProof();
     isLegal();
 }
 
@@ -50,12 +55,18 @@ export function erasureMouseMove(event: MouseEvent) {
  */
 export function erasureMouseUp(event: MouseEvent) {
     if (legalNode) {
+        //Stores the tree of the previous proof so that we can perform double cut actions without
+        //altering that tree
+        const nextProof = new ProofNode(currentProofTree, "Erasure");
+
         const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
-        const currentParent = treeContext.tree.getLowestParent(currentPoint);
+        const currentParent = nextProof.tree.getLowestParent(currentPoint);
         if (currentParent !== null) {
             currentParent.remove(currentPoint);
         }
-        redrawTree(treeContext.tree);
+
+        treeContext.proofHistory.push(nextProof);
+        redrawProof();
     }
 
     currentNode = null;
@@ -68,7 +79,7 @@ export function erasureMouseUp(event: MouseEvent) {
 export function erasureMouseOut() {
     currentNode = null;
     legalNode = false;
-    redrawTree(treeContext.tree);
+    redrawProof();
 }
 
 /**
@@ -77,9 +88,9 @@ export function erasureMouseOut() {
 function isLegal() {
     //If the node is not the tree, is not null, and is even it is legal
     if (
-        currentNode !== treeContext.tree.sheet &&
+        currentNode !== currentProofTree.sheet &&
         currentNode !== null &&
-        treeContext.tree.getLevel(currentNode) % 2 === 0
+        currentProofTree.getLevel(currentNode) % 2 === 0
     ) {
         legalNode = true;
         highlightChildren(currentNode, illegalColor());

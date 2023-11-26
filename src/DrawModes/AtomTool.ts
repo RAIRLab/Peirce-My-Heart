@@ -22,14 +22,14 @@ const ctx: CanvasRenderingContext2D = res;
 //HTML letter display
 const atomDisplay = <HTMLParagraphElement>document.getElementById("atomDisplay");
 
-//Allows font measurement in pixels to creature atom bounding box.
-let atomMetrics: TextMetrics;
-
 //Tracks if the mouse has ever left canvas disallowing future movements.
 let wasOut: boolean;
 
-let identifier = "A";
-atomDisplay.innerHTML = identifier;
+//Tracks whether the mouse button is currently down.
+let hasMouseDown: boolean;
+
+//The current atom we are creating
+let currentAtom: AtomNode = createAtom("A", new Point(0, 0));
 
 /**
  * Checks to see if the pressed key is a valid letter, if yes sets it to the atom node.
@@ -38,8 +38,12 @@ atomDisplay.innerHTML = identifier;
 export function atomKeyPress(event: KeyboardEvent) {
     const regex = new RegExp(/^[A-Za-z]$/);
     if (regex.test(event.key)) {
-        identifier = event.key;
-        atomDisplay.innerHTML = identifier;
+        currentAtom = createAtom(event.key, new Point(currentAtom.origin.x, currentAtom.origin.y));
+
+        //If the currentAtom is not the default then see if it can be drawn there and draw it.
+        if (currentAtom.origin.x !== 0 && currentAtom.origin.y !== 0 && hasMouseDown) {
+            drawLegal();
+        }
     }
 }
 
@@ -50,18 +54,13 @@ export function atomKeyPress(event: KeyboardEvent) {
  * @returns Whether or not the mouse event took place
  */
 export function atomMouseDown(event: MouseEvent) {
-    atomMetrics = ctx.measureText(identifier);
     wasOut = false;
-    const currentAtom = new AtomNode(
-        identifier,
-        new Point(event.clientX - offset.x, event.clientY - offset.y),
-        atomMetrics.width,
-        atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
+    hasMouseDown = true;
+    currentAtom = createAtom(
+        currentAtom.identifier,
+        new Point(event.clientX - offset.x, event.clientY - offset.y)
     );
-
-    redrawTree(treeContext.tree);
-    const color = treeContext.tree.canInsert(currentAtom) ? legalColor() : illegalColor();
-    drawAtom(currentAtom, color, true);
+    drawLegal();
 }
 
 /**
@@ -69,21 +68,11 @@ export function atomMouseDown(event: MouseEvent) {
  * @param event The mouse move event
  */
 export function atomMouseMove(event: MouseEvent) {
-    const currentAtom = new AtomNode(
-        identifier,
-        new Point(event.clientX - offset.x, event.clientY - offset.y),
-        atomMetrics.width,
-        atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
+    currentAtom = createAtom(
+        currentAtom.identifier,
+        new Point(event.clientX - offset.x, event.clientY - offset.y)
     );
-
-    redrawTree(treeContext.tree);
-    if (!wasOut) {
-        if (treeContext.tree.canInsert(currentAtom)) {
-            drawAtom(currentAtom, legalColor(), true);
-        } else {
-            drawAtom(currentAtom, illegalColor(), true);
-        }
-    }
+    drawLegal();
 }
 
 /**
@@ -91,16 +80,15 @@ export function atomMouseMove(event: MouseEvent) {
  * @param event The mouse up event
  */
 export function atomMouseUp(event: MouseEvent) {
-    const currentAtom = new AtomNode(
-        identifier,
-        new Point(event.clientX - offset.x, event.clientY - offset.y),
-        atomMetrics.width,
-        atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
+    currentAtom = createAtom(
+        currentAtom.identifier,
+        new Point(event.clientX - offset.x, event.clientY - offset.y)
     );
     if (treeContext.tree.canInsert(currentAtom) && !wasOut) {
         treeContext.tree.insert(currentAtom);
     }
     redrawTree(treeContext.tree);
+    hasMouseDown = false;
 }
 
 /**
@@ -109,4 +97,35 @@ export function atomMouseUp(event: MouseEvent) {
 export function atomMouseOut() {
     wasOut = true;
     redrawTree(treeContext.tree);
+}
+
+/**
+ * Helper function to construct a new atom node with a created width and height based on the font.
+ * @param identifier The letter representation of the atom
+ * @param origin The original place for the atom to be drawn and the bounding box
+ * @returns The newly made atom
+ */
+function createAtom(identifier: string, origin: Point): AtomNode {
+    atomDisplay.innerHTML = identifier;
+    const atomMetrics: TextMetrics = ctx.measureText(identifier);
+    return new AtomNode(
+        identifier,
+        new Point(origin.x, origin.y),
+        atomMetrics.width,
+        atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
+    );
+}
+
+/**
+ * Draws the global currentAtom based on if it can be inserted drawing it either legal or illegal.
+ */
+function drawLegal() {
+    redrawTree(treeContext.tree);
+    if (!wasOut) {
+        if (treeContext.tree.canInsert(currentAtom)) {
+            drawAtom(currentAtom, legalColor(), true);
+        } else {
+            drawAtom(currentAtom, illegalColor(), true);
+        }
+    }
 }
