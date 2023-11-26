@@ -15,7 +15,7 @@ export function appendStep(newStep: ProofNode) {
     button.type = "button";
     button.className = "proofNodeButton";
     button.title = newStep.tree.toString();
-    //button.onclick = stepBack(newStep);
+    //button.onclick() = stepBack(newStep);
 
     const stepContainer = document.createElement("span");
     stepContainer.id = "proofNodeText";

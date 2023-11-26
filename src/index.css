@@ -133,6 +133,7 @@ p {
   height: 100vh;
   min-width: 6vw;
   float: left; 
+  display: none;
 }
 
 #canvas {
@@ -211,7 +212,7 @@ input[type="checkbox"]:checked+.toggle-switch+p::before {
   min-height: 4vh;
   border: var(--mode-btn-border);
   background-color: var(--mode-btn-bg);
-  margin: 2px;
+  margin: 4px;
   border-radius: 50%;
   box-shadow: var(--mode-btn-shadow);
   color: var(--mode-btn-icon-color);

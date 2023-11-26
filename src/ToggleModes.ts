@@ -25,6 +25,7 @@ let proofCachedTool: Tool = Tool.none;
 
 const drawButtons = document.getElementById("DrawButtons")!;
 const proofButtons = document.getElementById("ProofButtons")!;
+const proofHistoryBar = <HTMLParagraphElement>document.getElementById("proofHistoryBar");
 
 export function toggleHandler(): void {
     //Toggle the value of the flag because the mode has been changed
@@ -35,6 +36,7 @@ export function toggleHandler(): void {
         treeString.style.display = "block";
         proofButtons.style.display = "none";
         proofString.style.display = "none";
+        proofHistoryBar.style.display = "none";
         treeContext.modeState = "Draw";
 
         //cache the proof tree and tool state so that we can load it back in when we toggle again
@@ -59,6 +61,7 @@ export function toggleHandler(): void {
         treeString.style.display = "none";
         proofButtons.style.display = "block";
         proofString.style.display = "block";
+        proofHistoryBar.style.display = "block";
         treeContext.modeState = "Proof";
 
         //cache the draw tree and tool state so that we can load it back in when we toggle again
