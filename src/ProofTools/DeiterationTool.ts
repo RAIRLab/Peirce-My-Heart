@@ -33,7 +33,7 @@ export function deiterationMouseDown(event: MouseEvent) {
     currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
     currentNode = currentProofTree.getLowestNode(currentPoint);
 
-    isLegal();
+    setLegal();
 }
 
 /**
@@ -46,7 +46,7 @@ export function deiterationMouseMove(event: MouseEvent) {
     currentNode = currentProofTree.getLowestNode(currentPoint);
     redrawProof();
 
-    isLegal();
+    setLegal();
 }
 
 /**
@@ -76,7 +76,7 @@ export function deiterationMouseUp(event: MouseEvent) {
 /**
  * Helper function to determine if the currently selected node is a legal node and highlight it.
  */
-function isLegal() {
+function setLegal() {
     if (
         currentNode !== null &&
         !(currentNode instanceof CutNode && currentNode.ellipse === null) &&
