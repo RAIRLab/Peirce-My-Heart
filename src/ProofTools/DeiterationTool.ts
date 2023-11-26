@@ -65,8 +65,8 @@ export function deiterationMouseUp(event: MouseEvent) {
             if (currentParent instanceof CutNode) {
                 currentParent.remove(currentPoint);
             }
+            treeContext.proofHistory.push(new ProofNode(currentProofTree, "Deiteration"));
         }
-        treeContext.proofHistory.push(new ProofNode(currentProofTree, "Deiteration"));
     }
 
     legalNode = false;
