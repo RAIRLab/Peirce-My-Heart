@@ -29,6 +29,7 @@ export enum Tool {
     insertionTool,
     erasureTool,
     iterationTool,
+    deiterationTool,
 }
 
 export class treeContext {

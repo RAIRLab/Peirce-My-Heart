@@ -105,6 +105,12 @@ import {
     iterationMouseUp,
     iterationMouseOut,
 } from "./ProofTools/IterationTool";
+import {
+    deiterationMouseDown,
+    deiterationMouseMove,
+    deiterationMouseOut,
+    deiterationMouseUp,
+} from "./ProofTools/DeiterationTool";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -157,6 +163,7 @@ window.doubleCutDeletionTool = Tool.doubleCutDeletionTool;
 window.insertionTool = Tool.insertionTool;
 window.erasureTool = Tool.erasureTool;
 window.iterationTool = Tool.iterationTool;
+window.deiterationTool = Tool.deiterationTool;
 window.setTool = setTool;
 window.setHighlight = setHighlight;
 window.toggleHandler = toggleHandler;
@@ -182,6 +189,7 @@ declare global {
         insertionTool: Tool;
         erasureTool: Tool;
         iterationTool: Tool;
+        deiterationTool: Tool;
         setTool: (state: Tool) => void;
         setHighlight: (event: string, id: string) => void;
         toggleHandler: () => void;
@@ -403,6 +411,9 @@ function mouseDownHandler(event: MouseEvent) {
         case Tool.iterationTool:
             iterationMouseDown(event);
             break;
+        case Tool.deiterationTool:
+            deiterationMouseDown(event);
+            break;
         default:
             break;
     }
@@ -467,6 +478,9 @@ function mouseMoveHandler(event: MouseEvent) {
             case Tool.iterationTool:
                 iterationMouseMove(event);
                 break;
+            case Tool.deiterationTool:
+                deiterationMouseMove(event);
+                break;
             default:
                 break;
         }
@@ -527,6 +541,9 @@ function mouseUpHandler(event: MouseEvent) {
             break;
         case Tool.iterationTool:
             iterationMouseUp(event);
+            break;
+        case Tool.deiterationTool:
+            deiterationMouseUp(event);
             break;
         default:
             break;
@@ -590,6 +607,9 @@ function mouseOutHandler() {
             break;
         case Tool.iterationTool:
             iterationMouseOut();
+            break;
+        case Tool.deiterationTool:
+            deiterationMouseOut();
             break;
         default:
             break;
