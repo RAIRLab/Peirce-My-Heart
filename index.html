@@ -17,7 +17,7 @@
     
     
     
-    <script type="module" crossorigin src="/Peirce-My-Heart/assets/index-b11af21e.js"></script>
+    <script type="module" crossorigin src="/Peirce-My-Heart/assets/index-d512c660.js"></script>
     <link rel="stylesheet" href="/Peirce-My-Heart/assets/index-ec6bb0a8.css">
     <link rel="stylesheet" href="/Peirce-My-Heart/assets/themes-62f77642.css">
   </head>
@@ -86,19 +86,19 @@
       </div>
       <div id="ProofButtons">
         <div class="row">
-          <button type="button" onclick="" title="Resize Single" class="toolButton">
-              <i class="fa fa-arrows-alt" aria-hidden="true"></i>
+          <button type="button" onclick="setTool(proofMoveSingleTool)" title="Move Single" class="toolButton">
+            <i class="fa fa-mouse-pointer" aria-hidden="true"></i>
+        </button>
+        <button type="button" onclick="setTool(proofMoveMultiTool)" title="Move Multiple" class="toolButton">
+            <i class="fa fa-arrows" aria-hidden="true"></i>
+        </button>
+        </div>
+        <div class="row">
+          <button type="button" onclick="setTool(proofResizeTool)" title="Resize Single" class="toolButton">
+            <i class="fa fa-arrows-alt" aria-hidden="true"></i>
           </button>
           <button type="button" onclick="setTool(pasteInProofTool)" title="Paste graph from Draw Mode" class="toolButton">
               <i class="fa fa-files-o" aria-hidden="true"></i>
-          </button>
-        </div>
-        <div class="row">
-          <button type="button" onclick="" title="Drag Single" class="toolButton">
-              <i class="fa fa-mouse-pointer" aria-hidden="true"></i>
-          </button>
-          <button type="button" onclick="" title="Drag Multiple" class="toolButton">
-              <i class="fa fa-arrows" aria-hidden="true"></i>
           </button>
         </div>
         <div class="row">
