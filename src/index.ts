@@ -92,6 +92,18 @@ import {
     resizeMouseUp,
     resizeMouseOut,
 } from "./DrawModes/ResizeTool";
+import {
+    proofMoveSingleMouseDown,
+    proofMoveSingleMouseMove,
+    proofMoveSingleMouseOut,
+    proofMoveSingleMouseUp,
+} from "./ProofTools/ProofMoveSingleTool";
+import {
+    proofMoveMultiMouseDown,
+    proofMoveMultiMouseMove,
+    proofMoveMultiMouseOut,
+    proofMoveMultiMouseUp,
+} from "./ProofTools/ProofMoveMultiTool";
 import {ProofNode} from "./AEG/ProofNode";
 import {
     pasteInProofMouseDown,
@@ -105,6 +117,12 @@ import {
     iterationMouseUp,
     iterationMouseOut,
 } from "./ProofTools/IterationTool";
+import {
+    proofResizeMouseDown,
+    proofResizeMouseMove,
+    proofResizeMouseUp,
+    proofResizeMouseOut,
+} from "./ProofTools/ProofResizeTool";
 import {
     deiterationMouseDown,
     deiterationMouseMove,
@@ -162,6 +180,9 @@ window.resizeTool = Tool.resizeTool;
 window.doubleCutDeletionTool = Tool.doubleCutDeletionTool;
 window.insertionTool = Tool.insertionTool;
 window.erasureTool = Tool.erasureTool;
+window.proofMoveSingleTool = Tool.proofMoveSingleTool;
+window.proofMoveMultiTool = Tool.proofMoveMultiTool;
+window.proofResizeTool = Tool.proofResizeTool;
 window.iterationTool = Tool.iterationTool;
 window.deiterationTool = Tool.deiterationTool;
 window.setTool = setTool;
@@ -188,6 +209,9 @@ declare global {
         doubleCutDeletionTool: Tool;
         insertionTool: Tool;
         erasureTool: Tool;
+        proofMoveSingleTool: Tool;
+        proofMoveMultiTool: Tool;
+        proofResizeTool: Tool;
         iterationTool: Tool;
         deiterationTool: Tool;
         setTool: (state: Tool) => void;
@@ -408,6 +432,15 @@ function mouseDownHandler(event: MouseEvent) {
         case Tool.erasureTool:
             erasureMouseDown(event);
             break;
+        case Tool.proofMoveSingleTool:
+            proofMoveSingleMouseDown(event);
+            break;
+        case Tool.proofMoveMultiTool:
+            proofMoveMultiMouseDown(event);
+            break;
+        case Tool.proofResizeTool:
+            proofResizeMouseDown(event);
+            break;
         case Tool.iterationTool:
             iterationMouseDown(event);
             break;
@@ -475,6 +508,15 @@ function mouseMoveHandler(event: MouseEvent) {
             case Tool.erasureTool:
                 erasureMouseMove(event);
                 break;
+            case Tool.proofMoveSingleTool:
+                proofMoveSingleMouseMove(event);
+                break;
+            case Tool.proofMoveMultiTool:
+                proofMoveMultiMouseMove(event);
+                break;
+            case Tool.proofResizeTool:
+                proofResizeMouseMove(event);
+                break;
             case Tool.iterationTool:
                 iterationMouseMove(event);
                 break;
@@ -538,6 +580,15 @@ function mouseUpHandler(event: MouseEvent) {
             break;
         case Tool.erasureTool:
             erasureMouseUp(event);
+            break;
+        case Tool.proofMoveSingleTool:
+            proofMoveSingleMouseUp(event);
+            break;
+        case Tool.proofMoveMultiTool:
+            proofMoveMultiMouseUp(event);
+            break;
+        case Tool.proofResizeTool:
+            proofResizeMouseUp(event);
             break;
         case Tool.iterationTool:
             iterationMouseUp(event);
@@ -604,6 +655,15 @@ function mouseOutHandler() {
             break;
         case Tool.erasureTool:
             erasureMouseOut();
+            break;
+        case Tool.proofMoveSingleTool:
+            proofMoveSingleMouseOut();
+            break;
+        case Tool.proofMoveMultiTool:
+            proofMoveMultiMouseOut();
+            break;
+        case Tool.proofResizeTool:
+            proofResizeMouseOut();
             break;
         case Tool.iterationTool:
             iterationMouseOut();
