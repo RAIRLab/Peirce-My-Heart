@@ -9,7 +9,7 @@ import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "../DrawModes/DragTool";
-import {drawCut, redrawTree} from "../DrawModes/DrawUtils";
+import {drawCut, redrawProof, redrawTree} from "../DrawModes/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
 import {ProofNode} from "../AEG/ProofNode";
 import {resizeCut} from "../DrawModes/EditModeUtils";
@@ -101,14 +101,12 @@ export function proofResizeMouseUp(event: MouseEvent) {
             if (tempCut.ellipse !== null) {
                 if (isLegal(tempCut)) {
                     currentProofTree.insert(tempCut);
-                } else {
-                    currentProofTree.insert(currentNode);
+                    treeContext.proofHistory.push(new ProofNode(currentProofTree, "Resize Cut"));
+                    redrawProof();
                 }
             }
         }
-
-        treeContext.proofHistory.push(new ProofNode(currentProofTree, "Resize Cut"));
-        redrawTree(treeContext.getLastProofStep().tree);
+        redrawProof();
         legalNode = false;
     }
 }

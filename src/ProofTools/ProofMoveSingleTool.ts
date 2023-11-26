@@ -9,7 +9,7 @@ import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "../DrawModes/DragTool";
-import {drawCut, drawAtom, redrawTree} from "../DrawModes/DrawUtils";
+import {drawCut, drawAtom, redrawTree, redrawProof} from "../DrawModes/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
 import {alterAtom, alterCut} from "../DrawModes/EditModeUtils";
 import {ProofNode} from "../AEG/ProofNode";
@@ -74,7 +74,6 @@ export function proofMoveSingleMouseMove(event: MouseEvent) {
         //If the node is a cut, and it has an ellipse, make a temporary cut and draw that.
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = alterCut(currentNode, moveDifference);
-
             const color = isMoveLegal(currentProofTree, tempCut) ? legalColor() : illegalColor();
             drawCut(tempCut, color);
         } //If the node is an atom, make a temporary atom and check legality, drawing that.
@@ -100,30 +99,20 @@ export function proofMoveSingleMouseUp(event: MouseEvent) {
             event.x - startingPoint.x,
             event.y - startingPoint.y
         );
+        let tempNode: CutNode | AtomNode | null = null;
 
         if (currentNode instanceof CutNode) {
-            const tempCut: CutNode = alterCut(currentNode, moveDifference);
-
-            //If the new location is legal, insert the cut otherwise reinsert the cut we removed.
-            if (isMoveLegal(currentProofTree, tempCut)) {
-                nextStep.tree.insert(tempCut);
-            } else {
-                nextStep.tree.insert(currentNode);
-            }
+            tempNode = alterCut(currentNode, moveDifference);
         } else if (currentNode instanceof AtomNode) {
-            const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
-
-            //If the new location is legal, insert the atom, if not reinsert the atom we removed.
-            if (isMoveLegal(currentProofTree, tempAtom)) {
-                nextStep.tree.insert(tempAtom);
-            } else {
-                nextStep.tree.insert(currentNode);
-            }
+            tempNode = alterAtom(currentNode, moveDifference);
         }
 
-        treeContext.proofHistory.push(nextStep);
-        redrawTree(nextStep.tree);
+        if (tempNode !== null && isMoveLegal(currentProofTree, tempNode)) {
+            nextStep.tree.insert(tempNode);
+            treeContext.proofHistory.push(nextStep);
+        }
     }
+    redrawProof();
     legalNode = false;
 }
 

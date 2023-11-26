@@ -11,7 +11,7 @@ import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "../DrawModes/DragTool";
-import {drawAtom, redrawTree} from "../DrawModes/DrawUtils";
+import {drawAtom, redrawProof, redrawTree} from "../DrawModes/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
 import {drawAltered, alterAtom, alterCutChildren} from "../DrawModes/EditModeUtils";
 import {isMoveLegal} from "./ProofMoveUtils";
@@ -92,28 +92,21 @@ export function proofMoveMultiMouseUp(event: MouseEvent) {
             event.x - startingPoint.x,
             event.y - startingPoint.y
         );
+        let tempNode: CutNode | AtomNode | null = null;
 
         if (currentNode instanceof CutNode) {
-            const tempCut: CutNode = alterCutChildren(currentNode, moveDifference);
-
-            if (isMoveLegal(currentProofTree, tempCut)) {
-                nextStep.tree.insert(tempCut);
-            } else {
-                nextStep.tree.insert(currentNode);
-            }
+            tempNode = alterCutChildren(currentNode, moveDifference);
         } else if (currentNode instanceof AtomNode) {
-            const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
-
-            if (isMoveLegal(currentProofTree, tempAtom)) {
-                nextStep.tree.insert(tempAtom);
-            } else {
-                nextStep.tree.insert(currentNode);
-            }
+            tempNode = alterAtom(currentNode, moveDifference);
         }
 
-        treeContext.proofHistory.push(nextStep);
-        redrawTree(nextStep.tree);
+        if (tempNode !== null && isMoveLegal(currentProofTree, tempNode)) {
+            nextStep.tree.insert(tempNode);
+            treeContext.proofHistory.push(nextStep);
+            redrawTree(nextStep.tree);
+        }
     }
+    redrawProof();
     legalNode = false;
 }
 
