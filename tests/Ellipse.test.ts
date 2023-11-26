@@ -123,12 +123,26 @@ describe("Ellipse-on-Ellipse overlaps soliloquy:", () => {
 
 describe("Ellipse-on-Rectangle contains soliloquy:", () => {
     test.each([
-        [5, 0, 10, 10], //begins at the Ellipse's topmost point but top right corner is outside
-        [5, 5, 10, 10], //begins at Ellipse's center but bottom right corner is outside
+        [5, 0, 10, 10], //begins at this Ellipse's topmost Point but top right corner is outside
+        [0, 5, 10, 10], //begins at this Ellipse's leftmost Point
+        [10, 5, 10, 10], //begins at this Ellipse's rightmost Point
+        [5, 10, 10, 10], //begins at this Ellipse's bottommost Point
+        [5, 5, 10, 10], //begins at this Ellipse's center but bottom right corner is outside
     ])(
         "Ellipse of center (5, 5) and {radX, radY} = 5 should not contain Rectangle of TL vertex (%f, %f) and w = %f, h = %f.",
         (x, y, w, h) => {
             expect(testEllipse.contains(new Rectangle(new Point(x, y), w, h))).toBeFalsy();
+        }
+    );
+
+    test.each([
+        [5, 5, 1, 1], //arbitrary fellows
+        [5, 5, 2, 2],
+        [7, 7, 0, 0.3],
+    ])(
+        "Ellipse of center (5, 5) and {radX, radY} = 5 should contain Rectangle of TL vertex (%f, %f) and w = %f, h = %f.",
+        (x, y, w, h) => {
+            expect(testEllipse.contains(new Rectangle(new Point(x, y), w, h))).toBeTruthy();
         }
     );
 });
@@ -137,6 +151,30 @@ describe("Ellipse-on-Ellipse contains soliloquy:", () => {
     test("Any Ellipse should not contain an Ellipse with the same measurements.", () => {
         expect(testEllipse.contains(testEllipse)).toBeFalsy();
     });
+
+    test.each([
+        [5, 0, 10, 10], //begins at this Ellipse's topmost Point but top right corner is outside
+        [0, 5, 10, 10], //begins at this Ellipse's leftmost Point
+        [10, 5, 10, 10], //begins at this Ellipse's rightmost Point
+        [5, 10, 10, 10], //begins at this Ellipse's bottommost Point
+        [5, 5, 10, 10], //begins at this Ellipse's center but expands outward in all directions
+    ])(
+        "Ellipse of center (5, 5) and {radX, radY} = 5 should not contain Ellipse of TL vertex (%f, %f) and radX = %f, radY = %f.",
+        (x, y, radX, radY) => {
+            expect(testEllipse.contains(new Ellipse(new Point(x, y), radX, radY))).toBeFalsy();
+        }
+    );
+
+    test.each([
+        [5, 5, 3, 3], //begins at this Ellipse's center and stays inward
+        [2, 2, 0.5, 0.3], //arbitrary guys
+        [6, 6, 0.1, 3],
+    ])(
+        "Ellipse of center (5, 5) and {radX, radY} = 5 should contain Ellipse of TL vertex (%f, %f) and radX = %f, radY = %f.",
+        (x, y, radX, radY) => {
+            expect(testEllipse.contains(new Ellipse(new Point(x, y), radX, radY))).toBeTruthy();
+        }
+    );
 });
 
 describe("Ellipse toString soliloquy:", () => {
