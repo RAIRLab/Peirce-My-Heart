@@ -1,17 +1,30 @@
 import {test, expect} from "@playwright/test";
 
-test("help", async ({page}) => {
-    //test on local site instead of production site
-    await page.goto("/");
-
-    const canvas = page.locator("#canvas");
-    await page.getByTitle("Cut Tool").click();
-    await canvas.dragTo(canvas, {
-        sourcePosition: {x: 200, y: 200},
-        targetPosition: {x: 300, y: 300},
+test.describe("Graph string soliloquy", () => {
+    test("Graph string with no cuts should have [] only.", async ({page}) => {
+        await page.goto("/");
+        await expect(page.locator("#graphString")).toHaveText("[]");
     });
 
-    await expect(page.locator("#graphString")).toHaveText("[()]");
+    test("Graph string with one cut should produce an appropriate string.", async ({page}) => {
+        //test on local site instead of production site
+        await page.goto("/");
+        const canvas = page.locator("#canvas");
+        await page.getByTitle("Cut Tool").click();
+        await canvas.dragTo(canvas, {
+            sourcePosition: {x: 200, y: 200}, //greater than minimum Ellipse creation
+            targetPosition: {x: 300, y: 300},
+        });
+        await expect(page.locator("#graphString")).toHaveText("[()]");
+    });
+
+    test("Graph string with one atom should produce an appropriate string.", async ({page}) => {
+        await page.goto("/");
+        const canvas = page.locator("#canvas");
+        await page.getByTitle("Atom Tool").click();
+        await canvas.click({position: {x: 600, y: 600}});
+        await expect(page.locator("#graphString")).toHaveText("[A]");
+    });
 });
 
 test("A or B", async ({page}) => {
