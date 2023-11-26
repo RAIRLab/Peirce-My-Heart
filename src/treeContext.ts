@@ -32,6 +32,7 @@ export enum Tool {
     proofMoveMultiTool,
     proofResizeTool,
     iterationTool,
+    deiterationTool,
 }
 
 export class treeContext {
