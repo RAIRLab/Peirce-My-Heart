@@ -84,4 +84,5 @@ export function deleteMultiMouseUp(event: MouseEvent) {
 export function deleteMultiMouseOut() {
     currentNode = null;
     legalNode = false;
+    redrawTree(treeContext.tree);
 }
