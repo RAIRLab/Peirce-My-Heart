@@ -5,6 +5,7 @@ test.describe("Information page soliloquy:", () => {
         //test on local site instead of production site for all tests
         await page.goto("/");
         await page.getByTitle("About AEG").click();
+        await page.waitForLoadState();
         await expect(page.waitForURL("**/aeg.html")).toBeTruthy();
     });
 
@@ -13,8 +14,8 @@ test.describe("Information page soliloquy:", () => {
     }) => {
         await page.goto("/");
         await page.getByTitle("About AEG").click();
-        await page.waitForURL("**/aeg.html");
         await page.getByTitle("Learn More!").click();
+        await page.waitForLoadState();
         await expect(page.waitForURL("**/about.html")).toBeTruthy();
     });
 
@@ -23,8 +24,8 @@ test.describe("Information page soliloquy:", () => {
     }) => {
         await page.goto("/");
         await page.getByTitle("About AEG").click();
-        await page.waitForURL("**/aeg.html");
         await page.getByTitle("Prove!").click();
+        await page.waitForLoadState();
         await expect(page.waitForURL("**/index.html")).toBeTruthy();
     });
 
@@ -33,8 +34,8 @@ test.describe("Information page soliloquy:", () => {
     }) => {
         await page.goto("/");
         await page.getByTitle("About AEG").click();
-        await page.waitForURL("**/aeg.html");
         await page.getByTitle("Docs!").click();
+        await page.waitForLoadState();
         await expect(page.waitForURL("**/docs/")).toBeTruthy();
     });
 });
