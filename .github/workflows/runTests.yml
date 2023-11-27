@@ -1,4 +1,4 @@
-name: Run all tests
+name: Run all AEG tests
 
 on:
   pull_request:
