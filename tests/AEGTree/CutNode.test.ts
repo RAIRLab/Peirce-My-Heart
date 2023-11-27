@@ -4,6 +4,7 @@ import {AtomNode} from "../../src/AEG/AtomNode";
 import {Ellipse} from "../../src/AEG/Ellipse";
 import {Point} from "../../src/AEG/Point";
 
+const origin = new Point(0, 0);
 const testCenter = new Point(5, 5);
 const testEllipse = new Ellipse(testCenter, 5, 5);
 
@@ -258,11 +259,10 @@ describe("CutNode remove soliloquy:", () => {
         expect(cNode.children.length).toBe(0);
     });
 
-    test.skip("Removing a CutNode with children, but with no children who contain the Point, should be successful.", () => {
+    test("Removing a CutNode with children, but with no children who contain the Point, should not be successful.", () => {
         cNode.child = new AtomNode("B", new Point(8, 8), 1, 1);
         cNode.child = new CutNode(new Ellipse(new Point(5, 2), 0.5, 0.5));
-        expect(cNode.remove(testCenter)).toBeTruthy();
-        expect(cNode).toBeNull();
+        expect(cNode.remove(testCenter)).toBeFalsy();
     });
 
     test("Removing a CutNode with children two cut levels deep should be successful.", () => {
@@ -288,6 +288,31 @@ describe("CutNode remove soliloquy:", () => {
 
         expect(cNode.remove(testCenter)).toBeTruthy();
         expect(childCutThreeDeep.children.length).toBe(0);
+    });
+});
+
+describe("CutNode clear soliloquy:", () => {
+    const cNode: CutNode = new CutNode(testEllipse);
+
+    test("CutNode with no children should have no children after clear call.", () => {
+        cNode.clear();
+        expect(cNode.children.length).toBe(0);
+    });
+
+    cNode.child = new AtomNode("C", origin, 3, 3);
+
+    test("CutNode with one child should have no children after clear call.", () => {
+        cNode.clear();
+        expect(cNode.children.length).toBe(0);
+    });
+
+    cNode.child = new AtomNode("C", origin, 1, 1);
+    cNode.child = new AtomNode("P", origin, 3, 3);
+    cNode.child = new CutNode(testEllipse);
+
+    test("CutNode with several children should have no children after clear call.", () => {
+        cNode.clear();
+        expect(cNode.children.length).toBe(0);
     });
 });
 
