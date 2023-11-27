@@ -1,13 +1,51 @@
 import {test, expect} from "@playwright/test";
 
-test.describe("Graph string soliloquy", () => {
+test.describe("Information page soliloquy:", () => {
+    test("User should be able to access the information page via button.", async ({page}) => {
+        //test on local site instead of production site for all tests
+        await page.goto("/");
+        await page.getByTitle("About AEG").click();
+        await expect(page.waitForURL("**/aeg.html")).toBeTruthy();
+    });
+
+    test("User should be able to access the information page via button and view the about page after.", async ({
+        page,
+    }) => {
+        await page.goto("/");
+        await page.getByTitle("About AEG").click();
+        await page.waitForURL("**/aeg.html");
+        await page.getByTitle("Learn More!").click();
+        await expect(page.waitForURL("**/about.html")).toBeTruthy();
+    });
+
+    test("User should be able to access the information page via button and return to draw mode.", async ({
+        page,
+    }) => {
+        await page.goto("/");
+        await page.getByTitle("About AEG").click();
+        await page.waitForURL("**/aeg.html");
+        await page.getByTitle("Prove!").click();
+        await expect(page.waitForURL("**/index.html")).toBeTruthy();
+    });
+
+    test("User should be able to access the information page via button and view the documentation page after.", async ({
+        page,
+    }) => {
+        await page.goto("/");
+        await page.getByTitle("About AEG").click();
+        await page.waitForURL("**/aeg.html");
+        await page.getByTitle("Docs!").click();
+        await expect(page.waitForURL("**/docs/")).toBeTruthy();
+    });
+});
+
+test.describe("Basic graph string/drawing soliloquy:", () => {
     test("Graph string with no cuts should have [] only.", async ({page}) => {
         await page.goto("/");
         await expect(page.locator("#graphString")).toHaveText("[]");
     });
 
     test("Graph string with one cut should produce an appropriate string.", async ({page}) => {
-        //test on local site instead of production site
         await page.goto("/");
         const canvas = page.locator("#canvas");
         await page.getByTitle("Cut Tool").click();
@@ -22,12 +60,12 @@ test.describe("Graph string soliloquy", () => {
         await page.goto("/");
         const canvas = page.locator("#canvas");
         await page.getByTitle("Atom Tool").click();
-        await canvas.click({position: {x: 600, y: 600}});
+        await canvas.click({position: {x: 600, y: 600}}); //arbitrary location, we just need them on the canvas
         await expect(page.locator("#graphString")).toHaveText("[A]");
     });
 });
 
-test("A or B", async ({page}) => {
+test("A or B:", async ({page}) => {
     //test on local site instead of production site
     await page.goto("/");
 
