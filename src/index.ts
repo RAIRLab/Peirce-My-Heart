@@ -259,11 +259,11 @@ async function saveMode() {
         data = treeContext.tree;
     } else {
         name =
-            treeContext.proofHistory[0].tree.toString() +
+            treeContext.proof[0].tree.toString() +
             // " - " +
             "\u2192" +
             treeContext.getLastProofStep().tree.toString();
-        data = treeContext.proofHistory;
+        data = treeContext.proof;
     }
 
     //Slow Download
@@ -319,7 +319,7 @@ async function loadMode() {
                 treeContext.tree = loadData as AEGTree;
                 redrawTree(treeContext.tree);
             } else if (treeContext.modeState === "Proof") {
-                treeContext.proofHistory = loadData as ProofNode[];
+                treeContext.proof = loadData as ProofNode[];
                 redrawProof();
             }
         } else {

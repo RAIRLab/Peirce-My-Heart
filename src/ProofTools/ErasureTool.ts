@@ -65,7 +65,7 @@ export function erasureMouseUp(event: MouseEvent) {
             currentParent.remove(currentPoint);
         }
 
-        treeContext.proofHistory.push(nextProof);
+        treeContext.proof.push(nextProof);
         redrawProof();
     }
 

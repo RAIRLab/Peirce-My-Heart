@@ -36,7 +36,10 @@ export class treeContext {
     public static tree: AEGTree = new AEGTree();
 
     //The proof being constructed
-    public static proofHistory: ProofNode[] = [];
+    public static proof: ProofNode[] = [];
+
+    //The current tree of the proof we are functioning on
+    public static currentProofStep = new AEGTree();
 
     //The node selected on draw mode which will copy over when we toggle to proof mode.
     public static selectForProof: AEGTree = new AEGTree();
@@ -48,10 +51,14 @@ export class treeContext {
     public static modeState: "Draw" | "Proof" = "Draw";
 
     public static getLastProofStep(): ProofNode {
-        if (treeContext.proofHistory.length === 0) {
+        if (treeContext.proof.length === 0) {
             return new ProofNode(new AEGTree());
         }
 
-        return treeContext.proofHistory[treeContext.proofHistory.length - 1];
+        return treeContext.proof[treeContext.proof.length - 1];
+    }
+
+    public static addLastProofStep(currentLast: ProofNode, nextNode: ProofNode) {
+        const index: number = treeContext.proof.indexOf(currentLast);
     }
 }

@@ -68,7 +68,7 @@ export function doubleCutDeletionMouseUp(event: MouseEvent) {
                 nextProof.tree.insert(lowerCut.children[i]);
             }
         }
-        treeContext.proofHistory.push(nextProof);
+        treeContext.proof.push(nextProof);
     }
 
     redrawProof();

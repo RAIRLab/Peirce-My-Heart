@@ -93,7 +93,7 @@ export function doubleCutInsertionMouseUp(event: MouseEvent) {
         if (legal) {
             nextProof.tree.insert(largeCut);
             nextProof.tree.insert(smallCut);
-            treeContext.proofHistory.push(nextProof);
+            treeContext.proof.push(nextProof);
         }
     }
     redrawProof();

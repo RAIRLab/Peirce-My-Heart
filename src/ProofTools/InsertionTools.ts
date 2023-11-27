@@ -37,7 +37,7 @@ export function insertionMouseDown(event: MouseEvent) {
     const startingPoint = new Point(event.x - offset.x, event.y - offset.y);
 
     //we can insert only a single subgraph at a time
-    if (treeContext.proofHistory.length > 0 && selectedNodes.length === 1) {
+    if (treeContext.proof.length > 0 && selectedNodes.length === 1) {
         //As long as there are graphs to be placed, they are legal nodes
         legalNode = true;
         currentNode = selectedNodes[0];
@@ -225,7 +225,7 @@ export function insertionMouseUp(event: MouseEvent) {
                 currentTree.insert(tempAtom);
             }
             //Insertion is a new step -> push a new node in the proof, signifying it as such
-            treeContext.proofHistory.push(new ProofNode(currentTree, "Insertion"));
+            treeContext.proof.push(new ProofNode(currentTree, "Insertion"));
         }
     }
     redrawProof();

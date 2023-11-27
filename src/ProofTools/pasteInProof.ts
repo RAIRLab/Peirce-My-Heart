@@ -26,7 +26,7 @@ export function pasteInProofMouseDown() {
 
     if (
         currentGraphs.children.length > 0 &&
-        treeContext.proofHistory.length === 0 &&
+        treeContext.proof.length === 0 &&
         currentTree.sheet.isEmptySheet()
     ) {
         legalNode = true;
@@ -41,7 +41,7 @@ export function pasteInProofMouseMove() {
 export function pasteInProofMouseUp() {
     if (legalNode) {
         currentTree.sheet = currentGraphs;
-        treeContext.proofHistory.push(new ProofNode(currentTree, "Copied from Draw Mode"));
+        treeContext.proof.push(new ProofNode(currentTree, "Copied from Draw Mode"));
     }
     legalNode = false;
     redrawProof();

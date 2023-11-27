@@ -40,7 +40,7 @@ export function toggleHandler(): void {
         treeContext.modeState = "Draw";
 
         //cache the proof tree and tool state so that we can load it back in when we toggle again
-        proofCachedAEG = JSON.stringify(treeContext.proofHistory);
+        proofCachedAEG = JSON.stringify(treeContext.proof);
         proofCachedTool = treeContext.toolState;
 
         //Load in our saved draw tree and tool state
@@ -74,7 +74,7 @@ export function toggleHandler(): void {
             loadedProof = loadFile(treeContext.modeState, proofCachedAEG) as ProofNode[] | null;
         }
         if (loadedProof !== null) {
-            treeContext.proofHistory = loadedProof;
+            treeContext.proof = loadedProof;
         }
         //Reset the state of our tools
         treeContext.toolState = proofCachedTool;

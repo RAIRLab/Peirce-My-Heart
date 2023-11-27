@@ -28,9 +28,9 @@ export function appendStep(newStep: ProofNode) {
 }
 
 export function stepBack(selectedStep: ProofNode) {
-    const index: number = treeContext.proofHistory.indexOf(selectedStep);
+    const index: number = treeContext.proof.indexOf(selectedStep);
     if (index !== -1) {
-        treeContext.proofHistory = treeContext.proofHistory.slice(0, index);
+        treeContext.proof = treeContext.proof.slice(0, index);
     }
 
     redrawProof();

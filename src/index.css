@@ -128,6 +128,7 @@ p {
   box-sizing: border-box;
   border: var(--sidebar-border);
   border-top: 0px;
+  border-left: 0px;
   padding-top: 3px;
   background-color: var(--sidebar-bg);
   height: 100vh;
