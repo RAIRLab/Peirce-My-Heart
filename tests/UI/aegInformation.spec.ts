@@ -1,6 +1,6 @@
 import {test, expect} from "@playwright/test";
 
-test.describe("Information page soliloquy:", () => {
+test.describe("Navigate to and from information page soliloquy:", () => {
     test("User should be able to access the information page via button.", async ({page}) => {
         //test on local site instead of production site for all tests
         await page.waitForLoadState();
