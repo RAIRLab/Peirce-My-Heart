@@ -1,15 +1,16 @@
 import {test, expect} from "@playwright/test";
 
+test.beforeEach(async ({page}) => {
+    page.goto("/");
+    await page.waitForLoadState();
+});
+
 test.describe("Basic graph string/drawing soliloquy:", () => {
     test("Graph string with no cuts should have [] only.", async ({page}) => {
-        await page.waitForLoadState();
-        await page.goto("/");
         await expect(page.locator("#graphString")).toHaveText("[]");
     });
 
     test("Graph string with one cut should produce an appropriate string.", async ({page}) => {
-        await page.waitForLoadState();
-        await page.goto("/");
         const canvas = page.locator("#canvas");
         await page.getByTitle("Cut Tool").click();
         await canvas.dragTo(canvas, {
@@ -20,8 +21,6 @@ test.describe("Basic graph string/drawing soliloquy:", () => {
     });
 
     test("Graph string with one atom should produce an appropriate string.", async ({page}) => {
-        await page.waitForLoadState();
-        await page.goto("/");
         const canvas = page.locator("#canvas");
         await page.getByTitle("Atom Tool").click();
         await canvas.click({position: {x: 600, y: 600}}); //arbitrary location, we just need them on the canvas
@@ -30,7 +29,7 @@ test.describe("Basic graph string/drawing soliloquy:", () => {
 });
 
 //skipping for right now. will determine the organization for and the placement of later
-test.skip("A or B:", async ({page}) => {
+test.fixme("A or B:", async ({page}) => {
     //test on local site instead of production site
     await page.goto("/");
 
