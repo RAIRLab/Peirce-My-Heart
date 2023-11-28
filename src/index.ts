@@ -361,7 +361,6 @@ async function loadMode() {
                     redrawProof();
                 }
             } else {
-                //throw Error("Loading failed because reading the file was unsuccessful");
                 console.log("Loading failed because reading the file was unsuccessful");
             }
         });
