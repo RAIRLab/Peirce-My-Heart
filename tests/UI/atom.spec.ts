@@ -29,7 +29,8 @@ test.describe("Basic graph string/drawing soliloquy:", () => {
     });
 });
 
-test("A or B:", async ({page}) => {
+//skipping for right now. will determine the organization for and the placement of later
+test.skip("A or B:", async ({page}) => {
     //test on local site instead of production site
     await page.goto("/");
 

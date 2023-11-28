@@ -162,6 +162,7 @@ let hasMouseDown = false;
 let hasMouseIn = true;
 
 //Window Exports
+window.tree = treeContext.tree;
 window.atomTool = Tool.atomTool;
 window.cutTool = Tool.cutTool;
 window.dragTool = Tool.dragTool;
@@ -191,6 +192,7 @@ window.toggleHandler = toggleHandler;
 
 declare global {
     interface Window {
+        tree: AEGTree;
         atomTool: Tool;
         cutTool: Tool;
         dragTool: Tool;
