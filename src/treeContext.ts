@@ -40,7 +40,10 @@ export class treeContext {
     public static tree: AEGTree = new AEGTree();
 
     //The proof being constructed
-    public static proofHistory: ProofNode[] = [];
+    public static proof: ProofNode[] = [];
+
+    //The node denoting the current step that we are on in the proof
+    public static currentProofStep: ProofNode;
 
     //The node selected on draw mode which will copy over when we toggle to proof mode.
     public static selectForProof: AEGTree = new AEGTree();
@@ -51,11 +54,15 @@ export class treeContext {
     //An indicator of the mode that we are currently on
     public static modeState: "Draw" | "Proof" = "Draw";
 
+    /**
+     * Method to get the last step in the proof.
+     * @returns The node denoting the last step in the proof.
+     */
     public static getLastProofStep(): ProofNode {
-        if (treeContext.proofHistory.length === 0) {
+        if (treeContext.proof.length === 0) {
             return new ProofNode(new AEGTree());
         }
 
-        return treeContext.proofHistory[treeContext.proofHistory.length - 1];
+        return treeContext.proof[treeContext.proof.length - 1];
     }
 }

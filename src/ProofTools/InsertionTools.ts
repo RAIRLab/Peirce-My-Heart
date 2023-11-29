@@ -32,12 +32,15 @@ let legalNode: boolean;
 export function insertionMouseDown(event: MouseEvent) {
     //Create a deep copy of the tree we are trying to insert the incoming node into so that we can
     //modify it as needed without affecting the actual structure
-    currentTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
+    currentTree = new AEGTree();
+    if (treeContext.currentProofStep) {
+        currentTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
+    }
     const selectedNodes = treeContext.selectForProof.sheet.children;
     const startingPoint = new Point(event.x - offset.x, event.y - offset.y);
 
     //we can insert only a single subgraph at a time
-    if (treeContext.proofHistory.length > 0 && selectedNodes.length === 1) {
+    if (treeContext.proof.length > 0 && selectedNodes.length === 1) {
         //As long as there are graphs to be placed, they are legal nodes
         legalNode = true;
         currentNode = selectedNodes[0];
@@ -225,7 +228,8 @@ export function insertionMouseUp(event: MouseEvent) {
                 currentTree.insert(tempAtom);
             }
             //Insertion is a new step -> push a new node in the proof, signifying it as such
-            treeContext.proofHistory.push(new ProofNode(currentTree, "Insertion"));
+            treeContext.currentProofStep = new ProofNode(currentTree, "Insertion");
+            treeContext.proof.push(treeContext.currentProofStep);
         }
     }
     redrawProof();

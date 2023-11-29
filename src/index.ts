@@ -291,18 +291,51 @@ async function saveMode() {
         data = treeContext.tree;
     } else {
         name =
-            treeContext.proofHistory[0].tree.toString() +
+            treeContext.proof[0].tree.toString() +
             // " - " +
             "\u2192" +
             treeContext.getLastProofStep().tree.toString();
-        data = treeContext.proofHistory;
+        data = treeContext.proof;
     }
 
-    //Slow Download
-    if ("showSaveFilePicker" in window) {
-        const saveHandle = await window.showSaveFilePicker({
+    //Errors caused due to file handler or html download element should not be displayed
+    try {
+        //Slow Download
+        if ("showSaveFilePicker" in window) {
+            const saveHandle = await window.showSaveFilePicker({
+                excludeAcceptAllOption: true,
+                suggestedName: name,
+                startIn: "downloads",
+                types: [
+                    {
+                        description: "JSON Files",
+                        accept: {
+                            "text/json": [".json"],
+                        },
+                    },
+                ],
+            });
+            saveFile(saveHandle, data);
+        } else {
+            //Quick Download
+            const f = document.createElement("a");
+            f.href = JSON.stringify(data, null, "\t");
+            f.download = name + ".json";
+            f.click();
+        }
+    } catch (error) {
+        //Catch error but do nothing
+    }
+}
+
+/**
+ * Calls the function to load the files.
+ */
+async function loadMode() {
+    try {
+        const [fileHandle] = await window.showOpenFilePicker({
             excludeAcceptAllOption: true,
-            suggestedName: name,
+            multiple: false,
             startIn: "downloads",
             types: [
                 {
@@ -313,52 +346,28 @@ async function saveMode() {
                 },
             ],
         });
-        saveFile(saveHandle, data);
-    } else {
-        //Quick Download
-        const f = document.createElement("a");
-        f.href = JSON.stringify(data, null, "\t");
-        f.download = name + ".json";
-        f.click();
-    }
-}
 
-/**
- * Calls the function to load the files.
- */
-async function loadMode() {
-    const [fileHandle] = await window.showOpenFilePicker({
-        excludeAcceptAllOption: true,
-        multiple: false,
-        startIn: "downloads",
-        types: [
-            {
-                description: "JSON Files",
-                accept: {
-                    "text/json": [".json"],
-                },
-            },
-        ],
-    });
-
-    const file = await fileHandle.getFile();
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-        const aegData = reader.result;
-        if (typeof aegData === "string") {
-            const loadData = loadFile(treeContext.modeState, aegData);
-            if (treeContext.modeState === "Draw") {
-                treeContext.tree = loadData as AEGTree;
-                redrawTree(treeContext.tree);
-            } else if (treeContext.modeState === "Proof") {
-                treeContext.proofHistory = loadData as ProofNode[];
-                redrawProof();
+        const file = await fileHandle.getFile();
+        const reader = new FileReader();
+        reader.addEventListener("load", () => {
+            const aegData = reader.result;
+            if (typeof aegData === "string") {
+                const loadData = loadFile(treeContext.modeState, aegData);
+                if (treeContext.modeState === "Draw") {
+                    treeContext.tree = loadData as AEGTree;
+                    redrawTree(treeContext.tree);
+                } else if (treeContext.modeState === "Proof") {
+                    treeContext.proof = loadData as ProofNode[];
+                    redrawProof();
+                }
+            } else {
+                console.log("Loading failed because reading the file was unsuccessful");
             }
-        } else {
-            throw Error("Loading failed because reading the file was unsuccessful");
-        }
-    });
-    reader.readAsText(file);
+        });
+        reader.readAsText(file);
+    } catch (error) {
+        //Do nothing
+    }
 }
 
 /**

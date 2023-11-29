@@ -40,7 +40,10 @@ let currentProofTree: AEGTree;
  * @param event The mouse down even while using resize tool in proof mode
  */
 export function proofResizeMouseDown(event: MouseEvent) {
-    currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
+    currentProofTree = new AEGTree();
+    if (treeContext.currentProofStep) {
+        currentProofTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
+    }
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = currentProofTree.getLowestNode(startingPoint);
 
@@ -101,7 +104,8 @@ export function proofResizeMouseUp(event: MouseEvent) {
             if (tempCut.ellipse !== null) {
                 if (isLegal(tempCut)) {
                     currentProofTree.insert(tempCut);
-                    treeContext.proofHistory.push(new ProofNode(currentProofTree, "Resize Cut"));
+                    treeContext.currentProofStep = new ProofNode(currentProofTree, "Resize Cut");
+                    treeContext.proof.push(treeContext.currentProofStep);
                     redrawProof();
                 }
             }

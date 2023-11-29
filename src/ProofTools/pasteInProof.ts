@@ -21,12 +21,15 @@ let currentTree: AEGTree;
 let legalNode: boolean;
 
 export function pasteInProofMouseDown() {
-    currentTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
+    currentTree = new AEGTree();
+    if (treeContext.currentProofStep) {
+        currentTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
+    }
     currentGraphs = treeContext.selectForProof.sheet;
 
     if (
         currentGraphs.children.length > 0 &&
-        treeContext.proofHistory.length === 0 &&
+        treeContext.proof.length === 0 &&
         currentTree.sheet.isEmptySheet()
     ) {
         legalNode = true;
@@ -41,7 +44,8 @@ export function pasteInProofMouseMove() {
 export function pasteInProofMouseUp() {
     if (legalNode) {
         currentTree.sheet = currentGraphs;
-        treeContext.proofHistory.push(new ProofNode(currentTree, "Copied from Draw Mode"));
+        treeContext.currentProofStep = new ProofNode(currentTree, "Copied from Draw Mode");
+        treeContext.proof.push(treeContext.currentProofStep);
     }
     legalNode = false;
     redrawProof();
