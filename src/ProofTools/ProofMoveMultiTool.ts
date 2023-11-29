@@ -90,7 +90,7 @@ export function proofMoveMultiMouseMove(event: MouseEvent) {
  */
 export function proofMoveMultiMouseUp(event: MouseEvent) {
     if (legalNode) {
-        const nextStep = new ProofNode(currentProofTree, "Multi Movement");
+        const nextStep = new ProofNode(currentProofTree, "Multi Move");
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
             event.y - startingPoint.y
@@ -105,9 +105,7 @@ export function proofMoveMultiMouseUp(event: MouseEvent) {
 
         if (tempNode !== null && isMoveLegal(currentProofTree, tempNode)) {
             nextStep.tree.insert(tempNode);
-            treeContext.currentProofStep = nextStep;
-            treeContext.proof.push(treeContext.currentProofStep);
-            redrawTree(treeContext.currentProofStep.tree);
+            treeContext.pushToProof(nextStep);
         }
     }
     redrawProof();

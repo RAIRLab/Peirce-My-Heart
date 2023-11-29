@@ -228,8 +228,7 @@ export function insertionMouseUp(event: MouseEvent) {
                 currentTree.insert(tempAtom);
             }
             //Insertion is a new step -> push a new node in the proof, signifying it as such
-            treeContext.currentProofStep = new ProofNode(currentTree, "Insertion");
-            treeContext.proof.push(treeContext.currentProofStep);
+            treeContext.pushToProof(new ProofNode(currentTree, "Insertion"));
         }
     }
     redrawProof();

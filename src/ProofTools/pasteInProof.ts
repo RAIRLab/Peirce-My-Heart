@@ -44,8 +44,7 @@ export function pasteInProofMouseMove() {
 export function pasteInProofMouseUp() {
     if (legalNode) {
         currentTree.sheet = currentGraphs;
-        treeContext.currentProofStep = new ProofNode(currentTree, "Copied from Draw Mode");
-        treeContext.proof.push(treeContext.currentProofStep);
+        treeContext.pushToProof(new ProofNode(currentTree, "Pasted"));
     }
     legalNode = false;
     redrawProof();

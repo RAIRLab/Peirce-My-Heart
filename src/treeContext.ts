@@ -1,5 +1,6 @@
 import {AEGTree} from "./AEG/AEGTree";
 import {ProofNode} from "./AEG/ProofNode";
+import {appendStep} from "./ProofHistory";
 // import {Tool} from "./index";
 
 /**
@@ -64,5 +65,19 @@ export class treeContext {
         }
 
         return treeContext.proof[treeContext.proof.length - 1];
+    }
+
+    /**
+     * Something something
+     * @param newStep The new proof node being added to the proof
+     */
+    public static pushToProof(newStep: ProofNode) {
+        if (this.currentProofStep !== this.proof[this.proof.length - 1]) {
+            this.proof.splice(0, this.proof.indexOf(this.currentProofStep));
+        }
+
+        this.currentProofStep = newStep;
+        this.proof.push(newStep);
+        appendStep(newStep);
     }
 }

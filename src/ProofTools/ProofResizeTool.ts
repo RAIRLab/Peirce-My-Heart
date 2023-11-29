@@ -104,9 +104,7 @@ export function proofResizeMouseUp(event: MouseEvent) {
             if (tempCut.ellipse !== null) {
                 if (isLegal(tempCut)) {
                     currentProofTree.insert(tempCut);
-                    treeContext.currentProofStep = new ProofNode(currentProofTree, "Resize Cut");
-                    treeContext.proof.push(treeContext.currentProofStep);
-                    redrawProof();
+                    treeContext.pushToProof(new ProofNode(currentProofTree, "Resize"));
                 }
             }
         }

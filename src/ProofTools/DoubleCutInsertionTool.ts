@@ -83,7 +83,7 @@ export function doubleCutInsertionMouseUp(event: MouseEvent) {
 
     //Stores the tree of the previous proof so that we can perform double cut actions without
     //altering that tree
-    const nextProof = new ProofNode(currentProofTree, "Double Cut Insertion");
+    const nextProof = new ProofNode(currentProofTree, "DC Insert");
 
     if (!wasOut && largeCut.ellipse !== null && smallCut.ellipse !== null) {
         //If either ellipse is in an invalid position or too small it cannot be inserted
@@ -96,8 +96,7 @@ export function doubleCutInsertionMouseUp(event: MouseEvent) {
         if (legal) {
             nextProof.tree.insert(largeCut);
             nextProof.tree.insert(smallCut);
-            treeContext.currentProofStep = nextProof;
-            treeContext.proof.push(treeContext.currentProofStep);
+            treeContext.pushToProof(nextProof);
         }
     }
     redrawProof();

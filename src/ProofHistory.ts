@@ -13,10 +13,10 @@ export function appendStep(newStep: ProofNode) {
 
     const button = document.createElement("button");
     button.type = "button";
-    button.id = "Step: " + treeContext.proofHistory.length;
+    button.id = "Step: " + treeContext.proof.length;
     button.className = "proofNodeButton";
     button.title = newStep.tree.toString();
-    button.onclick = stepBack(newStep);
+    //button.onclick = stepBack(newStep);
 
     const stepContainer = document.createElement("span");
     stepContainer.id = "proofNodeText";
@@ -29,10 +29,6 @@ export function appendStep(newStep: ProofNode) {
 }
 
 export function stepBack(selectedStep: ProofNode) {
-    const index: number = treeContext.proof.indexOf(selectedStep);
-    if (index !== -1) {
-        treeContext.proof = treeContext.proof.slice(0, index);
-    }
-
+    treeContext.currentProofStep = selectedStep;
     redrawProof();
 }

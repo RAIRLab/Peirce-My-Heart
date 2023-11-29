@@ -97,7 +97,7 @@ export function proofMoveSingleMouseMove(event: MouseEvent) {
  */
 export function proofMoveSingleMouseUp(event: MouseEvent) {
     if (legalNode) {
-        const nextStep = new ProofNode(currentProofTree, "Single Movement");
+        const nextStep = new ProofNode(currentProofTree, "Single Move");
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
             event.y - startingPoint.y
@@ -112,8 +112,7 @@ export function proofMoveSingleMouseUp(event: MouseEvent) {
 
         if (tempNode !== null && isMoveLegal(currentProofTree, tempNode)) {
             nextStep.tree.insert(tempNode);
-            treeContext.currentProofStep = nextStep;
-            treeContext.proof.push(treeContext.currentProofStep);
+            treeContext.pushToProof(nextStep);
         }
     }
     redrawProof();

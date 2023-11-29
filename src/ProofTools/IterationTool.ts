@@ -102,8 +102,7 @@ export function iterationMouseUp(event: MouseEvent) {
                 currentProofTree.insert(tempAtom);
             }
             //Iteration is a new step -> push a new node in the proof, signifying it as such
-            treeContext.currentProofStep = new ProofNode(currentProofTree, "Iteration");
-            treeContext.proof.push(treeContext.currentProofStep);
+            treeContext.pushToProof(new ProofNode(currentProofTree, "Iteration"));
         }
     }
     redrawProof();

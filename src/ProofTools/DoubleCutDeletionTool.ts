@@ -58,7 +58,7 @@ export function doubleCutDeletionMouseMove(event: MouseEvent) {
 export function doubleCutDeletionMouseUp(event: MouseEvent) {
     //Stores the tree of the previous proof so that we can perform double cut actions without
     //altering that tree
-    const nextProof = new ProofNode(currentProofTree, "Double Cut Deletion");
+    const nextProof = new ProofNode(currentProofTree, "DC Delete");
     const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
 
     if (legalNode && currentNode instanceof CutNode) {
@@ -71,8 +71,7 @@ export function doubleCutDeletionMouseUp(event: MouseEvent) {
                 nextProof.tree.insert(lowerCut.children[i]);
             }
         }
-        treeContext.currentProofStep = nextProof;
-        treeContext.proof.push(treeContext.currentProofStep);
+        treeContext.pushToProof(nextProof);
     }
 
     redrawProof();
