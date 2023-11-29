@@ -70,8 +70,8 @@ export function doubleCutDeletionMouseUp(event: MouseEvent) {
             for (let i = 0; i < lowerCut.children.length; i++) {
                 nextProof.tree.insert(lowerCut.children[i]);
             }
+            treeContext.pushToProof(nextProof);
         }
-        treeContext.pushToProof(nextProof);
     }
 
     redrawProof();

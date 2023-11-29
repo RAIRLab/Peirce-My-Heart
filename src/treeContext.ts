@@ -1,6 +1,6 @@
 import {AEGTree} from "./AEG/AEGTree";
 import {ProofNode} from "./AEG/ProofNode";
-import {appendStep} from "./ProofHistory";
+import {appendStep, deleteButtons} from "./ProofHistory";
 // import {Tool} from "./index";
 
 /**
@@ -68,12 +68,16 @@ export class treeContext {
     }
 
     /**
-     * Something something
+     * Adds the recently created proof node into the proof array and creates a new button for it.
+     * Sets the current step to this new step. If the current step is not the newest step then
+     * the array up to that step needs to be removed.
      * @param newStep The new proof node being added to the proof
      */
     public static pushToProof(newStep: ProofNode) {
         if (this.currentProofStep !== this.proof[this.proof.length - 1]) {
-            this.proof.splice(0, this.proof.indexOf(this.currentProofStep));
+            const currentIndex: number = this.proof.indexOf(this.currentProofStep);
+            deleteButtons(currentIndex);
+            this.proof = this.proof.splice(0, currentIndex);
         }
 
         this.currentProofStep = newStep;
