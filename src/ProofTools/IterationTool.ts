@@ -45,7 +45,6 @@ export function iterationMouseDown(event: MouseEvent) {
     //Make a deep copy of the tree of our latest proof step. Our iteration actions will be performed
     //on this structure, but they should all be on a new step - we do not want to make any changes
     //on the existing step
-    // currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
     currentProofTree = new AEGTree();
     if (treeContext.currentProofStep) {
         currentProofTree.sheet = treeContext.currentProofStep.tree.sheet.copy();

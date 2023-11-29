@@ -32,7 +32,6 @@ let legalNode: boolean;
 export function insertionMouseDown(event: MouseEvent) {
     //Create a deep copy of the tree we are trying to insert the incoming node into so that we can
     //modify it as needed without affecting the actual structure
-    // currentTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
     currentTree = new AEGTree();
     if (treeContext.currentProofStep) {
         currentTree.sheet = treeContext.currentProofStep.tree.sheet.copy();

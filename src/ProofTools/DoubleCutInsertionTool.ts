@@ -31,7 +31,6 @@ let currentProofTree: AEGTree;
  */
 export function doubleCutInsertionMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.clientX - offset.x, event.clientY - offset.y);
-    // currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
     currentProofTree = new AEGTree();
     if (treeContext.currentProofStep) {
         currentProofTree.sheet = treeContext.currentProofStep.tree.sheet.copy();

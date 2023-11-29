@@ -37,7 +37,6 @@ let currentProofTree: AEGTree;
  * @param event The mouse down event while using move multiple tool in proof mode
  */
 export function proofMoveMultiMouseDown(event: MouseEvent) {
-    // currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
     currentProofTree = new AEGTree();
     if (treeContext.currentProofStep) {
         currentProofTree.sheet = treeContext.currentProofStep.tree.sheet.copy();

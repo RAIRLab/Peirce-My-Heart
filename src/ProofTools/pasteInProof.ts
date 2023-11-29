@@ -21,7 +21,6 @@ let currentTree: AEGTree;
 let legalNode: boolean;
 
 export function pasteInProofMouseDown() {
-    // currentTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
     currentTree = new AEGTree();
     if (treeContext.currentProofStep) {
         currentTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
