@@ -92,6 +92,18 @@ import {
     resizeMouseUp,
     resizeMouseOut,
 } from "./DrawModes/ResizeTool";
+import {
+    proofMoveSingleMouseDown,
+    proofMoveSingleMouseMove,
+    proofMoveSingleMouseOut,
+    proofMoveSingleMouseUp,
+} from "./ProofTools/ProofMoveSingleTool";
+import {
+    proofMoveMultiMouseDown,
+    proofMoveMultiMouseMove,
+    proofMoveMultiMouseOut,
+    proofMoveMultiMouseUp,
+} from "./ProofTools/ProofMoveMultiTool";
 import {ProofNode} from "./AEG/ProofNode";
 import {
     pasteInProofMouseDown,
@@ -105,6 +117,18 @@ import {
     iterationMouseUp,
     iterationMouseOut,
 } from "./ProofTools/IterationTool";
+import {
+    proofResizeMouseDown,
+    proofResizeMouseMove,
+    proofResizeMouseUp,
+    proofResizeMouseOut,
+} from "./ProofTools/ProofResizeTool";
+import {
+    deiterationMouseDown,
+    deiterationMouseMove,
+    deiterationMouseOut,
+    deiterationMouseUp,
+} from "./ProofTools/DeiterationTool";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -156,7 +180,11 @@ window.resizeTool = Tool.resizeTool;
 window.doubleCutDeletionTool = Tool.doubleCutDeletionTool;
 window.insertionTool = Tool.insertionTool;
 window.erasureTool = Tool.erasureTool;
+window.proofMoveSingleTool = Tool.proofMoveSingleTool;
+window.proofMoveMultiTool = Tool.proofMoveMultiTool;
+window.proofResizeTool = Tool.proofResizeTool;
 window.iterationTool = Tool.iterationTool;
+window.deiterationTool = Tool.deiterationTool;
 window.setTool = setTool;
 window.setHighlight = setHighlight;
 window.toggleHandler = toggleHandler;
@@ -181,7 +209,11 @@ declare global {
         doubleCutDeletionTool: Tool;
         insertionTool: Tool;
         erasureTool: Tool;
+        proofMoveSingleTool: Tool;
+        proofMoveMultiTool: Tool;
+        proofResizeTool: Tool;
         iterationTool: Tool;
+        deiterationTool: Tool;
         setTool: (state: Tool) => void;
         setHighlight: (event: string, id: string) => void;
         toggleHandler: () => void;
@@ -266,11 +298,44 @@ async function saveMode() {
         data = treeContext.proof;
     }
 
-    //Slow Download
-    if ("showSaveFilePicker" in window) {
-        const saveHandle = await window.showSaveFilePicker({
+    //Errors caused due to file handler or html download element should not be displayed
+    try {
+        //Slow Download
+        if ("showSaveFilePicker" in window) {
+            const saveHandle = await window.showSaveFilePicker({
+                excludeAcceptAllOption: true,
+                suggestedName: name,
+                startIn: "downloads",
+                types: [
+                    {
+                        description: "JSON Files",
+                        accept: {
+                            "text/json": [".json"],
+                        },
+                    },
+                ],
+            });
+            saveFile(saveHandle, data);
+        } else {
+            //Quick Download
+            const f = document.createElement("a");
+            f.href = JSON.stringify(data, null, "\t");
+            f.download = name + ".json";
+            f.click();
+        }
+    } catch (error) {
+        //Catch error but do nothing
+    }
+}
+
+/**
+ * Calls the function to load the files.
+ */
+async function loadMode() {
+    try {
+        const [fileHandle] = await window.showOpenFilePicker({
             excludeAcceptAllOption: true,
-            suggestedName: name,
+            multiple: false,
             startIn: "downloads",
             types: [
                 {
@@ -281,52 +346,28 @@ async function saveMode() {
                 },
             ],
         });
-        saveFile(saveHandle, data);
-    } else {
-        //Quick Download
-        const f = document.createElement("a");
-        f.href = JSON.stringify(data, null, "\t");
-        f.download = name + ".json";
-        f.click();
-    }
-}
 
-/**
- * Calls the function to load the files.
- */
-async function loadMode() {
-    const [fileHandle] = await window.showOpenFilePicker({
-        excludeAcceptAllOption: true,
-        multiple: false,
-        startIn: "downloads",
-        types: [
-            {
-                description: "JSON Files",
-                accept: {
-                    "text/json": [".json"],
-                },
-            },
-        ],
-    });
-
-    const file = await fileHandle.getFile();
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-        const aegData = reader.result;
-        if (typeof aegData === "string") {
-            const loadData = loadFile(treeContext.modeState, aegData);
-            if (treeContext.modeState === "Draw") {
-                treeContext.tree = loadData as AEGTree;
-                redrawTree(treeContext.tree);
-            } else if (treeContext.modeState === "Proof") {
-                treeContext.proof = loadData as ProofNode[];
-                redrawProof();
+        const file = await fileHandle.getFile();
+        const reader = new FileReader();
+        reader.addEventListener("load", () => {
+            const aegData = reader.result;
+            if (typeof aegData === "string") {
+                const loadData = loadFile(treeContext.modeState, aegData);
+                if (treeContext.modeState === "Draw") {
+                    treeContext.tree = loadData as AEGTree;
+                    redrawTree(treeContext.tree);
+                } else if (treeContext.modeState === "Proof") {
+                    treeContext.proof = loadData as ProofNode[];
+                    redrawProof();
+                }
+            } else {
+                console.log("Loading failed because reading the file was unsuccessful");
             }
-        } else {
-            throw Error("Loading failed because reading the file was unsuccessful");
-        }
-    });
-    reader.readAsText(file);
+        });
+        reader.readAsText(file);
+    } catch (error) {
+        //Do nothing
+    }
 }
 
 /**
@@ -400,8 +441,20 @@ function mouseDownHandler(event: MouseEvent) {
         case Tool.erasureTool:
             erasureMouseDown(event);
             break;
+        case Tool.proofMoveSingleTool:
+            proofMoveSingleMouseDown(event);
+            break;
+        case Tool.proofMoveMultiTool:
+            proofMoveMultiMouseDown(event);
+            break;
+        case Tool.proofResizeTool:
+            proofResizeMouseDown(event);
+            break;
         case Tool.iterationTool:
             iterationMouseDown(event);
+            break;
+        case Tool.deiterationTool:
+            deiterationMouseDown(event);
             break;
         default:
             break;
@@ -464,8 +517,20 @@ function mouseMoveHandler(event: MouseEvent) {
             case Tool.erasureTool:
                 erasureMouseMove(event);
                 break;
+            case Tool.proofMoveSingleTool:
+                proofMoveSingleMouseMove(event);
+                break;
+            case Tool.proofMoveMultiTool:
+                proofMoveMultiMouseMove(event);
+                break;
+            case Tool.proofResizeTool:
+                proofResizeMouseMove(event);
+                break;
             case Tool.iterationTool:
                 iterationMouseMove(event);
+                break;
+            case Tool.deiterationTool:
+                deiterationMouseMove(event);
                 break;
             default:
                 break;
@@ -525,8 +590,20 @@ function mouseUpHandler(event: MouseEvent) {
         case Tool.erasureTool:
             erasureMouseUp(event);
             break;
+        case Tool.proofMoveSingleTool:
+            proofMoveSingleMouseUp(event);
+            break;
+        case Tool.proofMoveMultiTool:
+            proofMoveMultiMouseUp(event);
+            break;
+        case Tool.proofResizeTool:
+            proofResizeMouseUp(event);
+            break;
         case Tool.iterationTool:
             iterationMouseUp(event);
+            break;
+        case Tool.deiterationTool:
+            deiterationMouseUp(event);
             break;
         default:
             break;
@@ -588,8 +665,20 @@ function mouseOutHandler() {
         case Tool.erasureTool:
             erasureMouseOut();
             break;
+        case Tool.proofMoveSingleTool:
+            proofMoveSingleMouseOut();
+            break;
+        case Tool.proofMoveMultiTool:
+            proofMoveMultiMouseOut();
+            break;
+        case Tool.proofResizeTool:
+            proofResizeMouseOut();
+            break;
         case Tool.iterationTool:
             iterationMouseOut();
+            break;
+        case Tool.deiterationTool:
+            deiterationMouseOut();
             break;
         default:
             break;

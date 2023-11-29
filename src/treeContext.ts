@@ -28,7 +28,11 @@ export enum Tool {
     doubleCutDeletionTool,
     insertionTool,
     erasureTool,
+    proofMoveSingleTool,
+    proofMoveMultiTool,
+    proofResizeTool,
     iterationTool,
+    deiterationTool,
 }
 
 export class treeContext {
@@ -56,9 +60,5 @@ export class treeContext {
         }
 
         return treeContext.proof[treeContext.proof.length - 1];
-    }
-
-    public static addLastProofStep(currentLast: ProofNode, nextNode: ProofNode) {
-        const index: number = treeContext.proof.indexOf(currentLast);
     }
 }

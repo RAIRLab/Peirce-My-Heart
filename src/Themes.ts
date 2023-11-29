@@ -4,7 +4,7 @@
  * for the application from the CSS themes
  */
 import {treeContext} from "./treeContext";
-import {redrawTree} from "./DrawModes/DrawUtils";
+import {redrawProof, redrawTree} from "./DrawModes/DrawUtils";
 
 const themeSelector: HTMLSelectElement = <HTMLSelectElement>document.getElementById("theme-select");
 
@@ -36,7 +36,7 @@ function setTheme() {
         legalColorStr = cssVar("--good-placement");
         illegalColorStr = cssVar("--bad-placement");
         placedColorStr = cssVar("--canvas-items");
-        redrawTree(treeContext.tree);
+        treeContext.modeState === "Draw" ? redrawTree(treeContext.tree) : redrawProof();
     });
 }
 

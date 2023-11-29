@@ -1,17 +1,21 @@
 /**
- * A file containing single node resizing.
+ * Resize tool to be used during Proof Mode
+ * @author Dawn Moore
  */
 
+import {AEGTree} from "../AEG/AEGTree";
 import {Point} from "../AEG/Point";
-import {determineDirection} from "./DrawUtils";
-import {resizeCut} from "./EditModeUtils";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
-import {offset} from "./DragTool";
-import {drawCut, redrawTree} from "./DrawUtils";
+import {offset} from "../DrawModes/DragTool";
+import {drawCut, redrawProof, redrawTree} from "../DrawModes/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
-import {ellipseLargeEnough} from "./CutTool";
+import {ProofNode} from "../AEG/ProofNode";
+import {resizeCut} from "../DrawModes/EditModeUtils";
+import {determineDirection} from "../DrawModes/DrawUtils";
+import {ellipseLargeEnough} from "../DrawModes/CutTool";
+import {proofCanInsert} from "./ProofMoveUtils";
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -26,24 +30,29 @@ let legalNode: boolean;
 //For y 1 means going down and -1 means going up.
 let direction: Point = new Point(1, 1);
 
+//The tree of the current proof step
+let currentProofTree: AEGTree;
+
 /**
  * Takes the point the user clicked and stores that for later use. If the lowest node containing
  * that point is not the sheet, then store that as currentNode and find that node's parent.
  * Removes the node from the parent and reinsert its children if it has any. Cannot be an Atom.
- * @param event The event of a mouse down while using resize tool
+ * @param event The mouse down even while using resize tool in proof mode
  */
-export function resizeMouseDown(event: MouseEvent) {
+export function proofResizeMouseDown(event: MouseEvent) {
+    currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = treeContext.tree.getLowestNode(startingPoint);
+    currentNode = currentProofTree.getLowestNode(startingPoint);
+
     if (currentNode instanceof CutNode && currentNode.ellipse !== null) {
         legalNode = true;
-        const currentParent = treeContext.tree.getLowestParent(startingPoint);
+        const currentParent = currentProofTree.getLowestParent(startingPoint);
         if (currentParent !== null) {
             currentParent.remove(startingPoint);
         }
 
         for (let i = 0; i < currentNode.children.length; i++) {
-            treeContext.tree.insert(currentNode.children[i]);
+            currentProofTree.insert(currentNode.children[i]);
         }
         direction = determineDirection(currentNode, startingPoint);
         currentNode.children = [];
@@ -53,9 +62,9 @@ export function resizeMouseDown(event: MouseEvent) {
 /**
  * If the node is legal alters the center and both of the radii. Creates a copy of the current cut
  * So that the original is not altered in any way.
- * @param event The event of a mouse move while using the resize tool
+ * @param event The mouse move event while the resize tool is being used in proof mode
  */
-export function resizeMouseMove(event: MouseEvent) {
+export function proofResizeMouseMove(event: MouseEvent) {
     if (legalNode) {
         const moveDifference: Point = new Point(
             (event.x - offset.x - startingPoint.x) / 2,
@@ -66,10 +75,8 @@ export function resizeMouseMove(event: MouseEvent) {
             const tempCut: CutNode = resizeCut(currentNode, moveDifference, direction);
             //This is just to make the lint stop yelling
             if (tempCut.ellipse !== null) {
-                redrawTree(treeContext.tree);
-                const legal =
-                    treeContext.tree.canInsert(tempCut) && ellipseLargeEnough(tempCut.ellipse);
-                const color = legal ? legalColor() : illegalColor();
+                redrawTree(currentProofTree);
+                const color = isLegal(tempCut) ? legalColor() : illegalColor();
                 drawCut(tempCut, color);
             }
         }
@@ -79,9 +86,9 @@ export function resizeMouseMove(event: MouseEvent) {
 /**
  * If the node is legal creates a new temporary cut and alters the ellipse center and radii.
  * If this new cut can be inserted inserts that into the tree, otherwise reinserts the original.
- * @param event The event of a mouse up while using the resize tool
+ * @param event The mouse up event while using resize tool in proof mode
  */
-export function resizeMouseUp(event: MouseEvent) {
+export function proofResizeMouseUp(event: MouseEvent) {
     if (legalNode) {
         const moveDifference: Point = new Point(
             (event.x - offset.x - startingPoint.x) / 2,
@@ -92,14 +99,14 @@ export function resizeMouseUp(event: MouseEvent) {
             const tempCut: CutNode = resizeCut(currentNode, moveDifference, direction);
             //This is just to make the lint stop yelling
             if (tempCut.ellipse !== null) {
-                if (treeContext.tree.canInsert(tempCut) && ellipseLargeEnough(tempCut.ellipse)) {
-                    treeContext.tree.insert(tempCut);
-                } else {
-                    treeContext.tree.insert(currentNode);
+                if (isLegal(tempCut)) {
+                    currentProofTree.insert(tempCut);
+                    treeContext.proof.push(new ProofNode(currentProofTree, "Resize Cut"));
+                    redrawProof();
                 }
             }
         }
-        redrawTree(treeContext.tree);
+        redrawProof();
         legalNode = false;
     }
 }
@@ -107,10 +114,24 @@ export function resizeMouseUp(event: MouseEvent) {
 /**
  * If the mouse leaves the canvas then it is no longer a legal node and reinserts the original.
  */
-export function resizeMouseOut() {
+export function proofResizeMouseOut() {
     if (legalNode && currentNode !== null) {
-        treeContext.tree.insert(currentNode);
+        currentProofTree.insert(currentNode);
     }
     legalNode = false;
-    redrawTree(treeContext.tree);
+    redrawTree(treeContext.getLastProofStep().tree);
+}
+
+/**
+ * Determines if a node in a given position is legal if it can be inserted, is bigger than our
+ * minimum ellipse radii size, and can be inserted into the tree without changing the structure.
+ * @param currentCut The cut to be checked to see if it is legal
+ * @returns Whether or not the cut in this position is legal
+ */
+function isLegal(currentCut: CutNode): boolean {
+    return (
+        currentProofTree.canInsert(currentCut) &&
+        ellipseLargeEnough(currentCut.ellipse!) &&
+        proofCanInsert(new AEGTree(currentProofTree.sheet), currentCut)
+    );
 }

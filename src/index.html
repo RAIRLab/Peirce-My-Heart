@@ -83,19 +83,19 @@
       </div>
       <div id="ProofButtons">
         <div class="row">
-          <button type="button" onclick="" title="Resize Single" class="toolButton">
-              <i class="fa fa-arrows-alt" aria-hidden="true"></i>
+          <button type="button" onclick="setTool(proofMoveSingleTool)" title="Move Single" class="toolButton">
+            <i class="fa fa-mouse-pointer" aria-hidden="true"></i>
+        </button>
+        <button type="button" onclick="setTool(proofMoveMultiTool)" title="Move Multiple" class="toolButton">
+            <i class="fa fa-arrows" aria-hidden="true"></i>
+        </button>
+        </div>
+        <div class="row">
+          <button type="button" onclick="setTool(proofResizeTool)" title="Resize Single" class="toolButton">
+            <i class="fa fa-arrows-alt" aria-hidden="true"></i>
           </button>
           <button type="button" onclick="setTool(pasteInProofTool)" title="Paste graph from Draw Mode" class="toolButton">
               <i class="fa fa-files-o" aria-hidden="true"></i>
-          </button>
-        </div>
-        <div class="row">
-          <button type="button" onclick="" title="Drag Single" class="toolButton">
-              <i class="fa fa-mouse-pointer" aria-hidden="true"></i>
-          </button>
-          <button type="button" onclick="" title="Drag Multiple" class="toolButton">
-              <i class="fa fa-arrows" aria-hidden="true"></i>
           </button>
         </div>
         <div class="row">
@@ -118,7 +118,7 @@
           <button type="button" onclick="setTool(iterationTool)" title="Iteration" class="toolButton">
             <i class="fa fa-expand" aria-hidden="true"></i>
           </button>
-          <button type="button" onclick="" title="Deiteration" class="toolButton">
+          <button type="button" onclick="setTool(deiterationTool)" title="Deiteration" class="toolButton">
             <i class="fa fa-compress" aria-hidden="true"></i>
           </button>
         </div>
