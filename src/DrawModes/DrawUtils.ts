@@ -149,10 +149,10 @@ export function redrawProof() {
     //If this is the first step taken in the proof,
     //set the current tree as the head of the proof history
     let tree: AEGTree;
-    if (treeContext.proof.length === 0) {
+    if (treeContext.proof.length === 0 || treeContext.currentProofStep === undefined) {
         tree = new AEGTree();
     } else {
-        tree = treeContext.proof[treeContext.proof.length - 1].tree;
+        tree = treeContext.currentProofStep.tree;
     }
 
     cleanCanvas();

@@ -29,7 +29,11 @@ let currentProofTree: AEGTree;
  */
 export function erasureMouseDown(event: MouseEvent) {
     const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
-    currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
+    // currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
+    currentProofTree = new AEGTree();
+    if (treeContext.currentProofStep) {
+        currentProofTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
+    }
     currentNode = currentProofTree.getLowestNode(currentPoint);
 
     isLegal();
@@ -65,7 +69,8 @@ export function erasureMouseUp(event: MouseEvent) {
             currentParent.remove(currentPoint);
         }
 
-        treeContext.proof.push(nextProof);
+        treeContext.currentProofStep = nextProof;
+        treeContext.proof.push(treeContext.currentProofStep);
         redrawProof();
     }
 

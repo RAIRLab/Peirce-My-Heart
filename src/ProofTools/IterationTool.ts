@@ -45,7 +45,11 @@ export function iterationMouseDown(event: MouseEvent) {
     //Make a deep copy of the tree of our latest proof step. Our iteration actions will be performed
     //on this structure, but they should all be on a new step - we do not want to make any changes
     //on the existing step
-    currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
+    // currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
+    currentProofTree = new AEGTree();
+    if (treeContext.currentProofStep) {
+        currentProofTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
+    }
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = currentProofTree.getLowestNode(startingPoint);
     currentParent = currentProofTree.getLowestParent(startingPoint);
@@ -99,7 +103,8 @@ export function iterationMouseUp(event: MouseEvent) {
                 currentProofTree.insert(tempAtom);
             }
             //Iteration is a new step -> push a new node in the proof, signifying it as such
-            treeContext.proof.push(new ProofNode(currentProofTree, "Iteration"));
+            treeContext.currentProofStep = new ProofNode(currentProofTree, "Iteration");
+            treeContext.proof.push(treeContext.currentProofStep);
         }
     }
     redrawProof();
