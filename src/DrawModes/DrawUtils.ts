@@ -173,3 +173,41 @@ export function highlightNode(child: AtomNode | CutNode, color: string) {
         }
     }
 }
+
+/**
+ * Determines which widest points the current point is closest to so that the resize
+ * can move in that direction.
+ * widestPoints[0] = leftmost widest point of the ellipse
+ * widestPoints[1] = topmost widest point of the ellipse
+ * widestPoints[2] = rightmost widest point of the ellipse
+ * widestPoints[3] = bottommost widest point of the ellipse
+ * @returns The new direction for x and y
+ */
+export function determineDirection(currentNode: CutNode, startingPoint: Point): Point {
+    const newDirection = new Point(1, 1);
+    if (currentNode instanceof CutNode && (currentNode as CutNode).ellipse !== null) {
+        const currentEllipse: Ellipse = currentNode.ellipse as Ellipse;
+        const widestPoints: Point[] = [
+            new Point(currentEllipse.center.x - currentEllipse.radiusX, currentEllipse.center.y),
+            new Point(currentEllipse.center.x, currentEllipse.center.y - currentEllipse.radiusY),
+            new Point(currentEllipse.center.x + currentEllipse.radiusX, currentEllipse.center.y),
+            new Point(currentEllipse.center.x, currentEllipse.center.y + currentEllipse.radiusY),
+        ];
+
+        //If the current point is closer to the top or equal the direction is positive and going down
+        if (widestPoints[0].distance(startingPoint) >= widestPoints[2].distance(startingPoint)) {
+            newDirection.x = 1;
+        } else {
+            newDirection.x = -1;
+        }
+
+        //If the current point is closer to the left or equal the direction is positive and going right
+        if (widestPoints[1].distance(startingPoint) >= widestPoints[3].distance(startingPoint)) {
+            newDirection.y = 1;
+        } else {
+            newDirection.y = -1;
+        }
+    }
+
+    return newDirection;
+}
