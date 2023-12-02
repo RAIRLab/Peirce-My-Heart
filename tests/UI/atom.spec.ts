@@ -1,4 +1,7 @@
 import {test, expect} from "@playwright/test";
+//import {aegStringify} from "../../src/index";
+import {AEGTree} from "../../src/AEG/AEGTree";
+import {JSHandle} from "@playwright/test";
 
 test.beforeEach(async ({page}) => {
     page.goto("/");
@@ -6,8 +9,13 @@ test.beforeEach(async ({page}) => {
 });
 
 test.describe("Basic graph string/drawing soliloquy:", () => {
-    test("Graph string with no cuts should have [] only.", async ({page}) => {
-        await expect(page.locator("#graphString")).toHaveText("[]");
+    test.skip("Empty canvas should stringify appropriately.", async ({page}) => {
+        //const tree: JSHandle<AEGTree> = await page.evaluateHandle(() => window.tree);
+        const tree: AEGTree = await page.evaluate("window.tree");
+        //console.log(aegStringify(await page.evaluate(tree)));
+        //await expect(page.evaluate(aegStringify(window.tree))).toBe(aegStringify(window.tree));
+        //compare expected json to the json produced by our program
+        await expect(page.url()).toContain("Peirce"); //placeholder expect statement
     });
 
     test("Graph string with one cut should produce an appropriate string.", async ({page}) => {

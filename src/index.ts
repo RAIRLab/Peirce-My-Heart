@@ -280,6 +280,14 @@ export function setTool(state: Tool) {
             break;
     }
 }
+/**
+ * Creates and returns the stringification of the incoming data. Uses tab characters as delimiters.
+ * @param treeData the incoming data
+ * @returns the stringification of the incoming data
+ */
+export function aegStringify(treeData: AEGTree | ProofNode[]): string {
+    return JSON.stringify(treeData, null, "\t");
+}
 
 /**
  * Calls the function to save the file.
@@ -321,7 +329,7 @@ async function saveMode() {
         } else {
             //Quick Download
             const f = document.createElement("a");
-            f.href = JSON.stringify(data, null, "\t");
+            f.href = aegStringify(data);
             f.download = name + ".json";
             f.click();
         }
