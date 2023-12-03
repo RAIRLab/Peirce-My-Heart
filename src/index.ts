@@ -163,7 +163,7 @@ let hasMouseIn = true;
 
 //Window Exports
 window.tree = treeContext.tree;
-window.treeString = treeContext.treeString;
+window.treeString = aegStringify(window.tree);
 window.atomTool = Tool.atomTool;
 window.cutTool = Tool.cutTool;
 window.dragTool = Tool.dragTool;
