@@ -6,8 +6,12 @@
     //Update this with all Library Classes used
     "entryPoints": [
         "src/AEG",
-        "src/AtomCreation.ts",
-        "src/EllipseCreation.ts"
+        "src/DrawModes",
+        "src/ProofTools",
+        "src/AEG-IO.ts",
+        "src/Themes.ts",
+        "src/ToggleModes.ts",
+        "src/treeContext.ts"
     ], 
     "tsconfig": "tsconfig.json",
     "out": "public/docs"
