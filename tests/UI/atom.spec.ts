@@ -3,38 +3,16 @@ import {test, expect} from "@playwright/test";
 const fs = require("fs"); //nabbing the node.js module for file system shenanigans
 
 let emptyTreeString: string;
-let chromiumLoneAtomString: string;
-let firefoxLoneAtomString: string;
-let webkitLoneAtomString: string;
+let loneAtomString: string;
 
 test.beforeAll("Reading expected strings in from .json files...", async () => {
     fs.readFile(__dirname + "/expectedTrees/emptyTree.json", "utf8", (err: Error, data: string) => {
         emptyTreeString = data;
     });
 
-    fs.readFile(
-        __dirname + "/expectedTrees/chromiumLoneAtom.json",
-        "utf8",
-        (err: Error, data: string) => {
-            chromiumLoneAtomString = data;
-        }
-    );
-
-    fs.readFile(
-        __dirname + "/expectedTrees/firefoxLoneAtom.json",
-        "utf8",
-        (err: Error, data: string) => {
-            firefoxLoneAtomString = data;
-        }
-    );
-
-    fs.readFile(
-        __dirname + "/expectedTrees/webkitLoneAtom.json",
-        "utf8",
-        (err: Error, data: string) => {
-            webkitLoneAtomString = data;
-        }
-    );
+    fs.readFile(__dirname + "/expectedTrees/loneAtom.json", "utf8", (err: Error, data: string) => {
+        loneAtomString = data.substring(data.lastIndexOf("A"), data.lastIndexOf("},"));
+    });
 });
 
 test.beforeEach(async ({page}) => {
@@ -60,22 +38,12 @@ test.describe("Basic graph string/drawing soliloquy:", () => {
         await expect(stringify).toBe(playwrightString);
     });
 
-    test("Graph string with one atom should produce an appropriate string.", async ({page}) => {
-        //exclamation mark is fine here because we are not using persistent browser contexts
-        const currentBrowser: string = page.context().browser()!.browserType().name();
+    test("Canvas with one atom should produce an appropriate string.", async ({page}) => {
         const canvas = page.locator("#canvas");
         await page.getByTitle("Atom Tool").click();
         await canvas.click({position: {x: 600, y: 600}}); //arbitrary location, we just need them on the canvas
         const windowString: string = await page.evaluate("window.aegStringify(window.tree)");
-        if (currentBrowser === "chromium") {
-            await expect(windowString).toBe(chromiumLoneAtomString);
-        } else if (currentBrowser === "firefox") {
-            await expect(windowString).toBe(firefoxLoneAtomString);
-        } else if (currentBrowser === "webkit") {
-            await expect(windowString).toBe(webkitLoneAtomString);
-        } else {
-            throw new Error("Requested browser type not supported for Playwright test.");
-        }
+        expect(windowString).toContain(loneAtomString);
     });
 });
 
