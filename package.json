@@ -1,6 +1,6 @@
 {
   "name": "peircemyheart",
-  "version": "0.0.2",
+  "version": "0.9.0",
   "description": "A web application for modeling Charles Peirce's Alpha Existential Graph System. In development for UAlbany 499.",
   "main": "build/index.html",
   "scripts": {
