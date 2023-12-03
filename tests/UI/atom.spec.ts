@@ -4,7 +4,7 @@ const fs = require("fs");
 let emptyCanvasString: string;
 
 test.beforeAll("Reading expected strings in from .json files...", async () => {
-    fs.readFile(__dirname + "/emptyTree.json", "utf8", (err, data) => {
+    fs.readFile(__dirname + "/emptyTree.json", "utf8", (err: Error, data: string) => {
         emptyCanvasString = data;
     });
 });
@@ -15,7 +15,7 @@ test.beforeEach(async ({page}) => {
 });
 
 test.describe("Basic graph string/drawing soliloquy:", () => {
-    test.only("Empty canvas should stringify appropriately.", async ({page}) => {
+    test("Empty canvas should stringify appropriately.", async ({page}) => {
         const playwrightString: string = await page.evaluate("window.aegStringify(window.tree)");
         await expect(playwrightString).toBe(emptyCanvasString);
     });
