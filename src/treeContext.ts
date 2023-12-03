@@ -82,9 +82,10 @@ export class treeContext {
                 !this.currentProofStep.tree.isEqualTo(this.proof[this.proof.length - 1].tree) ||
                 this.currentProofStep.appliedRule !== this.proof[this.proof.length - 1].appliedRule
             ) {
-                const currentIndex: number = this.proof.indexOf(this.currentProofStep);
+                const currentIndex: number = this.currentProofStep.index;
                 deleteButtons(currentIndex);
-                this.proof = this.proof.splice(0, currentIndex);
+                this.proof = this.proof.splice(0, currentIndex + 1);
+                newStep.index = this.proof.length;
             }
         }
 
