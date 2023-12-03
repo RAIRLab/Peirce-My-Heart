@@ -40,54 +40,54 @@
         <p>
           Proposed by <cite><a href="https://en.wikipedia.org/wiki/Charles_Sanders_Peirce">Charles 
           Sanders Peirce</a></cite>, an <cite><a href="https://en.wikipedia.org/wiki/Existential_graph">
-          Existential Graph</a></cite> is a diagrammatic or visual representation of a logical expression. 
-          There are 3 types of Existential Graphs: Alpha Existential Graphs, Beta Existential Graphs and
-          Gamma Existential Graphs. In our application, we cover Alpha Existential Graphs.        
+          Existential Graph</a></cite> is a visual, also called diagrammatic, representation of some logical expression. 
+          There are three types of Existential Graphs: Alpha, Beta and Gamma.
+          In Peirce My Heart, we have implemented only Alpha Existential Graphs (AEGs).        
         </p>
 
-        <h4>The parts of an Alpha Existential Graph (AEG)</h4>
-        Alpha Existential Graphs are a form of Existential Graphs that are isomorphic to <cite>
-        <a href="https://en.wikipedia.org/wiki/Propositional_calculus">Propositional Logic</a></cite>
-        Propositional Logic. Graphs of this system can be used to construct entire propositional 
-        logic statements with just 3 components: 
+        <h4>The components of an Alpha Existential Graph</h4>
+        AEGs are isomorphic to <cite>
+        <a href="https://en.wikipedia.org/wiki/Propositional_calculus">Propositional Logic</a></cite>.
+        This means, simply, that all conclusions reachable through Propositional Logic are also reachable through AEGs.
+        These following three components make up all AEGs: 
         <dl>
-          <dt>Sheet of Assertion</dt>
-          <dd>The blank page on which the graph is constructed.</dd>
+          <dt>The Sheet of Assertion</dt>
+          <dd>Blank page on which the graph is constructed. May be referred to as "The Sheet."</dd>
 
           <dt>Atoms</dt>
-          <dd>The letters or phrases which are used to represent the propositions.</dd>
+          <dd>Letters or phrases used to represent propositions. Peirce My Heart only supports letters.</dd>
 
           <dt>Cuts</dt>
           <dd>
-            Fully closed curves that are used to represent negation. Everything contained within 
-            the cut will be considered to be negated. Cuts can be nested and concatenated with 
-            other cuts. Empty cuts, i.e. cuts that do not contain anything within them, are 
-            allowed to be present on the graph. Each cut represents a "level" in 
-            the graph; a nested cut represents one level deeper than the level of its parent cut.
+            Fully closed curves representing negations. Every atom and cut contained within 
+            some other cut is considered negated. Cuts can be nested within
+            other cuts. Empty cuts, i.e. cuts that do not contain anything, are 
+            allowed to exist on The Sheet. Each cut corresponds to an integer cut "level" in 
+            the graph, and a nested cut corresponds to one cut level deeper than the level of its parent.
           </dd>
         </dl>
 
         <h4>How AEGs Work</h4>
-        Anything drawn on this sheet is asserted to be <b>True</b>. Phrases, subgraphs and even the 
-        entire graph can be equated to <b>True</b> or <b>False.</b> <br/>
-        Since everything drawn on the sheet is considered <b>True</b>, placing multiple atoms on the 
-        same levels can be considered as a conjunction between the atoms. This further applies to 
-        atoms and cuts on the same level as well (Note: Asserting that multiple propositions 
-        are True all at the same time in turn holds that the conjunction of those propositions 
-        is True as well). <br/>
-        Everything contained within a cut is considered negated. As such, an empty cut represents
+        Anything drawn on The Sheet is asserted as <b>True</b>. Phrases, subgraphs and The 
+        Sheet itself may evaluate to <b>True</b> or <b>False.</b> <br/>
+        Since everything drawn on The Sheet is <b>True</b>, placing multiple atoms on the 
+        same level may be considered creating a conjunction between these atoms. This further applies to 
+        atoms and cuts on the same level (Note: Asserting that multiple propositions 
+        are <b>True</b> all at the same time means that the conjunction of these propositions 
+        is <b>True</b> as well). <br/>
+        Because everything contained within a cut is negated, and The Sheet corresponds to <b>True</b>, an empty cut corresponds to
         <b>False.</b> <br/>
-        An AEG introduces functionality to represent <b>AND</b> and <b>NOT</b> as seen in propositional
-        logic. Furthermore, all other propositional connectives can be represented in an AEG just 
-        by using <b>AND</b> and <b>NOT.</b> For instance, 
+        AEGs contain functionality to represent <b>AND</b> and <b>NOT</b>, as seen in propositional
+        logic. Further, all propositional connectives can be represented in an AEG 
+        by using some combination of <b>AND</b> and <b>NOT.</b> For instance, 
         <div style="margin: auto; text-align: center;">
           A <b>OR</b> B <br/>
           can be represented as <br/>
-          <b>NOT( NOT</b>A <b>AND (NOT</b>B<b>)</b>)
+          <b>NOT(NOT</b>A <b>AND (NOT</b>B<b>)</b>)
         </div>
 
-        In an AEG, this would be represented by first drawing a <b>CUT</b> on the Sheet of Assertion.
-        The, we would draw 2 smaller <b>CUTs</b> within the first <b>CUT</b>, and draw <b>A</b> within
+        In an AEG, this would be represented by first drawing a cut on the Sheet of Assertion.
+        The, we would draw 2 smaller cuts within the first cut, and draw <b>A</b> within
         one and <b>B</b> within the other.
       </div>
     </div>
