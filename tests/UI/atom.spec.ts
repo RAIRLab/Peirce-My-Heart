@@ -1,5 +1,4 @@
 import {test, expect} from "@playwright/test";
-import {AEGTree} from "../../src/AEG/AEGTree";
 
 test.beforeEach(async ({page}) => {
     await page.goto("/");
@@ -8,9 +7,8 @@ test.beforeEach(async ({page}) => {
 
 test.describe("Basic graph string/drawing soliloquy:", () => {
     test("Empty canvas should stringify appropriately.", async ({page}) => {
-        const tree: AEGTree = await page.evaluate("window.tree");
         const stringify: string = await page.evaluate("window.treeString");
-        const playwrightString: string = await page.evaluate("window.aegStringify(tree)");
+        const playwrightString: string = await page.evaluate("window.aegStringify(window.tree)");
         await expect(stringify).toBe(playwrightString);
     });
 
@@ -21,14 +19,18 @@ test.describe("Basic graph string/drawing soliloquy:", () => {
             sourcePosition: {x: 200, y: 200}, //greater than minimum Ellipse creation
             targetPosition: {x: 300, y: 300},
         });
-        await expect(page.locator("#graphString")).toHaveText("[()]");
+        const stringify = await page.evaluate("window.treeString");
+        const playwrightString: string = await page.evaluate("window.aegStringify(window.tree)");
+        await expect(stringify).toBe(playwrightString);
     });
 
     test("Graph string with one atom should produce an appropriate string.", async ({page}) => {
         const canvas = page.locator("#canvas");
         await page.getByTitle("Atom Tool").click();
         await canvas.click({position: {x: 600, y: 600}}); //arbitrary location, we just need them on the canvas
-        await expect(page.locator("#graphString")).toHaveText("[A]");
+        const stringify = await page.evaluate("window.treeString");
+        const playwrightString: string = await page.evaluate("window.aegStringify(window.tree)");
+        await expect(stringify).toBe(playwrightString);
     });
 });
 
