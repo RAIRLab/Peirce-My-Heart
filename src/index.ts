@@ -163,9 +163,11 @@ let hasMouseIn = true;
 
 //Window Exports
 window.tree = treeContext.tree;
+window.treeString = treeContext.treeString;
 window.atomTool = Tool.atomTool;
 window.cutTool = Tool.cutTool;
 window.dragTool = Tool.dragTool;
+window.aegStringify = aegStringify;
 window.saveMode = saveMode;
 window.loadMode = loadMode;
 window.moveSingleTool = Tool.moveSingleTool;
@@ -193,11 +195,13 @@ window.toggleHandler = toggleHandler;
 declare global {
     interface Window {
         tree: AEGTree;
+        treeString: string;
         atomTool: Tool;
         cutTool: Tool;
         dragTool: Tool;
         saveMode: () => void;
         loadMode: () => void;
+        aegStringify: (treeData: AEGTree | ProofNode[]) => string;
         moveSingleTool: Tool;
         moveMultiTool: Tool;
         copySingleTool: Tool;

@@ -1,5 +1,6 @@
 import {AEGTree} from "./AEG/AEGTree";
 import {ProofNode} from "./AEG/ProofNode";
+import {aegStringify} from "./index";
 // import {Tool} from "./index";
 
 /**
@@ -50,6 +51,9 @@ export class treeContext {
 
     //An indicator of the mode that we are currently on
     public static modeState: "Draw" | "Proof" = "Draw";
+
+    //Keeps track of the current stringification of our tree. For Playwright
+    public static treeString: string = aegStringify(treeContext.tree);
 
     public static getLastProofStep(): ProofNode {
         if (treeContext.proofHistory.length === 0) {
