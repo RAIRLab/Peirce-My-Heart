@@ -9,7 +9,6 @@
         "src/DrawModes",
         "src/ProofTools",
         "src/AEG-IO.ts",
-        "src/index.ts",
         "src/Themes.ts",
         "src/ToggleModes.ts",
         "src/treeContext.ts"
