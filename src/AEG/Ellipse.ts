@@ -3,36 +3,36 @@ import {Rectangle} from "./Rectangle";
 import {shapesOverlap, shapeContains, signedDistanceFromEllipse} from "./AEGUtils";
 
 /**
- * Class that defines an Ellipse.
- * @author Anusha Tiwari
+ * Defines an Ellipse.
+ * @author Anusha Tiwari,
  * @author Ryan Reilly
  */
 export class Ellipse {
     /**
-     * The center of the ellipse.
+     * Center of this Ellipse.
      */
     center: Point;
 
     /**
-     * The horizontal radius of the ellipse.
+     * Horizontal radius of this Ellipse.
      */
     radiusX: number;
 
     /**
-     * The vertical radius of the ellipse.
+     * Vertical radius of this Ellipse.
      */
     radiusY: number;
 
     /**
-     * The bounding box of the ellipse
+     * Bounding box of this Ellipse.
      */
     boundingBox: Rectangle;
 
     /**
-     * Construct an ellipse using the given points and radii.
-     * @param center The center point of the ellipse.
-     * @param radX The horizontal radius of the ellipse.
-     * @param radY The vertical radius of the ellipse.
+     * Creates an Ellipse using the incoming Points and radii.
+     * @param center Incoming center point of this Ellipse.
+     * @param radX Incoming horizontal radius of this Ellipse.
+     * @param radY Incoming vertical radius of this Ellipse.
      * @throws Errors on NaN, Infinity, and negative radii lengths.
      */
     public constructor(center: Point, radX: number, radY: number) {
@@ -56,35 +56,35 @@ export class Ellipse {
     }
 
     /**
-     * Method that checks whether a point is within the given ellipse.
-     * @param otherPoint The point that might be inside this ellipse.
-     * @returns True, if the point is inside this ellipse. Else, false
+     * Checks whether a Point is contained within this Ellipse.
+     * @param point Point that may be contained within this Ellipse.
+     * @returns True, if the Point is contained within this Ellipse.
      */
     public containsPoint(point: Point): boolean {
         return signedDistanceFromEllipse(this, point) < 0;
     }
 
     /**
-     * Method that checks whether there is an overlap between this ellipse and another shape.
-     * @param otherShape The other shape that might be overlapping this ellipse.
-     * @returns True, if there is an overlap. Else, false.
+     * Checks whether this Ellipse overlaps some other shape.
+     * @param otherShape Other shape that this Ellipse may overlap.
+     * @returns True if there is an overlap.
      */
     public overlaps(otherShape: Rectangle | Ellipse): boolean {
         return shapesOverlap(this, otherShape);
     }
 
     /**
-     * Method that checks whether another shape is within this ellipse.
-     * @param otherShape The shape that might be within this ellipse.
-     * @returns True, if the shape is within this ellipse. Else, false.
+     * Checks whether some other other shape is contained within this Ellipse.
+     * @param otherShape Shape that may be contained within this Ellipse.
+     * @returns True if the shape is contained within this Ellipse.
      */
     public contains(otherShape: Rectangle | Ellipse): boolean {
         return shapeContains(this, otherShape);
     }
 
     /**
-     * Method that returns the string representation of an ellipse.
-     * @returns The coordinates and radii for the ellipse.
+     * Creates and returns the string representation of this Ellipse.
+     * @returns Coordinates and radii for this Ellipse in string form.
      */
     public toString(): string {
         return (
