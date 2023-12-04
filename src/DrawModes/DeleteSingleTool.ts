@@ -31,9 +31,11 @@ let legalNode: boolean;
 export function deleteSingleMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = treeContext.tree.getLowestNode(startingPoint);
-
-    if (currentNode !== null) {
+    const currentParent = treeContext.tree.getLowestParent(startingPoint);
+    if (currentNode !== null && currentParent !== null) {
         legalNode = true;
+        currentParent.remove(startingPoint);
+        redrawTree(treeContext.tree);
         if (currentNode instanceof AtomNode) {
             drawAtom(currentNode, illegalColor(), true);
         } else {
@@ -49,9 +51,16 @@ export function deleteSingleMouseDown(event: MouseEvent) {
  * @param event The mouse move event
  */
 export function deleteSingleMouseMove(event: MouseEvent) {
+    if (legalNode && currentNode !== null && (currentNode as CutNode).ellipse !== null) {
+        if (treeContext.tree.canInsert(currentNode)) {
+            treeContext.tree.insert(currentNode);
+            redrawTree(treeContext.tree);
+        }
+    }
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
     const newNode: CutNode | AtomNode | null = treeContext.tree.getLowestNode(newPoint);
-    if (currentNode !== null && currentNode !== newNode) {
+    const currentParent = treeContext.tree.getLowestParent(newPoint);
+    if (currentNode !== null && currentParent !== null) {
         legalNode = true;
         redrawTree(treeContext.tree);
         if (newNode === null) {
@@ -59,6 +68,8 @@ export function deleteSingleMouseMove(event: MouseEvent) {
             legalNode = false;
         } else {
             currentNode = newNode;
+            currentParent.remove(newPoint);
+            redrawTree(treeContext.tree);
             if (currentNode instanceof AtomNode) {
                 drawAtom(currentNode, illegalColor(), true);
             } else {
@@ -101,4 +112,15 @@ export function deleteSingleMouseUp(event: MouseEvent) {
 export function deleteSingleMouseOut() {
     currentNode = null;
     legalNode = false;
+}
+
+/**
+ * Readds children of a parent CutNode.
+ * @param parentCut Parent CutNode
+ */
+function readdChildren(parentCut: CutNode) {
+    //The cut node loses custody of its children so that those can still be redrawn.
+    for (let i = 0; i < parentCut.children.length; i++) {
+        treeContext.tree.insert(parentCut.children[i]);
+    }
 }
