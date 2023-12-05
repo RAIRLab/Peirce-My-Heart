@@ -42,17 +42,6 @@ test.describe("Basic graph string/drawing soliloquy:", () => {
         await expect(windowString).toBe(emptyTreeString);
     });
 
-    test("Graph string with one cut should produce an appropriate string.", async ({page}) => {
-        const canvas = page.locator("#canvas");
-        await page.getByTitle("Cut Tool").click();
-        await canvas.dragTo(canvas, {
-            sourcePosition: {x: 200, y: 200}, //greater than minimum Ellipse creation
-            targetPosition: {x: 300, y: 300},
-        });
-        const windowString: string = await page.evaluate("window.aegStringify(window.tree)");
-        await expect(windowString).toBe(loneCutString);
-    });
-
     test("Canvas with one atom should produce an appropriate string.", async ({page}) => {
         const canvas = page.locator("#canvas");
         await page.getByTitle("Atom Tool").click();
@@ -77,6 +66,40 @@ test.describe("Basic graph string/drawing soliloquy:", () => {
         await canvas.click({position: {x: 600, y: 600}});
         const windowString: string = await page.evaluate("window.aegStringify(window.tree)");
         expect(windowString).toContain(loneAtomString);
+    });
+
+    test("Graph string with one cut should produce an appropriate string.", async ({page}) => {
+        const canvas = page.locator("#canvas");
+        await page.getByTitle("Cut Tool").click();
+        await canvas.dragTo(canvas, {
+            sourcePosition: {x: 200, y: 200}, //greater than minimum Ellipse creation
+            targetPosition: {x: 300, y: 300},
+        });
+        const windowString: string = await page.evaluate("window.aegStringify(window.tree)");
+        await expect(windowString).toBe(loneCutString);
+    });
+
+    test("Graph string with illegal cuts should produce an appropriate string.", async ({page}) => {
+        const canvas = page.locator("#canvas");
+        await page.getByTitle("Cut Tool").click();
+        await canvas.dragTo(canvas, {
+            sourcePosition: {x: 200, y: 200},
+            targetPosition: {x: 300, y: 300},
+        });
+        await canvas.dragTo(canvas, {
+            sourcePosition: {x: 250, y: 250},
+            targetPosition: {x: 300, y: 300},
+        });
+        await canvas.dragTo(canvas, {
+            sourcePosition: {x: 250, y: 250},
+            targetPosition: {x: 310, y: 310},
+        });
+        await canvas.dragTo(canvas, {
+            sourcePosition: {x: 280, y: 280},
+            targetPosition: {x: 400, y: 300},
+        });
+        const windowString: string = await page.evaluate("window.aegStringify(window.tree)");
+        await expect(windowString).toBe(loneCutString);
     });
 });
 
