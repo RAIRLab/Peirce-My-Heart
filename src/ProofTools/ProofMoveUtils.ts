@@ -21,6 +21,10 @@ export function isMoveLegal(tree: AEGTree, currentNode: CutNode | AtomNode): boo
  * @returns Whether or not the two graphs are equal
  */
 export function proofCanInsert(tree: AEGTree, currentNode: CutNode | AtomNode): boolean {
-    tree.insert(currentNode.copy());
-    return tree.isEqualTo(new AEGTree(treeContext.currentProofStep.tree.sheet));
+    if (treeContext.currentProofStep) {
+        tree.insert(currentNode.copy());
+        return tree.isEqualTo(new AEGTree(treeContext.currentProofStep.tree.sheet));
+    } else {
+        return false;
+    }
 }
