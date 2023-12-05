@@ -25,14 +25,43 @@ export function appendStep(newStep: ProofNode) {
     button.onclick = function () {
         stepBack(newStep);
     };
+    const icon = document.createElement("Text");
 
-    const stepContainer = document.createElement("span");
-    stepContainer.id = "proofNodeText";
-    const stepType = document.createTextNode(newStep.appliedRule);
-    stepContainer.appendChild(stepType);
+    switch (newStep.appliedRule) {
+        case "Single Move":
+            icon.className = "fa fa-mouse-pointer";
+            break;
+        case "Multi Move":
+            icon.className = "fa fa-arrows";
+            break;
+        case "Resize":
+            icon.className = "fa fa-arrows-alt";
+            break;
+        case "DC Insert":
+            icon.className = "fa fa-dot-circle-o";
+            break;
+        case "DC Delete":
+            icon.className = "fa fa-times-circle";
+            break;
+        case "Insertion":
+            icon.className = "fa fa-plus";
+            break;
+        case "Erasure":
+            icon.className = "fa fa-trash";
+            break;
+        case "Iteration":
+            icon.className = "fa fa-expand";
+            break;
+        case "Deiteration":
+            icon.className = "fa fa-compress";
+            break;
+        case "Pasted":
+            icon.className = "fa fa-files-o";
+            break;
+    }
 
+    button.appendChild(icon);
     newDiv.appendChild(button);
-    newDiv.appendChild(stepContainer);
     document.getElementById("proofHistoryBar")?.appendChild(newDiv);
 }
 

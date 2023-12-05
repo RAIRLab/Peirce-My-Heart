@@ -132,7 +132,7 @@ p {
   padding-top: 3px;
   background-color: var(--sidebar-bg);
   height: 100vh;
-  min-width: 6vw;
+  min-width: 4vw;
   float: left; 
   display: none;
 }
@@ -215,15 +215,8 @@ input[type="checkbox"]:checked+.toggle-switch+p::before {
   background-color: var(--mode-btn-bg);
   margin: 4px;
   border-radius: 50%;
+  aspect-ratio: 1 / 1;
   box-shadow: var(--mode-btn-shadow);
   color: var(--mode-btn-icon-color);
-  text-align: center;
-}
-
-#proofNodeText {
-  min-width: 2vw;
-  min-height: 4vh;
-  margin: 2px;
-  color: var(--p-text);
   text-align: center;
 }
