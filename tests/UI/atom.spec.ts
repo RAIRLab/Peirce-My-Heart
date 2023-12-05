@@ -4,6 +4,7 @@ const fs = require("fs"); //nabbing the node.js module for file system shenaniga
 
 let emptyTreeString: string;
 let loneAtomString: string;
+let loneCutString: string;
 
 test.beforeAll("Reading expected strings in from .json files...", async () => {
     fs.readFile(__dirname + "/expectedTrees/emptyTree.json", "utf8", (err: Error, data: string) => {
@@ -13,6 +14,10 @@ test.beforeAll("Reading expected strings in from .json files...", async () => {
     fs.readFile(__dirname + "/expectedTrees/loneAtom.json", "utf8", (err: Error, data: string) => {
         //loneAtomString = data.substring(data.lastIndexOf("A"), data.lastIndexOf("},"));
         loneAtomString = data;
+    });
+
+    fs.readFile(__dirname + "/expectedTrees/loneCut.json", "utf8", (err: Error, data: string) => {
+        loneCutString = data;
     });
 });
 
@@ -34,9 +39,8 @@ test.describe("Basic graph string/drawing soliloquy:", () => {
             sourcePosition: {x: 200, y: 200}, //greater than minimum Ellipse creation
             targetPosition: {x: 300, y: 300},
         });
-        const stringify = await page.evaluate("window.treeString");
-        const playwrightString: string = await page.evaluate("window.aegStringify(window.tree)");
-        await expect(stringify).toBe(playwrightString);
+        const windowString: string = await page.evaluate("window.aegStringify(window.tree)");
+        await expect(windowString).toBe(loneCutString);
     });
 
     test("Canvas with one atom should produce an appropriate string.", async ({page}) => {
