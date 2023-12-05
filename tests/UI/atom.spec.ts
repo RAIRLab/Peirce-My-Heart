@@ -14,7 +14,6 @@ test.beforeAll("Reading expected strings in from .json files...", async () => {
     });
 
     fs.readFile(__dirname + "/expectedTrees/loneAtom.json", "utf8", (err: Error, data: string) => {
-        //loneAtomString = data.substring(data.lastIndexOf("A"), data.lastIndexOf("},"));
         loneAtomString = data;
     });
 

@@ -16,4 +16,4 @@ jobs:
         run: npm ci
 
       - name: Run all vitest tests
-        run: npm run aegtest
+        run: npx vitest

@@ -35,7 +35,7 @@ We also use it to invoke all core development tools via `npm run`.
 2. [**Vite**](https://vitejs.dev/) : Vite is an asset bundler and build system for large web projects with 
 many types of resources such as typescript. Additionally, it provides excellent debugging features.
 We use it as a build system for Typescript, Asset Compressor, and Live Debugger.
-    * **Playwright** : a testing framework compatible with Vite with support for TypeScript. Very similar to Vitest but more for the UI side of things. 
+    * **Playwright** : a testing framework compatible with Vite with support for TypeScript.
     * **Vitest** : a testing framework native to Vite with support for TypeScript. It allows for github workflow compatibility and running numerous tests with one command.
     
 3. [**gts**](https://github.com/google/gts) : gts (Google TypeScript Style) is a set of style guidelines and tools for typescript
