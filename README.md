@@ -35,8 +35,9 @@ We also use it to invoke all core development tools via `npm run`.
 2. [**Vite**](https://vitejs.dev/) : Vite is an asset bundler and build system for large web projects with 
 many types of resources such as typescript. Additionally, it provides excellent debugging features.
 We use it as a build system for Typescript, Asset Compressor, and Live Debugger.
+    * **Playwright** : a testing framework compatible with Vite with support for TypeScript.
     * **Vitest** : a testing framework native to Vite with support for TypeScript. It allows for github workflow compatibility and running numerous tests with one command.
- 
+    
 3. [**gts**](https://github.com/google/gts) : gts (Google TypeScript Style) is a set of style guidelines and tools for typescript
 consistent and readable formatting. It provides defaults for the following tools we use:
     * **eslint** : an extensible linter for javascript and typescript code. It catches 
@@ -100,22 +101,32 @@ will be jumped to in VSC.
 
 ## Testing
 
-Test your changes! Vitest will help here by looking for all .test.ts files in /tests/ and running them.
+Test your frontend changes! Playwright will open a UI on a bunch of different browsers and
+walk you through the test scripts you write, step by step. Run the following to get started:
+```bash
+npm run uitest
+```
+Optionally, if you would like to run your frontend tests headless, or without any UI, run the following:
+```bash
+npm run uitestHeadless
+```
+Also, test your "backend" changes! Vitest will help here by looking for all .test.ts files in /tests/AEGTree and running them.
 To perform this locally in a terminal, run the following:
 ```bash
-npm run test
+npm run aegtest
 ```
-
 
 ### Root Files and Folders Overview
 ```
 /.github/ : The code for github workflows this project uses, used for automatically deploying.
 
-/src/ : source code for the application.
+/.vscode/ : .json files necessary to use VSCode as a development environment
 
 /public/ : non-code based resources for the application, icons, images, etc.
 
-/tests/ : testing source .test.ts files, made with vitest.
+/src/ : source code for the application.
+
+/tests/ : testing source .test.ts files made with vitest and .spec.ts files made with Playwright.
 
 /.eslintignore : list of .js and .ts files the linter shouldn't look at
 
@@ -129,9 +140,11 @@ npm run test
 
 /LICENSE : The legal jargon for who can use and sell the project.
 
+/package-lock.json : NPM record of all  dependencies and sub-dependencies used for this project.
+
 /package.json : main NPM file, contains information about the project and development dependencies.
 
-/package-lock.json : NPM record of all  dependencies and sub-dependencies used for this project.
+/playwright.config.js : Playwright configuration
 
 /README.md : the information file you're reading right now.
 
