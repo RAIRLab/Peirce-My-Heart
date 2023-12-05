@@ -1,3 +1,4 @@
+import {treeContext} from "../treeContext";
 import {AEGTree} from "./AEGTree";
 
 /**
@@ -10,7 +11,15 @@ export class ProofNode {
      */
     public tree: AEGTree;
 
+    /**
+     * The proof node's action that changed the proof
+     */
     public appliedRule: string;
+
+    /**
+     * The current location of this proof node in our proof array
+     */
+    public index: number;
 
     /**
      * Construct a proof node by providing the AEG Tree at the current state of the proof
@@ -21,5 +30,6 @@ export class ProofNode {
     public constructor(tree?: AEGTree, rule?: string) {
         this.appliedRule = rule ?? "";
         this.tree = new AEGTree(tree?.sheet);
+        this.index = treeContext.proof.length;
     }
 }

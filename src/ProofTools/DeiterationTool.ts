@@ -30,7 +30,10 @@ let currentProofTree: AEGTree;
  */
 export function deiterationMouseDown(event: MouseEvent) {
     const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
-    currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
+    currentProofTree = new AEGTree();
+    if (treeContext.currentProofStep) {
+        currentProofTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
+    }
     currentNode = currentProofTree.getLowestNode(currentPoint);
 
     setLegal();
@@ -65,7 +68,7 @@ export function deiterationMouseUp(event: MouseEvent) {
             if (currentParent instanceof CutNode) {
                 currentParent.remove(currentPoint);
             }
-            treeContext.proofHistory.push(new ProofNode(currentProofTree, "Deiteration"));
+            treeContext.pushToProof(new ProofNode(currentProofTree, "Deiteration"));
         }
     }
 

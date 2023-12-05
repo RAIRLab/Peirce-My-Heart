@@ -22,5 +22,5 @@ export function isMoveLegal(tree: AEGTree, currentNode: CutNode | AtomNode): boo
  */
 export function proofCanInsert(tree: AEGTree, currentNode: CutNode | AtomNode): boolean {
     tree.insert(currentNode.copy());
-    return tree.isEqualTo(new AEGTree(treeContext.getLastProofStep().tree.sheet));
+    return tree.isEqualTo(new AEGTree(treeContext.currentProofStep.tree.sheet));
 }

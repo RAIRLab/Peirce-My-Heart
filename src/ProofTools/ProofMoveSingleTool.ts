@@ -34,7 +34,10 @@ let currentProofTree: AEGTree;
  * @param event The mouse down event while using proof move single tool
  */
 export function proofMoveSingleMouseDown(event: MouseEvent) {
-    currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
+    currentProofTree = new AEGTree();
+    if (treeContext.currentProofStep) {
+        currentProofTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
+    }
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = currentProofTree.getLowestNode(startingPoint);
 
@@ -94,7 +97,7 @@ export function proofMoveSingleMouseMove(event: MouseEvent) {
  */
 export function proofMoveSingleMouseUp(event: MouseEvent) {
     if (legalNode) {
-        const nextStep = new ProofNode(currentProofTree, "Single Movement");
+        const nextStep = new ProofNode(currentProofTree, "Single Move");
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
             event.y - startingPoint.y
@@ -109,7 +112,7 @@ export function proofMoveSingleMouseUp(event: MouseEvent) {
 
         if (tempNode !== null && isMoveLegal(currentProofTree, tempNode)) {
             nextStep.tree.insert(tempNode);
-            treeContext.proofHistory.push(nextStep);
+            treeContext.pushToProof(nextStep);
         }
     }
     redrawProof();
