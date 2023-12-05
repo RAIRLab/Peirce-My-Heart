@@ -60,6 +60,24 @@ test.describe("Basic graph string/drawing soliloquy:", () => {
         const windowString: string = await page.evaluate("window.aegStringify(window.tree)");
         expect(windowString).toContain(loneAtomString);
     });
+
+    test("Canvas with illegal atom placements should produce an appropriate string.", async ({
+        page,
+    }) => {
+        const canvas = page.locator("#canvas");
+        await page.getByTitle("Atom Tool").click();
+        await canvas.click({position: {x: 600, y: 600}});
+        await page.getByTitle("Atom Tool").press("B");
+        await canvas.click({position: {x: 600, y: 600}});
+        await page.getByTitle("Atom Tool").press("C");
+        await canvas.click({position: {x: 600, y: 600}});
+        await page.getByTitle("Atom Tool").press("D");
+        await canvas.click({position: {x: 600, y: 600}});
+        await page.getByTitle("Atom Tool").press("E");
+        await canvas.click({position: {x: 600, y: 600}});
+        const windowString: string = await page.evaluate("window.aegStringify(window.tree)");
+        expect(windowString).toContain(loneAtomString);
+    });
 });
 
 test.describe("Basic theorem soliloquy:", () => {
