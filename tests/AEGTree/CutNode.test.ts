@@ -1,8 +1,8 @@
 import {describe, test, expect} from "vitest";
-import {CutNode} from "../src/AEG/CutNode";
-import {AtomNode} from "../src/AEG/AtomNode";
-import {Ellipse} from "../src/AEG/Ellipse";
-import {Point} from "../src/AEG/Point";
+import {CutNode} from "../../src/AEG/CutNode";
+import {AtomNode} from "../../src/AEG/AtomNode";
+import {Ellipse} from "../../src/AEG/Ellipse";
+import {Point} from "../../src/AEG/Point";
 
 const origin = new Point(0, 0);
 const testCenter = new Point(5, 5);
