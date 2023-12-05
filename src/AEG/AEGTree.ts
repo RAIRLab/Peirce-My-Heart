@@ -17,24 +17,21 @@ export class AEGTree {
     private internalSheet: CutNode;
 
     /**
-     * Method to construct a new AEG Tree.
-     * @param sheet If an existing sheet is passed, deep copy it to construct a new AEG Tree
+     * Constructs the sheet of assertion of the AEG tree
+     * @param sheet (OPTIONAL) An existing cut node which is to be used to construct the sheet of
+     * assertion of this AEG Tree. If given, creates a new tree with a deep copy of this node.
      */
     public constructor(sheet?: CutNode) {
-        //If we are constructing a new tree from a given sheet, deep copy the sheet and its children
-        //to ensure an entirely new tree is constructed.
-        this.internalSheet = new CutNode(null);
-        if (sheet instanceof CutNode) {
-            // this.internalSheet = new CutNode(sheet.ellipse);
-            if (sheet.children.length > 0) {
-                this.internalSheet.children = [...sheet.children];
-            }
+        if (sheet !== undefined) {
+            //If an existing cut node is passed, make a deep copy of it to copy over any children
+            this.internalSheet = sheet.copy();
+            //Ellipse of the sheet of assertion should be null
+            this.internalSheet.ellipse = null;
+        } else {
+            this.internalSheet = new CutNode(null);
         }
     }
 
-    /**
-     * Accessor to get the sheet of the AEG Tree
-     */
     public get sheet(): CutNode {
         return this.internalSheet;
     }
@@ -150,12 +147,28 @@ export class AEGTree {
     }
 
     /**
+     * Finds the depth of the node within the tree.
+     * @param incomingNode The node to be searched for
+     * @returns The level of the searched for node
+     */
+    public getLevel(incomingNode: CutNode | AtomNode): number {
+        return this.internalSheet.getLevel(incomingNode, 0);
+    }
+
+    /**
      * Removes the node containing this coordinate
      * @param incomingPoint The point indicating the node that must be removed
      * @returns True, if the node was successfully removed. Else, false
      */
     public remove(incomingPoint: Point): boolean {
         return this.internalSheet.remove(incomingPoint);
+    }
+
+    /**
+     * Removes all of the sheet's children.
+     */
+    public clear() {
+        this.internalSheet.clear();
     }
 
     /**
@@ -206,6 +219,17 @@ export class AEGTree {
                 return shapesOverlap(ellipse1, ellipse2);
             }
         }
+    }
+
+    /**
+     * Method that checks if an AEG Tree is equal to another AEG Tree. Trees are equal if they have
+     * the same children, irrespective of the ordering of nodes within a level
+     * @param otherTree The tree we want to check for equality with
+     * @returns True, if the trees are equal. Else, false
+     */
+    public isEqualTo(otherTree: AEGTree): boolean {
+        //For 2 trees to be equal, their sheet of assertion must be equal
+        return this.sheet.isEqualTo(otherTree.sheet);
     }
 
     /**

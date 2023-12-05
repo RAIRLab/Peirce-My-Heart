@@ -7,9 +7,10 @@ import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
-import {offset} from "./DragMode";
+import {offset} from "./DragTool";
 import {Ellipse} from "../AEG/Ellipse";
 import {drawCut, drawAtom} from "./DrawUtils";
+import {AEGTree} from "../AEG/AEGTree";
 
 /**
  * Checks the validity of the incoming node and all of its children. If the child is a cut node uses
@@ -19,10 +20,10 @@ import {drawCut, drawAtom} from "./DrawUtils";
  * @param change The difference between the original position and the new position
  * @returns If all nodes are in a valid position returns true, if any node is not returns false
  */
-export function validateChildren(incomingNode: CutNode, change: Point): boolean {
+export function validateChildren(tree: AEGTree, incomingNode: CutNode, change: Point): boolean {
     if (incomingNode.ellipse !== null) {
         const tempCut: CutNode = alterCut(incomingNode, change);
-        if (!treeContext.tree.canInsert(tempCut)) {
+        if (!tree.canInsert(tempCut)) {
             return false;
         }
     }
@@ -31,7 +32,7 @@ export function validateChildren(incomingNode: CutNode, change: Point): boolean 
         if (
             incomingNode.children[i] instanceof CutNode &&
             (incomingNode.children[i] as CutNode).ellipse !== null &&
-            !validateChildren(incomingNode.children[i] as CutNode, change)
+            !validateChildren(tree, incomingNode.children[i] as CutNode, change)
         ) {
             //If any of this node's children are in an invalid location return false for all of them.
             return false;
@@ -39,7 +40,7 @@ export function validateChildren(incomingNode: CutNode, change: Point): boolean 
             let tempAtom = incomingNode.children[i] as AtomNode;
             tempAtom = alterAtom(tempAtom, change);
 
-            if (!treeContext.tree.canInsert(tempAtom)) {
+            if (!tree.canInsert(tempAtom)) {
                 return false;
             }
         }
@@ -77,22 +78,38 @@ export function drawAltered(incomingNode: CutNode | AtomNode, color: string, cha
  * is a cut node that has children calls this function on each of its children.
  * @param incomingNode The current node to be inserted
  * @param change The difference between the original position and the new position
+ * @param tree The tree we want to insert the node in. By default, inserts in global draw tree.
  */
-export function insertChildren(incomingNode: CutNode | AtomNode, change: Point) {
+export function insertChildren(incomingNode: CutNode | AtomNode, change: Point, tree?: AEGTree) {
+    const insertTree = tree ? tree : treeContext.tree;
     if (incomingNode instanceof CutNode && incomingNode.ellipse !== null) {
         const tempCut: CutNode = alterCut(incomingNode, change);
-        treeContext.tree.insert(tempCut);
+        insertTree.insert(tempCut);
         //If this node has any children recurses to insert them with the same distance change
         if (incomingNode.children.length !== 0) {
             for (let i = 0; i < incomingNode.children.length; i++) {
-                insertChildren(incomingNode.children[i], change);
+                insertChildren(incomingNode.children[i], change, tree);
             }
         }
     } else if (incomingNode instanceof AtomNode) {
         const tempAtom: AtomNode = alterAtom(incomingNode, change);
 
-        treeContext.tree.insert(tempAtom);
+        insertTree.insert(tempAtom);
     }
+}
+
+/**
+ * Takes a node object and alters it accordingly based on the type of node
+ * @param node The node to be altered
+ * @param difference The difference on how far the node should move
+ * @returns The new altered version of the node
+ */
+export function alterNode(node: AtomNode | CutNode, difference: Point) {
+    if (node instanceof AtomNode) {
+        return alterAtom(node, difference);
+    }
+
+    return alterCut(node as CutNode, difference);
 }
 
 /**
@@ -120,10 +137,47 @@ export function alterCut(originalCut: CutNode, difference: Point): CutNode {
 }
 
 /**
+ * Takes a cut and makes a copy of it with the center changed by the given difference.
+ * Creates a new array of children and alters those by the same distance acting recursively if needed.
+ * @param originalCut The cut we want to change the center of
+ * @param difference The distance the cut will be shifted
+ * @returns The new cut node with all of it's children altered
+ */
+export function alterCutChildren(originalCut: CutNode, difference: Point): CutNode {
+    if (originalCut.ellipse !== null) {
+        const alteredChildren: (CutNode | AtomNode)[] = [];
+
+        for (let i = 0; i < originalCut.children.length; i++) {
+            if (originalCut.children[i] instanceof CutNode) {
+                alteredChildren.push(
+                    alterCutChildren(originalCut.children[i] as CutNode, difference)
+                );
+            } else if (originalCut.children[i] instanceof AtomNode) {
+                alteredChildren.push(alterAtom(originalCut.children[i] as AtomNode, difference));
+            }
+        }
+
+        return new CutNode(
+            new Ellipse(
+                new Point(
+                    originalCut.ellipse.center.x + difference.x - offset.x,
+                    originalCut.ellipse.center.y + difference.y - offset.y
+                ),
+                originalCut.ellipse.radiusX,
+                originalCut.ellipse.radiusY
+            ),
+            alteredChildren
+        );
+    } else {
+        throw new Error("Cannot alter the position of a cut without an ellipse.");
+    }
+}
+
+/**
  * Takes an atom object and changes the origin point by the difference.
  * @param originalAtom The Atom to be altered
- * @param difference The difference on how far the center should move
- * @returns The new altered version of the cut
+ * @param difference The difference on how far the atom should move
+ * @returns The new altered version of the atom
  */
 export function alterAtom(originalAtom: AtomNode, difference: Point) {
     return new AtomNode(
@@ -135,4 +189,45 @@ export function alterAtom(originalAtom: AtomNode, difference: Point) {
         originalAtom.width,
         originalAtom.height
     );
+}
+
+/**
+ * Highlights all the children of the incoming node as the incoming color.
+ * @param child The incoming node
+ * @param color The incoming color
+ */
+export function highlightChildren(child: AtomNode | CutNode, color: string) {
+    if (child instanceof AtomNode) {
+        drawAtom(child, color, true);
+    } else if (child instanceof CutNode) {
+        drawCut(child, color);
+        for (let i = 0; i < child.children.length; i++) {
+            highlightChildren(child.children[i], color);
+        }
+    }
+}
+
+/**
+ * Makes a copy of original cut and changes the center and radii by the difference given.
+ * Alters the change to the center based on the direction that is being moved to.
+ * @param originalCut The original cut that will be copied and altered
+ * @param difference The change for the new cut
+ * @param direction the direction the radius will be expanding towards
+ * @returns The new altered cut
+ */
+export function resizeCut(originalCut: CutNode, difference: Point, direction: Point) {
+    if (originalCut.ellipse !== null) {
+        return new CutNode(
+            new Ellipse(
+                new Point(
+                    originalCut.ellipse.center.x + difference.x,
+                    originalCut.ellipse.center.y + difference.y
+                ),
+                originalCut.ellipse.radiusX + difference.x * direction.x,
+                originalCut.ellipse.radiusY + difference.y * direction.y
+            )
+        );
+    } else {
+        throw new Error("Cannot alter the position of a cut without an ellipse.");
+    }
 }

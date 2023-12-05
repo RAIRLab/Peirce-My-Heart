@@ -1,9 +1,9 @@
 import {describe, test, expect} from "vitest";
-import {AtomNode} from "../src/AEG/AtomNode";
-import {CutNode} from "../src/AEG/CutNode";
-import {Point} from "../src/AEG/Point";
-import {Ellipse} from "../src/AEG/Ellipse";
-import {AEGTree} from "../src/AEG/AEGTree";
+import {AtomNode} from "../../src/AEG/AtomNode";
+import {CutNode} from "../../src/AEG/CutNode";
+import {Point} from "../../src/AEG/Point";
+import {Ellipse} from "../../src/AEG/Ellipse";
+import {AEGTree} from "../../src/AEG/AEGTree";
 
 const origin = new Point(0, 0);
 const testCenter = new Point(5, 5);
@@ -76,7 +76,7 @@ describe("AEGTree canInsert soliloquy:", () => {
     });
 
     //Should be impossible, just wanted a case written to express the thought. Currently throws an error if not skipped
-    test.skip("Tree should not be able to insert another Sheet of Assertion.", () => {
+    test.fails("Tree should not be able to insert another Sheet of Assertion.", () => {
         expect(tree.canInsert(new CutNode(null))).toBeFalsy();
     });
 });
@@ -125,6 +125,33 @@ describe("AEGTree remove soliloquy:", () => {
         coco.child = new AtomNode("P", new Point(7, 7), 2, 2);
         tree.insert(coco);
         expect(tree.remove(new Point(6, 6))).toBeTruthy();
+    });
+});
+
+describe("AEGTree clear soliloquy:", () => {
+    const tree: AEGTree = new AEGTree();
+
+    test("Empty AEGTree should have no children after clear call.", () => {
+        tree.clear();
+        expect(tree.sheet.children.length).toBe(0);
+    });
+
+    tree.insert(new AtomNode("C", origin, 1, 1));
+
+    test("AEGTree with one child should have no children after clear call.", () => {
+        tree.clear();
+        expect(tree.sheet.children.length).toBe(0);
+    });
+
+    const tree2: AEGTree = new AEGTree();
+
+    tree2.insert(new AtomNode("C", origin, 2, 2));
+    tree2.insert(new AtomNode("P", new Point(origin.x + 5, origin.y + 5), 3, 3));
+    tree2.insert(new CutNode(testEllipse));
+
+    test("AEGTree with several children should have no children after clear call.", () => {
+        tree2.clear();
+        expect(tree2.sheet.children.length).toBe(0);
     });
 });
 

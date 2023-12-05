@@ -8,7 +8,7 @@ import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
-import {offset} from "./DragMode";
+import {offset} from "./DragTool";
 import {drawCut, drawAtom, redrawTree} from "./DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
 import {alterAtom, alterCut} from "./EditModeUtils";
@@ -30,11 +30,12 @@ let legalNode: boolean;
 export function copySingleMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     const realNode: CutNode | AtomNode | null = treeContext.tree.getLowestNode(startingPoint);
+    const moveDifference: Point = new Point(event.x - startingPoint.x, event.y - startingPoint.y);
     if (realNode !== treeContext.tree.sheet && realNode !== null) {
         if (realNode instanceof CutNode) {
             //The cut node loses custody of its children because those do not copy over during
             //copy single mode
-            currentNode = alterCut(realNode, new Point(0, 0));
+            currentNode = alterCut(realNode, moveDifference);
             currentNode.children = [];
         } else if (realNode instanceof AtomNode) {
             currentNode = realNode;

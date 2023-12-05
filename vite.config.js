@@ -27,7 +27,7 @@ export default defineConfig(({command, mode}) => {
             }
         },
         test:{
-            include:["../tests/*"]   
+            include:["../tests/AEGTree/*"]   
         }
     };
 })
