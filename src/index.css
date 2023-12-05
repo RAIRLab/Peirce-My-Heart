@@ -215,7 +215,6 @@ input[type="checkbox"]:checked+.toggle-switch+p::before {
   background-color: var(--mode-btn-bg);
   margin: 4px;
   border-radius: 50%;
-  aspect-ratio: 1 / 1;
   box-shadow: var(--mode-btn-shadow);
   color: var(--mode-btn-icon-color);
   text-align: center;

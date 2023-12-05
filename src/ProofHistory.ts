@@ -17,6 +17,7 @@ export function appendStep(newStep: ProofNode) {
     newDiv.className = "row";
     newDiv.id = "Row: " + treeContext.proof.length;
 
+    //Create the new button with the function stepBack calling the step it represents
     const button = document.createElement("button");
     button.type = "button";
     button.id = "Step: " + treeContext.proof.length;
@@ -25,8 +26,9 @@ export function appendStep(newStep: ProofNode) {
     button.onclick = function () {
         stepBack(newStep);
     };
-    const icon = document.createElement("Text");
 
+    //Determine which action was just taken to give the button the corresponding icon.
+    const icon = document.createElement("Text");
     switch (newStep.appliedRule) {
         case "Single Move":
             icon.className = "fa fa-mouse-pointer";
