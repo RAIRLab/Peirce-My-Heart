@@ -145,19 +145,28 @@ p {
 
 .toggle-switch {
   position: relative;
-  display: inline-block;
+  display: block;
   width: 60px;
   height: 34px;
+  border-radius: var(--mode-btn-radius);
+  box-shadow: var(--mode-btn-shadow);
+  color: var(--mode-btn-icon-color);
+  text-align: center;
+  margin:auto;
 }
 
 .toggle-switch .switch-track {
-  background-color: var(--mode-btn-bg);
+  background-color: var(--sidebar-border);
   border-radius: 34px;
   display: block;
   height: 100%;
   width: 100%;
   position: absolute;
   transition: background-color 0.3s;
+  border-radius: var(--mode-btn-radius);
+  box-shadow: var(--mode-btn-shadow);
+  color: var(--mode-btn-icon-color);
+  text-align: center;
 }
 
 .toggle-switch .switch-thumb {
@@ -169,6 +178,10 @@ p {
   top: 4px;
   left: 4px;
   transition: transform 0.3s, background-color 0.3s;
+  border-radius: var(--mode-btn-radius);
+  box-shadow: var(--mode-btn-shadow);
+  color: var(--mode-btn-icon-color);
+  text-align: center;
 }
 
 input[type="checkbox"]:checked+.toggle-switch .switch-track {
@@ -181,16 +194,22 @@ input[type="checkbox"]:checked+.toggle-switch .switch-thumb {
 
 .toggle-switch+p::before {
   content: "Draw mode";
+  display:block;
+  text-align:center;
 }
 
 input[type="checkbox"]:checked+.toggle-switch+p::before {
   content: "Proof mode";
+  display:block; 
+  text-align:center;
 }
 
 #ProofButtons {
   display: none;
+  text-align: center;
 }
 
 #DrawButtons {
   display: block;
+  text-align: center;
 }
