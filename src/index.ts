@@ -162,9 +162,12 @@ let hasMouseDown = false;
 let hasMouseIn = true;
 
 //Window Exports
+window.tree = treeContext.tree;
+window.treeString = aegStringify(window.tree);
 window.atomTool = Tool.atomTool;
 window.cutTool = Tool.cutTool;
 window.dragTool = Tool.dragTool;
+window.aegStringify = aegStringify;
 window.saveMode = saveMode;
 window.loadMode = loadMode;
 window.moveSingleTool = Tool.moveSingleTool;
@@ -191,11 +194,14 @@ window.toggleHandler = toggleHandler;
 
 declare global {
     interface Window {
+        tree: AEGTree;
+        treeString: string;
         atomTool: Tool;
         cutTool: Tool;
         dragTool: Tool;
         saveMode: () => void;
         loadMode: () => void;
+        aegStringify: (treeData: AEGTree | ProofNode[]) => string;
         moveSingleTool: Tool;
         moveMultiTool: Tool;
         copySingleTool: Tool;
@@ -268,6 +274,14 @@ export function setTool(state: Tool) {
             break;
     }
 }
+/**
+ * Creates and returns the stringification of the incoming data. Uses tab characters as delimiters.
+ * @param treeData the incoming data
+ * @returns the stringification of the incoming data
+ */
+export function aegStringify(treeData: AEGTree | ProofNode[]): string {
+    return JSON.stringify(treeData, null, "\t");
+}
 
 /**
  * Calls the function to save the file.
@@ -309,7 +323,7 @@ async function saveMode() {
         } else {
             //Quick Download
             const f = document.createElement("a");
-            f.href = JSON.stringify(data, null, "\t");
+            f.href = aegStringify(data);
             f.download = name + ".json";
             f.click();
         }
