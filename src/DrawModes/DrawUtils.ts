@@ -11,6 +11,7 @@ import {treeContext} from "../treeContext";
 import {offset} from "./DragTool";
 import {placedColor} from "../Themes";
 import {AEGTree} from "../AEG/AEGTree";
+import {aegStringify} from "../index";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -104,6 +105,7 @@ export function redrawTree(tree: AEGTree, color?: string) {
     cutDisplay.innerHTML = tree.toString();
     cleanCanvas();
     redrawCut(tree.sheet, color);
+    window.treeString = aegStringify(tree);
 }
 
 /**
