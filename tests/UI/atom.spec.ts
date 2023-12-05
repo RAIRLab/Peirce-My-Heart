@@ -6,6 +6,8 @@ let emptyTreeString: string;
 let loneAtomString: string;
 let loneCutString: string;
 
+let disjunctionString: string;
+
 test.beforeAll("Reading expected strings in from .json files...", async () => {
     fs.readFile(__dirname + "/expectedTrees/emptyTree.json", "utf8", (err: Error, data: string) => {
         emptyTreeString = data;
@@ -19,6 +21,14 @@ test.beforeAll("Reading expected strings in from .json files...", async () => {
     fs.readFile(__dirname + "/expectedTrees/loneCut.json", "utf8", (err: Error, data: string) => {
         loneCutString = data;
     });
+
+    fs.readFile(
+        __dirname + "/expectedTrees/disjunction.json",
+        "utf8",
+        (err: Error, data: string) => {
+            disjunctionString = data;
+        }
+    );
 });
 
 test.beforeEach(async ({page}) => {
@@ -52,85 +62,39 @@ test.describe("Basic graph string/drawing soliloquy:", () => {
     });
 });
 
-//skipping for right now. will determine the organization for and the placement of later
-test.fixme("A or B:", async ({page}) => {
-    //test on local site instead of production site
-    await page.goto("/");
+test.describe("Basic theorem soliloquy:", () => {
+    test("A or B:", async ({page}) => {
+        const canvas = page.locator("canvas");
+        await page.getByTitle("Cut Tool").click();
 
-    const canvas = page.locator("canvas");
-    await page.getByTitle("Cut Tool").click();
+        await canvas.dragTo(canvas, {
+            sourcePosition: {x: 100, y: 150},
+            targetPosition: {x: 1200, y: 700},
+        });
 
-    await canvas.dragTo(canvas, {
-        sourcePosition: {x: 100, y: 150},
-        targetPosition: {x: 1200, y: 700},
+        await canvas.dragTo(canvas, {
+            sourcePosition: {x: 250, y: 250},
+            targetPosition: {x: 500, y: 500},
+        });
+
+        await canvas.dragTo(canvas, {
+            sourcePosition: {x: 600, y: 420},
+            targetPosition: {x: 900, y: 550},
+        });
+
+        await page.getByTitle("Atom Tool").click();
+
+        await canvas.click({
+            position: {x: 350, y: 350},
+        });
+
+        await page.getByTitle("Atom Tool").press("B");
+
+        await canvas.click({
+            position: {x: 700, y: 500},
+        });
+
+        const windowString: string = await page.evaluate("window.aegStringify(window.tree)");
+        await expect(windowString).toBe(disjunctionString);
     });
-
-    await canvas.dragTo(canvas, {
-        sourcePosition: {x: 250, y: 250},
-        targetPosition: {x: 500, y: 500},
-    });
-
-    await canvas.dragTo(canvas, {
-        sourcePosition: {x: 600, y: 420},
-        targetPosition: {x: 900, y: 550},
-    });
-
-    await canvas.dragTo(canvas, {
-        sourcePosition: {x: 550, y: 400},
-        targetPosition: {x: 950, y: 600},
-    });
-
-    await canvas.dragTo(canvas, {
-        sourcePosition: {x: 300, y: 300},
-        targetPosition: {x: 450, y: 450},
-    });
-
-    await page.getByTitle("Atom Tool").click();
-
-    await canvas.click({
-        position: {x: 350, y: 350},
-    });
-
-    await page.getByTitle("Atom Tool").press("B");
-
-    await canvas.click({
-        position: {x: 700, y: 500},
-    });
-
-    await page.getByTitle("Atom Tool").press("C");
-
-    await canvas.click({
-        position: {x: 350, y: 400},
-    });
-
-    await expect(page.locator("#graphString")).toHaveText("[(((A C)) ((B)))]");
-
-    //const downloadPromise = page.waitForEvent("download");
-    //await page.keyboard.down("Control");
-    //await page.keyboard.press("s");
-    //await page.keyboard.up("Control");
-    //const download = await downloadPromise;
-    //await download.saveAs("./" + download.suggestedFilename());
-
-    //All of these should fail, and the canvas should remain the same.
-    await page.getByTitle("Cut Tool").click();
-
-    await canvas.dragTo(canvas, {
-        sourcePosition: {x: 300, y: 300},
-        targetPosition: {x: 600, y: 600},
-    });
-
-    await page.getByTitle("Atom Tool").click();
-
-    await page.getByTitle("Atom Tool").press("D");
-    await canvas.click({
-        position: {x: 350, y: 350},
-    });
-
-    await page.getByTitle("Atom Tool").press("E");
-    await canvas.click({
-        position: {x: 550, y: 550},
-    });
-
-    await expect(page.locator("#graphString")).toHaveText("[(((A C)) ((B)))]");
 });
