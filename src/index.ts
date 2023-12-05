@@ -257,17 +257,7 @@ export function setTool(state: Tool) {
     treeContext.toolState = state;
     cutTools.style.display = "none";
     atomTools.style.display = "none";
-    treeString.style.display = "none";
-    proofString.style.display = "none";
     selectionDisplay.style.display = "none";
-
-    if (state <= 11) {
-        treeContext.modeState = "Draw";
-        treeString.style.display = "block";
-    } else {
-        treeContext.modeState = "Proof";
-        proofString.style.display = "block";
-    }
 
     switch (treeContext.toolState) {
         case Tool.atomTool:
