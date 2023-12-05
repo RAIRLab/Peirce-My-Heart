@@ -34,6 +34,7 @@ export enum Tool {
     proofResizeTool,
     iterationTool,
     deiterationTool,
+    clearProofTool,
 }
 
 export class treeContext {
@@ -44,7 +45,7 @@ export class treeContext {
     public static proof: ProofNode[] = [];
 
     //The node denoting the current step that we are on in the proof
-    public static currentProofStep: ProofNode;
+    public static currentProofStep: ProofNode | undefined;
 
     //The node selected on draw mode which will copy over when we toggle to proof mode.
     public static selectForProof: AEGTree = new AEGTree();
@@ -93,5 +94,13 @@ export class treeContext {
         this.currentProofStep = newStep;
         this.proof.push(newStep);
         appendStep(newStep);
+    }
+
+    /**
+     * Clears the proof by resetting the array and the current step of the proof
+     */
+    public static clearProof() {
+        this.proof = [];
+        this.currentProofStep = undefined;
     }
 }
