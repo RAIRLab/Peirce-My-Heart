@@ -151,7 +151,6 @@ p {
   border-radius: var(--mode-btn-radius);
   box-shadow: var(--mode-btn-shadow);
   color: var(--mode-btn-icon-color);
-  text-align: center;
   margin:auto;
 }
 
@@ -166,7 +165,6 @@ p {
   border-radius: var(--mode-btn-radius);
   box-shadow: var(--mode-btn-shadow);
   color: var(--mode-btn-icon-color);
-  text-align: center;
 }
 
 .toggle-switch .switch-thumb {
@@ -181,7 +179,6 @@ p {
   border-radius: var(--mode-btn-radius);
   box-shadow: var(--mode-btn-shadow);
   color: var(--mode-btn-icon-color);
-  text-align: center;
 }
 
 input[type="checkbox"]:checked+.toggle-switch .switch-track {
@@ -206,10 +203,8 @@ input[type="checkbox"]:checked+.toggle-switch+p::before {
 
 #ProofButtons {
   display: none;
-  text-align: center;
 }
 
 #DrawButtons {
   display: block;
-  text-align: center;
 }
