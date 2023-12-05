@@ -162,9 +162,12 @@ let hasMouseDown = false;
 let hasMouseIn = true;
 
 //Window Exports
+window.tree = treeContext.tree;
+window.treeString = aegStringify(window.tree);
 window.atomTool = Tool.atomTool;
 window.cutTool = Tool.cutTool;
 window.dragTool = Tool.dragTool;
+window.aegStringify = aegStringify;
 window.saveMode = saveMode;
 window.loadMode = loadMode;
 window.moveSingleTool = Tool.moveSingleTool;
@@ -191,11 +194,14 @@ window.toggleHandler = toggleHandler;
 
 declare global {
     interface Window {
+        tree: AEGTree;
+        treeString: string;
         atomTool: Tool;
         cutTool: Tool;
         dragTool: Tool;
         saveMode: () => void;
         loadMode: () => void;
+        aegStringify: (treeData: AEGTree | ProofNode[]) => string;
         moveSingleTool: Tool;
         moveMultiTool: Tool;
         copySingleTool: Tool;
@@ -251,17 +257,7 @@ export function setTool(state: Tool) {
     treeContext.toolState = state;
     cutTools.style.display = "none";
     atomTools.style.display = "none";
-    treeString.style.display = "none";
-    proofString.style.display = "none";
     selectionDisplay.style.display = "none";
-
-    if (state <= 11) {
-        treeContext.modeState = "Draw";
-        treeString.style.display = "block";
-    } else {
-        treeContext.modeState = "Proof";
-        proofString.style.display = "block";
-    }
 
     switch (treeContext.toolState) {
         case Tool.atomTool:
@@ -277,6 +273,14 @@ export function setTool(state: Tool) {
             cutTools.style.display = "block";
             break;
     }
+}
+/**
+ * Creates and returns the stringification of the incoming data. Uses tab characters as delimiters.
+ * @param treeData the incoming data
+ * @returns the stringification of the incoming data
+ */
+export function aegStringify(treeData: AEGTree | ProofNode[]): string {
+    return JSON.stringify(treeData, null, "\t");
 }
 
 /**
@@ -319,7 +323,7 @@ async function saveMode() {
         } else {
             //Quick Download
             const f = document.createElement("a");
-            f.href = JSON.stringify(data, null, "\t");
+            f.href = aegStringify(data);
             f.download = name + ".json";
             f.click();
         }
