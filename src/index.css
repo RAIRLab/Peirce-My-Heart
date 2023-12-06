@@ -125,16 +125,16 @@ p {
 }
 
 #proofHistoryBar {
-  box-sizing: border-box;
-  border: var(--sidebar-border);
-  border-top: 0px;
-  border-left: 0px;
-  padding-top: 3px;
-  background-color: var(--sidebar-bg);
-  height: 100vh;
-  min-width: 4vw;
-  float: left; 
-  display: none;
+    box-sizing: border-box;
+    border: var(--sidebar-border);
+    border-top: 0px;
+    border-left: 0px;
+    padding-top: 3px;
+    background-color: var(--sidebar-bg);
+    height: 100vh;
+    min-width: 4vw;
+    float: left; 
+    display: none;
 }
 
 #canvas {
@@ -153,79 +153,80 @@ p {
 }
 
 .toggle-switch {
-  position: relative;
-  display: block;
-  width: 60px;
-  height: 34px;
-  color: var(--mode-btn-icon-color);
-  margin:auto;
+    position: relative;
+    display: block;
+    width: 60px;
+    height: 34px;
+    color: var(--mode-btn-icon-color);
+    margin:auto;
 }
 
 .toggle-switch .switch-track {
-  background-color: var(--sidebar-border);
-  display: block;
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  transition: background-color 0.3s;
-  border: var(--mode-btn-border); 
-  border-radius: var(--mode-btn-radius);
-  box-shadow: var(--mode-btn-shadow);
-  color: var(--mode-btn-icon-color);
+    background-color: var(--sidebar-border);
+    display: block;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    transition: background-color 0.3s;
+    border: var(--mode-btn-border); 
+    border-radius: var(--mode-btn-radius);
+    box-shadow: var(--mode-btn-shadow);
+    color: var(--mode-btn-icon-color);
 }
 
 .toggle-switch .switch-thumb {
-  background-color: var(--mode-btn-icon-color);
-  width: 26px;
-  height: 26px;
-  position: absolute;
-  margin: 3%;
-  top: 4px;
-  left: 4px;
-  transition: transform 0.3s, background-color 0.3s;
-  border-radius: var(--mode-btn-radius);
-  box-shadow: var(--mode-btn-shadow);
-  color: var(--mode-btn-icon-color);
+    background-color: var(--mode-btn-icon-color);
+    width: 26px;
+    height: 26px;
+    position: absolute;
+    margin: 3%;
+    top: 4px;
+    left: 4px;
+    transition: transform 0.3s, background-color 0.3s;
+    border-radius: var(--mode-btn-radius);
+    box-shadow: var(--mode-btn-shadow);
+    color: var(--mode-btn-icon-color);
 }
 
 input[type="checkbox"]:checked+.toggle-switch .switch-track {
-  margin: auto;
-  background-color: var(--mode-btn-bg)
+    margin: auto;
+    background-color: var(--mode-btn-bg)
 }
+
 input[type="checkbox"]:checked+.toggle-switch .switch-thumb {
-  transform: translateX(26px);
+    transform: translateX(26px);
 }
 
 .toggle-switch+p::before {
-  content: "Draw mode";
-  display:block;
-  text-align:center;
-  margin: 15% auto;
+    content: "Draw mode";
+    display:block;
+    text-align:center;
+    margin: 15% auto;
 }
 
 input[type="checkbox"]:checked+.toggle-switch+p::before {
-  content: "Proof mode";
-  display:block; 
-  text-align:center;
-  margin: 15% auto;
+    content: "Proof mode";
+    display:block; 
+    text-align:center;
+    margin: 15% auto;
 }
 
 #ProofButtons {
-  display: none;
+    display: none;
 }
 
 #DrawButtons {
-  display: block;
+    display: block;
 }
 
 .proofNodeButton {
-  min-width: 2vw;
-  min-height: 4vh;
-  border: var(--mode-btn-border);
-  background-color: var(--mode-btn-bg);
-  margin: 4px;
-  border-radius: 50%;
-  box-shadow: var(--mode-btn-shadow);
-  color: var(--mode-btn-icon-color);
-  text-align: center;
+    min-width: 2vw;
+    min-height: 4vh;
+    border: var(--mode-btn-border);
+    background-color: var(--mode-btn-bg);
+    margin: 4px;
+    border-radius: 50%;
+    box-shadow: var(--mode-btn-shadow);
+    color: var(--mode-btn-icon-color);
+    text-align: center;
 }
