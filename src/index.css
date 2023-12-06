@@ -60,7 +60,7 @@ p {
 }
 
 .toolButton:hover {
-  background-color: var(--mode-btn-hover-bg);
+    background-color: var(--mode-btn-hover-bg);
 }
 
 .fileButton {
