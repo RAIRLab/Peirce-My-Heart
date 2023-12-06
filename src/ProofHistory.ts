@@ -29,38 +29,20 @@ export function appendStep(newStep: ProofNode) {
 
     //Determine which action was just taken to give the button the corresponding icon.
     const icon = document.createElement("Text");
-    switch (newStep.appliedRule) {
-        case "Single Move":
-            icon.className = "fa fa-mouse-pointer";
-            break;
-        case "Multi Move":
-            icon.className = "fa fa-arrows";
-            break;
-        case "Resize":
-            icon.className = "fa fa-arrows-alt";
-            break;
-        case "DC Insert":
-            icon.className = "fa fa-dot-circle-o";
-            break;
-        case "DC Delete":
-            icon.className = "fa fa-times-circle";
-            break;
-        case "Insertion":
-            icon.className = "fa fa-plus";
-            break;
-        case "Erasure":
-            icon.className = "fa fa-trash";
-            break;
-        case "Iteration":
-            icon.className = "fa fa-expand";
-            break;
-        case "Deiteration":
-            icon.className = "fa fa-compress";
-            break;
-        case "Pasted":
-            icon.className = "fa fa-files-o";
-            break;
-    }
+    icon.className =
+        "fa fa-" +
+        {
+            "Single Move": "mouse-pointer",
+            "Multi Move": "arrows",
+            Resize: "arrows-alt",
+            "DC Insert": "dot-circle-o",
+            "DC Delete": "times-circle",
+            Insertion: "plus",
+            Erasure: "trash",
+            Iteration: "expand",
+            Deiteration: "compress",
+            Pasted: "files-o",
+        }[newStep.appliedRule];
 
     button.appendChild(icon);
     newDiv.appendChild(button);
