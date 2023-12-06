@@ -249,12 +249,9 @@ export function insertionMouseOut() {
  */
 function calculatePoint(event: MouseEvent, node: CutNode | AtomNode): Point | undefined {
     if (node instanceof CutNode && node.ellipse !== null) {
-        return new Point(
-            event.x - node.ellipse.center.x - offset.x,
-            event.y - node.ellipse.center.y - offset.y
-        );
+        return new Point(event.x - node.ellipse.center.x, event.y - node.ellipse.center.y);
     } else if (node instanceof AtomNode) {
-        return new Point(event.x - node.origin.x - offset.x, event.y - node.origin.y - offset.y);
+        return new Point(event.x - node.origin.x, event.y - node.origin.y);
     }
 
     return undefined;
