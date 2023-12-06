@@ -261,7 +261,12 @@ toolButtons.forEach(button => {
     });
 });
 
-export function setTool(state: Tool) {
+/**
+ * Updates our global tree content tool and the html display elements according to the tool button
+ * that was clicked on
+ * @param state The tool that was clicked on
+ */
+function setTool(state: Tool) {
     treeContext.toolState = state;
     cutTools.style.display = "none";
     atomTools.style.display = "none";
