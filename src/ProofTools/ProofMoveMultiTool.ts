@@ -120,5 +120,5 @@ export function proofMoveMultiMouseOut() {
         currentProofTree.insert(currentNode);
     }
     legalNode = false;
-    redrawTree(treeContext.getLastProofStep().tree);
+    redrawProof();
 }

@@ -78,9 +78,8 @@ export class treeContext {
         if (newStep.appliedRule === "Pasted") {
             this.proof.pop();
             document.getElementById("Row: 1")?.remove();
-        }
-
-        if (this.currentProofStep && this.proof.length > 0) {
+            newStep.index = 0;
+        } else if (this.currentProofStep && this.proof.length > 0) {
             //Compare the current step we are on and the last step stored in the history
             //If they are not the same, we have moved back to a previous step and need to delete
             //all the steps in between
@@ -106,6 +105,7 @@ export class treeContext {
      */
     public static clearProof() {
         this.proof = [];
-        this.currentProofStep = undefined;
+        this.pushToProof(new ProofNode());
+        this.currentProofStep = this.proof[0];
     }
 }
