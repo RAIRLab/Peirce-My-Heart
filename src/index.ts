@@ -130,6 +130,12 @@ import {
     deiterationMouseUp,
 } from "./ProofTools/DeiterationTool";
 
+import {
+    clearProofMouseDown,
+    clearProofMouseOut,
+    clearProofMouseUp,
+} from "./ProofTools/ClearProofTool";
+
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
 canvas.width = window.innerWidth;
@@ -188,6 +194,7 @@ window.proofMoveMultiTool = Tool.proofMoveMultiTool;
 window.proofResizeTool = Tool.proofResizeTool;
 window.iterationTool = Tool.iterationTool;
 window.deiterationTool = Tool.deiterationTool;
+window.clearProofTool = Tool.clearProofTool;
 window.setTool = setTool;
 window.setHighlight = setHighlight;
 window.toggleHandler = toggleHandler;
@@ -220,6 +227,7 @@ declare global {
         proofResizeTool: Tool;
         iterationTool: Tool;
         deiterationTool: Tool;
+        clearProofTool: Tool;
         setTool: (state: Tool) => void;
         setHighlight: (event: string, id: string) => void;
         toggleHandler: () => void;
@@ -299,12 +307,15 @@ async function saveMode() {
         name = "AEG Tree";
         data = treeContext.tree;
     } else {
-        name =
-            treeContext.proofHistory[0].tree.toString() +
-            // " - " +
-            "\u2192" +
-            treeContext.getLastProofStep().tree.toString();
-        data = treeContext.proofHistory;
+        if (treeContext.proof.length === 0) {
+            name = "[] \u2192 []";
+        } else {
+            name =
+                treeContext.proof[0].tree.toString() +
+                "\u2192" +
+                treeContext.getLastProofStep().tree.toString();
+        }
+        data = treeContext.proof;
     }
 
     //Errors caused due to file handler or html download element should not be displayed
@@ -366,7 +377,7 @@ async function loadMode() {
                     treeContext.tree = loadData as AEGTree;
                     redrawTree(treeContext.tree);
                 } else if (treeContext.modeState === "Proof") {
-                    treeContext.proofHistory = loadData as ProofNode[];
+                    treeContext.proof = loadData as ProofNode[];
                     redrawProof();
                 }
             } else {
@@ -464,6 +475,9 @@ function mouseDownHandler(event: MouseEvent) {
             break;
         case Tool.deiterationTool:
             deiterationMouseDown(event);
+            break;
+        case Tool.clearProofTool:
+            clearProofMouseDown();
             break;
         default:
             break;
@@ -614,6 +628,9 @@ function mouseUpHandler(event: MouseEvent) {
         case Tool.deiterationTool:
             deiterationMouseUp(event);
             break;
+        case Tool.clearProofTool:
+            clearProofMouseUp();
+            break;
         default:
             break;
     }
@@ -688,6 +705,9 @@ function mouseOutHandler() {
             break;
         case Tool.deiterationTool:
             deiterationMouseOut();
+            break;
+        case Tool.clearProofTool:
+            clearProofMouseOut();
             break;
         default:
             break;

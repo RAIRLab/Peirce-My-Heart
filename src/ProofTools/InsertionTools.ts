@@ -32,12 +32,15 @@ let legalNode: boolean;
 export function insertionMouseDown(event: MouseEvent) {
     //Create a deep copy of the tree we are trying to insert the incoming node into so that we can
     //modify it as needed without affecting the actual structure
-    currentTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
+    currentTree = new AEGTree();
+    if (treeContext.currentProofStep) {
+        currentTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
+    }
     const selectedNodes = treeContext.selectForProof.sheet.children;
     const startingPoint = new Point(event.x - offset.x, event.y - offset.y);
 
     //we can insert only a single subgraph at a time
-    if (treeContext.proofHistory.length > 0 && selectedNodes.length === 1) {
+    if (treeContext.proof.length > 0 && selectedNodes.length === 1) {
         //As long as there are graphs to be placed, they are legal nodes
         legalNode = true;
         currentNode = selectedNodes[0];
@@ -225,7 +228,7 @@ export function insertionMouseUp(event: MouseEvent) {
                 currentTree.insert(tempAtom);
             }
             //Insertion is a new step -> push a new node in the proof, signifying it as such
-            treeContext.proofHistory.push(new ProofNode(currentTree, "Insertion"));
+            treeContext.pushToProof(new ProofNode(currentTree, "Insertion"));
         }
     }
     redrawProof();
@@ -246,12 +249,9 @@ export function insertionMouseOut() {
  */
 function calculatePoint(event: MouseEvent, node: CutNode | AtomNode): Point | undefined {
     if (node instanceof CutNode && node.ellipse !== null) {
-        return new Point(
-            event.x - node.ellipse.center.x - offset.x,
-            event.y - node.ellipse.center.y - offset.y
-        );
+        return new Point(event.x - node.ellipse.center.x, event.y - node.ellipse.center.y);
     } else if (node instanceof AtomNode) {
-        return new Point(event.x - node.origin.x - offset.x, event.y - node.origin.y - offset.y);
+        return new Point(event.x - node.origin.x, event.y - node.origin.y);
     }
 
     return undefined;

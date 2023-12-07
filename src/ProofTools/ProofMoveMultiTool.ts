@@ -37,7 +37,10 @@ let currentProofTree: AEGTree;
  * @param event The mouse down event while using move multiple tool in proof mode
  */
 export function proofMoveMultiMouseDown(event: MouseEvent) {
-    currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
+    currentProofTree = new AEGTree();
+    if (treeContext.currentProofStep) {
+        currentProofTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
+    }
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = currentProofTree.getLowestNode(startingPoint);
 
@@ -87,7 +90,7 @@ export function proofMoveMultiMouseMove(event: MouseEvent) {
  */
 export function proofMoveMultiMouseUp(event: MouseEvent) {
     if (legalNode) {
-        const nextStep = new ProofNode(currentProofTree, "Multi Movement");
+        const nextStep = new ProofNode(currentProofTree, "Multi Move");
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
             event.y - startingPoint.y
@@ -102,8 +105,7 @@ export function proofMoveMultiMouseUp(event: MouseEvent) {
 
         if (tempNode !== null && isMoveLegal(currentProofTree, tempNode)) {
             nextStep.tree.insert(tempNode);
-            treeContext.proofHistory.push(nextStep);
-            redrawTree(nextStep.tree);
+            treeContext.pushToProof(nextStep);
         }
     }
     redrawProof();
@@ -118,5 +120,5 @@ export function proofMoveMultiMouseOut() {
         currentProofTree.insert(currentNode);
     }
     legalNode = false;
-    redrawTree(treeContext.getLastProofStep().tree);
+    redrawProof();
 }
