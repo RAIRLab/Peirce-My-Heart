@@ -22,10 +22,6 @@ We also use it to invoke all core development tools via <code>npm run</code>.</p
 <li><p><a href="https://vitejs.dev/"><strong>Vite</strong></a> : Vite is an asset bundler and build system for large web projects with 
 many types of resources such as typescript. Additionally, it provides excellent debugging features.
 We use it as a build system for Typescript, Asset Compressor, and Live Debugger.</p>
-<ul>
-<li><strong>Playwright</strong> : a testing framework compatible with Vite with support for TypeScript.</li>
-<li><strong>Vitest</strong> : a testing framework native to Vite with support for TypeScript. It allows for github workflow compatibility and running numerous tests with one command.</li>
-</ul>
 </li>
 <li><p><a href="https://github.com/google/gts"><strong>gts</strong></a> : gts (Google TypeScript Style) is a set of style guidelines and tools for typescript
 consistent and readable formatting. It provides defaults for the following tools we use:</p>
@@ -35,6 +31,10 @@ many semantic errors such as unused variables.</li>
 <li><strong>prettier</strong> : an opinionated code formatter that enforces a code style. It enforces
 syntactic style such as indentation and spacing.</li>
 </ul>
+</li>
+<li><p><a href="https://vitest.dev/"><strong>Vitest</strong></a> : A unit testing framework native to Vite with support for TypeScript. It allows for github workflow compatibility and running numerous tests with one command.</p>
+</li>
+<li><p><a href="https://playwright.dev/"><strong>Playwright</strong></a> : A UI testing framework compatible with Vite with support for TypeScript, similar to other UI testing frameworks such as Selenium.</p>
 </li>
 </ol>
 <a id="md:linting" class="tsd-anchor"></a><h2><a href="#md:linting">Linting</a></h2><p>Lint the code to make sure your code follows all gts style guidelines. To lint gts will invoke eslint and prettier, based
