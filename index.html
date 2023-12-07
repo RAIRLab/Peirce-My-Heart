@@ -17,8 +17,8 @@
     
     
     
-    <script type="module" crossorigin src="/Peirce-My-Heart/assets/index-28f19312.js"></script>
-    <link rel="stylesheet" href="/Peirce-My-Heart/assets/index-b61b774b.css">
+    <script type="module" crossorigin src="/Peirce-My-Heart/assets/index-e34f519d.js"></script>
+    <link rel="stylesheet" href="/Peirce-My-Heart/assets/index-0b87e11f.css">
     <link rel="stylesheet" href="/Peirce-My-Heart/assets/themes-62f77642.css">
   </head>
   <body>
@@ -86,6 +86,14 @@
       </div>
       <div id="ProofButtons">
         <div class="row">
+          <button type="button" onclick= "setTool(clearProofTool)" title="Clear Proof" class="toolButton">
+            <i class="fa fa-ban" aria-hidden="true"></i>
+          </button>
+          <button type="button" onclick= "setTool(dragTool)" title="Drag Tool" class="toolButton">
+            <i class="fa fa-hand-paper-o" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="row">
           <button type="button" onclick="setTool(proofMoveSingleTool)" title="Move Single" class="toolButton">
             <i class="fa fa-mouse-pointer" aria-hidden="true"></i>
         </button>
@@ -126,6 +134,8 @@
           </button>
         </div>
       </div>
+    </div>
+    <div id="proofHistoryBar" class="no-highlight">
     </div>
     <div id="toolbar" class="no-highlight" onmousedown="setHighlight('mousedown', 'toolbar')"
     onmouseleave="setHighlight('mouseleave', 'toolbar')">
