@@ -68,6 +68,10 @@ export function toggleHandler(): void {
         drawCachedAEG = JSON.stringify(treeContext.tree);
         drawCachedTool = treeContext.toolState;
 
+        if (treeContext.proof.length === 0) {
+            treeContext.pushToProof(new ProofNode());
+        }
+
         //Load in our saved proof structure and tool state
         let loadedProof: ProofNode[] | null = null;
         if (proofCachedAEG !== null) {

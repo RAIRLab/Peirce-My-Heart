@@ -75,7 +75,11 @@ export class treeContext {
      * @param newStep The new proof node being added to the proof
      */
     public static pushToProof(newStep: ProofNode) {
-        if (this.currentProofStep && this.proof.length > 0) {
+        if (newStep.appliedRule === "Pasted") {
+            this.proof.pop();
+            document.getElementById("Row: 1")?.remove();
+            newStep.index = 0;
+        } else if (this.currentProofStep && this.proof.length > 0) {
             //Compare the current step we are on and the last step stored in the history
             //If they are not the same, we have moved back to a previous step and need to delete
             //all the steps in between
@@ -101,6 +105,7 @@ export class treeContext {
      */
     public static clearProof() {
         this.proof = [];
-        this.currentProofStep = undefined;
+        this.pushToProof(new ProofNode());
+        this.currentProofStep = this.proof[0];
     }
 }

@@ -29,7 +29,7 @@ export function pasteInProofMouseDown() {
 
     if (
         currentGraphs.children.length > 0 &&
-        treeContext.proof.length === 0 &&
+        treeContext.proof.length === 1 &&
         currentTree.sheet.isEmptySheet()
     ) {
         legalNode = true;
