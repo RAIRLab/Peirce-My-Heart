@@ -12,7 +12,7 @@ import {illegalColor} from "../Themes";
 import {offset} from "../DrawModes/DragTool";
 import {ProofNode} from "../AEG/ProofNode";
 import {AEGTree} from "../AEG/AEGTree";
-import {readdChildren} from "../DrawModes/EditModeUtils";
+import {reInsertNode, readdChildren} from "../DrawModes/EditModeUtils";
 
 //The node selected with the user mouse down.
 let currentNode: CutNode | AtomNode | null = null;
@@ -53,11 +53,12 @@ export function doubleCutDeletionMouseDown(event: MouseEvent) {
  */
 export function doubleCutDeletionMouseMove(event: MouseEvent) {
     currentPoint = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = currentProofTree.getLowestNode(currentPoint);
     tempTree = new AEGTree(currentProofTree.sheet);
-    redrawProof();
-
-    isLegal();
+    if (currentNode !== null) {
+        currentNode = currentProofTree.getLowestNode(currentPoint);
+        redrawProof();
+        isLegal();
+    }
 }
 
 /**
@@ -91,6 +92,10 @@ export function doubleCutDeletionMouseUp(event: MouseEvent) {
  * Resets the canvas if the mouse ends up out of the canvas.
  */
 export function doubleCutDeletionMouseOut() {
+    if (legalNode && currentNode !== null) {
+        reInsertNode(tempTree, currentNode);
+    }
+    currentNode = null;
     legalNode = false;
     redrawProof();
 }
