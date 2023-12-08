@@ -8,8 +8,8 @@ import {Ellipse} from "../AEG/Ellipse";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
-import {offset} from "../DrawModes/DragTool";
-import {drawAtom, redrawProof} from "../DrawModes/DrawUtils";
+import {offset} from "../SharedToolUtils/DragTool";
+import {drawAtom, redrawProof} from "../SharedToolUtils/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
 import {
     validateChildren,
@@ -17,9 +17,10 @@ import {
     insertChildren,
     alterAtom,
     alterCut,
-} from "../DrawModes/EditModeUtils";
+} from "../SharedToolUtils/EditModeUtils";
 import {AEGTree} from "../AEG/AEGTree";
 import {ProofNode} from "../AEG/ProofNode";
+import {getCurrentProofTree} from "./ProofToolsUtils";
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -45,10 +46,7 @@ export function iterationMouseDown(event: MouseEvent) {
     //Make a deep copy of the tree of our latest proof step. Our iteration actions will be performed
     //on this structure, but they should all be on a new step - we do not want to make any changes
     //on the existing step
-    currentProofTree = new AEGTree();
-    if (treeContext.currentProofStep) {
-        currentProofTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
-    }
+    currentProofTree = getCurrentProofTree();
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = currentProofTree.getLowestNode(startingPoint);
     currentParent = currentProofTree.getLowestParent(startingPoint);

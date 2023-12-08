@@ -1,7 +1,6 @@
 import {AEGTree} from "./AEG/AEGTree";
 import {ProofNode} from "./AEG/ProofNode";
 import {appendStep, deleteButtons} from "./ProofHistory";
-// import {Tool} from "./index";
 
 /**
  * The global context describing the state of the AEG Tree and other related attributes
