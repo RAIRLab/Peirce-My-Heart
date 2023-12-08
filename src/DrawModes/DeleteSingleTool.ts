@@ -8,9 +8,10 @@ import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {offset} from "./DragTool";
-import {drawAtom, drawCut, readdChildren, redrawTree} from "./DrawUtils";
+import {drawAtom, drawCut, redrawTree} from "./DrawUtils";
 import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
+import {readdChildren} from "./EditModeUtils";
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -42,7 +43,7 @@ export function deleteSingleMouseDown(event: MouseEvent) {
             currentNode.children.length !== 0 &&
             currentNode !== treeContext.tree.sheet
         ) {
-            readdChildren(currentNode);
+            readdChildren(treeContext.tree, currentNode);
         }
         redrawTree(treeContext.tree);
         if (currentNode instanceof AtomNode) {
@@ -67,7 +68,7 @@ export function deleteSingleMouseMove(event: MouseEvent) {
         if (treeContext.tree.canInsert(currentNode)) {
             treeContext.tree.insert(currentNode);
             if (currentNode instanceof CutNode && (currentNode as CutNode).children.length !== 0) {
-                readdChildren(currentNode);
+                readdChildren(treeContext.tree, currentNode);
             }
             redrawTree(treeContext.tree);
         }
@@ -85,7 +86,7 @@ export function deleteSingleMouseMove(event: MouseEvent) {
             currentParent.remove(newPoint);
             currentNode = newNode;
             if (currentNode instanceof CutNode && currentNode.children.length !== 0) {
-                readdChildren(currentNode);
+                readdChildren(treeContext.tree, currentNode);
                 currentNode.children = [];
             }
             redrawTree(treeContext.tree);
@@ -114,7 +115,7 @@ export function deleteSingleMouseUp(event: MouseEvent) {
             currentNode instanceof CutNode &&
             currentNode.children.length !== 0
         ) {
-            readdChildren(currentNode);
+            readdChildren(treeContext.tree, currentNode);
         }
         redrawTree(treeContext.tree);
     }

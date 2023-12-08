@@ -147,20 +147,6 @@ export function redrawAtom(incomingNode: AtomNode) {
     drawAtom(incomingNode, placedColor(), false);
 }
 
-/**
- * Readds children of a parent CutNode.
- * In the wise words of Dawn Moore,
- * "The cut node loses custody of its children so that those can still be redrawn."
- * @param parentCut Parent CutNode
- */
-export function readdChildren(parentCut: CutNode) {
-    for (let i = 0; i < parentCut.children.length; i++) {
-        if (treeContext.tree.canInsert(parentCut.children[i])) {
-            treeContext.tree.insert(parentCut.children[i]);
-        }
-    }
-}
-
 export function redrawProof() {
     //If this is the first step taken in the proof,
     //set the current tree as the head of the proof history
@@ -177,7 +163,9 @@ export function redrawProof() {
 }
 
 /**
- * Helper function to highlight the specific selected node
+ * Highlights all the children of the incoming node as the incoming color.
+ * @param child The incoming node
+ * @param color The incoming color
  */
 export function highlightNode(child: AtomNode | CutNode, color: string) {
     if (child instanceof AtomNode) {

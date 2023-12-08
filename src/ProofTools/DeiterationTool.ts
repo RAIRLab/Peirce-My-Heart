@@ -6,13 +6,12 @@
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {redrawProof} from "../DrawModes/DrawUtils";
+import {redrawProof, highlightNode} from "../DrawModes/DrawUtils";
 import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
 import {offset} from "../DrawModes/DragTool";
 import {ProofNode} from "../AEG/ProofNode";
 import {AEGTree} from "../AEG/AEGTree";
-import {highlightChildren} from "../DrawModes/EditModeUtils";
 
 //The node selected with the user mouse down.
 let currentNode: CutNode | AtomNode | null = null;
@@ -85,7 +84,7 @@ function setLegal() {
         !(currentNode instanceof CutNode && currentNode.ellipse === null) &&
         canDeiterate(currentProofTree.sheet, currentProofTree.getLevel(currentNode))
     ) {
-        highlightChildren(currentNode, illegalColor());
+        highlightNode(currentNode, illegalColor());
         legalNode = true;
     } else {
         legalNode = false;

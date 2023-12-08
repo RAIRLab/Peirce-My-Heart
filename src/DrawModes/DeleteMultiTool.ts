@@ -6,11 +6,11 @@
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {readdChildren, redrawTree} from "./DrawUtils";
+import {redrawTree, highlightNode} from "./DrawUtils";
 import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
 import {offset} from "./DragTool";
-import {highlightChildren} from "./EditModeUtils";
+import {reInsertNode} from "./EditModeUtils";
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -42,7 +42,7 @@ export function deleteMultiMouseDown(event: MouseEvent) {
         }
         legalNode = true;
         redrawTree(treeContext.tree);
-        highlightChildren(currentNode, illegalColor());
+        highlightNode(currentNode, illegalColor());
     }
 }
 
@@ -53,7 +53,7 @@ export function deleteMultiMouseDown(event: MouseEvent) {
  */
 export function deleteMultiMouseMove(event: MouseEvent) {
     if (legalNode && currentNode !== null) {
-        deleteToolInsertion(currentNode);
+        reInsertNode(treeContext.tree, currentNode);
     }
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
     const newNode: CutNode | AtomNode | null = treeContext.tree.getLowestNode(newPoint);
@@ -68,13 +68,13 @@ export function deleteMultiMouseMove(event: MouseEvent) {
             currentNode = newNode;
             legalNode = true;
             redrawTree(treeContext.tree);
-            highlightChildren(currentNode, illegalColor());
+            highlightNode(currentNode, illegalColor());
         }
     } else if (legalNode && currentParent === null) {
         currentNode = treeContext.tree.sheet.copy();
         treeContext.tree.clear();
         redrawTree(treeContext.tree);
-        highlightChildren(currentNode, illegalColor());
+        highlightNode(currentNode, illegalColor());
     }
 }
 
@@ -102,25 +102,9 @@ export function deleteMultiMouseUp(event: MouseEvent) {
  */
 export function deleteMultiMouseOut() {
     if (legalNode && currentNode !== null) {
-        deleteToolInsertion(currentNode);
+        reInsertNode(treeContext.tree, currentNode);
     }
     currentNode = null;
     legalNode = false;
     redrawTree(treeContext.tree);
-}
-
-/**
- * Adds the incoming node to the tree, and, if necessary, its children
- * @param currentNode The incoming node
- */
-function deleteToolInsertion(currentNode: AtomNode | CutNode) {
-    if (currentNode instanceof CutNode && currentNode.ellipse === null) {
-        treeContext.tree.sheet = currentNode;
-    } else if (treeContext.tree.canInsert(currentNode)) {
-        treeContext.tree.insert(currentNode);
-        if (currentNode instanceof CutNode && (currentNode as CutNode).children.length !== 0) {
-            readdChildren(currentNode);
-        }
-        redrawTree(treeContext.tree);
-    }
 }

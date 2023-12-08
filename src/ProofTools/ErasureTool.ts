@@ -6,11 +6,10 @@
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {redrawProof} from "../DrawModes/DrawUtils";
+import {redrawProof, redrawTree, highlightNode} from "../DrawModes/DrawUtils";
 import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
 import {offset} from "../DrawModes/DragTool";
-import {highlightChildren} from "../DrawModes/EditModeUtils";
 import {ProofNode} from "../AEG/ProofNode";
 import {AEGTree} from "../AEG/AEGTree";
 
@@ -22,17 +21,22 @@ let legalNode: boolean;
 
 let currentProofTree: AEGTree;
 
+let tempTree: AEGTree;
+
+let currentPoint: Point;
+
 /**
  * Captures the current location, and the node linked with that location.
  * Determines if it is a legal node.
  * @param event The mouse down event while using the erasure tool
  */
 export function erasureMouseDown(event: MouseEvent) {
-    const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
+    currentPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentProofTree = new AEGTree();
     if (treeContext.currentProofStep) {
         currentProofTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
     }
+    tempTree = new AEGTree(currentProofTree.sheet);
     currentNode = currentProofTree.getLowestNode(currentPoint);
 
     isLegal();
@@ -44,7 +48,7 @@ export function erasureMouseDown(event: MouseEvent) {
  * @param event The mouse move event while using the erasure tool
  */
 export function erasureMouseMove(event: MouseEvent) {
-    const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
+    currentPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = currentProofTree.getLowestNode(currentPoint);
 
     redrawProof();
@@ -62,7 +66,7 @@ export function erasureMouseUp(event: MouseEvent) {
         //altering that tree
         const nextProof = new ProofNode(currentProofTree, "Erasure");
 
-        const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
+        currentPoint = new Point(event.x - offset.x, event.y - offset.y);
         const currentParent = nextProof.tree.getLowestParent(currentPoint);
         if (currentParent !== null) {
             currentParent.remove(currentPoint);
@@ -96,7 +100,20 @@ function isLegal() {
         currentProofTree.getLevel(currentNode) % 2 === 0
     ) {
         legalNode = true;
-        highlightChildren(currentNode, illegalColor());
+
+        //Find the parent at the point we are on
+        const tempParent = tempTree.getLowestParent(currentPoint);
+        if (tempParent !== null) {
+            //remove the node from the parent
+            tempParent.remove(currentPoint);
+        }
+
+        //Draw the temp tree, from which the node we want to erase has been removed
+        redrawTree(tempTree);
+        //Highlight the node selected for erasure in illegal color
+        highlightNode(currentNode, illegalColor());
+        //Insert it back into the temporary tree
+        tempTree.insert(currentNode);
     } else {
         legalNode = false;
     }

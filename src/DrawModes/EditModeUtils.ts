@@ -9,7 +9,7 @@ import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "./DragTool";
 import {Ellipse} from "../AEG/Ellipse";
-import {drawCut, drawAtom} from "./DrawUtils";
+import {drawCut, drawAtom, redrawTree} from "./DrawUtils";
 import {AEGTree} from "../AEG/AEGTree";
 
 /**
@@ -192,22 +192,6 @@ export function alterAtom(originalAtom: AtomNode, difference: Point) {
 }
 
 /**
- * Highlights all the children of the incoming node as the incoming color.
- * @param child The incoming node
- * @param color The incoming color
- */
-export function highlightChildren(child: AtomNode | CutNode, color: string) {
-    if (child instanceof AtomNode) {
-        drawAtom(child, color, true);
-    } else if (child instanceof CutNode) {
-        drawCut(child, color);
-        for (let i = 0; i < child.children.length; i++) {
-            highlightChildren(child.children[i], color);
-        }
-    }
-}
-
-/**
  * Makes a copy of original cut and changes the center and radii by the difference given.
  * Alters the change to the center based on the direction that is being moved to.
  * @param originalCut The original cut that will be copied and altered
@@ -229,5 +213,37 @@ export function resizeCut(originalCut: CutNode, difference: Point, direction: Po
         );
     } else {
         throw new Error("Cannot alter the position of a cut without an ellipse.");
+    }
+}
+
+/**
+ * Readds children of a parent CutNode.
+ * In the wise words of Dawn Moore,
+ * "The cut node loses custody of its children so that those can still be redrawn."
+ * @param tree The AEG tree we want to readd the children into
+ * @param parentCut Parent CutNode
+ */
+export function readdChildren(tree: AEGTree, parentCut: CutNode) {
+    for (let i = 0; i < parentCut.children.length; i++) {
+        if (tree.canInsert(parentCut.children[i])) {
+            tree.insert(parentCut.children[i]);
+        }
+    }
+}
+
+/**
+ * Adds the incoming node to the tree, and, if necessary, its children
+ * @param tree The AEG Tree we want to inset the node into
+ * @param currentNode The incoming node
+ */
+export function reInsertNode(tree: AEGTree, currentNode: AtomNode | CutNode) {
+    if (currentNode instanceof CutNode && currentNode.ellipse === null) {
+        tree.sheet = currentNode;
+    } else if (tree.canInsert(currentNode)) {
+        tree.insert(currentNode);
+        if (currentNode instanceof CutNode && (currentNode as CutNode).children.length !== 0) {
+            readdChildren(tree, currentNode);
+        }
+        redrawTree(tree);
     }
 }
