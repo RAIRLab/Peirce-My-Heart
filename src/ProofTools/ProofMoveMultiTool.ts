@@ -11,7 +11,7 @@ import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
-import {drawAtom, redrawProof, redrawTree} from "../SharedToolUtils/DrawUtils";
+import {drawAtom, highlightNode, redrawProof, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
 import {drawAltered, alterAtom, alterCutChildren} from "../SharedToolUtils/EditModeUtils";
 import {isMoveLegal} from "./ProofToolsUtils";
@@ -48,6 +48,10 @@ export function proofMoveMultiMouseDown(event: MouseEvent) {
             currentParent.remove(startingPoint);
         }
         legalNode = true;
+
+        // highlight the chosen node and its children in legal color to show what will be moved
+        redrawTree(currentProofTree);
+        highlightNode(currentNode, legalColor());
     } else {
         legalNode = false;
     }
