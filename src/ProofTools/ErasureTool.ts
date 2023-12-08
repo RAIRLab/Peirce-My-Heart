@@ -19,10 +19,13 @@ let currentNode: CutNode | AtomNode | null = null;
 //Whether or not the node is allowed to be moved (not the sheet).
 let legalNode: boolean;
 
+//The current tree in the proof chain
 let currentProofTree: AEGTree;
 
+//A copy of the tree we are dealing with in this step
 let tempTree: AEGTree;
 
+//The point that the current mouse event is targeting
 let currentPoint: Point;
 
 /**
