@@ -11,7 +11,7 @@ import {offset} from "./DragTool";
 import {drawAtom, drawCut, redrawTree} from "./DrawUtils";
 import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
-import {readdChildren} from "./EditModeUtils";
+import {readdChildren, reInsertNode} from "./EditModeUtils";
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -65,13 +65,7 @@ export function deleteSingleMouseDown(event: MouseEvent) {
  */
 export function deleteSingleMouseMove(event: MouseEvent) {
     if (legalNode && currentNode !== null && (currentNode as CutNode).ellipse !== null) {
-        if (treeContext.tree.canInsert(currentNode)) {
-            treeContext.tree.insert(currentNode);
-            if (currentNode instanceof CutNode && (currentNode as CutNode).children.length !== 0) {
-                readdChildren(treeContext.tree, currentNode);
-            }
-            redrawTree(treeContext.tree);
-        }
+        reInsertNode(treeContext.tree, currentNode);
     }
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
     const newNode: CutNode | AtomNode | null = treeContext.tree.getLowestNode(newPoint);
@@ -128,6 +122,10 @@ export function deleteSingleMouseUp(event: MouseEvent) {
  * If the mouse leaves the canvas, reset data back to defaults.
  */
 export function deleteSingleMouseOut() {
+    if (legalNode && currentNode !== null) {
+        reInsertNode(treeContext.tree, currentNode);
+    }
     currentNode = null;
     legalNode = false;
+    redrawTree(treeContext.tree);
 }
