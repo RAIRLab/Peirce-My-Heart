@@ -84,16 +84,20 @@ export function deleteSingleMouseMove(event: MouseEvent) {
         } else {
             currentNode = newNode;
 
+            currentParent.remove(newPoint);
             if (currentNode instanceof CutNode && currentNode.children.length !== 0) {
-                for (let i = 0; i < currentNode.children.length; i++) {
-                    treeContext.tree.insert(currentNode.children[i]);
+                if (treeContext.tree.canInsert(currentNode)) {
+                    treeContext.tree.insert(currentNode);
+                    if (currentNode instanceof CutNode) {
+                        readdChildren(currentNode);
+                    }
+                    redrawTree(treeContext.tree);
                 }
             }
-            currentParent.remove(newPoint);
+
             redrawTree(treeContext.tree);
             if (currentNode instanceof AtomNode) {
                 drawAtom(currentNode, illegalColor(), true);
-                console.log("highlighting atom red in mouse move");
             } else {
                 drawCut(currentNode, illegalColor());
             }
@@ -118,9 +122,7 @@ export function deleteSingleMouseUp(event: MouseEvent) {
             currentNode.children.length !== 0
         ) {
             //The cut node loses custody of its children so that those can still be redrawn.
-            for (let i = 0; i < currentNode.children.length; i++) {
-                treeContext.tree.insert(currentNode.children[i]);
-            }
+            readdChildren(currentNode);
         }
         redrawTree(treeContext.tree);
     }
