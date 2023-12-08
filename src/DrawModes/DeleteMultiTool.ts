@@ -33,7 +33,12 @@ export function deleteMultiMouseDown(event: MouseEvent) {
     currentNode = treeContext.tree.getLowestNode(startingPoint);
 
     if (currentNode !== null) {
+        const currentParent = treeContext.tree.getLowestParent(startingPoint);
+        if (currentParent !== null) {
+            currentParent.remove(startingPoint);
+        }
         legalNode = true;
+        redrawTree(treeContext.tree);
         highlightChildren(currentNode, illegalColor());
     }
 }
@@ -44,16 +49,28 @@ export function deleteMultiMouseDown(event: MouseEvent) {
  * The removal will update accordingly.
  */
 export function deleteMultiMouseMove(event: MouseEvent) {
+    if (legalNode && currentNode !== null) {
+        if (treeContext.tree.canInsert(currentNode)) {
+            treeContext.tree.insert(currentNode);
+            if (currentNode instanceof CutNode && (currentNode as CutNode).children.length !== 0) {
+                readdChildren(currentNode);
+            }
+            redrawTree(treeContext.tree);
+        }
+    }
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
     const newNode: CutNode | AtomNode | null = treeContext.tree.getLowestNode(newPoint);
-    if (currentNode !== null && currentNode !== treeContext.tree.getLowestNode(newPoint)) {
+    const currentParent = treeContext.tree.getLowestParent(newPoint);
+    if (currentNode !== null && currentParent !== null) {
         legalNode = true;
-        redrawTree(treeContext.tree);
         if (newNode === null) {
             currentNode = null;
             legalNode = false;
         } else {
+            currentParent.remove(newPoint);
             currentNode = newNode;
+            legalNode = true;
+            redrawTree(treeContext.tree);
             highlightChildren(currentNode, illegalColor());
         }
     }
@@ -66,9 +83,9 @@ export function deleteMultiMouseMove(event: MouseEvent) {
 export function deleteMultiMouseUp(event: MouseEvent) {
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
     if (legalNode) {
-        const currentParent = treeContext.tree.getLowestParent(newPoint);
-        if (currentParent !== null) {
-            currentParent.remove(newPoint);
+        const currentNode = treeContext.tree.getLowestNode(newPoint);
+        if (currentNode !== null && currentNode instanceof CutNode) {
+            currentNode.remove(newPoint);
         } else {
             treeContext.tree.clear();
         }
@@ -85,4 +102,16 @@ export function deleteMultiMouseOut() {
     currentNode = null;
     legalNode = false;
     redrawTree(treeContext.tree);
+}
+
+/**
+ * Readds children of a parent CutNode.
+ * @param parentCut Parent CutNode
+ */
+function readdChildren(parentCut: CutNode) {
+    for (let i = 0; i < parentCut.children.length; i++) {
+        if (treeContext.tree.canInsert(parentCut.children[i])) {
+            treeContext.tree.insert(parentCut.children[i]);
+        }
+    }
 }
