@@ -36,6 +36,9 @@ export function deleteMultiMouseDown(event: MouseEvent) {
         const currentParent = treeContext.tree.getLowestParent(startingPoint);
         if (currentParent !== null) {
             currentParent.remove(startingPoint);
+        } else {
+            currentNode = treeContext.tree.sheet.copy();
+            treeContext.tree.clear();
         }
         legalNode = true;
         redrawTree(treeContext.tree);
@@ -50,7 +53,9 @@ export function deleteMultiMouseDown(event: MouseEvent) {
  */
 export function deleteMultiMouseMove(event: MouseEvent) {
     if (legalNode && currentNode !== null) {
-        if (treeContext.tree.canInsert(currentNode)) {
+        if (currentNode instanceof CutNode && currentNode.ellipse === null) {
+            treeContext.tree.sheet = currentNode;
+        } else if (treeContext.tree.canInsert(currentNode)) {
             treeContext.tree.insert(currentNode);
             if (currentNode instanceof CutNode && (currentNode as CutNode).children.length !== 0) {
                 readdChildren(currentNode);
@@ -61,7 +66,7 @@ export function deleteMultiMouseMove(event: MouseEvent) {
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
     const newNode: CutNode | AtomNode | null = treeContext.tree.getLowestNode(newPoint);
     const currentParent = treeContext.tree.getLowestParent(newPoint);
-    if (currentNode !== null && currentParent !== null) {
+    if (legalNode && currentNode !== null && currentParent !== null) {
         legalNode = true;
         if (newNode === null) {
             currentNode = null;
@@ -73,6 +78,11 @@ export function deleteMultiMouseMove(event: MouseEvent) {
             redrawTree(treeContext.tree);
             highlightChildren(currentNode, illegalColor());
         }
+    } else if (legalNode && currentParent === null) {
+        currentNode = treeContext.tree.sheet.copy();
+        treeContext.tree.clear();
+        redrawTree(treeContext.tree);
+        highlightChildren(currentNode, illegalColor());
     }
 }
 
@@ -99,6 +109,17 @@ export function deleteMultiMouseUp(event: MouseEvent) {
  * If the mouse is held down and the user leaves canvas, we reset fields back to default.
  */
 export function deleteMultiMouseOut() {
+    if (legalNode && currentNode !== null) {
+        if (currentNode instanceof CutNode && currentNode.ellipse === null) {
+            treeContext.tree.sheet = currentNode;
+        } else if (treeContext.tree.canInsert(currentNode)) {
+            treeContext.tree.insert(currentNode);
+            if (currentNode instanceof CutNode && (currentNode as CutNode).children.length !== 0) {
+                readdChildren(currentNode);
+            }
+            redrawTree(treeContext.tree);
+        }
+    }
     currentNode = null;
     legalNode = false;
     redrawTree(treeContext.tree);
