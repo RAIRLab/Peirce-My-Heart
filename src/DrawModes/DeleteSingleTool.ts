@@ -1,7 +1,7 @@
 /**
  * Contains logic for deleting one node.
  * @author Ryan Reilly
- * @author Dawn Less
+ * @author Dawn Moore
  */
 
 import {Point} from "../AEG/Point";
@@ -31,13 +31,17 @@ let legalNode: boolean;
 export function deleteSingleMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = treeContext.tree.getLowestNode(startingPoint);
-    if (currentNode !== treeContext.tree.sheet && currentNode !== null) {
+    if (currentNode !== null) {
         const currentParent = treeContext.tree.getLowestParent(startingPoint);
         if (currentParent !== null) {
             currentParent.remove(startingPoint);
         }
 
-        if (currentNode instanceof CutNode && currentNode.children.length !== 0) {
+        if (
+            currentNode instanceof CutNode &&
+            currentNode.children.length !== 0 &&
+            currentNode !== treeContext.tree.sheet
+        ) {
             readdChildren(currentNode);
             currentNode.children = [];
         }
