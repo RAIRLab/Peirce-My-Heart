@@ -38,10 +38,7 @@ export function deleteSingleMouseDown(event: MouseEvent) {
         }
 
         if (currentNode instanceof CutNode && currentNode.children.length !== 0) {
-            //The cut node loses custody of its children so that those can still be redrawn.
-            for (let i = 0; i < currentNode.children.length; i++) {
-                treeContext.tree.insert(currentNode.children[i]);
-            }
+            readdChildren(currentNode);
             currentNode.children = [];
         }
         redrawTree(treeContext.tree);
@@ -66,7 +63,7 @@ export function deleteSingleMouseMove(event: MouseEvent) {
     if (legalNode && currentNode !== null && (currentNode as CutNode).ellipse !== null) {
         if (treeContext.tree.canInsert(currentNode)) {
             treeContext.tree.insert(currentNode);
-            if (currentNode instanceof CutNode) {
+            if (currentNode instanceof CutNode && (currentNode as CutNode).children.length !== 0) {
                 readdChildren(currentNode);
             }
             redrawTree(treeContext.tree);
@@ -82,19 +79,12 @@ export function deleteSingleMouseMove(event: MouseEvent) {
             currentNode = null;
             legalNode = false;
         } else {
-            currentNode = newNode;
-
             currentParent.remove(newPoint);
+            currentNode = newNode;
             if (currentNode instanceof CutNode && currentNode.children.length !== 0) {
-                if (treeContext.tree.canInsert(currentNode)) {
-                    treeContext.tree.insert(currentNode);
-                    if (currentNode instanceof CutNode) {
-                        readdChildren(currentNode);
-                    }
-                    redrawTree(treeContext.tree);
-                }
+                readdChildren(currentNode);
+                currentNode.children = [];
             }
-
             redrawTree(treeContext.tree);
             if (currentNode instanceof AtomNode) {
                 drawAtom(currentNode, illegalColor(), true);
@@ -121,7 +111,6 @@ export function deleteSingleMouseUp(event: MouseEvent) {
             currentNode instanceof CutNode &&
             currentNode.children.length !== 0
         ) {
-            //The cut node loses custody of its children so that those can still be redrawn.
             readdChildren(currentNode);
         }
         redrawTree(treeContext.tree);

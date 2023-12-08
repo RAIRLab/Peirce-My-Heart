@@ -19,6 +19,7 @@
         "rady",
         "RAIR",
         "Rensselaer",
+        "stringification",
         "styleguidelines",
         "subbar",
         "Subrina",
@@ -36,7 +37,7 @@
         "msedge",
         "singlefile",
         "aegtest",
-        "uitest"
+        "uitest",
         "subbar",
         "buttonface",
         "Wireframe",
