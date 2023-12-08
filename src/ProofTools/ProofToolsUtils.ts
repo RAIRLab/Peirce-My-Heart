@@ -1,6 +1,6 @@
 import {AEGTree} from "../AEG/AEGTree";
-import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
+import {AtomNode} from "../AEG/AtomNode";
 import {treeContext} from "../treeContext";
 
 /**
