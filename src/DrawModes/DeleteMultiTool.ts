@@ -6,7 +6,7 @@
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {redrawTree} from "./DrawUtils";
+import {readdChildren, redrawTree} from "./DrawUtils";
 import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
 import {offset} from "./DragTool";
@@ -53,15 +53,7 @@ export function deleteMultiMouseDown(event: MouseEvent) {
  */
 export function deleteMultiMouseMove(event: MouseEvent) {
     if (legalNode && currentNode !== null) {
-        if (currentNode instanceof CutNode && currentNode.ellipse === null) {
-            treeContext.tree.sheet = currentNode;
-        } else if (treeContext.tree.canInsert(currentNode)) {
-            treeContext.tree.insert(currentNode);
-            if (currentNode instanceof CutNode && (currentNode as CutNode).children.length !== 0) {
-                readdChildren(currentNode);
-            }
-            redrawTree(treeContext.tree);
-        }
+        deleteToolInsertion(currentNode);
     }
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
     const newNode: CutNode | AtomNode | null = treeContext.tree.getLowestNode(newPoint);
@@ -110,15 +102,7 @@ export function deleteMultiMouseUp(event: MouseEvent) {
  */
 export function deleteMultiMouseOut() {
     if (legalNode && currentNode !== null) {
-        if (currentNode instanceof CutNode && currentNode.ellipse === null) {
-            treeContext.tree.sheet = currentNode;
-        } else if (treeContext.tree.canInsert(currentNode)) {
-            treeContext.tree.insert(currentNode);
-            if (currentNode instanceof CutNode && (currentNode as CutNode).children.length !== 0) {
-                readdChildren(currentNode);
-            }
-            redrawTree(treeContext.tree);
-        }
+        deleteToolInsertion(currentNode);
     }
     currentNode = null;
     legalNode = false;
@@ -126,13 +110,17 @@ export function deleteMultiMouseOut() {
 }
 
 /**
- * Readds children of a parent CutNode.
- * @param parentCut Parent CutNode
+ * Adds the incoming node to the tree, and, if necessary, its children
+ * @param currentNode The incoming node
  */
-function readdChildren(parentCut: CutNode) {
-    for (let i = 0; i < parentCut.children.length; i++) {
-        if (treeContext.tree.canInsert(parentCut.children[i])) {
-            treeContext.tree.insert(parentCut.children[i]);
+function deleteToolInsertion(currentNode: AtomNode | CutNode) {
+    if (currentNode instanceof CutNode && currentNode.ellipse === null) {
+        treeContext.tree.sheet = currentNode;
+    } else if (treeContext.tree.canInsert(currentNode)) {
+        treeContext.tree.insert(currentNode);
+        if (currentNode instanceof CutNode && (currentNode as CutNode).children.length !== 0) {
+            readdChildren(currentNode);
         }
+        redrawTree(treeContext.tree);
     }
 }

@@ -8,7 +8,7 @@ import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {offset} from "./DragTool";
-import {drawAtom, drawCut, redrawTree} from "./DrawUtils";
+import {drawAtom, drawCut, readdChildren, redrawTree} from "./DrawUtils";
 import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
 
@@ -129,16 +129,4 @@ export function deleteSingleMouseUp(event: MouseEvent) {
 export function deleteSingleMouseOut() {
     currentNode = null;
     legalNode = false;
-}
-
-/**
- * Readds children of a parent CutNode.
- * @param parentCut Parent CutNode
- */
-function readdChildren(parentCut: CutNode) {
-    for (let i = 0; i < parentCut.children.length; i++) {
-        if (treeContext.tree.canInsert(parentCut.children[i])) {
-            treeContext.tree.insert(parentCut.children[i]);
-        }
-    }
 }

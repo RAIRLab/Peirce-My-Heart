@@ -1,6 +1,6 @@
 /**
  * File containing all drawing function for the canvas
- * @author Dawn MOore
+ * @author Dawn Moore
  */
 
 import {Point} from "../AEG/Point";
@@ -145,6 +145,20 @@ function redrawCut(incomingNode: CutNode, color?: string) {
  */
 export function redrawAtom(incomingNode: AtomNode) {
     drawAtom(incomingNode, placedColor(), false);
+}
+
+/**
+ * Readds children of a parent CutNode.
+ * In the wise words of Dawn Moore,
+ * "The cut node loses custody of its children so that those can still be redrawn."
+ * @param parentCut Parent CutNode
+ */
+export function readdChildren(parentCut: CutNode) {
+    for (let i = 0; i < parentCut.children.length; i++) {
+        if (treeContext.tree.canInsert(parentCut.children[i])) {
+            treeContext.tree.insert(parentCut.children[i]);
+        }
+    }
 }
 
 export function redrawProof() {
