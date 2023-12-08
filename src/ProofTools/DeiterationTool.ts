@@ -12,6 +12,7 @@ import {illegalColor} from "../Themes";
 import {offset} from "../DrawModes/DragTool";
 import {ProofNode} from "../AEG/ProofNode";
 import {AEGTree} from "../AEG/AEGTree";
+import {reInsertNode} from "../DrawModes/EditModeUtils";
 
 //The node selected with the user mouse down.
 let currentNode: CutNode | AtomNode | null = null;
@@ -52,10 +53,11 @@ export function deiterationMouseDown(event: MouseEvent) {
  */
 export function deiterationMouseMove(event: MouseEvent) {
     currentPoint = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = currentProofTree.getLowestNode(currentPoint);
-    redrawProof();
-
-    setLegal();
+    if (currentNode !== null) {
+        currentNode = currentProofTree.getLowestNode(currentPoint);
+        redrawProof();
+        setLegal();
+    }
 }
 
 /**
@@ -115,6 +117,9 @@ function setLegal() {
  * Reset the current null and make this node illegal until it's selected again, redraws the screen.
  */
 export function deiterationMouseOut() {
+    if (legalNode && currentNode !== null) {
+        reInsertNode(tempTree, currentNode);
+    }
     legalNode = false;
     currentNode = null;
     redrawProof();
