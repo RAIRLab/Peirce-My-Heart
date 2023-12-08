@@ -43,7 +43,6 @@ export function deleteSingleMouseDown(event: MouseEvent) {
             currentNode !== treeContext.tree.sheet
         ) {
             readdChildren(currentNode);
-            currentNode.children = [];
         }
         redrawTree(treeContext.tree);
         if (currentNode instanceof AtomNode) {
@@ -106,9 +105,9 @@ export function deleteSingleMouseMove(event: MouseEvent) {
 export function deleteSingleMouseUp(event: MouseEvent) {
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
     if (legalNode) {
-        const currentParent = treeContext.tree.getLowestNode(newPoint);
-        if (currentParent !== null && currentParent instanceof CutNode) {
-            currentParent.remove(newPoint);
+        const currentNode = treeContext.tree.getLowestNode(newPoint);
+        if (currentNode !== null && currentNode instanceof CutNode) {
+            currentNode.remove(newPoint);
         }
         if (
             currentNode !== treeContext.tree.sheet &&
@@ -130,7 +129,6 @@ export function deleteSingleMouseUp(event: MouseEvent) {
 export function deleteSingleMouseOut() {
     currentNode = null;
     legalNode = false;
-    redrawTree(treeContext.tree);
 }
 
 /**
