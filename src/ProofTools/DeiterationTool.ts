@@ -104,7 +104,7 @@ function setLegal() {
 
         //Draw the temp tree, from which the node we want to erase has been removed
         redrawTree(tempTree);
-        //Highlight the node selected for erasure in illegal color
+        //Highlight the node selected for deiteration in illegal color
         highlightNode(currentNode, illegalColor());
         //Insert it back into the temporary tree
         tempTree.insert(currentNode);

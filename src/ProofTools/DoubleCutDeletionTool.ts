@@ -6,12 +6,13 @@
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {drawCut, redrawProof} from "../DrawModes/DrawUtils";
+import {drawCut, redrawProof, redrawTree} from "../DrawModes/DrawUtils";
 import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
 import {offset} from "../DrawModes/DragTool";
 import {ProofNode} from "../AEG/ProofNode";
 import {AEGTree} from "../AEG/AEGTree";
+import {readdChildren} from "../DrawModes/EditModeUtils";
 
 //The node selected with the user mouse down.
 let currentNode: CutNode | AtomNode | null = null;
@@ -19,7 +20,14 @@ let currentNode: CutNode | AtomNode | null = null;
 //Whether or not the node is allowed to be moved (not the sheet).
 let legalNode: boolean;
 
+//The current tree in the proof chain
 let currentProofTree: AEGTree;
+
+//A copy of the tree we are dealing with in this step
+let tempTree: AEGTree;
+
+//The point that the current mouse event is targeting
+let currentPoint: Point;
 
 /**
  * Takes the current point and finds the lowest node containing that point.
@@ -27,11 +35,12 @@ let currentProofTree: AEGTree;
  * @param event The event of a mouse down while the user is using double cut deletion
  */
 export function doubleCutDeletionMouseDown(event: MouseEvent) {
-    const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
+    currentPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentProofTree = new AEGTree();
     if (treeContext.currentProofStep) {
         currentProofTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
     }
+    tempTree = new AEGTree(currentProofTree.sheet);
     currentNode = currentProofTree.getLowestNode(currentPoint);
 
     isLegal();
@@ -43,8 +52,9 @@ export function doubleCutDeletionMouseDown(event: MouseEvent) {
  * @param event The event of a mouse move while the user is using double cut deletion
  */
 export function doubleCutDeletionMouseMove(event: MouseEvent) {
-    const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
+    currentPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = currentProofTree.getLowestNode(currentPoint);
+    tempTree = new AEGTree(currentProofTree.sheet);
     redrawProof();
 
     isLegal();
@@ -59,7 +69,7 @@ export function doubleCutDeletionMouseUp(event: MouseEvent) {
     //Stores the tree of the previous proof so that we can perform double cut actions without
     //altering that tree
     const nextProof = new ProofNode(currentProofTree, "DC Delete");
-    const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
+    currentPoint = new Point(event.x - offset.x, event.y - offset.y);
 
     if (legalNode && currentNode instanceof CutNode) {
         const currentParent: CutNode | null = nextProof.tree.getLowestParent(currentPoint);
@@ -113,6 +123,22 @@ function highlightDoubleCut(parentCut: CutNode) {
 function isLegal() {
     if (currentNode instanceof CutNode && isDoubleCut(currentNode)) {
         legalNode = true;
+
+        //Find the parent at the point we are on
+        const tempParent = tempTree.getLowestParent(currentPoint);
+        if (tempParent !== null) {
+            //remove the node from the parent
+            tempParent.remove(currentPoint);
+            //The parent should adopt the children from the lower cut
+            const tempLower = currentNode.children[0].copy() as CutNode;
+            readdChildren(tempTree, tempLower);
+            tempLower.children = [];
+        }
+
+        //Draw the temp tree, from which the node we want to erase has been removed
+        redrawTree(tempTree);
+
+        //Highlight the double cut selected for deletion in illegal color
         highlightDoubleCut(currentNode);
     } else {
         legalNode = false;
