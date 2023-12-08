@@ -10,12 +10,7 @@ import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
 import {redrawProof} from "../SharedToolUtils/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
-import {
-    validateChildren,
-    drawAltered,
-    insertChildren,
-    alterNode,
-} from "../SharedToolUtils/EditModeUtils";
+import * as EditModeUtils from "../SharedToolUtils/EditModeUtils";
 import {AEGTree} from "../AEG/AEGTree";
 import {ProofNode} from "../AEG/ProofNode";
 import {getCurrentProofTree} from "./ProofToolsUtils";
@@ -59,14 +54,14 @@ export function insertionMouseDown(event: MouseEvent) {
         if (newPoint) {
             //Create a temporary node with the altered values of the new node at the location we
             //are placing it on
-            const newNode = alterNode(currentNode, newPoint);
+            const newNode = EditModeUtils.alterNode(currentNode, newPoint);
 
             //If the node being placed is not contained within the parent node at the given position,
             //it is being placed in a position which will result in adoption of nodes. This is
             //considered illegal -> mark it as such
             if (currentParent !== null && !(currentParent as CutNode).containsNode(newNode)) {
                 legalPlace = false;
-                drawAltered(currentNode, illegalColor(), newPoint);
+                EditModeUtils.drawAltered(currentNode, illegalColor(), newPoint);
             } else {
                 //According to rule of insertion, we can insert 1 graph at a time only on odd levels.
                 //Check to ensure that the new point where we are pasting is on an odd level (for
@@ -101,32 +96,35 @@ export function insertionMouseDown(event: MouseEvent) {
                         //collisions within this level
                         let color = "";
                         if (currentNode instanceof CutNode) {
-                            const legalChildren = validateChildren(
+                            const legalChildren = EditModeUtils.validateChildren(
                                 currentTree,
                                 currentNode,
                                 newPoint
                             );
                             color = legalChildren ? legalColor() : illegalColor();
                         } else if (currentNode instanceof AtomNode) {
-                            const tempAtom: AtomNode = alterNode(currentNode, newPoint) as AtomNode;
+                            const tempAtom: AtomNode = EditModeUtils.alterNode(
+                                currentNode,
+                                newPoint
+                            ) as AtomNode;
                             const canInsert = currentTree.canInsert(tempAtom);
                             color = canInsert ? legalColor() : illegalColor();
                         }
                         legalPlace = color === legalColor() ? true : false;
-                        drawAltered(currentNode, color, newPoint);
+                        EditModeUtils.drawAltered(currentNode, color, newPoint);
                     } else {
-                        drawAltered(currentNode, illegalColor(), newPoint);
+                        EditModeUtils.drawAltered(currentNode, illegalColor(), newPoint);
                     }
                 } else {
                     legalPlace = false;
-                    drawAltered(currentNode, illegalColor(), newPoint);
+                    EditModeUtils.drawAltered(currentNode, illegalColor(), newPoint);
                 }
             }
         }
     } else {
         legalPlace = false;
         legalNode = false;
-        drawAltered(currentNode, illegalColor(), startingPoint);
+        EditModeUtils.drawAltered(currentNode, illegalColor(), startingPoint);
     }
 }
 
@@ -146,14 +144,14 @@ export function insertionMouseMove(event: MouseEvent) {
         if (newPoint) {
             //Create a temporary node with the altered values of the new node at the location we
             //are placing it on
-            const newNode = alterNode(currentNode, newPoint);
+            const newNode = EditModeUtils.alterNode(currentNode, newPoint);
 
             //If the node being placed is not contained within the parent node at the given
             //position, it is being placed in a position which will result in adoption of nodes.
             //This is considered illegal -> mark it as such
             if (currentParent !== null && !(currentParent as CutNode).containsNode(newNode)) {
                 legalPlace = false;
-                drawAltered(currentNode, illegalColor(), newPoint);
+                EditModeUtils.drawAltered(currentNode, illegalColor(), newPoint);
             } else {
                 //According to rule of insertion, we can insert 1 graph at a time only on odd
                 //levels. Check to ensure that the new point where we are pasting is on an odd
@@ -189,25 +187,28 @@ export function insertionMouseMove(event: MouseEvent) {
                         //collisions within this level
                         let color = "";
                         if (currentNode instanceof CutNode) {
-                            const legalChildren = validateChildren(
+                            const legalChildren = EditModeUtils.validateChildren(
                                 currentTree,
                                 currentNode,
                                 newPoint
                             );
                             color = legalChildren ? legalColor() : illegalColor();
                         } else if (currentNode instanceof AtomNode) {
-                            const tempAtom: AtomNode = alterNode(currentNode, newPoint) as AtomNode;
+                            const tempAtom: AtomNode = EditModeUtils.alterNode(
+                                currentNode,
+                                newPoint
+                            ) as AtomNode;
                             const canInsert = currentTree.canInsert(tempAtom);
                             color = canInsert ? legalColor() : illegalColor();
                         }
                         legalPlace = color === legalColor() ? true : false;
-                        drawAltered(currentNode, color, newPoint);
+                        EditModeUtils.drawAltered(currentNode, color, newPoint);
                     } else {
-                        drawAltered(currentNode, illegalColor(), newPoint);
+                        EditModeUtils.drawAltered(currentNode, illegalColor(), newPoint);
                     }
                 } else {
                     legalPlace = false;
-                    drawAltered(currentNode, illegalColor(), newPoint);
+                    EditModeUtils.drawAltered(currentNode, illegalColor(), newPoint);
                 }
             }
         }
@@ -225,9 +226,12 @@ export function insertionMouseUp(event: MouseEvent) {
         //Insert the node, and its children if it has any
         if (newPoint) {
             if (currentNode instanceof CutNode) {
-                insertChildren(currentNode, newPoint, currentTree);
+                EditModeUtils.insertChildren(currentNode, newPoint, currentTree);
             } else if (currentNode instanceof AtomNode) {
-                const tempAtom: AtomNode = alterNode(currentNode, newPoint) as AtomNode;
+                const tempAtom: AtomNode = EditModeUtils.alterNode(
+                    currentNode,
+                    newPoint
+                ) as AtomNode;
                 currentTree.insert(tempAtom);
             }
             //Insertion is a new step -> push a new node in the proof, signifying it as such
