@@ -8,14 +8,13 @@ import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
-import {offset} from "../DrawModes/DragTool";
-import {drawCut, redrawProof, redrawTree} from "../DrawModes/DrawUtils";
+import {offset} from "../SharedToolUtils/DragTool";
+import {drawCut, redrawProof, redrawTree, determineDirection} from "../SharedToolUtils/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
 import {ProofNode} from "../AEG/ProofNode";
-import {resizeCut} from "../DrawModes/EditModeUtils";
-import {determineDirection} from "../DrawModes/DrawUtils";
-import {ellipseLargeEnough} from "../DrawModes/CutTool";
-import {proofCanInsert} from "./ProofMoveUtils";
+import {ellipseLargeEnough, resizeCut} from "../SharedToolUtils/EditModeUtils";
+import {proofCanInsert} from "./ProofToolsUtils";
+import {getCurrentProofTree} from "./ProofToolsUtils";
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -40,10 +39,7 @@ let currentProofTree: AEGTree;
  * @param event The mouse down even while using resize tool in proof mode
  */
 export function proofResizeMouseDown(event: MouseEvent) {
-    currentProofTree = new AEGTree();
-    if (treeContext.currentProofStep) {
-        currentProofTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
-    }
+    currentProofTree = getCurrentProofTree();
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = currentProofTree.getLowestNode(startingPoint);
 

@@ -7,12 +7,18 @@ import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
-import {offset} from "../DrawModes/DragTool";
-import {redrawProof} from "../DrawModes/DrawUtils";
+import {offset} from "../SharedToolUtils/DragTool";
+import {redrawProof} from "../SharedToolUtils/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
-import {validateChildren, drawAltered, insertChildren, alterNode} from "../DrawModes/EditModeUtils";
+import {
+    validateChildren,
+    drawAltered,
+    insertChildren,
+    alterNode,
+} from "../SharedToolUtils/EditModeUtils";
 import {AEGTree} from "../AEG/AEGTree";
 import {ProofNode} from "../AEG/ProofNode";
+import {getCurrentProofTree} from "./ProofToolsUtils";
 
 //The selected subgraph that we will be placing
 let currentNode: CutNode | AtomNode;
@@ -32,10 +38,7 @@ let legalNode: boolean;
 export function insertionMouseDown(event: MouseEvent) {
     //Create a deep copy of the tree we are trying to insert the incoming node into so that we can
     //modify it as needed without affecting the actual structure
-    currentTree = new AEGTree();
-    if (treeContext.currentProofStep) {
-        currentTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
-    }
+    currentTree = getCurrentProofTree();
     const selectedNodes = treeContext.selectForProof.sheet.children;
     const startingPoint = new Point(event.x - offset.x, event.y - offset.y);
 

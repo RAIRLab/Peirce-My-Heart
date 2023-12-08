@@ -10,11 +10,12 @@ import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
-import {offset} from "../DrawModes/DragTool";
-import {drawAtom, redrawProof, redrawTree} from "../DrawModes/DrawUtils";
+import {offset} from "../SharedToolUtils/DragTool";
+import {drawAtom, redrawProof, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
-import {drawAltered, alterAtom, alterCutChildren} from "../DrawModes/EditModeUtils";
-import {isMoveLegal} from "./ProofMoveUtils";
+import {drawAltered, alterAtom, alterCutChildren} from "../SharedToolUtils/EditModeUtils";
+import {isMoveLegal} from "./ProofToolsUtils";
+import {getCurrentProofTree} from "./ProofToolsUtils";
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -37,10 +38,7 @@ let currentProofTree: AEGTree;
  * @param event The mouse down event while using move multiple tool in proof mode
  */
 export function proofMoveMultiMouseDown(event: MouseEvent) {
-    currentProofTree = new AEGTree();
-    if (treeContext.currentProofStep) {
-        currentProofTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
-    }
+    currentProofTree = getCurrentProofTree();
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = currentProofTree.getLowestNode(startingPoint);
 

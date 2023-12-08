@@ -7,8 +7,8 @@ import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
-import {offset} from "./DragTool";
-import {drawAtom, cleanCanvas, redrawTree, highlightNode} from "./DrawUtils";
+import {offset} from "../SharedToolUtils/DragTool";
+import {drawAtom, cleanCanvas, redrawTree, highlightNode} from "../SharedToolUtils/DrawUtils";
 import {legalColor} from "../Themes";
 import {AEGTree} from "../AEG/AEGTree";
 

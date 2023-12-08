@@ -8,12 +8,13 @@ import {Point} from "../AEG/Point";
 import {CutNode} from "../AEG/CutNode";
 import {Ellipse} from "../AEG/Ellipse";
 import {treeContext} from "../treeContext";
-import {offset} from "../DrawModes/DragTool";
+import {offset} from "../SharedToolUtils/DragTool";
 import {legalColor, illegalColor} from "../Themes";
-import {drawCut, redrawProof, drawGuidelines} from "../DrawModes/DrawUtils";
-import {ellipseLargeEnough, createEllipse} from "../DrawModes/CutTool";
+import {drawCut, redrawProof, drawGuidelines} from "../SharedToolUtils/DrawUtils";
 import {ProofNode} from "../AEG/ProofNode";
 import {AEGTree} from "../AEG/AEGTree";
+import {getCurrentProofTree} from "./ProofToolsUtils";
+import {createEllipse, ellipseLargeEnough} from "../SharedToolUtils/EditModeUtils";
 
 const showRectElm: HTMLInputElement = <HTMLInputElement>document.getElementById("showRect");
 
@@ -31,10 +32,7 @@ let currentProofTree: AEGTree;
  */
 export function doubleCutInsertionMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.clientX - offset.x, event.clientY - offset.y);
-    currentProofTree = new AEGTree();
-    if (treeContext.currentProofStep) {
-        currentProofTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
-    }
+    currentProofTree = getCurrentProofTree();
     wasOut = false;
 }
 
