@@ -1,17 +1,18 @@
-/**
- * File containing all drawing function for the canvas
- * @author Dawn Moore
- */
-
-import {Point} from "../AEG/Point";
-import {CutNode} from "../AEG/CutNode";
+import {aegStringify} from "../index";
+import {AEGTree} from "../AEG/AEGTree";
 import {AtomNode} from "../AEG/AtomNode";
+import {CutNode} from "../AEG/CutNode";
 import {Ellipse} from "../AEG/Ellipse";
-import {treeContext} from "../treeContext";
 import {offset} from "./DragTool";
 import {placedColor} from "../Themes";
-import {AEGTree} from "../AEG/AEGTree";
-import {aegStringify} from "../index";
+import {Point} from "../AEG/Point";
+import {treeContext} from "../treeContext";
+
+/**
+ * Collection of methods for function on the HTML canvas.
+ * @author Dawn Moore
+ * @author Anusha Tiwari
+ */
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");

@@ -1,16 +1,17 @@
-/**
- * File containing helper functions for move, copy, and delete modes.
- * @author Dawn Moore
- */
-
-import {Point} from "../AEG/Point";
+import {AEGTree} from "../AEG/AEGTree";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {treeContext} from "../treeContext";
-import {offset} from "./DragTool";
+import {drawAtom, drawCut, redrawTree} from "./DrawUtils";
 import {Ellipse} from "../AEG/Ellipse";
-import {drawCut, drawAtom, redrawTree} from "./DrawUtils";
-import {AEGTree} from "../AEG/AEGTree";
+import {offset} from "./DragTool";
+import {Point} from "../AEG/Point";
+import {treeContext} from "../treeContext";
+
+/**
+ * Collection of methods for move, copy, and delete modes.
+ * @author Dawn Moore
+ * @author Anusha Tiwari
+ */
 
 const modeElm: HTMLSelectElement = <HTMLSelectElement>document.getElementById("mode");
 

@@ -1,11 +1,12 @@
-/**
- * File containing drag based event functions.
- * @author Dawn Moore
- */
-
 import {Point} from "../AEG/Point";
-import {treeContext} from "../treeContext";
 import {redrawProof, redrawTree} from "./DrawUtils";
+import {treeContext} from "../treeContext";
+
+/**
+ * Collection of functions for drag based events.
+ * @author Dawn Moore
+ * @author Anusha Tiwari
+ */
 
 //Original point later points will be compared to.
 let originPoint: Point;
