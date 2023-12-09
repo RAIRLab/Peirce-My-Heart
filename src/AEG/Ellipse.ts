@@ -58,7 +58,7 @@ export class Ellipse {
     /**
      * Checks whether a Point is contained within this Ellipse.
      * @param point Point that may be contained within this Ellipse.
-     * @returns True, if the Point is contained within this Ellipse.
+     * @returns True if the Point is contained within this Ellipse.
      */
     public containsPoint(point: Point): boolean {
         return signedDistanceFromEllipse(this, point) < 0;
