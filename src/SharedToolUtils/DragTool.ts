@@ -5,7 +5,7 @@
 
 import {Point} from "../AEG/Point";
 import {treeContext} from "../treeContext";
-import {redrawTree} from "./DrawUtils";
+import {redrawProof, redrawTree} from "./DrawUtils";
 
 //Original point later points will be compared to.
 let originPoint: Point;
@@ -32,7 +32,12 @@ export function dragMouseDown(event: MouseEvent) {
 export function dragMouseMove(event: MouseEvent) {
     if (!wasOut) {
         offset = new Point(event.x - originPoint.x, event.y - originPoint.y);
-        redrawTree(treeContext.tree);
+
+        if (treeContext.modeState === "Proof") {
+            redrawProof();
+        } else {
+            redrawTree(treeContext.tree);
+        }
     }
 }
 
@@ -41,5 +46,9 @@ export function dragMouseMove(event: MouseEvent) {
  */
 export function dragMosueOut() {
     wasOut = true;
-    redrawTree(treeContext.tree);
+    if (treeContext.modeState === "Proof") {
+        redrawProof();
+    } else {
+        redrawTree(treeContext.tree);
+    }
 }

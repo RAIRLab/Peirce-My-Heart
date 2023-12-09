@@ -7,8 +7,8 @@ import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
-import {offset} from "./DragTool";
-import {drawAtom, cleanCanvas, redrawTree, highlightNode} from "./DrawUtils";
+import {offset} from "../SharedToolUtils/DragTool";
+import {cleanCanvas, redrawTree, highlightNode} from "../SharedToolUtils/DrawUtils";
 import {legalColor} from "../Themes";
 import {AEGTree} from "../AEG/AEGTree";
 
@@ -118,11 +118,7 @@ function isLegal() {
         }
 
         //Highlight the selected part by redrawing in legalColor
-        if (selectedNode instanceof AtomNode) {
-            drawAtom(selectedNode, legalColor(), true);
-        } else {
-            highlightNode(selectedNode, legalColor());
-        }
+        highlightNode(selectedNode, legalColor());
 
         //If something was removed, add it back kin
         if (removed) {

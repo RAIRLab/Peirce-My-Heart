@@ -6,19 +6,25 @@
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {redrawProof} from "../DrawModes/DrawUtils";
+import {redrawProof, highlightNode, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
-import {offset} from "../DrawModes/DragTool";
+import {offset} from "../SharedToolUtils/DragTool";
 import {ProofNode} from "../AEG/ProofNode";
 import {AEGTree} from "../AEG/AEGTree";
-import {highlightChildren} from "../DrawModes/EditModeUtils";
+import {reInsertNode} from "../SharedToolUtils/EditModeUtils";
 
 //The node selected with the user mouse down.
 let currentNode: CutNode | AtomNode | null = null;
 
 //Whether or not the node is allowed to be moved (not the sheet).
 let legalNode: boolean;
+
+//A copy of the tree we are dealing with in this step
+let tempTree: AEGTree;
+
+//The point that the current mouse event is targeting
+let currentPoint: Point;
 
 //The current tree in the proof chain
 let currentProofTree: AEGTree;
@@ -29,8 +35,12 @@ let currentProofTree: AEGTree;
  * @param event A Mouse up event while using the deiteration tool
  */
 export function deiterationMouseDown(event: MouseEvent) {
-    const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
-    currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
+    currentPoint = new Point(event.x - offset.x, event.y - offset.y);
+    currentProofTree = new AEGTree();
+    if (treeContext.currentProofStep) {
+        currentProofTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
+    }
+    tempTree = new AEGTree(currentProofTree.sheet);
     currentNode = currentProofTree.getLowestNode(currentPoint);
 
     setLegal();
@@ -42,11 +52,12 @@ export function deiterationMouseDown(event: MouseEvent) {
  * @param event A mouse move event while using deiteration tool
  */
 export function deiterationMouseMove(event: MouseEvent) {
-    const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = currentProofTree.getLowestNode(currentPoint);
-    redrawProof();
-
-    setLegal();
+    currentPoint = new Point(event.x - offset.x, event.y - offset.y);
+    if (currentNode !== null) {
+        currentNode = currentProofTree.getLowestNode(currentPoint);
+        redrawProof();
+        setLegal();
+    }
 }
 
 /**
@@ -56,7 +67,7 @@ export function deiterationMouseMove(event: MouseEvent) {
  */
 export function deiterationMouseUp(event: MouseEvent) {
     if (legalNode) {
-        const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
+        currentPoint = new Point(event.x - offset.x, event.y - offset.y);
         if (
             currentNode !== null &&
             canDeiterate(currentProofTree.sheet, currentProofTree.getLevel(currentNode))
@@ -65,7 +76,7 @@ export function deiterationMouseUp(event: MouseEvent) {
             if (currentParent instanceof CutNode) {
                 currentParent.remove(currentPoint);
             }
-            treeContext.proofHistory.push(new ProofNode(currentProofTree, "Deiteration"));
+            treeContext.pushToProof(new ProofNode(currentProofTree, "Deiteration"));
         }
     }
 
@@ -82,8 +93,21 @@ function setLegal() {
         !(currentNode instanceof CutNode && currentNode.ellipse === null) &&
         canDeiterate(currentProofTree.sheet, currentProofTree.getLevel(currentNode))
     ) {
-        highlightChildren(currentNode, illegalColor());
         legalNode = true;
+
+        //Find the parent at the point we are on
+        const tempParent = tempTree.getLowestParent(currentPoint);
+        if (tempParent !== null) {
+            //remove the node from the parent
+            tempParent.remove(currentPoint);
+        }
+
+        //Draw the temp tree, from which the node we want to erase has been removed
+        redrawTree(tempTree);
+        //Highlight the node selected for deiteration in illegal color
+        highlightNode(currentNode, illegalColor());
+        //Insert it back into the temporary tree
+        tempTree.insert(currentNode);
     } else {
         legalNode = false;
     }
@@ -93,6 +117,9 @@ function setLegal() {
  * Reset the current null and make this node illegal until it's selected again, redraws the screen.
  */
 export function deiterationMouseOut() {
+    if (legalNode && currentNode !== null) {
+        reInsertNode(tempTree, currentNode);
+    }
     legalNode = false;
     currentNode = null;
     redrawProof();
