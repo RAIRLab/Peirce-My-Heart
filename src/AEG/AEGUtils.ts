@@ -23,7 +23,7 @@ export function shapesOverlap(
     newShape: Rectangle | Ellipse,
     existingShape: Rectangle | Ellipse
 ): boolean {
-    return shapesIntersect(newShape, existingShape) || shapeContains(newShape, existingShape);
+    return shapesIntersect(newShape, existingShape) || shapeContains(existingShape, newShape);
 }
 
 /**
