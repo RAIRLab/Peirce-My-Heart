@@ -1,6 +1,6 @@
 /**
  * File containing all drawing function for the canvas
- * @author Dawn MOore
+ * @author Dawn Moore
  */
 
 import {Point} from "../AEG/Point";
@@ -163,7 +163,9 @@ export function redrawProof() {
 }
 
 /**
- * Helper function to highlight the specific selected node
+ * Highlights all the children of the incoming node as the incoming color.
+ * @param child The incoming node
+ * @param color The incoming color
  */
 export function highlightNode(child: AtomNode | CutNode, color: string) {
     if (child instanceof AtomNode) {
