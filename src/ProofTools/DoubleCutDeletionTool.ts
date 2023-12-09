@@ -13,6 +13,7 @@ import {offset} from "../SharedToolUtils/DragTool";
 import {ProofNode} from "../AEG/ProofNode";
 import {AEGTree} from "../AEG/AEGTree";
 import {reInsertNode, readdChildren} from "../SharedToolUtils/EditModeUtils";
+import {getCurrentProofTree} from "./ProofToolsUtils";
 
 //The node selected with the user mouse down.
 let currentNode: CutNode | AtomNode | null = null;
@@ -36,10 +37,7 @@ let currentPoint: Point;
  */
 export function doubleCutDeletionMouseDown(event: MouseEvent) {
     currentPoint = new Point(event.x - offset.x, event.y - offset.y);
-    currentProofTree = new AEGTree();
-    if (treeContext.currentProofStep) {
-        currentProofTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
-    }
+    currentProofTree = getCurrentProofTree();
     tempTree = new AEGTree(currentProofTree.sheet);
     currentNode = currentProofTree.getLowestNode(currentPoint);
 

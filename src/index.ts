@@ -37,11 +37,6 @@ import * as IterationTool from "./ProofTools/IterationTool";
 import * as ProofResizeTool from "./ProofTools/ProofResizeTool";
 import * as DeiterationTool from "./ProofTools/DeiterationTool";
 import * as ClearProofTool from "./ProofTools/ClearProofTool";
-import {
-    clearProofMouseDown,
-    clearProofMouseOut,
-    clearProofMouseUp,
-} from "./ProofTools/ClearProofTool";
 import {appendStep} from "./ProofHistory";
 
 //Setting up Canvas
@@ -297,6 +292,7 @@ async function loadMode() {
                     for (let i = 0; i < treeContext.proof.length; i++) {
                         appendStep(treeContext.proof[i], i + 1);
                     }
+                    treeContext.currentProofStep = treeContext.proof[treeContext.proof.length - 1];
                     //Redraw our proof
                     redrawProof();
                 }

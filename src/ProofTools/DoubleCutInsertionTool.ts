@@ -74,7 +74,7 @@ export function doubleCutInsertionMouseMove(event: MouseEvent) {
  */
 export function doubleCutInsertionMouseUp(event: MouseEvent) {
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
-    currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
+    currentProofTree = getCurrentProofTree();
 
     const largeCut: CutNode = new CutNode(createEllipse(startingPoint, currentPoint));
     const smallCut: CutNode = new CutNode(calcSmallEllipse(<Ellipse>largeCut.ellipse));
