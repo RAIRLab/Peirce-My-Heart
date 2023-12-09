@@ -11,7 +11,7 @@ import {offset} from "../SharedToolUtils/DragTool";
 import {drawAtom, drawCut, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
-import {readdChildren, reInsertNode} from "./EditModeUtils";
+import {readdChildren, reInsertNode} from "../SharedToolUtils/EditModeUtils";
 
 //The initial point the user pressed down.
 let startingPoint: Point;
