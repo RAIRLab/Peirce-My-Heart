@@ -6,13 +6,13 @@
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {redrawProof, redrawTree, highlightNode} from "../DrawModes/DrawUtils";
 import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
-import {offset} from "../DrawModes/DragTool";
 import {ProofNode} from "../AEG/ProofNode";
 import {AEGTree} from "../AEG/AEGTree";
-import {reInsertNode} from "../DrawModes/EditModeUtils";
+import {reInsertNode} from "../SharedToolUtils/EditModeUtils";
+import {redrawProof, redrawTree, highlightNode} from "../SharedToolUtils/DrawUtils";
+import {offset} from "../SharedToolUtils/DragTool";
 
 //The node selected with the user mouse down.
 let currentNode: CutNode | AtomNode | null = null;

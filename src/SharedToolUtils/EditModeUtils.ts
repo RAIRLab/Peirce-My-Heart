@@ -12,6 +12,8 @@ import {Ellipse} from "../AEG/Ellipse";
 import {drawCut, drawAtom, redrawTree} from "./DrawUtils";
 import {AEGTree} from "../AEG/AEGTree";
 
+const modeElm: HTMLSelectElement = <HTMLSelectElement>document.getElementById("mode");
+
 /**
  * Checks the validity of the incoming node and all of its children. If the child is a cut node uses
  * recursion to check the validity, if it is an atom it does not need recursion. If even one node
@@ -246,4 +248,46 @@ export function reInsertNode(tree: AEGTree, currentNode: AtomNode | CutNode) {
         }
         redrawTree(tree);
     }
+}
+/**
+ * A function to calculate an ellipse between two points designated by the user.
+ * @param original the point where the user originally clicked
+ * @param current the point where the user's mouse is currently located
+ */
+export function createEllipse(original: Point, current: Point): Ellipse {
+    const center: Point = new Point(
+        (current.x - original.x) / 2 + original.x,
+        (current.y - original.y) / 2 + original.y
+    );
+
+    const sdx = original.x - current.x;
+    const sdy = original.y - current.y;
+    const dx = Math.abs(sdx);
+    const dy = Math.abs(sdy);
+    let rx, ry: number;
+
+    if (modeElm.value === "circumscribed") {
+        //This inscribed ellipse solution is inspired by the discussion of radius ratios in
+        //https://stackoverflow.com/a/433426/6342516
+        const rv: number = Math.floor(center.distance(current));
+        ry = Math.floor(rv * (dy / dx));
+        rx = Math.floor(rv * (dx / dy));
+    } else {
+        rx = dx / 2;
+        ry = dy / 2;
+    }
+
+    return new Ellipse(center, rx, ry);
+}
+
+/**
+ * Checks to see if the given ellipse is large enough to be considered legal.
+ * @param ellipse The ellipse to be checked
+ * @returns Whether the given ellipse is large enough to be legal
+ */
+export function ellipseLargeEnough(ellipse: Ellipse) {
+    if (ellipse.radiusX > 15 && ellipse.radiusY > 15) {
+        return true;
+    }
+    return false;
 }

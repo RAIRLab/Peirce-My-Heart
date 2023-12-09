@@ -3,15 +3,13 @@
  */
 
 import {Point} from "../AEG/Point";
-import {determineDirection} from "./DrawUtils";
-import {resizeCut} from "./EditModeUtils";
+import {ellipseLargeEnough, resizeCut} from "../SharedToolUtils/EditModeUtils";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
-import {offset} from "./DragTool";
-import {drawCut, redrawTree} from "./DrawUtils";
+import {offset} from "../SharedToolUtils/DragTool";
+import {drawCut, redrawTree, determineDirection} from "../SharedToolUtils/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
-import {ellipseLargeEnough} from "./CutTool";
 
 //The initial point the user pressed down.
 let startingPoint: Point;

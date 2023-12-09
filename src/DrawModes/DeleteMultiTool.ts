@@ -6,11 +6,11 @@
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {redrawTree, highlightNode} from "./DrawUtils";
 import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
-import {offset} from "./DragTool";
-import {reInsertNode} from "./EditModeUtils";
+import {highlightNode, redrawTree} from "../SharedToolUtils/DrawUtils";
+import {offset} from "../SharedToolUtils/DragTool";
+import {reInsertNode} from "../SharedToolUtils/EditModeUtils";
 
 //The initial point the user pressed down.
 let startingPoint: Point;

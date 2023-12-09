@@ -8,10 +8,10 @@ import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
-import {offset} from "./DragTool";
-import {drawAtom, redrawTree} from "./DrawUtils";
+import {offset} from "../SharedToolUtils/DragTool";
+import {drawAtom, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
-import {validateChildren, drawAltered, insertChildren, alterAtom} from "./EditModeUtils";
+import * as EditModeUtils from "../SharedToolUtils/EditModeUtils";
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -52,12 +52,16 @@ export function copyMultiMouseMove(event: MouseEvent) {
 
         redrawTree(treeContext.tree);
         if (currentNode instanceof CutNode) {
-            const color = validateChildren(treeContext.tree, currentNode, moveDifference)
+            const color = EditModeUtils.validateChildren(
+                treeContext.tree,
+                currentNode,
+                moveDifference
+            )
                 ? legalColor()
                 : illegalColor();
-            drawAltered(currentNode, color, moveDifference);
+            EditModeUtils.drawAltered(currentNode, color, moveDifference);
         } else if (currentNode instanceof AtomNode) {
-            const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
+            const tempAtom: AtomNode = EditModeUtils.alterAtom(currentNode, moveDifference);
             const color = treeContext.tree.canInsert(tempAtom) ? legalColor() : illegalColor();
             drawAtom(tempAtom, color, true);
         }
@@ -79,11 +83,11 @@ export function copyMultiMouseUp(event: MouseEvent) {
         );
 
         if (currentNode instanceof CutNode) {
-            if (validateChildren(treeContext.tree, currentNode, moveDifference)) {
-                insertChildren(currentNode, moveDifference);
+            if (EditModeUtils.validateChildren(treeContext.tree, currentNode, moveDifference)) {
+                EditModeUtils.insertChildren(currentNode, moveDifference);
             }
         } else if (currentNode instanceof AtomNode) {
-            const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
+            const tempAtom: AtomNode = EditModeUtils.alterAtom(currentNode, moveDifference);
 
             if (treeContext.tree.canInsert(tempAtom)) {
                 treeContext.tree.insert(tempAtom);
