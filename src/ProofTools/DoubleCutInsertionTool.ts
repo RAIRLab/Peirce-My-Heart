@@ -8,12 +8,13 @@ import {Point} from "../AEG/Point";
 import {CutNode} from "../AEG/CutNode";
 import {Ellipse} from "../AEG/Ellipse";
 import {treeContext} from "../treeContext";
-import {offset} from "../DrawModes/DragTool";
+import {offset} from "../SharedToolUtils/DragTool";
 import {legalColor, illegalColor} from "../Themes";
-import {drawCut, redrawProof, drawGuidelines} from "../DrawModes/DrawUtils";
-import {ellipseLargeEnough, createEllipse} from "../DrawModes/CutTool";
+import {drawCut, redrawProof, drawGuidelines} from "../SharedToolUtils/DrawUtils";
 import {ProofNode} from "../AEG/ProofNode";
 import {AEGTree} from "../AEG/AEGTree";
+import {getCurrentProofTree} from "./ProofToolsUtils";
+import {createEllipse, ellipseLargeEnough} from "../SharedToolUtils/EditModeUtils";
 
 const showRectElm: HTMLInputElement = <HTMLInputElement>document.getElementById("showRect");
 
@@ -31,7 +32,7 @@ let currentProofTree: AEGTree;
  */
 export function doubleCutInsertionMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.clientX - offset.x, event.clientY - offset.y);
-    currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
+    currentProofTree = getCurrentProofTree();
     wasOut = false;
 }
 
@@ -80,7 +81,7 @@ export function doubleCutInsertionMouseUp(event: MouseEvent) {
 
     //Stores the tree of the previous proof so that we can perform double cut actions without
     //altering that tree
-    const nextProof = new ProofNode(currentProofTree, "Double Cut Insertion");
+    const nextProof = new ProofNode(currentProofTree, "DC Insert");
 
     if (!wasOut && largeCut.ellipse !== null && smallCut.ellipse !== null) {
         //If either ellipse is in an invalid position or too small it cannot be inserted
@@ -93,7 +94,7 @@ export function doubleCutInsertionMouseUp(event: MouseEvent) {
         if (legal) {
             nextProof.tree.insert(largeCut);
             nextProof.tree.insert(smallCut);
-            treeContext.proofHistory.push(nextProof);
+            treeContext.pushToProof(nextProof);
         }
     }
     redrawProof();

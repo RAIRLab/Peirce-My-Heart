@@ -4,6 +4,22 @@ import {AtomNode} from "../AEG/AtomNode";
 import {treeContext} from "../treeContext";
 
 /**
+ * Get a copy of the AEGTree of the current step in the proof.
+ * If there is no steps in the proof, returns a new AEGTree
+ * @returns A copy of the AEGTree of the current step in the proof
+ */
+export function getCurrentProofTree() {
+    const currentTree = new AEGTree();
+    //Check whether the current step has been defined
+    if (treeContext.currentProofStep) {
+        //If it has, get a copy of its tree
+        currentTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
+    }
+
+    return currentTree;
+}
+
+/**
  * Determines if the current node can be inserted in a position that is not overlapping with anything
  * and it being inserted would result in a graph that would equal one another.
  * @param currentNode The node that will be checked for legality
@@ -21,6 +37,10 @@ export function isMoveLegal(tree: AEGTree, currentNode: CutNode | AtomNode): boo
  * @returns Whether or not the two graphs are equal
  */
 export function proofCanInsert(tree: AEGTree, currentNode: CutNode | AtomNode): boolean {
-    tree.insert(currentNode.copy());
-    return tree.isEqualTo(new AEGTree(treeContext.getLastProofStep().tree.sheet));
+    if (treeContext.currentProofStep) {
+        tree.insert(currentNode.copy());
+        return tree.isEqualTo(new AEGTree(treeContext.currentProofStep.tree.sheet));
+    } else {
+        return false;
+    }
 }

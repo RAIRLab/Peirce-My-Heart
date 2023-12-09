@@ -1,6 +1,6 @@
 import {AEGTree} from "./AEG/AEGTree";
 import {ProofNode} from "./AEG/ProofNode";
-// import {Tool} from "./index";
+import {appendStep, deleteButtons} from "./ProofHistory";
 
 /**
  * The global context describing the state of the AEG Tree and other related attributes
@@ -33,6 +33,7 @@ export enum Tool {
     proofResizeTool,
     iterationTool,
     deiterationTool,
+    clearProofTool,
 }
 
 export class treeContext {
@@ -40,7 +41,10 @@ export class treeContext {
     public static tree: AEGTree = new AEGTree();
 
     //The proof being constructed
-    public static proofHistory: ProofNode[] = [];
+    public static proof: ProofNode[] = [];
+
+    //The node denoting the current step that we are on in the proof
+    public static currentProofStep: ProofNode | undefined;
 
     //The node selected on draw mode which will copy over when we toggle to proof mode.
     public static selectForProof: AEGTree = new AEGTree();
@@ -51,11 +55,57 @@ export class treeContext {
     //An indicator of the mode that we are currently on
     public static modeState: "Draw" | "Proof" = "Draw";
 
+    /**
+     * Method to get the last step in the proof.
+     * @returns The node denoting the last step in the proof.
+     */
     public static getLastProofStep(): ProofNode {
-        if (treeContext.proofHistory.length === 0) {
+        if (treeContext.proof.length === 0) {
             return new ProofNode(new AEGTree());
         }
 
-        return treeContext.proofHistory[treeContext.proofHistory.length - 1];
+        return treeContext.proof[treeContext.proof.length - 1];
+    }
+
+    /**
+     * Adds the recently created proof node into the proof array and creates a new button for it.
+     * Sets the current step to this new step. If the current step is not the newest step then
+     * the array up to that step needs to be removed.
+     * @param newStep The new proof node being added to the proof
+     */
+    public static pushToProof(newStep: ProofNode) {
+        if (newStep.appliedRule === "Pasted") {
+            this.proof.pop();
+            document.getElementById("Row: 1")?.remove();
+            newStep.index = 0;
+        } else if (this.currentProofStep && this.proof.length > 0) {
+            //Compare the current step we are on and the last step stored in the history
+            //If they are not the same, we have moved back to a previous step and need to delete
+            //all the steps in between
+            if (
+                !this.currentProofStep.tree.isEqualTo(this.proof[this.proof.length - 1].tree) ||
+                this.currentProofStep.appliedRule !== this.proof[this.proof.length - 1].appliedRule
+            ) {
+                const currentIndex: number = this.currentProofStep.index;
+                deleteButtons(currentIndex);
+                this.proof = this.proof.splice(0, currentIndex + 1);
+                newStep.index = this.proof.length;
+            }
+        }
+
+        //Set the newest performed step as the current step, and it to the proof
+        this.currentProofStep = newStep;
+        this.proof.push(newStep);
+        appendStep(newStep);
+    }
+
+    /**
+     * Clears the proof by resetting the array and the current step of the proof
+     */
+    public static clearProof() {
+        deleteButtons(-1);
+        this.proof = [];
+        this.pushToProof(new ProofNode());
+        this.currentProofStep = this.proof[0];
     }
 }

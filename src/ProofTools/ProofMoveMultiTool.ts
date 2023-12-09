@@ -10,11 +10,12 @@ import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
-import {offset} from "../DrawModes/DragTool";
-import {drawAtom, redrawProof, redrawTree} from "../DrawModes/DrawUtils";
+import {offset} from "../SharedToolUtils/DragTool";
+import {drawAtom, highlightNode, redrawProof, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
-import {drawAltered, alterAtom, alterCutChildren} from "../DrawModes/EditModeUtils";
-import {isMoveLegal} from "./ProofMoveUtils";
+import {drawAltered, alterAtom, alterCutChildren} from "../SharedToolUtils/EditModeUtils";
+import {isMoveLegal} from "./ProofToolsUtils";
+import {getCurrentProofTree} from "./ProofToolsUtils";
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -37,7 +38,7 @@ let currentProofTree: AEGTree;
  * @param event The mouse down event while using move multiple tool in proof mode
  */
 export function proofMoveMultiMouseDown(event: MouseEvent) {
-    currentProofTree = new AEGTree(treeContext.getLastProofStep().tree.sheet);
+    currentProofTree = getCurrentProofTree();
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = currentProofTree.getLowestNode(startingPoint);
 
@@ -47,6 +48,10 @@ export function proofMoveMultiMouseDown(event: MouseEvent) {
             currentParent.remove(startingPoint);
         }
         legalNode = true;
+
+        // highlight the chosen node and its children in legal color to show what will be moved
+        redrawTree(currentProofTree);
+        highlightNode(currentNode, legalColor());
     } else {
         legalNode = false;
     }
@@ -87,7 +92,7 @@ export function proofMoveMultiMouseMove(event: MouseEvent) {
  */
 export function proofMoveMultiMouseUp(event: MouseEvent) {
     if (legalNode) {
-        const nextStep = new ProofNode(currentProofTree, "Multi Movement");
+        const nextStep = new ProofNode(currentProofTree, "Multi Move");
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
             event.y - startingPoint.y
@@ -102,8 +107,7 @@ export function proofMoveMultiMouseUp(event: MouseEvent) {
 
         if (tempNode !== null && isMoveLegal(currentProofTree, tempNode)) {
             nextStep.tree.insert(tempNode);
-            treeContext.proofHistory.push(nextStep);
-            redrawTree(nextStep.tree);
+            treeContext.pushToProof(nextStep);
         }
     }
     redrawProof();
@@ -118,5 +122,5 @@ export function proofMoveMultiMouseOut() {
         currentProofTree.insert(currentNode);
     }
     legalNode = false;
-    redrawTree(treeContext.getLastProofStep().tree);
+    redrawProof();
 }
