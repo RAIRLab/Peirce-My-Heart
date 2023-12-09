@@ -135,6 +135,7 @@ import {
     clearProofMouseOut,
     clearProofMouseUp,
 } from "./ProofTools/ClearProofTool";
+import {appendStep} from "./ProofHistory";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -374,10 +375,22 @@ async function loadMode() {
             if (typeof aegData === "string") {
                 const loadData = loadFile(treeContext.modeState, aegData);
                 if (treeContext.modeState === "Draw") {
+                    //Load in the data of our new tree
                     treeContext.tree = loadData as AEGTree;
+                    //Redraw our tree
                     redrawTree(treeContext.tree);
                 } else if (treeContext.modeState === "Proof") {
+                    //Clear our current proof
+                    treeContext.clearProof();
+                    //Load in the data of the new proof
                     treeContext.proof = loadData as ProofNode[];
+                    //Remove our default start step
+                    document.getElementById("Row: 1")?.remove();
+                    //Add a button for each step of the proof to the history bar
+                    for (let i = 0; i < treeContext.proof.length; i++) {
+                        appendStep(treeContext.proof[i], i + 1);
+                    }
+                    //Redraw our proof
                     redrawProof();
                 }
             } else {
