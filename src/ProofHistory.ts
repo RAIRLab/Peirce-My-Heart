@@ -4,7 +4,7 @@
  */
 
 import {treeContext} from "./treeContext";
-import {redrawProof} from "./DrawModes/DrawUtils";
+import {redrawProof} from "./SharedToolUtils/DrawUtils";
 import {ProofNode} from "./AEG/ProofNode";
 
 /**

@@ -8,12 +8,13 @@ import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
-import {offset} from "../DrawModes/DragTool";
-import {drawCut, drawAtom, redrawTree, redrawProof} from "../DrawModes/DrawUtils";
+import {offset} from "../SharedToolUtils/DragTool";
+import {drawCut, drawAtom, redrawTree, redrawProof} from "../SharedToolUtils/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
-import {alterAtom, alterCut} from "../DrawModes/EditModeUtils";
+import {alterAtom, alterCut} from "../SharedToolUtils/EditModeUtils";
 import {ProofNode} from "../AEG/ProofNode";
-import {isMoveLegal} from "./ProofMoveUtils";
+import {isMoveLegal} from "./ProofToolsUtils";
+import {getCurrentProofTree} from "./ProofToolsUtils";
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -34,10 +35,7 @@ let currentProofTree: AEGTree;
  * @param event The mouse down event while using proof move single tool
  */
 export function proofMoveSingleMouseDown(event: MouseEvent) {
-    currentProofTree = new AEGTree();
-    if (treeContext.currentProofStep) {
-        currentProofTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
-    }
+    currentProofTree = getCurrentProofTree();
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = currentProofTree.getLowestNode(startingPoint);
 
@@ -56,6 +54,14 @@ export function proofMoveSingleMouseDown(event: MouseEvent) {
             currentNode.children = [];
         }
         legalNode = true;
+
+        // highlight the chosen node in legal color to show what will be moved
+        redrawTree(currentProofTree);
+        if (currentNode instanceof AtomNode) {
+            drawAtom(currentNode, legalColor(), true);
+        } else {
+            drawCut(currentNode as CutNode, legalColor());
+        }
     } else {
         legalNode = false;
     }

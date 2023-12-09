@@ -6,13 +6,14 @@
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {redrawProof} from "../DrawModes/DrawUtils";
+import {redrawProof} from "../SharedToolUtils/DrawUtils";
 import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
-import {offset} from "../DrawModes/DragTool";
-import {highlightChildren} from "../DrawModes/EditModeUtils";
+import {offset} from "../SharedToolUtils/DragTool";
+import {highlightChildren} from "../SharedToolUtils/EditModeUtils";
 import {ProofNode} from "../AEG/ProofNode";
 import {AEGTree} from "../AEG/AEGTree";
+import {getCurrentProofTree} from "./ProofToolsUtils";
 
 //The node selected with the user mouse down.
 let currentNode: CutNode | AtomNode | null = null;
@@ -29,10 +30,7 @@ let currentProofTree: AEGTree;
  */
 export function erasureMouseDown(event: MouseEvent) {
     const currentPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
-    currentProofTree = new AEGTree();
-    if (treeContext.currentProofStep) {
-        currentProofTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
-    }
+    currentProofTree = getCurrentProofTree();
     currentNode = currentProofTree.getLowestNode(currentPoint);
 
     isLegal();

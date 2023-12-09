@@ -4,10 +4,11 @@
  */
 
 import {treeContext} from "../treeContext";
-import {cleanCanvas, highlightNode, redrawProof} from "../DrawModes/DrawUtils";
+import {cleanCanvas, highlightNode, redrawProof} from "../SharedToolUtils/DrawUtils";
 import {AEGTree} from "../AEG/AEGTree";
 import {illegalColor} from "../Themes";
 import {deleteButtons} from "../ProofHistory";
+import {getCurrentProofTree} from "./ProofToolsUtils";
 
 //The current tree in the proof chain
 let currentProofTree: AEGTree;
@@ -21,10 +22,7 @@ let legalNode: boolean;
  */
 export function clearProofMouseDown() {
     //Get the tree of the current step
-    currentProofTree = new AEGTree();
-    if (treeContext.currentProofStep) {
-        currentProofTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
-    }
+    currentProofTree = getCurrentProofTree();
 
     //As long as we are within the canvas, we can legally perform clear
     legalNode = true;

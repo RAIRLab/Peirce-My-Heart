@@ -4,9 +4,10 @@
  */
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
-import {redrawProof} from "../DrawModes/DrawUtils";
+import {redrawProof} from "../SharedToolUtils/DrawUtils";
 import {AEGTree} from "../AEG/AEGTree";
 import {ProofNode} from "../AEG/ProofNode";
+import {getCurrentProofTree} from "./ProofToolsUtils";
 
 //The initial point the user pressed down.
 // let startingPoint: Point;
@@ -21,10 +22,7 @@ let currentTree: AEGTree;
 let legalNode: boolean;
 
 export function pasteInProofMouseDown() {
-    currentTree = new AEGTree();
-    if (treeContext.currentProofStep) {
-        currentTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
-    }
+    currentTree = getCurrentProofTree();
     currentGraphs = treeContext.selectForProof.sheet;
 
     if (

@@ -6,7 +6,7 @@
 import {loadFile} from "./AEG-IO";
 import {AEGTree} from "./AEG/AEGTree";
 import {ProofNode} from "./AEG/ProofNode";
-import {redrawProof, redrawTree} from "./DrawModes/DrawUtils";
+import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 import {treeString, proofString} from ".";
 import {Tool, treeContext} from "./treeContext";
 

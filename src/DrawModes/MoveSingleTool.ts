@@ -7,10 +7,10 @@ import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
-import {offset} from "./DragTool";
-import {drawCut, drawAtom, redrawTree} from "./DrawUtils";
+import {offset} from "../SharedToolUtils/DragTool";
+import {drawCut, drawAtom, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
-import {alterAtom, alterCut} from "./EditModeUtils";
+import {alterAtom, alterCut} from "../SharedToolUtils/EditModeUtils";
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -44,6 +44,14 @@ export function moveSingleMouseDown(event: MouseEvent) {
             currentNode.children = [];
         }
         legalNode = true;
+
+        // highlight the chosen node in legal color to show what will be moved
+        redrawTree(treeContext.tree);
+        if (currentNode instanceof AtomNode) {
+            drawAtom(currentNode, legalColor(), true);
+        } else {
+            drawCut(currentNode as CutNode, legalColor());
+        }
     } else {
         legalNode = false;
     }
