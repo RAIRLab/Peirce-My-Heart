@@ -11,11 +11,13 @@ import {ProofNode} from "./AEG/ProofNode";
  * Creates a button representing the proof step allowing a user to return to that step.
  * Creates a new row, a piece of text, and a button for it.
  * @param newStep The newest step of our proof
+ * @param step The number of the step that we are appending
  */
-export function appendStep(newStep: ProofNode) {
+export function appendStep(newStep: ProofNode, step?: number) {
     const newDiv = document.createElement("div");
     newDiv.className = "row";
-    newDiv.id = "Row: " + treeContext.proof.length;
+    const stepNumber = step ? step : treeContext.proof.length;
+    newDiv.id = "Row: " + stepNumber;
 
     //Create the new button with the function stepBack calling the step it represents
     const button = document.createElement("button");

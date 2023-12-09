@@ -103,6 +103,7 @@ export class treeContext {
      * Clears the proof by resetting the array and the current step of the proof
      */
     public static clearProof() {
+        deleteButtons(-1);
         this.proof = [];
         this.pushToProof(new ProofNode());
         this.currentProofStep = this.proof[0];
