@@ -6,10 +6,10 @@
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {treeContext} from "../treeContext";
-import {redrawTree} from "./DrawUtils";
-import {offset} from "./DragTool";
+import {redrawTree} from "../SharedToolUtils/DrawUtils";
+import {offset} from "../SharedToolUtils/DragTool";
 import {legalColor, illegalColor} from "../Themes";
-import {drawAtom} from "./DrawUtils";
+import {drawAtom} from "../SharedToolUtils/DrawUtils";
 
 //Setting Up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");

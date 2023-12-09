@@ -1,6 +1,6 @@
 /**
  * File containing all drawing function for the canvas
- * @author Dawn MOore
+ * @author Dawn Moore
  */
 
 import {Point} from "../AEG/Point";
@@ -151,10 +151,10 @@ export function redrawProof() {
     //If this is the first step taken in the proof,
     //set the current tree as the head of the proof history
     let tree: AEGTree;
-    if (treeContext.proofHistory.length === 0) {
+    if (treeContext.proof.length === 0 || treeContext.currentProofStep === undefined) {
         tree = new AEGTree();
     } else {
-        tree = treeContext.proofHistory[treeContext.proofHistory.length - 1].tree;
+        tree = treeContext.currentProofStep.tree;
     }
 
     cleanCanvas();
@@ -163,7 +163,9 @@ export function redrawProof() {
 }
 
 /**
- * Helper function to highlight the specific selected node
+ * Highlights all the children of the incoming node as the incoming color.
+ * @param child The incoming node
+ * @param color The incoming color
  */
 export function highlightNode(child: AtomNode | CutNode, color: string) {
     if (child instanceof AtomNode) {

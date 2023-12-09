@@ -7,10 +7,11 @@
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {offset} from "./DragTool";
-import {drawAtom, drawCut, redrawTree} from "./DrawUtils";
+import {offset} from "../SharedToolUtils/DragTool";
+import {drawAtom, drawCut, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
+import {readdChildren, reInsertNode} from "../SharedToolUtils/EditModeUtils";
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -31,14 +32,28 @@ let legalNode: boolean;
 export function deleteSingleMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = treeContext.tree.getLowestNode(startingPoint);
-
     if (currentNode !== null) {
-        legalNode = true;
+        const currentParent = treeContext.tree.getLowestParent(startingPoint);
+        if (currentParent !== null) {
+            currentParent.remove(startingPoint);
+        }
+
+        if (
+            currentNode instanceof CutNode &&
+            currentNode.children.length !== 0 &&
+            currentNode !== treeContext.tree.sheet
+        ) {
+            readdChildren(treeContext.tree, currentNode);
+        }
+        redrawTree(treeContext.tree);
         if (currentNode instanceof AtomNode) {
             drawAtom(currentNode, illegalColor(), true);
         } else {
             drawCut(currentNode, illegalColor());
         }
+        legalNode = true;
+    } else {
+        legalNode = false;
     }
 }
 
@@ -49,16 +64,26 @@ export function deleteSingleMouseDown(event: MouseEvent) {
  * @param event The mouse move event
  */
 export function deleteSingleMouseMove(event: MouseEvent) {
+    if (legalNode && currentNode !== null && (currentNode as CutNode).ellipse !== null) {
+        reInsertNode(treeContext.tree, currentNode);
+    }
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
     const newNode: CutNode | AtomNode | null = treeContext.tree.getLowestNode(newPoint);
-    if (currentNode !== null && currentNode !== newNode) {
+    const currentParent = treeContext.tree.getLowestParent(newPoint);
+    if (legalNode && currentNode !== null && currentParent !== null) {
         legalNode = true;
         redrawTree(treeContext.tree);
         if (newNode === null) {
             currentNode = null;
             legalNode = false;
         } else {
+            currentParent.remove(newPoint);
             currentNode = newNode;
+            if (currentNode instanceof CutNode && currentNode.children.length !== 0) {
+                readdChildren(treeContext.tree, currentNode);
+                currentNode.children = [];
+            }
+            redrawTree(treeContext.tree);
             if (currentNode instanceof AtomNode) {
                 drawAtom(currentNode, illegalColor(), true);
             } else {
@@ -75,22 +100,20 @@ export function deleteSingleMouseMove(event: MouseEvent) {
 export function deleteSingleMouseUp(event: MouseEvent) {
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
     if (legalNode) {
-        const currentParent = treeContext.tree.getLowestParent(newPoint);
-        if (currentParent !== null) {
-            currentParent.remove(newPoint);
+        const currentNode = treeContext.tree.getLowestNode(newPoint);
+        if (currentNode !== null && currentNode instanceof CutNode) {
+            currentNode.remove(newPoint);
         }
         if (
             currentNode !== treeContext.tree.sheet &&
             currentNode instanceof CutNode &&
             currentNode.children.length !== 0
         ) {
-            //The cut node loses custody of its children so that those can still be redrawn.
-            for (let i = 0; i < currentNode.children.length; i++) {
-                treeContext.tree.insert(currentNode.children[i]);
-            }
+            readdChildren(treeContext.tree, currentNode);
         }
+        redrawTree(treeContext.tree);
     }
-    redrawTree(treeContext.tree);
+
     currentNode = null;
     legalNode = false;
 }
@@ -99,6 +122,10 @@ export function deleteSingleMouseUp(event: MouseEvent) {
  * If the mouse leaves the canvas, reset data back to defaults.
  */
 export function deleteSingleMouseOut() {
+    if (legalNode && currentNode !== null) {
+        reInsertNode(treeContext.tree, currentNode);
+    }
     currentNode = null;
     legalNode = false;
+    redrawTree(treeContext.tree);
 }
