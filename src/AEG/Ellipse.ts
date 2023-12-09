@@ -1,6 +1,6 @@
 import {Point} from "./Point";
 import {Rectangle} from "./Rectangle";
-import {shapesOverlap, shapeContains, signedDistanceFromEllipse} from "./AEGUtils";
+import {shapeContains, shapesOverlap, signedDistanceFromEllipse} from "./AEGUtils";
 
 /**
  * Defines an Ellipse.

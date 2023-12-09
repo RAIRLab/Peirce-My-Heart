@@ -1,5 +1,5 @@
-import {Rectangle} from "./Rectangle";
 import {Point} from "./Point";
+import {Rectangle} from "./Rectangle";
 
 /**
  * Defines an Atom.

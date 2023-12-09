@@ -1,9 +1,9 @@
 import {AtomNode} from "./AtomNode";
 import {CutNode} from "./CutNode";
-import {Point} from "./Point";
 import {Ellipse} from "./Ellipse";
+import {Point} from "./Point";
 import {Rectangle} from "./Rectangle";
-import {shapesOverlap, shapesIntersect} from "./AEGUtils";
+import {shapesIntersect, shapesOverlap} from "./AEGUtils";
 
 /**
  * Represents an AEG tree structure.
