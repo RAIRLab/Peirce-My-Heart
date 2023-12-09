@@ -3,10 +3,11 @@ import {Point} from "./Point";
 
 /**
  * Defines an Atom.
- * These are propositions in Peirce's AEG system.
+ * Atoms are propositions in Peirce's AEG system.
  * Peirce My Heart only handles single character identifiers as of 1.0.0.
- * @author Anusha Tiwari
+ *
  * @author Ryan Reilly
+ * @author Anusha Tiwari
  */
 export class AtomNode {
     /**
@@ -146,19 +147,6 @@ export class AtomNode {
     }
 
     /**
-     * Creates and returns the string representation of this AtomNode.
-     * @returns Proposition and boundary box of this AtomNode in string form.
-     */
-    public toString(): string {
-        return (
-            "An atom representing the proposition: " +
-            this.internalIdentifier +
-            " and Boundary box of: " +
-            this.calcRect().toString()
-        );
-    }
-
-    /**
      * Creates and returns a Rectangle based off the origin, width, and height of this AtomNode.
      * internalHeight is subtracted from internalOrigin to move the origin Point from the bottom left to top right of the boundary box.
      * @returns Rectangle based off this AtomNode's measurements.
@@ -179,5 +167,18 @@ export class AtomNode {
      */
     public isEqualTo(otherAtom: AtomNode): boolean {
         return this.identifier === otherAtom.identifier;
+    }
+
+    /**
+     * Creates and returns the string representation of this AtomNode.
+     * @returns Proposition and boundary box of this AtomNode in string form.
+     */
+    public toString(): string {
+        return (
+            "An atom representing the proposition: " +
+            this.internalIdentifier +
+            " and Boundary box of: " +
+            this.calcRect().toString()
+        );
     }
 }

@@ -1,7 +1,8 @@
 /**
  * Defines a 2D Point.
- * @author Anusha Tiwari
+ *
  * @author Ryan Reilly
+ * @author Anusha Tiwari
  */
 export class Point {
     /**

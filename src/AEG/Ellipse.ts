@@ -4,8 +4,9 @@ import {shapesOverlap, shapeContains, signedDistanceFromEllipse} from "./AEGUtil
 
 /**
  * Defines an Ellipse.
- * @author Anusha Tiwari,
+ *
  * @author Ryan Reilly
+ * @author Anusha Tiwari
  */
 export class Ellipse {
     /**

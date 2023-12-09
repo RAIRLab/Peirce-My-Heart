@@ -4,8 +4,9 @@ import {shapesOverlap, shapeContains, pointInRect} from "./AEGUtils";
 
 /**
  * Defines a Rectangle.
- * @author Anusha Tiwari
+ *
  * @author Ryan Reilly
+ * @author Anusha Tiwari
  */
 export class Rectangle {
     /**
