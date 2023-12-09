@@ -3,10 +3,21 @@ import {Point} from "./Point";
 import {Rectangle} from "./Rectangle";
 
 /**
- * Method that checks whether one shape overlaps another
- * @param newShape The new shape that might be overlapping the existing shape
- * @param existingShape The existing shape
- * @returns True, if the new shape overlaps the existing shape. Else, false
+ * Collection of functions used by shapes drawn and stored by the AEGTree.
+ *
+ * @author Anusha Tiwari
+ */
+
+/**
+ * Checks whether one incoming shape overlaps another incoming shape.
+ *
+ * Decomposes overlapping into an intersection check and a contains check.
+ * If either of these checks return true, i.e the shapes intersect or contain each other or both,
+ * The shapes overlap.
+ *
+ * @param newShape One incoming shape.
+ * @param existingShape Another incoming shape.
+ * @returns True, if newShape overlaps existingShape.
  */
 export function shapesOverlap(
     newShape: Rectangle | Ellipse,
@@ -16,10 +27,11 @@ export function shapesOverlap(
 }
 
 /**
- * Method that checks whether two shapes intersect
- * @param newShape The new shape that might intersect with the existing shape
- * @param existingShape The existing shape
- * @returns True, if shapes intersect. Else, false.
+ * Checks whether one incoming shape intersects another incoming shape.
+ *
+ * @param newShape One incoming shape.
+ * @param existingShape Another incoming shape.
+ * @returns True, if newShape intersects existingShape.
  */
 export function shapesIntersect(
     newShape: Rectangle | Ellipse,
@@ -35,8 +47,8 @@ export function shapesIntersect(
         if (existingShape instanceof Rectangle) {
             return ellipseRectangleIntersection(newShape as Ellipse, existingShape as Rectangle);
         } else {
-            //For ellipse-ellipse collision, check if the rectangular bounding boxes intersect.
-            //If they do, check if points of the new ellipse are within the current ellipse
+            //For Ellipse-Ellipse collision checking, determine if their Rectangle bounding boxes intersect or contain one another.
+            //If they do, check if points of the new Ellipse are within the current Ellipse.
             if (
                 edgesIntersect(
                     (newShape as Ellipse).boundingBox,
@@ -52,7 +64,7 @@ export function shapesIntersect(
                 for (let i = 0; i < points.length; i++) {
                     val = signedDistanceFromEllipse(existingShape as Ellipse, points[i]);
                     if (val <= 0) {
-                        //Intersection if the point is within the ellipse OR on the ellipse
+                        //Intersection is true if the point is within the Ellipse OR on the Ellipse.
                         return true;
                     }
                 }
@@ -64,17 +76,19 @@ export function shapesIntersect(
 }
 
 /**
- * Method that checks if there is intersection between an ellipse and a rectangle
- * Check for both vertical and horizontal intersection within the boundaries of the shapes.
- * @param ellipse The given ellipse
- * @param rectangle The given rectangle
- * @returns True, if either vertical or horizontal intersection is present. Else, false.
+ * Checks if there is intersection between an incoming Ellipse and an incoming Rectangle.
+ * This includes checks for both vertical and horizontal intersection within the boundaries of the shapes.
+ *
+ * @param ellipse Incoming Ellipse.
+ * @param rectangle Incoming Rectangle.
+ * @returns True, if either vertical or horizontal intersection is present.
  */
 function ellipseRectangleIntersection(ellipse: Ellipse, rectangle: Rectangle): boolean {
-    //For ellipse-rectangle collision, check for intersection along the horizontal or vertical edges
+    //For Ellipse-Rectangle collision checking,
+    //Determine if there is intersection along the horizontal or vertical edges.
     const corners = rectangle.getCorners();
 
-    //Check for vertical edge intersection
+    //Get curve points to check for vertical edge intersection.
     const leftEdgeUpperCurve = getCurvePoint(ellipse, corners[0].x, 1);
     const rightEdgeUpperCurve = getCurvePoint(ellipse, corners[1].x, 1);
     const leftEdgeLowerCurve = getCurvePoint(ellipse, corners[0].x, -1);
@@ -89,17 +103,17 @@ function ellipseRectangleIntersection(ellipse: Ellipse, rectangle: Rectangle): b
         return true;
     }
 
-    //Check for horizontal edge intersection
+    //Check for horizontal edge intersection.
     const a = -1 / Math.pow(ellipse.radiusX, 2);
     const b = (2 * ellipse.center.x) / Math.pow(ellipse.radiusX, 2);
 
-    //c with height of the top edge
+    //c with height of the top edge.
     const cTop =
         -Math.pow(ellipse.center.x, 2) / Math.pow(ellipse.radiusX, 2) +
         1 -
         Math.pow((corners[0].y - ellipse.center.y) / ellipse.radiusY, 2);
 
-    //c with height of the bottom edge
+    //c with height of the bottom edge.
     const cBottom =
         -Math.pow(ellipse.center.x, 2) / Math.pow(ellipse.radiusX, 2) +
         1 -
@@ -110,7 +124,7 @@ function ellipseRectangleIntersection(ellipse: Ellipse, rectangle: Rectangle): b
     const bottomX1 = (-b + Math.sqrt(Math.pow(b, 2) - 4 * a * cBottom)) / (2 * a);
     const bottomX2 = (-b - Math.sqrt(Math.pow(b, 2) - 4 * a * cBottom)) / (2 * a);
 
-    //Horizontal intersection if the intersection point is within the bounds of the ellipse
+    //Horizontal intersection is true if the intersection Point is within the bounds of the Ellipse.
     return (
         (!isNaN(topX1) && corners[0].x < topX1 && topX1 < corners[1].x) ||
         (!isNaN(topX2) && corners[0].x < topX2 && topX2 < corners[1].x) ||
@@ -120,12 +134,15 @@ function ellipseRectangleIntersection(ellipse: Ellipse, rectangle: Rectangle): b
 }
 
 /**
- * Method that checks whether a shape is contained within another.
- * A shape is contained if and only if it is completely within the other shape.
- * Overlapping edges do not signify containment.
- * @param outerShape The outer shape
- * @param innerShape The inner shape, that might be contained in the outer shape
- * @return True, if shape1 contains shape2. Else, false.
+ * Checks whether an incoming inner shape is contained within an incoming outer shape.
+ *
+ * A shape is considered to be contained if and only if it is entirely within the other shape.
+ * Overlapping edges do not constitute containment.
+ *
+ * @param outerShape Incoming outer shape.
+ * @param innerShape Incoming inner shape.
+ *
+ * @return True, if outerShape contains innerShape.
  */
 export function shapeContains(
     outerShape: Rectangle | Ellipse,
@@ -133,8 +150,8 @@ export function shapeContains(
 ): boolean {
     if (outerShape instanceof Rectangle) {
         if (innerShape instanceof Rectangle) {
-            //A rectangle contains a rectangle if all the corners of the inner rectangle are
-            //within the outer rectangle
+            //A Rectangle contains another Rectangle if all the corners, as Points, of the inner Rectangle are
+            //Contained within the outer Rectangle.
             const innerCorners: Point[] = (innerShape as Rectangle).getCorners();
             for (let i = 0; i < 4; i++) {
                 if (!pointInRect(outerShape as Rectangle, innerCorners[i])) {
@@ -143,8 +160,8 @@ export function shapeContains(
             }
             return true;
         } else {
-            //A rectangle contains an ellipse if all the widest coordinates of the ellipse are
-            //within the rectangle
+            //A Rectangle contains an Ellipse if all the farthest coordinates of that Ellipse are
+            //Contained within the Rectangle.
             const innerCoords: Point[] = getWidestCoordinates(innerShape as Ellipse);
             for (let i = 0; i < 4; i++) {
                 if (!pointInRect(outerShape as Rectangle, innerCoords[i])) {
@@ -155,27 +172,25 @@ export function shapeContains(
         }
     } else {
         if (innerShape instanceof Rectangle) {
-            //An ellipse contains a rectangle if all the corners of the rectangle are within
-            //the ellipse
+            //An Ellipse contains a Rectangle if all the corners of that Rectangle are
+            //Contained within the Ellipse.
             const innerCorners = (innerShape as Rectangle).getCorners();
             let val: number;
             for (let i = 0; i < 4; i++) {
                 val = signedDistanceFromEllipse(outerShape as Ellipse, innerCorners[i]);
                 if (!(val < 0)) {
-                    //The point should be completely within the ellipse
                     return false;
                 }
             }
             return true;
         } else {
-            //An ellipse contains an ellipse if all the widest coordinates of the inner ellipse
-            //are within the outer ellipse
+            //An Ellipse contains another Ellipse if all the farthest coordinates of the inner Ellipse are
+            //Contained within the outer Ellipse.
             const innerCoords: Point[] = getEllipsePoints(innerShape as Ellipse);
             let val: number;
             for (let i = 0; i < innerCoords.length; i++) {
                 val = signedDistanceFromEllipse(outerShape as Ellipse, innerCoords[i]);
                 if (!(val < 0)) {
-                    //The point should be completely within the ellipse
                     return false;
                 }
             }
@@ -185,23 +200,24 @@ export function shapeContains(
 }
 
 /**
- * Method that checks if any edges of a rectangle intersect with the other rectangle.
- * @param rect1 The incoming rectangle.
- * @param rect2 The existing rectangle.
- * @returns True, if edges intersect. Else, false.
+ * Checks if any edges of one incoming Rectangle intersect with another incoming Rectangle.
+ *
+ * @param rect1 One incoming Rectangle.
+ * @param rect2 Another incoming Rectangle.
+ * @returns True, if the edges of rect1 intersect the edges of rect2.
  */
 function edgesIntersect(rect1: Rectangle, rect2: Rectangle): boolean {
     const corners1 = rect1.getCorners();
     const corners2 = rect2.getCorners();
 
-    //2 equal edges (aka edges on edges) are considered as intersection
+    //Edges on other edges are considered intersections. Hence the >= and <=, not > and <.
     return (
-        //Check if the horizontal edges are intersecting
+        //Horizontal edge intersection checks.
         ((corners1[0].y <= corners2[0].y && corners1[2].y >= corners2[0].y) ||
             (corners1[0].y <= corners2[2].y && corners1[2].y >= corners2[2].y) ||
             (corners2[0].y <= corners1[0].y && corners2[2].y >= corners1[0].y) ||
             (corners2[0].y <= corners1[2].y && corners2[2].y >= corners1[2].y)) &&
-        //Check if the vertical edges are intersecting
+        //Vertical edge intersection checks.
         ((corners1[0].x <= corners2[0].x && corners1[1].x >= corners2[0].x) ||
             (corners1[0].x <= corners2[1].x && corners1[1].x >= corners2[1].x) ||
             (corners2[0].x <= corners1[0].x && corners2[1].x >= corners1[0].x) ||
@@ -210,15 +226,16 @@ function edgesIntersect(rect1: Rectangle, rect2: Rectangle): boolean {
 }
 
 /**
- * Method that checks whether there is a point inside the given rectangle.
- * @param rect The given rectangle.
- * @param otherPoint The point that might be inside the given rectangle.
- * @returns True, if the point is completely inside the rectangle. Else, false.
+ * Checks whether the incoming Point is inside the incoming Rectangle.
+ *
+ * @param rect Incoming Rectangle.
+ * @param otherPoint Incoming Point.
+ * @returns True, if otherPoint is contained within rect.
  */
 export function pointInRect(rect: Rectangle, point: Point): boolean {
     const rectCorners = rect.getCorners();
 
-    //Points on edges are considered to be intersected, not contained
+    //Points on edges are considered as intersecting, not contained.
     return (
         rectCorners[0].x < point.x &&
         rectCorners[1].x > point.x &&
@@ -228,19 +245,21 @@ export function pointInRect(rect: Rectangle, point: Point): boolean {
 }
 
 /**
- * Method that returns the value of a point compared to the ellipse
- * @param ellipse The given ellipse
- * @param otherPoint The point that might be inside the given ellipse.
- * @returns 0, if the point is on the ellipse.
- * Returns <0 if the point is completely within the ellipse.
- * Returns >0 if the point is completely outside the ellipse.
+ * Calculates and returns the signed distance of the incoming Point with respect to the incoming Ellipse.
+ *
+ * @param ellipse Incoming Ellipse.
+ * @param otherPoint Incoming Point.
+ *
+ * @returns 0, if point is on ellipse.
+ * @returns < 0 if point is completely within ellipse.
+ * @returns > 0 if point is completely outside ellipse.
  */
 export function signedDistanceFromEllipse(ellipse: Ellipse, point: Point): number {
     //(x-h)^2/rx^2 + (y-k)^2/ry^2 <= 1
     //(x, y) = new point
     //(h, k) = center
 
-    //Points on edges are considered to be contained
+    //Points on edges are considered as contained.
     const p: number =
         Math.pow(point.x - ellipse.center.x, 2) / Math.pow(ellipse.radiusX, 2) +
         Math.pow(point.y - ellipse.center.y, 2) / Math.pow(ellipse.radiusY, 2);
@@ -249,15 +268,18 @@ export function signedDistanceFromEllipse(ellipse: Ellipse, point: Point): numbe
 }
 
 /**
- * An array containing the widest coordinates of the given ellipse, i.e. the coordinates along the
- * x-axis and y-axis of the ellipse.
- * @param ellipse The given ellipse.
- * @returns The coordinates of the ellipse.
- * The coordinates are in clockwise order such that:
- * 0 - Top most coordinate (Top along y-axis).
- * 1 - Right most coordinate (Right along x-axis).
- * 2 - Bottom most coordinate (Bottom along y-axis).
- * 3 - Left most coordinate (Left along x-axis).
+ * Creates and returns an array, of length 4,
+ * Containing the farthest Points of the incoming Ellipse, i.e. the farthest Points on the
+ * x-axis and y-axis of the Ellipse.
+ *
+ * @param ellipse Incoming Ellipse.
+ * @returns Farthest Points of ellipse.
+ *
+ * The Points are in clockwise order such that:
+ * 0 - Topmost Point (Top along y-axis).
+ * 1 - Rightmost Point (Right along x-axis).
+ * 2 - Bottommost Point (Bottom along y-axis).
+ * 3 - Leftmost Point (Left along x-axis).
  */
 function getWidestCoordinates(ellipse: Ellipse): Point[] {
     return [
@@ -269,9 +291,10 @@ function getWidestCoordinates(ellipse: Ellipse): Point[] {
 }
 
 /**
- * Method to get the points along the bounding curve of the given ellipse
- * @param ellipse The given ellipse
- * @returns An array of points along the bounding curve of the ellipse
+ * Calculates and returns the Points along the boundary of the incoming Ellipse.
+ *
+ * @param ellipse Incoming Ellipse.
+ * @returns Points along the boundary of ellipse.
  */
 export function getEllipsePoints(ellipse: Ellipse): Point[] {
     const points: Point[] = [];
@@ -293,13 +316,14 @@ export function getEllipsePoints(ellipse: Ellipse): Point[] {
 }
 
 /**
- * Method that returns the y coordinate of a point on the curve of the given ellipse for a given
- * x coordinate
- * @param ellipse The given ellipse
- * @param x The x coordinate of the point
- * @param curveHalf Flag signifying the curve of the ellipse.
- * 1 for top curve, -1 for bottom curve
- * @returns The y-coordinate of the point with the given x coordinate along the specified curve
+ * Calculates and returns the y-coordinate of a Point on the curve of the incoming Ellipse for the
+ * Incoming x-coordinate and half of the curve.
+ *
+ * @param ellipse Incoming Ellipse.
+ * @param x Incoming x-coordinate.
+ * @param curveHalf Represents which half of the Ellipse currently being worked with.
+ * 1 for top curve, -1 for bottom curve.
+ * @returns y-coordinate of the Point with x along curveHalf.
  */
 function getCurvePoint(ellipse: Ellipse, x: number, curveHalf: number): number {
     if (ellipse.radiusX === 0 || ellipse.radiusY === 0) {

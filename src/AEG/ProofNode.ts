@@ -1,31 +1,33 @@
-import {treeContext} from "../treeContext";
 import {AEGTree} from "./AEGTree";
+import {treeContext} from "../treeContext";
 
 /**
- * The structure representing a single node of the proof
+ * Defines a single step in a proof.
  * @author Anusha Tiwari
  */
 export class ProofNode {
     /**
-     * The AEG Tree representing the current state of the proof
+     * The AEGTree at this proof step.
      */
     public tree: AEGTree;
 
     /**
-     * The proof node's action that changed the proof
+     * Inference rule applied in this ProofNode.
      */
     public appliedRule: string;
 
     /**
-     * The current location of this proof node in our proof array
+     * Index of this ProofNode in treeContext.ts' proof array.
      */
     public index: number;
 
     /**
-     * Construct a proof node by providing the AEG Tree at the current state of the proof
-     * @param tree The AEG at the current state of the proof.
-     * If not defined, an empty AEG tree will be set constructed.
-     * @param rule The inference rule applied to get to this stage of the proof.
+     * Constructs a ProofNode.
+     *
+     * @param tree AEGTree at this proof step.
+     * If not passed in, an empty AEGTree will be constructed and set as this ProofNode's tree.
+     * @param rule Inference rule applied.
+     * If not passed in, appliedRule will be set as an empty string.
      */
     public constructor(tree?: AEGTree, rule?: string) {
         this.appliedRule = rule ?? "";

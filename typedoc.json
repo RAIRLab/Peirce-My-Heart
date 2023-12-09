@@ -8,7 +8,9 @@
         "src/AEG",
         "src/DrawModes",
         "src/ProofTools",
+        "src/SharedToolUtils",
         "src/AEG-IO.ts",
+        "src/ProofHistory.ts",
         "src/Themes.ts",
         "src/ToggleModes.ts",
         "src/treeContext.ts"

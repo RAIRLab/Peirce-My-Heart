@@ -1,33 +1,34 @@
 import {Ellipse} from "./Ellipse";
 import {Point} from "./Point";
-import {shapesOverlap, shapeContains, pointInRect} from "./AEGUtils";
+import {pointInRect, shapeContains, shapesOverlap} from "./AEGUtils";
 
 /**
- * Defines a rectangle.
- * @author Anusha Tiwari
+ * Defines a Rectangle.
+ *
  * @author Ryan Reilly
+ * @author Anusha Tiwari
  */
 export class Rectangle {
     /**
-     * The starting (top left) vertex of this Rectangle.
+     * Starting (top left) vertex of this Rectangle.
      */
     startVertex: Point;
 
     /**
-     * The width of this Rectangle.
+     * Width of this Rectangle.
      */
     width: number;
 
     /**
-     * The height of this Rectangle.
+     * Height of this Rectangle.
      */
     height: number;
 
     /**
-     * Constructs a rectangle using the given points and lengths.
-     * @param vertex The starting point of the rectangle.
-     * @param w The width of the rectangle.
-     * @param h The height of the rectangle.
+     * Creates a Rectangle using the incoming Points and lengths.
+     * @param vertex Incoming starting Point of this Rectangle.
+     * @param w Incoming width of the rectangle.
+     * @param h Incoming height of the rectangle.
      */
     public constructor(vertex: Point, w: number, h: number) {
         if (!Number.isFinite(w) || !Number.isFinite(h)) {
@@ -46,12 +47,12 @@ export class Rectangle {
 
     /**
      * Creates a Point array of
-     * the corners of the rectangle in clockwise order, starting from the top left.
+     * the corners of this Rectangle in clockwise order, starting from the top left.
      * vertices[0] = Top left vertex.
-     * vertices[1] = Top Right vertex.
-     * vertices[2] = Bottom Right vertex.
-     * vertices[3] = Bottom Left vertex.
-     * @returns The bounding box of the rectangle in Point array form.
+     * vertices[1] = Top right vertex.
+     * vertices[2] = Bottom right vertex.
+     * vertices[3] = Bottom left vertex.
+     * @returns Bounding box of this Rectangle in Point array form.
      */
     public getCorners(): Point[] {
         const vertices: Point[] = [this.startVertex];
@@ -71,9 +72,9 @@ export class Rectangle {
     }
 
     /**
-     * Checks whether there is an overlap between this rectangle and another shape.
-     * @param otherShape The other shape that might be overlapping this rectangle.
-     * @returns True, if there is an overlap. Else, false.
+     * Checks whether there is an overlap between this Rectangle and some other shape.
+     * @param otherShape Other shape that this Rectangle may overlap.
+     * @returns True if there is an overlap.
      */
     public overlaps(otherShape: Rectangle | Ellipse): boolean {
         return shapesOverlap(this, otherShape);
@@ -81,15 +82,15 @@ export class Rectangle {
 
     /**
      * Checks whether another shape is contained within this Rectangle.
-     * @param otherShape The shape that may be within this Rectangle.
-     * @returns True, if the shape is within this Rectangle.
+     * @param otherShape Shape that may be contained within this Rectangle.
+     * @returns True if the shape is contained within this Rectangle.
      */
     public contains(otherShape: Rectangle | Ellipse): boolean {
         return shapeContains(this, otherShape);
     }
 
     /**
-     * Returns a string representation of this Rectangle.
+     * Creates and returns a string representation of this Rectangle.
      * @returns This Rectangle in string form.
      */
     public toString(): string {
