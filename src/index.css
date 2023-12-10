@@ -135,6 +135,7 @@ p {
     min-width: 4vw;
     float: left; 
     display: none;
+    overflow-y: auto;
 }
 
 #canvas {
