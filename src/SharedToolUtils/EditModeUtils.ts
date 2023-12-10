@@ -8,7 +8,8 @@ import {Point} from "../AEG/Point";
 import {treeContext} from "../treeContext";
 
 /**
- * Collection of methods for move, copy, and delete modes.
+ * Collection of methods for move, copy, and delete tools.
+ *
  * @author Dawn Moore
  * @author Anusha Tiwari
  */
@@ -19,6 +20,7 @@ const modeElm: HTMLSelectElement = <HTMLSelectElement>document.getElementById("m
  * Checks the validity of the incoming node and all of its children. If the child is a cut node uses
  * recursion to check the validity, if it is an atom it does not need recursion. If even one node
  * fails, every current position will return as invalid.
+ *
  * @param incomingNode The current node that will be checked for validity
  * @param change The difference between the original position and the new position
  * @returns If all nodes are in a valid position returns true, if any node is not returns false
@@ -102,12 +104,13 @@ export function insertChildren(incomingNode: CutNode | AtomNode, change: Point, 
 }
 
 /**
- * Takes a node object and alters it accordingly based on the type of node
+ * Calculates and returns a node object and alters it accordingly based on the type of node
+ *
  * @param node The node to be altered
  * @param difference The difference on how far the node should move
  * @returns The new altered version of the node
  */
-export function alterNode(node: AtomNode | CutNode, difference: Point) {
+export function alterNode(node: AtomNode | CutNode, difference: Point): AtomNode | CutNode {
     if (node instanceof AtomNode) {
         return alterAtom(node, difference);
     }
@@ -182,7 +185,7 @@ export function alterCutChildren(originalCut: CutNode, difference: Point): CutNo
  * @param difference The difference on how far the atom should move
  * @returns The new altered version of the atom
  */
-export function alterAtom(originalAtom: AtomNode, difference: Point) {
+export function alterAtom(originalAtom: AtomNode, difference: Point): AtomNode {
     return new AtomNode(
         originalAtom.identifier,
         new Point(
@@ -202,7 +205,7 @@ export function alterAtom(originalAtom: AtomNode, difference: Point) {
  * @param direction the direction the radius will be expanding towards
  * @returns The new altered cut
  */
-export function resizeCut(originalCut: CutNode, difference: Point, direction: Point) {
+export function resizeCut(originalCut: CutNode, difference: Point, direction: Point): CutNode {
     if (originalCut.ellipse !== null) {
         return new CutNode(
             new Ellipse(
@@ -223,6 +226,7 @@ export function resizeCut(originalCut: CutNode, difference: Point, direction: Po
  * Readds children of a parent CutNode.
  * In the wise words of Dawn Moore,
  * "The cut node loses custody of its children so that those can still be redrawn."
+ *
  * @param tree The AEG tree we want to readd the children into
  * @param parentCut Parent CutNode
  */
@@ -286,7 +290,7 @@ export function createEllipse(original: Point, current: Point): Ellipse {
  * @param ellipse The ellipse to be checked
  * @returns Whether the given ellipse is large enough to be legal
  */
-export function ellipseLargeEnough(ellipse: Ellipse) {
+export function ellipseLargeEnough(ellipse: Ellipse): boolean {
     if (ellipse.radiusX > 15 && ellipse.radiusY > 15) {
         return true;
     }
