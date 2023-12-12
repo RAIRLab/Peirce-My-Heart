@@ -1,17 +1,18 @@
+import {createEllipse, ellipseLargeEnough} from "../SharedToolUtils/EditModeUtils";
+import {CutNode} from "../AEG/CutNode";
+import {drawCut, drawGuidelines, redrawTree} from "../SharedToolUtils/DrawUtils";
+import {Ellipse} from "../AEG/Ellipse";
+import {illegalColor, legalColor} from "../Themes";
+import {offset} from "../SharedToolUtils/DragTool";
+import {Point} from "../AEG/Point";
+import {treeContext} from "../treeContext";
+
 /**
  * File containing cut based event functions.
+ *
  * @author Dawn Moore
  * @author James Oswald
  */
-
-import {Point} from "../AEG/Point";
-import {CutNode} from "../AEG/CutNode";
-import {Ellipse} from "../AEG/Ellipse";
-import {treeContext} from "../treeContext";
-import {offset} from "../SharedToolUtils/DragTool";
-import {legalColor, illegalColor} from "../Themes";
-import {drawCut, redrawTree, drawGuidelines} from "../SharedToolUtils/DrawUtils";
-import {createEllipse, ellipseLargeEnough} from "../SharedToolUtils/EditModeUtils";
 
 const showRectElm: HTMLInputElement = <HTMLInputElement>document.getElementById("showRect");
 

@@ -1,15 +1,16 @@
-/**
- * A file containing single node resizing.
- */
-
-import {Point} from "../AEG/Point";
-import {ellipseLargeEnough, resizeCut} from "../SharedToolUtils/EditModeUtils";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {treeContext} from "../treeContext";
+import {determineDirection, drawCut, redrawTree} from "../SharedToolUtils/DrawUtils";
+import {ellipseLargeEnough, resizeCut} from "../SharedToolUtils/EditModeUtils";
+import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
-import {drawCut, redrawTree, determineDirection} from "../SharedToolUtils/DrawUtils";
-import {legalColor, illegalColor} from "../Themes";
+import {Point} from "../AEG/Point";
+import {treeContext} from "../treeContext";
+
+/**
+ * A file containing single node resizing.
+ * @author Dawn Moore
+ */
 
 //The initial point the user pressed down.
 let startingPoint: Point;

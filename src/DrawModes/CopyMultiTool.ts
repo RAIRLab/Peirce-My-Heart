@@ -1,17 +1,18 @@
-/**
- * File containing copy node movement event handlers.
- * @author Anusha Tiwari
- * @author Dawn Moore
- */
-
-import {Point} from "../AEG/Point";
+import * as EditModeUtils from "../SharedToolUtils/EditModeUtils";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {treeContext} from "../treeContext";
-import {offset} from "../SharedToolUtils/DragTool";
 import {drawAtom, redrawTree} from "../SharedToolUtils/DrawUtils";
-import {legalColor, illegalColor} from "../Themes";
-import * as EditModeUtils from "../SharedToolUtils/EditModeUtils";
+import {illegalColor, legalColor} from "../Themes";
+import {offset} from "../SharedToolUtils/DragTool";
+import {Point} from "../AEG/Point";
+import {treeContext} from "../treeContext";
+
+/**
+ * File containing copy node movement event handlers.
+ *
+ * @author Dawn Moore
+ * @author Anusha Tiwari
+ */
 
 //The initial point the user pressed down.
 let startingPoint: Point;

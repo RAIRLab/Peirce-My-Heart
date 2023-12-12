@@ -1,17 +1,17 @@
+import * as EditModeUtils from "../SharedToolUtils/EditModeUtils";
+import {AtomNode} from "../AEG/AtomNode";
+import {CutNode} from "../AEG/CutNode";
+import {drawAtom, highlightNode, redrawTree} from "../SharedToolUtils/DrawUtils";
+import {illegalColor, legalColor} from "../Themes";
+import {offset} from "../SharedToolUtils/DragTool";
+import {Point} from "../AEG/Point";
+import {treeContext} from "../treeContext";
+
 /**
  * File containing multi node movement event handlers.
  * @author Dawn Moore
+ * @author Anusha Tiwari
  */
-
-import {Point} from "../AEG/Point";
-import {AtomNode} from "../AEG/AtomNode";
-import {CutNode} from "../AEG/CutNode";
-import {treeContext} from "../treeContext";
-import {offset} from "../SharedToolUtils/DragTool";
-import {drawAtom, highlightNode, redrawTree} from "../SharedToolUtils/DrawUtils";
-import {legalColor, illegalColor} from "../Themes";
-import * as EditModeUtils from "../SharedToolUtils/EditModeUtils";
-
 //The initial point the user pressed down.
 let startingPoint: Point;
 

@@ -1,17 +1,18 @@
-/**
- * Contains logic for deleting one node.
- * @author Ryan Reilly
- * @author Dawn Moore
- */
-
-import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {offset} from "../SharedToolUtils/DragTool";
 import {drawAtom, drawCut, redrawTree} from "../SharedToolUtils/DrawUtils";
-import {treeContext} from "../treeContext";
 import {illegalColor} from "../Themes";
+import {offset} from "../SharedToolUtils/DragTool";
+import {Point} from "../AEG/Point";
 import {readdChildren, reInsertNode} from "../SharedToolUtils/EditModeUtils";
+import {treeContext} from "../treeContext";
+
+/**
+ * Contains logic for deleting one node.
+ *
+ * @author Dawn Moore
+ * @author Ryan Reilly
+ */
 
 //The initial point the user pressed down.
 let startingPoint: Point;

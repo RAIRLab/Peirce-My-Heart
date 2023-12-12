@@ -1,16 +1,18 @@
+import {AEGTree} from "../AEG/AEGTree";
+import {AtomNode} from "../AEG/AtomNode";
+import {cleanCanvas, highlightNode, redrawTree} from "../SharedToolUtils/DrawUtils";
+import {CutNode} from "../AEG/CutNode";
+import {legalColor} from "../Themes";
+import {offset} from "../SharedToolUtils/DragTool";
+import {Point} from "../AEG/Point";
+import {treeContext} from "../treeContext";
+
 /**
  * File containing event handlers to select from draw mode and copy to proof mode
+ *
+ * @author Dawn Moore
  * @author Anusha Tiwari
  */
-
-import {Point} from "../AEG/Point";
-import {AtomNode} from "../AEG/AtomNode";
-import {CutNode} from "../AEG/CutNode";
-import {treeContext} from "../treeContext";
-import {offset} from "../SharedToolUtils/DragTool";
-import {cleanCanvas, redrawTree, highlightNode} from "../SharedToolUtils/DrawUtils";
-import {legalColor} from "../Themes";
-import {AEGTree} from "../AEG/AEGTree";
 
 //The initial point the user pressed down.
 let currentPoint: Point;

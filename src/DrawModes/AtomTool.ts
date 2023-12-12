@@ -1,15 +1,17 @@
+import {AtomNode} from "../AEG/AtomNode";
+import {drawAtom} from "../SharedToolUtils/DrawUtils";
+import {illegalColor, legalColor} from "../Themes";
+import {offset} from "../SharedToolUtils/DragTool";
+import {Point} from "../AEG/Point";
+import {redrawTree} from "../SharedToolUtils/DrawUtils";
+import {treeContext} from "../treeContext";
+
 /**
  * File containing atom based event functions.
+ *
  * @author Dawn Moore
+ * @author Anusha Tiwari
  */
-
-import {Point} from "../AEG/Point";
-import {AtomNode} from "../AEG/AtomNode";
-import {treeContext} from "../treeContext";
-import {redrawTree} from "../SharedToolUtils/DrawUtils";
-import {offset} from "../SharedToolUtils/DragTool";
-import {legalColor, illegalColor} from "../Themes";
-import {drawAtom} from "../SharedToolUtils/DrawUtils";
 
 //Setting Up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");

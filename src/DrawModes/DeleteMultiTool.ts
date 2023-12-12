@@ -1,16 +1,17 @@
+import {AtomNode} from "../AEG/AtomNode";
+import {CutNode} from "../AEG/CutNode";
+import {highlightNode, redrawTree} from "../SharedToolUtils/DrawUtils";
+import {illegalColor} from "../Themes";
+import {offset} from "../SharedToolUtils/DragTool";
+import {Point} from "../AEG/Point";
+import {reInsertNode} from "../SharedToolUtils/EditModeUtils";
+import {treeContext} from "../treeContext";
+
 /**
- * Contains logic for deleting multiple nodes.
+ * Contains logic for deleting multiple nodes at once.
  * @author Ryan Reilly
  * @author Dawn Moore
  */
-import {Point} from "../AEG/Point";
-import {AtomNode} from "../AEG/AtomNode";
-import {CutNode} from "../AEG/CutNode";
-import {treeContext} from "../treeContext";
-import {illegalColor} from "../Themes";
-import {highlightNode, redrawTree} from "../SharedToolUtils/DrawUtils";
-import {offset} from "../SharedToolUtils/DragTool";
-import {reInsertNode} from "../SharedToolUtils/EditModeUtils";
 
 //The initial point the user pressed down.
 let startingPoint: Point;
