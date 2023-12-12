@@ -34,12 +34,7 @@ export function dragMouseDown(event: MouseEvent) {
 export function dragMouseMove(event: MouseEvent) {
     if (!wasOut) {
         offset = new Point(event.x - originPoint.x, event.y - originPoint.y);
-
-        if (treeContext.modeState === "Proof") {
-            redrawProof();
-        } else {
-            redrawTree(treeContext.tree);
-        }
+        redrawCorrectTree();
     }
 }
 
@@ -48,6 +43,13 @@ export function dragMouseMove(event: MouseEvent) {
  */
 export function dragMouseOut() {
     wasOut = true;
+    redrawCorrectTree();
+}
+
+/**
+ * Redraws the correct tree based on global mode state.
+ */
+function redrawCorrectTree() {
     if (treeContext.modeState === "Proof") {
         redrawProof();
     } else {
