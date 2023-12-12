@@ -566,7 +566,7 @@ function mouseOutHandler() {
             AtomTool.atomMouseOut();
             break;
         case Tool.dragTool:
-            DragTool.dragMosueOut();
+            DragTool.dragMouseOut();
             break;
         case Tool.moveSingleTool:
             MoveSingleTool.moveSingleMouseOut();
