@@ -9,33 +9,36 @@ import {Point} from "../AEG/Point";
 import {treeContext} from "../treeContext";
 
 /**
- * Collection of methods for function on the HTML canvas.
+ * Collection of methods used for drawing on the HTML canvas.
+ *
  * @author Dawn Moore
  * @author Anusha Tiwari
  */
 
-//Setting up Canvas
+//Setting up Canvas...
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
 const res: CanvasRenderingContext2D | null = canvas.getContext("2d");
+
 if (res === null) {
-    throw Error("2d rendering context not supported");
+    throw Error("2d rendering context not supported.");
 }
 const ctx: CanvasRenderingContext2D = res;
 ctx.font = "35pt arial";
 
-//Tree string displayed on webpage
+//Tree strings displayed on webpage depending on whether the user is in draw/proof mode.
 const cutDisplay = <HTMLParagraphElement>document.getElementById("graphString");
 const proofString = <HTMLParagraphElement>document.getElementById("proofString");
 
-//HTML bounding box check
+//Current bounding box checkbox and all bounding box checkbox for Atoms, respectively.
 const atomCheckBox = <HTMLInputElement>document.getElementById("atomBox");
 const atomCheckBoxes = <HTMLInputElement>document.getElementById("atomBoxes");
 atomCheckBoxes.addEventListener("input", checkBoxRedraw);
 
 /**
- * Draws the given cut onto the canvas.
- * @param thisCut The cut containing the ellipse to be drawn
- * @param color the line color of the ellipse
+ * Draws the incoming CutNode on canvas as the incoming color string.
+ *
+ * @param thisCut Incoming CutNode.
+ * @param color Incoming color string.
  */
 export function drawCut(thisCut: CutNode, color: string) {
     const ellipse: Ellipse = <Ellipse>thisCut.ellipse;
@@ -57,9 +60,13 @@ export function drawCut(thisCut: CutNode, color: string) {
 }
 
 /**
- * Draws the given atomNode with the given color.
- * @param thisAtom the atomMode to be drawn.
- * @param color the color of the atom.
+ * Draws the incoming AtomNode as the incoming color string.
+ * If the incoming flag is true, which happens when the checkbox for drawing AtomNodes' bounding boxes is checked,
+ * Then the incoming AtomNode's bounding box is drawn as well.
+ *
+ * @param thisAtom Incoming AtomNode.
+ * @param color Incoming color string.
+ * @param currentAtom Incoming flag.
  */
 export function drawAtom(thisAtom: AtomNode, color: string, currentAtom: Boolean) {
     ctx.textBaseline = "bottom";
@@ -79,6 +86,15 @@ export function drawAtom(thisAtom: AtomNode, color: string, currentAtom: Boolean
     ctx.stroke();
 }
 
+/**
+ * Draws the guidelines for some node's bounding box.
+ * This bounding box is a Rectangle created from one incoming original Point to another current Point.
+ * This Rectangle is drawn in the color of the incoming color string.
+ *
+ * @param original Incoming original Point.
+ * @param current Incoming current Point.
+ * @param color Incoming color string.
+ */
 export function drawGuidelines(original: Point, current: Point, color: string) {
     ctx.beginPath();
     ctx.strokeStyle = color;
@@ -89,18 +105,25 @@ export function drawGuidelines(original: Point, current: Point, color: string) {
 }
 
 /**
- * When the checkbox for showing all bounding boxes is checked redraws the canvas showing the boxes.
+ * Redraws the draw mode AEGTree after a bounding box checkbox is activated.
  */
 function checkBoxRedraw() {
     redrawTree(treeContext.tree);
 }
 
+/**
+ * Completely clears canvas of all drawings.
+ */
 export function cleanCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 /**
- * Resets the canvas and begins the recursive method of drawing the current tree.
+ * Clears canvas and redraws the incoming AEGTree as the incoming color string.
+ * Also, updates cutDisplay and the window's string forms of the incoming AEGTree.
+ *
+ * @param tree Incoming AEGTree.
+ * @param color Incoming color string.
  */
 export function redrawTree(tree: AEGTree, color?: string) {
     cutDisplay.innerHTML = tree.toString();
@@ -110,10 +133,10 @@ export function redrawTree(tree: AEGTree, color?: string) {
 }
 
 /**
- * Iterates through the entire tree, if there are no children the for loop will not begin.
- * Sends any Atom children to redrawAtom.
- * @param incomingNode The CutNode to be iterated through
- * @param offset The difference between the actual graph and the current canvas
+ * Redraws the incoming CutNode and all its children as the incoming color string.
+ *
+ * @param incomingNode Incoming CutNode.
+ * @param color Incoming color string. Defaults to the color of a valid placement if not passed in.
  */
 function redrawCut(incomingNode: CutNode, color?: string) {
     for (let i = 0; incomingNode.children.length > i; i++) {
@@ -140,17 +163,21 @@ function redrawCut(incomingNode: CutNode, color?: string) {
 }
 
 /**
- * Redraws the given atom. Also redraws the the bounding box.
- * @param incomingNode The Atom Node to be redrawn
- * @param offset The difference between the actual graph and the current canvas
+ * Redraws the incoming AtomNode. Also redraws the incoming AtomNode's bounding box.
+ *
+ * @param incomingNode Incoming AtomNode.
  */
 export function redrawAtom(incomingNode: AtomNode) {
     drawAtom(incomingNode, placedColor(), false);
 }
 
+/**
+ * Redraws the current proof AEGTree after clearing the canvas.
+ * Also updates the proof's tree string.
+ */
 export function redrawProof() {
     //If this is the first step taken in the proof,
-    //set the current tree as the head of the proof history
+    //Set the current AEGTree as the head of the proof history.
     let tree: AEGTree;
     if (treeContext.proof.length === 0 || treeContext.currentProofStep === undefined) {
         tree = new AEGTree();
@@ -164,9 +191,10 @@ export function redrawProof() {
 }
 
 /**
- * Highlights all the children of the incoming node as the incoming color.
- * @param child The incoming node
- * @param color The incoming color
+ * Highlights all the children of the incoming child node as the incoming color string.
+ *
+ * @param child Incoming child node.
+ * @param color Incoming color string.
  */
 export function highlightNode(child: AtomNode | CutNode, color: string) {
     if (child instanceof AtomNode) {
@@ -180,18 +208,21 @@ export function highlightNode(child: AtomNode | CutNode, color: string) {
 }
 
 /**
- * Determines which widest points the current point is closest to so that the resize
- * can move in that direction.
- * widestPoints[0] = leftmost widest point of the ellipse
- * widestPoints[1] = topmost widest point of the ellipse
- * widestPoints[2] = rightmost widest point of the ellipse
- * widestPoints[3] = bottommost widest point of the ellipse
- * @returns The new direction for x and y
+ * Calculates and returns a Point which represents the direction for the incoming CutNode to move towards, based off the incoming Point.
+ *
+ * @param currentNode Incoming CutNode.
+ * @param startingPoint Incoming Point.
+ * @returns Direction for currentNode to move towards.
  */
 export function determineDirection(currentNode: CutNode, startingPoint: Point): Point {
     const newDirection = new Point(1, 1);
     if (currentNode instanceof CutNode && (currentNode as CutNode).ellipse !== null) {
         const currentEllipse: Ellipse = currentNode.ellipse as Ellipse;
+
+        //widestPoints[0] = Leftmost widest Point of the currentEllipse.
+        //widestPoints[1] = Topmost widest Point of currentEllipse.
+        //widestPoints[2] = Rightmost widest Point of currentEllipse.
+        //widestPoints[3] = Bottommost widest Point of currentEllipse.
         const widestPoints: Point[] = [
             new Point(currentEllipse.center.x - currentEllipse.radiusX, currentEllipse.center.y),
             new Point(currentEllipse.center.x, currentEllipse.center.y - currentEllipse.radiusY),
@@ -199,20 +230,19 @@ export function determineDirection(currentNode: CutNode, startingPoint: Point): 
             new Point(currentEllipse.center.x, currentEllipse.center.y + currentEllipse.radiusY),
         ];
 
-        //If the current point is closer to the top or equal the direction is positive and going down
+        //If the current Point is closer to the top or equal, the direction is positive and going down.
         if (widestPoints[0].distance(startingPoint) >= widestPoints[2].distance(startingPoint)) {
             newDirection.x = 1;
         } else {
             newDirection.x = -1;
         }
 
-        //If the current point is closer to the left or equal the direction is positive and going right
+        //If the current Point is closer to the left or equal, the direction is positive and going right.
         if (widestPoints[1].distance(startingPoint) >= widestPoints[3].distance(startingPoint)) {
             newDirection.y = 1;
         } else {
             newDirection.y = -1;
         }
     }
-
     return newDirection;
 }

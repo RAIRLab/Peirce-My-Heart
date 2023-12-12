@@ -310,8 +310,8 @@ export function createEllipse(original: Point, current: Point): Ellipse {
  * Exceedingly long and exceedingly tall Ellipses appearing.
  * Also, tiny CutNodes do not serve any purpose due to their inability to contain AtomNodes and CutNodes.
  *
- * @param ellipse The ellipse to be checked
- * @returns Whether the given ellipse is large enough to be legal
+ * @param ellipse Incoming Ellipse.
+ * @returns True if ellipse is large enough to be legal.
  */
 export function ellipseLargeEnough(ellipse: Ellipse): boolean {
     if (ellipse.radiusX > 15 && ellipse.radiusY > 15) {
