@@ -3,7 +3,7 @@ import {Point} from "./Point";
 import {Rectangle} from "./Rectangle";
 
 /**
- * Collection of functions used by shapes drawn and stored by the AEGTree.
+ * Collection of methods used by shapes drawn and stored by the AEGTree.
  *
  * @author Anusha Tiwari
  */
