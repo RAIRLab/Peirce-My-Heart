@@ -8,23 +8,26 @@ import {Point} from "../AEG/Point";
 import {treeContext} from "../treeContext";
 
 /**
- * File containing cut based event functions.
+ * Contains CutNode-based event methods.
  *
  * @author Dawn Moore
  * @author James Oswald
+ * @author Anusha Tiwari
  */
 
+//Checkbox next to "Show Guidelines:" in Draw Mode' Cut Tool toolbar.
 const showRectElm: HTMLInputElement = <HTMLInputElement>document.getElementById("showRect");
 
-//The point the ellipse is initially placed.
+//Point the CutNode is initially placed.
 let startingPoint: Point;
 
-//Tracks if the mouse has ever left canvas disallowing future movements.
+//True if the mouse has left canvas.
 let wasOut: boolean;
 
 /**
- * Sets the starting point for the ellipse to where the user clicks.
- * @param event The mouse down event
+ * Sets startingPoint according to the coordinates given by the incoming MouseEvent.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function cutMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.clientX - offset.x, event.clientY - offset.y);
@@ -32,10 +35,11 @@ export function cutMouseDown(event: MouseEvent) {
 }
 
 /**
- * Takes the current point of the ellipse and draws the ellipse between those two points.
- * Checks to see if the current point is valid to determine color.
- * Redraws the canvas then draws the ellipse.
- * @param event The mouse move event
+ * Draws a CutNode on canvas using startingPoint and the coordinates given by the incoming MouseEvent.
+ * Color is legal only if this CutNode's Ellipse calculations can be inserted and are greater than the minimum Ellipse size.
+ * Redraws the canvas and CutNode regardless of legality. Also draws the guidelines, if that checkbox is active.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function cutMouseMove(event: MouseEvent) {
     const newCut: CutNode = new CutNode(new Ellipse(new Point(0, 0), 0, 0));
@@ -55,9 +59,11 @@ export function cutMouseMove(event: MouseEvent) {
 }
 
 /**
- * Takes the current point of the mouse up event and if it is in a legal position adds it to the tree
- * Redraws the canvas, if the cut was legal it will be there on the new redraw.
- * @param event The mouse up event
+ * Inserts a CutNode into the Draw Mode AEGTree if possible.
+ * This CutNode's Ellipse takes the coordinates given by the incoming MouseEvent into its calculation.
+ * Redraws the canvas regardless if the CutNode was inserted.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function cutMouseUp(event: MouseEvent) {
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
@@ -73,7 +79,7 @@ export function cutMouseUp(event: MouseEvent) {
 }
 
 /**
- * Resets the canvas if the mouse ends up out of the canvas.
+ * Marks the mouse as having left canvas and redraws the tree.
  */
 export function cutMouseOut() {
     wasOut = true;

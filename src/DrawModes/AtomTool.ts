@@ -21,7 +21,7 @@ if (res === null) {
 }
 const ctx: CanvasRenderingContext2D = res;
 
-//Letter display next to "Current Atom:" in Draw Mode's Atom Tool.
+//Letter display next to "Current Atom:" in Draw Mode's Atom Tool toolbar.
 const atomDisplay = <HTMLParagraphElement>document.getElementById("atomDisplay");
 
 //True if the mouse has left canvas.
