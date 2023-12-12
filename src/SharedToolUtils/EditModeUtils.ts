@@ -17,17 +17,17 @@ import {treeContext} from "../treeContext";
 const modeElm: HTMLSelectElement = <HTMLSelectElement>document.getElementById("mode");
 
 /**
- * Checks the validity of the incoming node and all of its children. If the child is a cut node uses
- * recursion to check the validity, if it is an atom it does not need recursion. If even one node
- * fails, every current position will return as invalid.
+ * Checks that the incoming CutNode, when placed in the incoming AEGTree and offset by the incoming Point, is still able to be inserted.
+ * Performs this check for all of the incoming CutNode's children as well.
  *
- * @param incomingNode The current node that will be checked for validity
- * @param change The difference between the original position and the new position
- * @returns If all nodes are in a valid position returns true, if any node is not returns false
+ * @param tree Incoming AEGTree.
+ * @param incomingNode Incoming CutNode.
+ * @param change Incoming Point.
+ * @returns True f all nodes are able to be inserted after being offset by difference.
  */
-export function validateChildren(tree: AEGTree, incomingNode: CutNode, change: Point): boolean {
+export function validateChildren(tree: AEGTree, incomingNode: CutNode, difference: Point): boolean {
     if (incomingNode.ellipse !== null) {
-        const tempCut: CutNode = alterCut(incomingNode, change);
+        const tempCut: CutNode = alterCut(incomingNode, difference);
         if (!tree.canInsert(tempCut)) {
             return false;
         }
@@ -37,13 +37,14 @@ export function validateChildren(tree: AEGTree, incomingNode: CutNode, change: P
         if (
             incomingNode.children[i] instanceof CutNode &&
             (incomingNode.children[i] as CutNode).ellipse !== null &&
-            !validateChildren(tree, incomingNode.children[i] as CutNode, change)
+            !validateChildren(tree, incomingNode.children[i] as CutNode, difference)
         ) {
-            //If any of this node's children are in an invalid location return false for all of them.
+            //If any of this incomingNode's children are in an invalid location,
+            //We return false for all of those invalid children.
             return false;
         } else if (incomingNode.children[i] instanceof AtomNode) {
             let tempAtom = incomingNode.children[i] as AtomNode;
-            tempAtom = alterAtom(tempAtom, change);
+            tempAtom = alterAtom(tempAtom, difference);
 
             if (!tree.canInsert(tempAtom)) {
                 return false;
@@ -51,64 +52,71 @@ export function validateChildren(tree: AEGTree, incomingNode: CutNode, change: P
         }
     }
 
-    //All children and current node are legal, return true.
+    //All incomingNode's children and incomingNode are legal here. We return true.
     return true;
 }
 
 /**
- * If the incoming node is a cut, makes a temporary cut draws it and if it has children calls this
- * function for each of its children. Atom nodes are just redrawn using drawAtom.
- * @param incomingNode The current node to be drawn
- * @param color The color to draw the atom or cut as
- * @param change The difference between the original position and the new position
+ * Draws the incoming node as the incoming color string after being offset by the incoming Point.
+ * The incoming Point determines how far the incoming node will be offset in the x and y directions.
+ *
+ * @param incomingNode Incoming node.
+ * @param color Incoming color string.
+ * @param difference Incoming Point.
  */
-export function drawAltered(incomingNode: CutNode | AtomNode, color: string, change: Point) {
+export function drawAltered(incomingNode: CutNode | AtomNode, color: string, difference: Point) {
     if (incomingNode instanceof CutNode && incomingNode.ellipse !== null) {
-        const tempCut: CutNode = alterCut(incomingNode, change);
+        const tempCut: CutNode = alterCut(incomingNode, difference);
         drawCut(tempCut, color);
-        //If this node has any children draws them as well.
+        //If this node has any children, the children must also be drawn.
         if (incomingNode.children.length !== 0) {
             for (let i = 0; i < incomingNode.children.length; i++) {
-                drawAltered(incomingNode.children[i], color, change);
+                drawAltered(incomingNode.children[i], color, difference);
             }
         }
     } else if (incomingNode instanceof AtomNode) {
-        const tempAtom: AtomNode = alterAtom(incomingNode, change);
+        const tempAtom: AtomNode = alterAtom(incomingNode, difference);
         drawAtom(tempAtom, color, true);
     }
 }
 
 /**
- * Inserts the incoming node into the tree with the change to its original location. If the node
- * is a cut node that has children calls this function on each of its children.
- * @param incomingNode The current node to be inserted
- * @param change The difference between the original position and the new position
- * @param tree The tree we want to insert the node in. By default, inserts in global draw tree.
+ * Inserts the incoming node into the incoming AEGTree offset by the incoming Point.
+ * If the incoming node has any children, those children are also offset by the incoming Point and inserted.
+ * The incoming Point determines how far the incoming node will be offset in the x and y directions.
+ *
+ * @param incomingNode Incoming node.
+ * @param difference Incoming Point.
+ * @param tree Incoming AEGTree. Defaults to global draw tree if not passed in.
  */
-export function insertChildren(incomingNode: CutNode | AtomNode, change: Point, tree?: AEGTree) {
+export function insertChildren(
+    incomingNode: CutNode | AtomNode,
+    difference: Point,
+    tree?: AEGTree
+) {
     const insertTree = tree ? tree : treeContext.tree;
     if (incomingNode instanceof CutNode && incomingNode.ellipse !== null) {
-        const tempCut: CutNode = alterCut(incomingNode, change);
+        const tempCut: CutNode = alterCut(incomingNode, difference);
         insertTree.insert(tempCut);
-        //If this node has any children recurses to insert them with the same distance change
+        //If this node has any children, we insert those children that are also offset by difference.
         if (incomingNode.children.length !== 0) {
             for (let i = 0; i < incomingNode.children.length; i++) {
-                insertChildren(incomingNode.children[i], change, tree);
+                insertChildren(incomingNode.children[i], difference, tree);
             }
         }
     } else if (incomingNode instanceof AtomNode) {
-        const tempAtom: AtomNode = alterAtom(incomingNode, change);
-
+        const tempAtom: AtomNode = alterAtom(incomingNode, difference);
         insertTree.insert(tempAtom);
     }
 }
 
 /**
- * Calculates and returns a node object and alters it accordingly based on the type of node
+ * Calculates and returns the incoming node altered by the incoming Point.
+ * The incoming Point determines how far the incoming node will be offset in the x and y directions.
  *
- * @param node The node to be altered
- * @param difference The difference on how far the node should move
- * @returns The new altered version of the node
+ * @param node Incoming node.
+ * @param difference Incoming Point.
+ * @returns Altered version of node according to difference.
  */
 export function alterNode(node: AtomNode | CutNode, difference: Point): AtomNode | CutNode {
     if (node instanceof AtomNode) {
@@ -119,11 +127,14 @@ export function alterNode(node: AtomNode | CutNode, difference: Point): AtomNode
 }
 
 /**
- * Takes a cut object and changes the center point of the ellipse by the difference.
- * If the cut does not have an ellipse throws and error.
- * @param originalCut The original cut to be altered
- * @param difference The difference on how far the center should move
- * @returns The new altered version of the cut
+ * Calculates and returns the incoming CutNode with its center shifted by the incoming Point.
+ * The incoming Point determines how far the incoming CutNode will be offset in the x and y directions.
+ *
+ * @param originalCut Incoming CutNode.
+ * @param difference Incoming Point.
+ *
+ * @returns Altered version of originalCut according to difference.
+ * @throws Error If originalCut is The Sheet of Assertion.
  */
 export function alterCut(originalCut: CutNode, difference: Point): CutNode {
     if (originalCut.ellipse !== null) {
@@ -138,16 +149,17 @@ export function alterCut(originalCut: CutNode, difference: Point): CutNode {
             )
         );
     } else {
-        throw new Error("Cannot alter the position of a cut without an ellipse.");
+        throw new Error("Cannot alter the position of a CutNode without no Ellipse.");
     }
 }
 
 /**
- * Takes a cut and makes a copy of it with the center changed by the given difference.
- * Creates a new array of children and alters those by the same distance acting recursively if needed.
- * @param originalCut The cut we want to change the center of
- * @param difference The distance the cut will be shifted
- * @returns The new cut node with all of it's children altered
+ * Calculates and returns a copy of the incoming CutNode with it and all of its children's centers offset by the incoming Point.
+ * The incoming Point determines how far the incoming CutNode and its children will be offset in the x and y directions.
+ *
+ * @param originalCut Incoming CutNode.
+ * @param difference Incoming Point.
+ * @returns originalCut with it and its children altered by difference.
  */
 export function alterCutChildren(originalCut: CutNode, difference: Point): CutNode {
     if (originalCut.ellipse !== null) {
@@ -175,15 +187,17 @@ export function alterCutChildren(originalCut: CutNode, difference: Point): CutNo
             alteredChildren
         );
     } else {
-        throw new Error("Cannot alter the position of a cut without an ellipse.");
+        throw new Error("Cannot alter the position of a CutNode without an Ellipse.");
     }
 }
 
 /**
- * Takes an atom object and changes the origin point by the difference.
- * @param originalAtom The Atom to be altered
- * @param difference The difference on how far the atom should move
- * @returns The new altered version of the atom
+ * Calculates and returns the incoming AtomNode with its position offset by the incoming Point.
+ * The incoming Point determines how far the incoming AtomNode will be offset in the x and y directions.
+ *
+ * @param originalAtom Incoming AtomNode.
+ * @param difference Incoming Point.
+ * @returns Altered version of originalAtom according to difference.
  */
 export function alterAtom(originalAtom: AtomNode, difference: Point): AtomNode {
     return new AtomNode(
@@ -198,12 +212,12 @@ export function alterAtom(originalAtom: AtomNode, difference: Point): AtomNode {
 }
 
 /**
- * Makes a copy of original cut and changes the center and radii by the difference given.
- * Alters the change to the center based on the direction that is being moved to.
- * @param originalCut The original cut that will be copied and altered
- * @param difference The change for the new cut
- * @param direction the direction the radius will be expanding towards
- * @returns The new altered cut
+ * Calculates and returns the incoming CutNode expanded by one incoming Point in the direction of the other incoming Point.
+ *
+ * @param originalCut Incoming CutNode.
+ * @param difference One incoming Point.
+ * @param direction Other incoming Point.
+ * @returns originalCut with radii expanded by difference towards direction.
  */
 export function resizeCut(originalCut: CutNode, difference: Point, direction: Point): CutNode {
     if (originalCut.ellipse !== null) {
@@ -218,17 +232,18 @@ export function resizeCut(originalCut: CutNode, difference: Point, direction: Po
             )
         );
     } else {
-        throw new Error("Cannot alter the position of a cut without an ellipse.");
+        throw new Error("Cannot alter the position of a CutNode without an Ellipse.");
     }
 }
 
 /**
- * Readds children of a parent CutNode.
+ * Inserts abandoned children from the incoming parent CutNode to the incoming AEGTree.
+ *
  * In the wise words of Dawn Moore,
  * "The cut node loses custody of its children so that those can still be redrawn."
  *
- * @param tree The AEG tree we want to readd the children into
- * @param parentCut Parent CutNode
+ * @param tree Incoming AEGTree.
+ * @param parentCut Incoming parent CutNode.
  */
 export function readdChildren(tree: AEGTree, parentCut: CutNode) {
     for (let i = 0; i < parentCut.children.length; i++) {
@@ -239,9 +254,11 @@ export function readdChildren(tree: AEGTree, parentCut: CutNode) {
 }
 
 /**
- * Adds the incoming node to the tree, and, if necessary, its children
- * @param tree The AEG Tree we want to inset the node into
- * @param currentNode The incoming node
+ * Inserts the incoming node to the incoming AEGTree and however many children the incoming node has.
+ * Redraws that AEGTree afterward.
+ *
+ * @param tree Incoming AEGTree.
+ * @param currentNode Incoming node.
  */
 export function reInsertNode(tree: AEGTree, currentNode: AtomNode | CutNode) {
     if (currentNode instanceof CutNode && currentNode.ellipse === null) {
@@ -255,9 +272,11 @@ export function reInsertNode(tree: AEGTree, currentNode: AtomNode | CutNode) {
     }
 }
 /**
- * A function to calculate an ellipse between two points designated by the user.
- * @param original the point where the user originally clicked
- * @param current the point where the user's mouse is currently located
+ * Calculates and returns an Ellipse based on two incoming Points.
+ * The original mouse placement and the current mouse placement are these Points.
+ *
+ * @param original Incoming original mouse placement Point.
+ * @param current Incoming current mouse placement Point.
  */
 export function createEllipse(original: Point, current: Point): Ellipse {
     const center: Point = new Point(
@@ -272,8 +291,8 @@ export function createEllipse(original: Point, current: Point): Ellipse {
     let rx, ry: number;
 
     if (modeElm.value === "circumscribed") {
-        //This inscribed ellipse solution is inspired by the discussion of radius ratios in
-        //https://stackoverflow.com/a/433426/6342516
+        //This inscribed ellipse solution is inspired by:
+        //https://stackoverflow.com/a/433426/6342516.
         const rv: number = Math.floor(center.distance(current));
         ry = Math.floor(rv * (dy / dx));
         rx = Math.floor(rv * (dx / dy));
@@ -286,7 +305,11 @@ export function createEllipse(original: Point, current: Point): Ellipse {
 }
 
 /**
- * Checks to see if the given ellipse is large enough to be considered legal.
+ * Checks if the incoming Ellipse is large enough to be considered legal.
+ * CutNode legality was introduced because of exceedingly tiny,
+ * Exceedingly long and exceedingly tall Ellipses appearing.
+ * Also, tiny CutNodes do not serve any purpose due to their inability to contain AtomNodes and CutNodes.
+ *
  * @param ellipse The ellipse to be checked
  * @returns Whether the given ellipse is large enough to be legal
  */
