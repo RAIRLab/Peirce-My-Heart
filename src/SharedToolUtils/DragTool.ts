@@ -3,23 +3,24 @@ import {redrawProof, redrawTree} from "./DrawUtils";
 import {treeContext} from "../treeContext";
 
 /**
- * Collection of functions for drag based events.
+ * Collection of methods for drag related tools.
+ *
  * @author Dawn Moore
  * @author Anusha Tiwari
  */
 
-//Original point later points will be compared to.
+//Original Point later Points will be compared to.
 let originPoint: Point;
 
 //Difference between real AEG coordinates and current canvas location.
 export let offset: Point = new Point(0, 0);
 
-//Tracks if the mouse has ever left canvas disallowing future movements.
+//Tracks if the mouse has ever left the HTML canvas.
 let wasOut: boolean;
 
 /**
- * Sets the origin point of the user's click so it can be compared for offset.
- * @param event The mouse down event in drag mode
+ * Sets originPoint to the coordinates of the incoming MouseEvent.
+ * @param event Incoming MouseEvent.
  */
 export function dragMouseDown(event: MouseEvent) {
     originPoint = new Point(event.x - offset.x, event.y - offset.y);
@@ -27,8 +28,8 @@ export function dragMouseDown(event: MouseEvent) {
 }
 
 /**
- * Compares the origin point with the current point and calculate the current difference as offset.
- * @param event The mouse move event in drag mode
+ * Compares originPoint with the coordinates of the incoming MouseEvent and redraws the tree.
+ * @param event Incoming MouseEvent.
  */
 export function dragMouseMove(event: MouseEvent) {
     if (!wasOut) {
@@ -43,9 +44,9 @@ export function dragMouseMove(event: MouseEvent) {
 }
 
 /**
- * Sets wasOut to true when the cursor leaves the canvas and redraws the canvas.
+ * Sets wasOut to true and redraws the canvas.
  */
-export function dragMosueOut() {
+export function dragMouseOut() {
     wasOut = true;
     if (treeContext.modeState === "Proof") {
         redrawProof();
