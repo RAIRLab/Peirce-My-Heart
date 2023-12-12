@@ -8,28 +8,31 @@ import {Point} from "../AEG/Point";
 import {treeContext} from "../treeContext";
 
 /**
- * A file containing single node resizing.
+ * Contains single node resizing.
  * @author Dawn Moore
  */
 
-//The initial point the user pressed down.
+//First Point the user clicks.
 let startingPoint: Point;
 
-//The node selected with the user mouse down.
+//Node in question.
 let currentNode: CutNode | AtomNode | null = null;
 
-//Whether or not the node is allowed to be moved (not the sheet).
+//True if this node is not The Sheet of Assertion (i.e can be moved.)
 let legalNode: boolean;
 
-//The direction the cut will move in. For x 1 means going to the right and -1 means left.
-//For y 1 means going down and -1 means going up.
+//Direction a CutNode will move in.
+//For x, 1 means going right and -1 means left.
+//For y, 1 means going down and -1 means going up.
+//Defaults to going right and down according to the above details.
 let direction: Point = new Point(1, 1);
 
 /**
- * Takes the point the user clicked and stores that for later use. If the lowest node containing
- * that point is not the sheet, then store that as currentNode and find that node's parent.
- * Removes the node from the parent and reinsert its children if it has any. Cannot be an Atom.
- * @param event The event of a mouse down while using resize tool
+ * Sets startingPoint according to the coordinates given by the incoming MouseEvent.
+ * currentNode and direction are set too.
+ * If currentNode is a CutNode, it is removed from the Draw Mode AEGTree and its children are inserted.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function resizeMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
@@ -50,9 +53,12 @@ export function resizeMouseDown(event: MouseEvent) {
 }
 
 /**
- * If the node is legal alters the center and both of the radii. Creates a copy of the current cut
- * So that the original is not altered in any way.
- * @param event The event of a mouse move while using the resize tool
+ * Alters the center and both radii of currentNode according to the coordinates given by the incoming MouseEvent.
+ * This is done if and only if currentNode is legal and a CutNode.
+ * The Draw Mode AEGTree is then redrawn.
+ * Highlighting colors are determined by whether the resized CutNode can be inserted or not.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function resizeMouseMove(event: MouseEvent) {
     if (legalNode) {
@@ -63,7 +69,6 @@ export function resizeMouseMove(event: MouseEvent) {
 
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = resizeCut(currentNode, moveDifference, direction);
-            //This is just to make the lint stop yelling
             if (tempCut.ellipse !== null) {
                 redrawTree(treeContext.tree);
                 const legal =
@@ -76,8 +81,12 @@ export function resizeMouseMove(event: MouseEvent) {
 }
 
 /**
- * If the node is legal creates a new temporary cut and alters the ellipse center and radii.
- * If this new cut can be inserted inserts that into the tree, otherwise reinserts the original.
+ * Alters currentNode's center and radii according the coordinates given by the incoming MouseEvent.
+ * This is done if and only if currentNode is legal and a CutNode.
+ * This resized CutNode is inserted into the Draw Mode AEGTree if possible.
+ * Otherwise the original CutNode is inserted.
+ * The Draw Mode AEGTree is then redrawn.
+ *
  * @param event The event of a mouse up while using the resize tool
  */
 export function resizeMouseUp(event: MouseEvent) {
@@ -89,7 +98,6 @@ export function resizeMouseUp(event: MouseEvent) {
 
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = resizeCut(currentNode, moveDifference, direction);
-            //This is just to make the lint stop yelling
             if (tempCut.ellipse !== null) {
                 if (treeContext.tree.canInsert(tempCut) && ellipseLargeEnough(tempCut.ellipse)) {
                     treeContext.tree.insert(tempCut);
@@ -104,7 +112,7 @@ export function resizeMouseUp(event: MouseEvent) {
 }
 
 /**
- * If the mouse leaves the canvas then it is no longer a legal node and reinserts the original.
+ * Marks legality as false, reinserts the original node and redraws the Draw Mode AEGTree.
  */
 export function resizeMouseOut() {
     if (legalNode && currentNode !== null) {
