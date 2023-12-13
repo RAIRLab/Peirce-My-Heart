@@ -9,6 +9,9 @@ import {treeContext} from "../treeContext";
  * @author Anusha Tiwari
  */
 
+//Setting up canvas...
+const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
+
 //Original Point later Points will be compared to.
 let originPoint: Point;
 
@@ -19,10 +22,18 @@ export let offset: Point = new Point(0, 0);
 let wasOut: boolean;
 
 /**
+ * Sets the canvas' style tag to grab.
+ */
+export function dragMouseEnter() {
+    canvas.style.cssText = "cursor: grab";
+}
+
+/**
  * Sets originPoint to the coordinates of the incoming MouseEvent.
  * @param event Incoming MouseEvent.
  */
 export function dragMouseDown(event: MouseEvent) {
+    canvas.style.cssText = "cursor: grabbing";
     originPoint = new Point(event.x - offset.x, event.y - offset.y);
     wasOut = false;
 }
@@ -33,15 +44,24 @@ export function dragMouseDown(event: MouseEvent) {
  */
 export function dragMouseMove(event: MouseEvent) {
     if (!wasOut) {
+        canvas.style.cssText = "cursor: grabbing";
         offset = new Point(event.x - originPoint.x, event.y - originPoint.y);
         redrawCorrectTree();
     }
 }
 
 /**
+ * Sets the canvas' style tag to grab.
+ */
+export function dragMouseUp() {
+    canvas.style.cssText = "cursor: grab";
+}
+
+/**
  * Sets wasOut to true and redraws the canvas.
  */
 export function dragMouseOut() {
+    canvas.style.cssText = "cursor: default";
     wasOut = true;
     redrawCorrectTree();
 }

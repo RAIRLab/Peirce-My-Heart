@@ -490,6 +490,9 @@ function mouseUpHandler(event: MouseEvent) {
         case Tool.atomTool:
             AtomTool.atomMouseUp(event);
             break;
+        case Tool.dragTool:
+            DragTool.dragMouseUp();
+            break;
         case Tool.moveSingleTool:
             MoveSingleTool.moveSingleMouseUp(event);
             break;
@@ -632,6 +635,13 @@ function mouseOutHandler() {
 }
 
 function mouseEnterHandler() {
+    switch (treeContext.toolState) {
+        case Tool.dragTool:
+            DragTool.dragMouseEnter();
+            break;
+        default:
+            break;
+    }
     hasMouseIn = true;
 }
 
