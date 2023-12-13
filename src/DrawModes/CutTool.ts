@@ -13,10 +13,16 @@ import {legalColor, illegalColor} from "../Themes";
 import {drawCut, redrawTree, drawGuidelines} from "../SharedToolUtils/DrawUtils";
 import {createEllipse, ellipseLargeEnough} from "../SharedToolUtils/EditModeUtils";
 
+//Setting up canvas...
+const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
+
 const showRectElm: HTMLInputElement = <HTMLInputElement>document.getElementById("showRect");
 
 //The point the ellipse is initially placed.
 let startingPoint: Point;
+
+//Stores the previous radii of this CutNode.
+let previousRadiiTracker: Point;
 
 //Tracks if the mouse has ever left canvas disallowing future movements.
 let wasOut: boolean;
@@ -28,6 +34,7 @@ let wasOut: boolean;
 export function cutMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.clientX - offset.x, event.clientY - offset.y);
     wasOut = false;
+    previousRadiiTracker = new Point(0, 0);
 }
 
 /**
@@ -43,13 +50,24 @@ export function cutMouseMove(event: MouseEvent) {
     newCut.ellipse = createEllipse(startingPoint, currentPoint);
 
     if (!wasOut) {
+        if (Math.abs(previousRadiiTracker.x - newCut.ellipse.radiusX) <= 0.5) {
+            canvas.style.cssText = "cursor: ns-resize";
+        } else {
+            canvas.style.cssText = "cursor: ew-resize";
+        }
         const legal = treeContext.tree.canInsert(newCut) && ellipseLargeEnough(newCut.ellipse);
         const color = legal ? legalColor() : illegalColor();
+
+        if (!legal) {
+            canvas.style.cssText = "cursor: no-drop";
+        }
+
         drawCut(newCut, color);
 
         if (showRectElm.checked) {
             drawGuidelines(startingPoint, currentPoint, color);
         }
+        previousRadiiTracker.set(newCut.ellipse.radiusX, newCut.ellipse.radiusY);
     }
 }
 
@@ -69,12 +87,14 @@ export function cutMouseUp(event: MouseEvent) {
         treeContext.tree.insert(newCut);
     }
     redrawTree(treeContext.tree);
+    canvas.style.cssText = "cursor: default";
 }
 
 /**
  * Resets the canvas if the mouse ends up out of the canvas.
  */
 export function cutMouseOut() {
+    canvas.style.cssText = "cursor: default";
     wasOut = true;
     redrawTree(treeContext.tree);
 }

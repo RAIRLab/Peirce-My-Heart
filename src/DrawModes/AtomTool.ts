@@ -128,7 +128,7 @@ function drawLegal() {
             canvas.style.cssText = "cursor: default";
             drawAtom(currentAtom, legalColor(), true);
         } else {
-            canvas.style.cssText = "cursor: not-allowed";
+            canvas.style.cssText = "cursor: no-drop";
             drawAtom(currentAtom, illegalColor(), true);
         }
     }
