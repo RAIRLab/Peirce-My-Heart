@@ -8,26 +8,30 @@ import {reInsertNode} from "../SharedToolUtils/EditModeUtils";
 import {treeContext} from "../treeContext";
 
 /**
- * Contains logic for deleting multiple nodes at once.
- * @author Ryan Reilly
+ * Contains methods for deleting multiple nodes at once.
+ * When it is said that nodes are "removed" in the documentation,
+ * This means that they are removed from the Draw Mode AEGTree but visually are still present.
+ *
  * @author Dawn Moore
+ * @author Ryan Reilly
  */
 
-//The initial point the user pressed down.
+//First Point the user clicks.
 let startingPoint: Point;
 
-//The node selected with the user mouse down.
+//Node in question.
 let currentNode: CutNode | AtomNode | null = null;
 
-//Whether or not the node is allowed to be moved (not the sheet).
+//True if this node is not null.
 let legalNode: boolean;
 
 /**
- * Takes the Point the user clicked and stores it.
- * If the lowest node containing that Point isn't the Sheet of Assertion,
- * That node is stored as currentNode.
- * currentNode is marked with the "illegal" color while the user holds it.
- * @param event The event from which we will get the Point
+ * Sets startingPoint according to the coordinate given by the incoming MouseEvent.
+ * Then the node at startingPoint is stored as currentNode.
+ * Then currentNode and all its children are removed from the Draw Mode AEGTree and are highlighted as the illegal color.
+ * If currentNode is The Sheet of Assertion, all its children are removed.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function deleteMultiMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
@@ -48,9 +52,11 @@ export function deleteMultiMouseDown(event: MouseEvent) {
 }
 
 /**
- * If the user clicks on a node to delete it, but moves their mouse away,
- * That node will not be deleted. If the mouse was moved farther down or higher in the tree,
- * The removal will update accordingly.
+ * Reinserts any nodes previously deleted, including whatever children of theirs were abandoned.
+ * Then currentNode is set according to the coordinates given by the incoming MouseEvent.
+ * Then that new currentNode and all its children are removed and highlighted as the illegal color.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function deleteMultiMouseMove(event: MouseEvent) {
     if (legalNode && currentNode !== null) {
@@ -80,8 +86,11 @@ export function deleteMultiMouseMove(event: MouseEvent) {
 }
 
 /**
- * Removes currentNode and sets all data back to default values.
- * @param event The mouse up event
+ * Sets currentNode according to the coordinates given by the incoming MouseEvent.
+ * Then currentNode and all its children are deleted from the Draw Mode AEGTree.
+ * Then the currentNode is set to null and legality is set to false.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function deleteMultiMouseUp(event: MouseEvent) {
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
@@ -99,7 +108,7 @@ export function deleteMultiMouseUp(event: MouseEvent) {
 }
 
 /**
- * If the mouse is held down and the user leaves canvas, we reset fields back to default.
+ * Reinserts the original currentNode, sets currentNode to null, sets legality to false and redraws the Draw Mode AEGTree.
  */
 export function deleteMultiMouseOut() {
     if (legalNode && currentNode !== null) {

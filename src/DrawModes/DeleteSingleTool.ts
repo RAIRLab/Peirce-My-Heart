@@ -9,7 +9,8 @@ import {treeContext} from "../treeContext";
 
 /**
  * Contains methods for deleting one node at a time.
- *
+ * When it is said that nodes are "removed" in the documentation,
+ * This means that they are removed from the Draw Mode AEGTree but visually are still present.
  * @author Dawn Moore
  * @author Ryan Reilly
  */
@@ -20,7 +21,7 @@ let startingPoint: Point;
 //Node in question.
 let currentNode: CutNode | AtomNode | null = null;
 
-//True if this node is not The Sheet of Assertion (i.e can be moved.)
+//True if this node is not The Sheet of Assertion or null (i.e can be removed.)
 let legalNode: boolean;
 
 /**
@@ -98,6 +99,7 @@ export function deleteSingleMouseMove(event: MouseEvent) {
 /**
  * Sets currentNode according to the coordinates given by the incoming MouseEvent.
  * Then currentNode is deleted and all its children are readded to the Draw Mode AEGTree.
+ * Then the currentNode is set to null and legality is set to false.
  *
  * @param event Incoming MouseEvent.
  */
@@ -123,7 +125,7 @@ export function deleteSingleMouseUp(event: MouseEvent) {
 }
 
 /**
- * Marks legality as false, sets currentNode to null, reinserts the original currentNode and redraws the Draw Mode AEGTree.
+ * Reinserts the original currentNode, sets currentNode to null, sets legality to false and redraws the Draw Mode AEGTree.
  */
 export function deleteSingleMouseOut() {
     if (legalNode && currentNode !== null) {
