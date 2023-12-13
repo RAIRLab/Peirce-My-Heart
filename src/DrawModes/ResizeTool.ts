@@ -8,7 +8,7 @@ import {Point} from "../AEG/Point";
 import {treeContext} from "../treeContext";
 
 /**
- * Contains single node resizing.
+ * Contains Draw Mode resizing methods.
  * @author Dawn Moore
  */
 
@@ -112,7 +112,7 @@ export function resizeMouseUp(event: MouseEvent) {
 }
 
 /**
- * Marks legality as false, reinserts the original node and redraws the Draw Mode AEGTree.
+ * Marks legality as false, reinserts currentNode and redraws the Draw Mode AEGTree.
  */
 export function resizeMouseOut() {
     if (legalNode && currentNode !== null) {

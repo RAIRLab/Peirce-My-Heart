@@ -8,27 +8,27 @@ import {readdChildren, reInsertNode} from "../SharedToolUtils/EditModeUtils";
 import {treeContext} from "../treeContext";
 
 /**
- * Contains logic for deleting one node.
+ * Contains methods for deleting one node at a time.
  *
  * @author Dawn Moore
  * @author Ryan Reilly
  */
 
-//The initial point the user pressed down.
+//First Point the user clicks.
 let startingPoint: Point;
 
-//The node selected with the user mouse down.
+//Node in question.
 let currentNode: CutNode | AtomNode | null = null;
 
-//Whether or not the node is allowed to be moved (not the sheet).
+//True if this node is not The Sheet of Assertion (i.e can be moved.)
 let legalNode: boolean;
 
 /**
- * Takes the Point the user clicked and stores it.
- * If the lowest node containing that Point isn't the Sheet of Assertion,
- * That node is stored as currentNode.
- * currentNode is marked with the "illegal" color while the user holds it.
- * @param event The event from which we will get the Point
+ * Sets startingPoint according to the coordinate given by the incoming MouseEvent.
+ * Then the node at startingPoint is stored as currentNode if it is not The Sheet of Assertion.
+ * Then currentNode is removed from the Draw Mode AEGTree, its children are readded, and it is highlighted as the illegal color.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function deleteSingleMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
@@ -59,10 +59,11 @@ export function deleteSingleMouseDown(event: MouseEvent) {
 }
 
 /**
- * If the user clicks on a node to delete it, but moves their mouse away,
- * The node will not be deleted. Whichever node lowest on the tree now contains the MouseEvent's
- * Point will be set to the node to be deleted.
- * @param event The mouse move event
+ * Reinserts any nodes previously deleted, including whatever children of theirs were abandoned.
+ * Then currentNode is set according to the coordinates given by the incoming MouseEvent.
+ * Then that new currentNode is removed, its children are inserted, and is highlighted as the illegal color.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function deleteSingleMouseMove(event: MouseEvent) {
     if (legalNode && currentNode !== null && (currentNode as CutNode).ellipse !== null) {
@@ -95,8 +96,10 @@ export function deleteSingleMouseMove(event: MouseEvent) {
 }
 
 /**
- * Removes currentNode and sets all data back to default values.
- * @param event The mouse up event
+ * Sets currentNode according to the coordinates given by the incoming MouseEvent.
+ * Then currentNode is deleted and all its children are readded to the Draw Mode AEGTree.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function deleteSingleMouseUp(event: MouseEvent) {
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
@@ -120,7 +123,7 @@ export function deleteSingleMouseUp(event: MouseEvent) {
 }
 
 /**
- * If the mouse leaves the canvas, reset data back to defaults.
+ * Marks legality as false, sets currentNode to null, reinserts the original currentNode and redraws the Draw Mode AEGTree.
  */
 export function deleteSingleMouseOut() {
     if (legalNode && currentNode !== null) {
