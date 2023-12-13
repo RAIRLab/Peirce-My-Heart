@@ -8,45 +8,49 @@ import {Point} from "../AEG/Point";
 import {treeContext} from "../treeContext";
 
 /**
- * File containing event handlers to select from draw mode and copy to proof mode
+ * Contains methods for copying AEGs to Proof Mode.
  *
  * @author Dawn Moore
  * @author Anusha Tiwari
  */
 
-//The initial point the user pressed down.
+//First Point the user clicks.
 let currentPoint: Point;
 
-//The current node and its children we will be moving.
+//AEG in question.
 let selectedNode: CutNode | AtomNode | null = null;
 
-//Whether or not the node is allowed to be selected.
+//True if selectedNode is not null.
 let legalNode: boolean;
 
-//A deep copy of the global tree
+//Deep copy of the Draw Mode AEGTree.
 let tempTree: AEGTree;
 
+//Under the "Selected subgraph:" text in CopyToProof's toolbar.
 const selectString = <HTMLParagraphElement>document.getElementById("selectionString");
+
 /**
- * Handles the MouseDown event while in copy to proof mode.
- * Gets the lowest node on the tree at the point identified by the MouseDown event.
- * If it is a legal selection, highlights the node.
- * @param event The MouseDown event while in copy to proof mode
+ * Sets tempTree.
+ * Then sets selectedNode to the node at the coordinates given by the incoming MouseEvent.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function copyFromDrawMouseDown(event: MouseEvent) {
     tempTree = new AEGTree(treeContext.tree.sheet);
-    //Reset our selectForProof tree to a blank AEG so that a new graph can be selected
+    //Set our selectForProof tree to a new AEGTree so that a new graph can be selected.
     treeContext.selectForProof.sheet = new AEGTree().sheet;
 
     currentPoint = new Point(event.x - offset.x, event.y - offset.y);
     selectedNode = treeContext.tree.getLowestNode(currentPoint);
 
-    isLegal();
+    highlightSelection();
 }
 
 /**
- * Handles the MouseMove event while in copy to proof mode.
+ * Sets selectedNode to the node at the coordinates given by the incoming MouseEvent.
  * Currently MouseMove does not allow for node selection. (Can be changed as per team review)
+ *
+ * @param event Incoming MouseEvent.
  */
 export function copyFromDrawMouseMove(event: MouseEvent) {
     if (legalNode) {
@@ -55,13 +59,13 @@ export function copyFromDrawMouseMove(event: MouseEvent) {
         currentPoint = new Point(event.x - offset.x, event.y - offset.y);
         selectedNode = treeContext.tree.getLowestNode(currentPoint);
 
-        isLegal();
+        highlightSelection();
     }
 }
 
 /**
- * Handles the MouseUp event while in copy to proof mode.
- * MouseUp displays an alert stating that a legal node has been selected
+ * Inserts selectedNode and all its children into the treeContext.
+ * Then selectedNode is set to null and legality is set to false.
  */
 export function copyFromDrawMouseUp() {
     if (legalNode && selectedNode !== null) {
@@ -82,8 +86,7 @@ export function copyFromDrawMouseUp() {
 }
 
 /**
- * Handles the MouseOut event of when the mouse moves outside the canvas while in copy to proof mode.
- * On MouseOut, the selection is cancelled.
+ * Sets selectedNode to null, sets legality to false and redraws the Draw Mode AEGTree.
  */
 export function copyFromDrawMouseOut() {
     selectedNode = null;
@@ -91,23 +94,25 @@ export function copyFromDrawMouseOut() {
     redrawTree(treeContext.tree);
 }
 
-function isLegal() {
-    //A tree which will contain our selected node so that it can be displayed on the sub bar
+/**
+ * Removes selectedNode from the Draw Mode AEGTree and draws it as the legal color.
+ */
+function highlightSelection() {
+    //Displayed under the "Selected subgraph:" text.
     const tree = new AEGTree();
     let removed = false;
 
     if (selectedNode !== null) {
         legalNode = true;
 
-        //Temporarily remove the selected part of the tree and highlight selected part only
-        //If the sheet has been selected, clear the canvas and redraw the entire tree
+        //Temporarily remove selectedNode from tree and highlight selectedNode only.
         if (
             selectedNode instanceof AtomNode ||
             !(selectedNode as CutNode).isEqualTo(tempTree.sheet)
         ) {
             tree.insert(selectedNode);
             const tempParent = tempTree.getLowestParent(currentPoint);
-            //Remove the selected node from the tree so that it can be highlighted cleanly
+            //Remove the node at currentPoint from tempTree so that selectedNode is highlighted without color overlaps.
             if (tempParent !== null) {
                 tempParent.remove(currentPoint);
                 removed = true;
@@ -115,14 +120,14 @@ function isLegal() {
             redrawTree(tempTree);
         } else {
             tree.sheet = selectedNode as CutNode;
-            //If the sheet is selected, clear the canvas so that entire tree is highlighted cleanly
+            //If The Sheet of Assertion is selected,
+            //Clear canvas so the entire Draw Mode AEGTree is highlighted without color overlaps.
             cleanCanvas();
         }
 
-        //Highlight the selected part by redrawing in legalColor
         highlightNode(selectedNode, legalColor());
 
-        //If something was removed, add it back kin
+        //If something was removed, add it back in.
         if (removed) {
             tempTree.insert(selectedNode);
         }

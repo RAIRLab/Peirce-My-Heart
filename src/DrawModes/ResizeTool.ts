@@ -18,7 +18,7 @@ let startingPoint: Point;
 //Node in question.
 let currentNode: CutNode | AtomNode | null = null;
 
-//True if this node is not The Sheet of Assertion (i.e can be moved.)
+//True if currentNode is not The Sheet of Assertion (i.e can be moved.)
 let legalNode: boolean;
 
 //Direction a CutNode will move in.

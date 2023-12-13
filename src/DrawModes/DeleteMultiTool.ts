@@ -22,7 +22,7 @@ let startingPoint: Point;
 //Node in question.
 let currentNode: CutNode | AtomNode | null = null;
 
-//True if this node is not null.
+//True if currentNode is not null.
 let legalNode: boolean;
 
 /**

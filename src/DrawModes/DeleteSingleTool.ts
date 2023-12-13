@@ -21,7 +21,7 @@ let startingPoint: Point;
 //Node in question.
 let currentNode: CutNode | AtomNode | null = null;
 
-//True if this node is not The Sheet of Assertion or null (i.e can be removed.)
+//True if currentNode is not The Sheet of Assertion or null (i.e can be removed.)
 let legalNode: boolean;
 
 /**
