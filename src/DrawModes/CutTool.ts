@@ -21,9 +21,6 @@ const showRectElm: HTMLInputElement = <HTMLInputElement>document.getElementById(
 //The point the ellipse is initially placed.
 let startingPoint: Point;
 
-//Stores the previous radii of this CutNode.
-let previousRadiiTracker: Point;
-
 //Tracks if the mouse has ever left canvas disallowing future movements.
 let wasOut: boolean;
 
@@ -41,7 +38,6 @@ export function cutMouseEnter() {
 export function cutMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.clientX - offset.x, event.clientY - offset.y);
     wasOut = false;
-    previousRadiiTracker = new Point(0, 0);
 }
 
 /**
@@ -70,7 +66,6 @@ export function cutMouseMove(event: MouseEvent) {
         if (showRectElm.checked) {
             drawGuidelines(startingPoint, currentPoint, color);
         }
-        previousRadiiTracker.set(newCut.ellipse.radiusX, newCut.ellipse.radiusY);
     }
 }
 
