@@ -80,6 +80,7 @@ export function atomMouseMove(event: MouseEvent) {
  * @param event The mouse up event
  */
 export function atomMouseUp(event: MouseEvent) {
+    canvas.style.cssText = "cursor: default";
     currentAtom = createAtom(
         currentAtom.identifier,
         new Point(event.clientX - offset.x, event.clientY - offset.y)
@@ -95,6 +96,7 @@ export function atomMouseUp(event: MouseEvent) {
  * If the mouse leaves the canvas resets the current atom.
  */
 export function atomMouseOut() {
+    canvas.style.cssText = "cursor: default";
     wasOut = true;
     redrawTree(treeContext.tree);
 }
@@ -123,8 +125,10 @@ function drawLegal() {
     redrawTree(treeContext.tree);
     if (!wasOut) {
         if (treeContext.tree.canInsert(currentAtom)) {
+            canvas.style.cssText = "cursor: default";
             drawAtom(currentAtom, legalColor(), true);
         } else {
+            canvas.style.cssText = "cursor: not-allowed";
             drawAtom(currentAtom, illegalColor(), true);
         }
     }
