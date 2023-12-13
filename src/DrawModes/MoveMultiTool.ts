@@ -12,6 +12,9 @@ import {drawAtom, highlightNode, redrawTree} from "../SharedToolUtils/DrawUtils"
 import {legalColor, illegalColor} from "../Themes";
 import * as EditModeUtils from "../SharedToolUtils/EditModeUtils";
 
+//Setting up canvas...
+const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
+
 //The initial point the user pressed down.
 let startingPoint: Point;
 
@@ -30,6 +33,7 @@ export function moveMultiMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = treeContext.tree.getLowestNode(startingPoint);
     if (currentNode !== treeContext.tree.sheet && currentNode !== null) {
+        canvas.style.cssText = "cursor: grabbing";
         const currentParent = treeContext.tree.getLowestParent(startingPoint);
         if (currentParent !== null) {
             currentParent.remove(startingPoint);
@@ -83,6 +87,7 @@ export function moveMultiMouseMove(event: MouseEvent) {
  * @param event the mouse up event while in moveMulti mode
  */
 export function moveMultiMouseUp(event: MouseEvent) {
+    canvas.style.cssText = "cursor: default";
     if (legalNode) {
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
@@ -114,6 +119,7 @@ export function moveMultiMouseUp(event: MouseEvent) {
  * Redraws the canvas to clear any drawings not part of the tree.
  */
 export function moveMultiMouseOut() {
+    canvas.style.cssText = "cursor: default";
     if (legalNode && currentNode !== null) {
         treeContext.tree.insert(currentNode);
     }

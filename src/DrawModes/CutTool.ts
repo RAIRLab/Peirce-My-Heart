@@ -50,6 +50,7 @@ export function cutMouseMove(event: MouseEvent) {
     newCut.ellipse = createEllipse(startingPoint, currentPoint);
 
     if (!wasOut) {
+        //Magic number here is to reduce incredibly frequent changes in the cursor style (not visually pleasant.)
         if (Math.abs(previousRadiiTracker.x - newCut.ellipse.radiusX) <= 0.5) {
             canvas.style.cssText = "cursor: ns-resize";
         } else {
