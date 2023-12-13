@@ -636,6 +636,9 @@ function mouseOutHandler() {
 
 function mouseEnterHandler() {
     switch (treeContext.toolState) {
+        case Tool.cutTool:
+            CutTool.cutMouseEnter();
+            break;
         case Tool.dragTool:
             DragTool.dragMouseEnter();
             break;

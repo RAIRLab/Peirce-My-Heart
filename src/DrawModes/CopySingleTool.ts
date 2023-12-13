@@ -13,6 +13,9 @@ import {drawCut, drawAtom, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
 import {alterAtom, alterCut} from "../SharedToolUtils/EditModeUtils";
 
+//Setting up canvas...
+const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
+
 //The initial point the user pressed down.
 let startingPoint: Point;
 
@@ -32,6 +35,7 @@ export function copySingleMouseDown(event: MouseEvent) {
     const realNode: CutNode | AtomNode | null = treeContext.tree.getLowestNode(startingPoint);
     const moveDifference: Point = new Point(event.x - startingPoint.x, event.y - startingPoint.y);
     if (realNode !== treeContext.tree.sheet && realNode !== null) {
+        canvas.style.cssText = "cursor: copy";
         if (realNode instanceof CutNode) {
             //The cut node loses custody of its children because those do not copy over during
             //copy single mode
@@ -55,6 +59,7 @@ export function copySingleMouseDown(event: MouseEvent) {
  */
 export function copySingleMouseMove(event: MouseEvent) {
     if (legalNode) {
+        canvas.style.cssText = "cursor: grabbing";
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
             event.y - startingPoint.y
@@ -84,6 +89,7 @@ export function copySingleMouseMove(event: MouseEvent) {
  * @param event The mouse up event while in copySingle mode
  */
 export function copySingleMouseUp(event: MouseEvent) {
+    canvas.style.cssText = "cursor: default";
     if (legalNode) {
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
@@ -114,6 +120,7 @@ export function copySingleMouseUp(event: MouseEvent) {
  * Redraws the canvas.
  */
 export function copySingleMouseOut() {
+    canvas.style.cssText = "cursor: default";
     legalNode = false;
     redrawTree(treeContext.tree);
 }

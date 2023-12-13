@@ -13,6 +13,9 @@ import {drawAtom, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
 import * as EditModeUtils from "../SharedToolUtils/EditModeUtils";
 
+//Setting up canvas...
+const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
+
 //The initial point the user pressed down.
 let startingPoint: Point;
 
@@ -31,6 +34,7 @@ export function copyMultiMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = treeContext.tree.getLowestNode(startingPoint);
     if (currentNode !== treeContext.tree.sheet && currentNode !== null) {
+        canvas.style.cssText = "cursor: copy";
         legalNode = true;
     } else {
         legalNode = false;
@@ -45,11 +49,11 @@ export function copyMultiMouseDown(event: MouseEvent) {
  */
 export function copyMultiMouseMove(event: MouseEvent) {
     if (legalNode) {
+        canvas.style.cssText = "cursor: grabbing";
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
             event.y - startingPoint.y
         );
-
         redrawTree(treeContext.tree);
         if (currentNode instanceof CutNode) {
             const color = EditModeUtils.validateChildren(
@@ -76,6 +80,7 @@ export function copyMultiMouseMove(event: MouseEvent) {
  * @param event the mouse up event while in copyMulti mode
  */
 export function copyMultiMouseUp(event: MouseEvent) {
+    canvas.style.cssText = "cursor: default";
     if (legalNode) {
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
@@ -103,6 +108,7 @@ export function copyMultiMouseUp(event: MouseEvent) {
  * Redraws the canvas to clear any drawings not part of the tree.
  */
 export function copyMultiMouseOut() {
+    canvas.style.cssText = "cursor: default";
     legalNode = false;
     redrawTree(treeContext.tree);
 }

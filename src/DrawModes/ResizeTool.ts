@@ -11,6 +11,9 @@ import {offset} from "../SharedToolUtils/DragTool";
 import {drawCut, redrawTree, determineDirection} from "../SharedToolUtils/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
 
+//Setting up canvas...
+const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
+
 //The initial point the user pressed down.
 let startingPoint: Point;
 
@@ -61,6 +64,7 @@ export function resizeMouseMove(event: MouseEvent) {
         );
 
         if (currentNode instanceof CutNode) {
+            canvas.style.cssText = "cursor: crosshair";
             const tempCut: CutNode = resizeCut(currentNode, moveDifference, direction);
             //This is just to make the lint stop yelling
             if (tempCut.ellipse !== null) {
@@ -68,6 +72,11 @@ export function resizeMouseMove(event: MouseEvent) {
                 const legal =
                     treeContext.tree.canInsert(tempCut) && ellipseLargeEnough(tempCut.ellipse);
                 const color = legal ? legalColor() : illegalColor();
+
+                if (!legal) {
+                    canvas.style.cssText = "cursor: no-drop";
+                }
+
                 drawCut(tempCut, color);
             }
         }
@@ -80,6 +89,7 @@ export function resizeMouseMove(event: MouseEvent) {
  * @param event The event of a mouse up while using the resize tool
  */
 export function resizeMouseUp(event: MouseEvent) {
+    canvas.style.cssText = "cursor: default";
     if (legalNode) {
         const moveDifference: Point = new Point(
             (event.x - offset.x - startingPoint.x) / 2,
@@ -106,6 +116,7 @@ export function resizeMouseUp(event: MouseEvent) {
  * If the mouse leaves the canvas then it is no longer a legal node and reinserts the original.
  */
 export function resizeMouseOut() {
+    canvas.style.cssText = "cursor: default";
     if (legalNode && currentNode !== null) {
         treeContext.tree.insert(currentNode);
     }

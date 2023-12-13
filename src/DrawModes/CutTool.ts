@@ -28,6 +28,13 @@ let previousRadiiTracker: Point;
 let wasOut: boolean;
 
 /**
+ * Sets the canvas' cursor style to crosshair.
+ */
+export function cutMouseEnter() {
+    canvas.style.cssText = "cursor: crosshair";
+}
+
+/**
  * Sets the starting point for the ellipse to where the user clicks.
  * @param event The mouse down event
  */
@@ -50,12 +57,7 @@ export function cutMouseMove(event: MouseEvent) {
     newCut.ellipse = createEllipse(startingPoint, currentPoint);
 
     if (!wasOut) {
-        //Magic number here is to reduce incredibly frequent changes in the cursor style (not visually pleasant.)
-        if (Math.abs(previousRadiiTracker.x - newCut.ellipse.radiusX) <= 0.5) {
-            canvas.style.cssText = "cursor: ns-resize";
-        } else {
-            canvas.style.cssText = "cursor: ew-resize";
-        }
+        canvas.style.cssText = "cursor: crosshair";
         const legal = treeContext.tree.canInsert(newCut) && ellipseLargeEnough(newCut.ellipse);
         const color = legal ? legalColor() : illegalColor();
 
@@ -88,7 +90,6 @@ export function cutMouseUp(event: MouseEvent) {
         treeContext.tree.insert(newCut);
     }
     redrawTree(treeContext.tree);
-    canvas.style.cssText = "cursor: default";
 }
 
 /**
