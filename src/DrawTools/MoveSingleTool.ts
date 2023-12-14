@@ -9,6 +9,7 @@ import {treeContext} from "../treeContext";
 
 /**
  * Contains methods for moving one node at a time.
+ *
  * When it is said that a node is "removed" in the documentation,
  * This means that it is removed from the Draw Mode AEGTree but visually is still present.
  *
@@ -27,7 +28,9 @@ let legalNode: boolean;
 
 /**
  * Sets startingPoint according to the coordinates given by the incoming MouseEvent.
- * Then removes the lowest node containing startingPoint, reinserts its children and highlights currentNode the legal color.
+ * Then removes the lowest node containing startingPoint.
+ * Then reinserts its children.
+ * Then highlights currentNode the legal color.
  *
  * @param event Incoming MouseEvent.
  */
@@ -60,7 +63,8 @@ export function moveSingleMouseDown(event: MouseEvent) {
 }
 
 /**
- * Alters currentNode according to the coordinates given by the incoming MouseEvent.
+ * Alters currentNode's position according to the coordinates given by the incoming MouseEvent.
+ * Then redraws the Draw Mode AEGTree.
  * Then highlights currentNode according to the legality of its position.
  *
  * @param event Incoming MouseEvent.
@@ -86,8 +90,9 @@ export function moveSingleMouseMove(event: MouseEvent) {
 }
 
 /**
- * Alters currentNode according to the coordinates given by the incoming MouseEvent.
- * Then inserts currentNode if its altering is legal. Reinserts the original currentNode otherwise.
+ * Alters currentNode's position according to the coordinates given by the incoming MouseEvent.
+ * Then inserts currentNode if its altered position is valid.
+ * Otherwise reinserts the unaltered currentNode.
  *
  * @param event Incoming MouseEvent.
  */
@@ -118,7 +123,8 @@ export function moveSingleMouseUp(event: MouseEvent) {
 }
 
 /**
- * Sets wasOut to true and reinserts the original currentNode.
+ * Reinserts the original currentNode if legal.
+ * Then sets legality to false.
  * Then redraws the canvas.
  */
 export function moveSingleMouseOut() {

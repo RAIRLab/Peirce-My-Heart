@@ -9,6 +9,7 @@ import {treeContext} from "../treeContext";
 
 /**
  * Contains methods for deleting one node at a time.
+ *
  * When it is said that a node is "removed" in the documentation,
  * This means that it is removed from the Draw Mode AEGTree but visually is still present.
  *
@@ -27,7 +28,7 @@ let legalNode: boolean;
 
 /**
  * Sets startingPoint according to the coordinates given by the incoming MouseEvent.
- * Then the node at startingPoint is stored as currentNode if it is not The Sheet of Assertion.
+ * Then the lowest node containing startingPoint is stored as currentNode if it is not The Sheet of Assertion or null.
  * Then currentNode is removed from the Draw Mode AEGTree, its children are readded, and it is highlighted as the illegal color.
  *
  * @param event Incoming MouseEvent.
@@ -62,7 +63,7 @@ export function deleteSingleMouseDown(event: MouseEvent) {
 
 /**
  * Reinserts any nodes previously deleted, including whatever children of theirs were abandoned.
- * Then currentNode is set according to the coordinates given by the incoming MouseEvent.
+ * Then currentNode is to the lowest node containing the coordinates given by the incoming MouseEvent.
  * Then that new currentNode is removed, its children are inserted, and is highlighted as the illegal color.
  *
  * @param event Incoming MouseEvent.

@@ -9,6 +9,7 @@ import {treeContext} from "../treeContext";
 
 /**
  * Contains methods for moving one or more nodes at a time.
+ *
  * When it is said that nodes are "removed" in the documentation,
  * This means that they are removed from the Draw Mode AEGTree but visually are still present.
  *
@@ -27,7 +28,11 @@ let legalNode: boolean;
 
 /**
  * Sets startingPoint according to the coordinates given by the incoming MouseEvent.
- * Then removes the lowest node containing startingPoint.
+ * Then sets currentNode to the lowest node containing startingPoint.
+ * Then removes currentNode.
+ * Then sets legality to true.
+ * Then redraws the Draw Mode AEGTree.
+ * Then highlights currentNode the legal color.
  *
  * @param event Incoming MouseEvent.
  */
@@ -49,9 +54,9 @@ export function moveMultiMouseDown(event: MouseEvent) {
 
 /**
  * Draws an altered currentNode according to the coordinates given by the incoming MouseEvent.
- * Then highlights currentNode according to the legality of its position.
+ * Then highlights currentNode according to the legality of it and its children's positions' validity.
  *
- * @param event The mouse move event while in moveMulti mode
+ * @param event Incoming MouseEvent.
  */
 export function moveMultiMouseMove(event: MouseEvent) {
     if (legalNode) {
@@ -79,10 +84,11 @@ export function moveMultiMouseMove(event: MouseEvent) {
 }
 
 /**
- * Sets currentNode to the coordinates given by the incoming MouseEvent.
- * Then Inserts currentNode into the Draw Mode AEGTree if the position of it and all its children is legal.
+ * Sets currentNode according to the coordinates given by the incoming MouseEvent.
+ * Then inserts currentNode into the Draw Mode AEGTree if the positions of it and all its children are legal.
  * Otherwise inserts the original currentNode.
- * Then redraws the tree.
+ * Then sets legality to false.
+ * Then redraws the Draw Mode AEGTree.
  *
  * @param event Incoming MouseEvent.
  */
@@ -92,7 +98,6 @@ export function moveMultiMouseUp(event: MouseEvent) {
             event.x - startingPoint.x,
             event.y - startingPoint.y
         );
-
         if (currentNode instanceof CutNode) {
             if (EditModeUtils.validateChildren(treeContext.tree, currentNode, moveDifference)) {
                 EditModeUtils.insertChildren(currentNode, moveDifference);
@@ -101,7 +106,6 @@ export function moveMultiMouseUp(event: MouseEvent) {
             }
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = EditModeUtils.alterAtom(currentNode, moveDifference);
-
             if (treeContext.tree.canInsert(tempAtom)) {
                 treeContext.tree.insert(tempAtom);
             } else {
@@ -114,7 +118,8 @@ export function moveMultiMouseUp(event: MouseEvent) {
 }
 
 /**
- * Sets wasOut to true and reinserts the original currentNode and all its children.
+ * Reinserts the original currentNode and all its children.
+ * Then sets legality to false.
  * Then redraws the canvas.
  */
 export function moveMultiMouseOut() {

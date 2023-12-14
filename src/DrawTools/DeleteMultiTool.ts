@@ -9,6 +9,7 @@ import {treeContext} from "../treeContext";
 
 /**
  * Contains methods for deleting one or more nodes at a time.
+ *
  * When it is said that nodes are "removed" in the documentation,
  * This means that they are removed from the Draw Mode AEGTree but visually are still present.
  *
@@ -27,9 +28,9 @@ let legalNode: boolean;
 
 /**
  * Sets startingPoint according to the coordinates given by the incoming MouseEvent.
- * Then the node at startingPoint is stored as currentNode.
- * Then currentNode and all its children are removed from the Draw Mode AEGTree and are highlighted as the illegal color.
- * If currentNode is The Sheet of Assertion, all its children are removed.
+ * Then currentNode is set to the lowest node containing startingPoint.
+ * Then currentNode and all its children are removed from the Draw Mode AEGTree and are highlighted the illegal color.
+ * Then removes all the children of currentNode if currentNode is The Sheet of Assertion.
  *
  * @param event Incoming MouseEvent.
  */
@@ -52,8 +53,8 @@ export function deleteMultiMouseDown(event: MouseEvent) {
 }
 
 /**
- * Reinserts any nodes previously deleted, including whatever children of theirs were abandoned.
- * Then currentNode is set according to the coordinates given by the incoming MouseEvent.
+ * Reinserts any nodes previously deleted, including whatever children of its were abandoned.
+ * Then currentNode is set to the lowest node containing the coordinates given by the incoming MouseEvent.
  * Then that new currentNode and all its children are removed and highlighted as the illegal color.
  *
  * @param event Incoming MouseEvent.
@@ -86,9 +87,10 @@ export function deleteMultiMouseMove(event: MouseEvent) {
 }
 
 /**
- * Sets currentNode according to the coordinates given by the incoming MouseEvent.
+ * Sets currentNode according to the lowest node containing the coordinates given by the incoming MouseEvent.
  * Then currentNode and all its children are deleted from the Draw Mode AEGTree.
- * Then the currentNode is set to null and legality is set to false.
+ * Then the currentNode is set to null.
+ * Then legality is set to false.
  *
  * @param event Incoming MouseEvent.
  */
@@ -108,7 +110,10 @@ export function deleteMultiMouseUp(event: MouseEvent) {
 }
 
 /**
- * Reinserts the original currentNode, sets currentNode to null, sets legality to false and redraws the Draw Mode AEGTree.
+ * Reinserts the original currentNode if legal.
+ * Then sets currentNode to null.
+ * Then sets legality to false.
+ * Then redraws the Draw Mode AEGTree.
  */
 export function deleteMultiMouseOut() {
     if (legalNode && currentNode !== null) {

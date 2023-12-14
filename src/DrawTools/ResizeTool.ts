@@ -9,6 +9,7 @@ import {treeContext} from "../treeContext";
 
 /**
  * Contains Draw Mode CutNode resizing methods.
+ *
  * When it is said that a node is "removed" in the documentation,
  * This means that it is removed from the Draw Mode AEGTree but visually is still present.
  *
@@ -32,9 +33,10 @@ let direction: Point = new Point(1, 1);
 
 /**
  * Sets startingPoint according to the coordinates given by the incoming MouseEvent.
- * Then currentNode and legality are set.
+ * Then currentNode is set to the lowest node containing startingPoint.
+ * Then legality is set to true.
  * Then if currentNode is a CutNode, it is removed from the Draw Mode AEGTree and its children are inserted.
- * Then direction is set.
+ * Then direction is calculated and set.
  *
  * @param event Incoming MouseEvent.
  */

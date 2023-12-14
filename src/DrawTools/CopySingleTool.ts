@@ -9,6 +9,7 @@ import {treeContext} from "../treeContext";
 
 /**
  * Contains methods for copy and pasting one node at a time.
+ *
  * When it is said that a node is "removed" in the documentation,
  * This means that it is removed from the Draw Mode AEGTree but visually is still present.
  *

@@ -31,7 +31,7 @@ const selectString = <HTMLParagraphElement>document.getElementById("selectionStr
 
 /**
  * Sets tempTree to a new AEGTree.
- * Then sets selectedNode to the lowest node at the coordinates given by the incoming MouseEvent.
+ * Then sets selectedNode to the lowest node containing the coordinates given by the incoming MouseEvent.
  * Then highlights selectedNode the legal color.
  *
  * @param event Incoming MouseEvent.
@@ -48,7 +48,9 @@ export function copyFromDrawMouseDown(event: MouseEvent) {
 }
 
 /**
- * Sets selectedNode to the lowest node at the coordinates given by the incoming MouseEvent.
+ * Redraws the Draw Mode AEGTree.
+ * Then sets selectedNode to the lowest node containing the coordinates given by the incoming MouseEvent.
+ * Then highlights the selection the legal color.
  * Currently MouseMove does not allow for node selection. (Can be changed as per team review.)
  *
  * @param event Incoming MouseEvent.
