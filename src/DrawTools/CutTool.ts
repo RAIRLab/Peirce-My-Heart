@@ -8,7 +8,7 @@ import {Point} from "../AEG/Point";
 import {treeContext} from "../treeContext";
 
 /**
- * Contains CutNode-based event methods.
+ * Contains methods for manipulating CutNodes on the HTML canvas.
  *
  * @author Dawn Moore
  * @author James Oswald

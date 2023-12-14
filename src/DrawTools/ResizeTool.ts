@@ -8,7 +8,8 @@ import {Point} from "../AEG/Point";
 import {treeContext} from "../treeContext";
 
 /**
- * Contains Draw Mode resizing methods.
+ * Contains Draw Mode CutNode resizing methods.
+ *
  * @author Dawn Moore
  */
 

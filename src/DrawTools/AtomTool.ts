@@ -7,7 +7,7 @@ import {redrawTree} from "../SharedToolUtils/DrawUtils";
 import {treeContext} from "../treeContext";
 
 /**
- * Contains AtomNode-based event methods.
+ * Contains methods for manipulating AtomNodes on the HTML canvas.
  *
  * @author Dawn Moore
  * @author Anusha Tiwari
