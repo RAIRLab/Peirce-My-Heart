@@ -9,6 +9,8 @@ import {treeContext} from "../treeContext";
 
 /**
  * Contains Draw Mode CutNode resizing methods.
+ * When it is said that a node is "removed" in the documentation,
+ * This means that it is removed from the Draw Mode AEGTree but visually is still present.
  *
  * @author Dawn Moore
  */
@@ -30,8 +32,9 @@ let direction: Point = new Point(1, 1);
 
 /**
  * Sets startingPoint according to the coordinates given by the incoming MouseEvent.
- * currentNode and direction are set too.
- * If currentNode is a CutNode, it is removed from the Draw Mode AEGTree and its children are inserted.
+ * Then currentNode and legality are set.
+ * Then if currentNode is a CutNode, it is removed from the Draw Mode AEGTree and its children are inserted.
+ * Then direction is set.
  *
  * @param event Incoming MouseEvent.
  */
@@ -56,8 +59,9 @@ export function resizeMouseDown(event: MouseEvent) {
 /**
  * Alters the center and both radii of currentNode according to the coordinates given by the incoming MouseEvent.
  * This is done if and only if currentNode is legal and a CutNode.
- * The Draw Mode AEGTree is then redrawn.
- * Highlighting colors are determined by whether the resized CutNode can be inserted or not.
+ * Then the Draw Mode AEGTree is redrawn.
+ * Then highlights currentNode according to its position's validity.
+ * Highlight Color is legal only if currentNode can be inserted and is greater than the minimum radii values.
  *
  * @param event Incoming MouseEvent.
  */
@@ -67,7 +71,6 @@ export function resizeMouseMove(event: MouseEvent) {
             (event.x - offset.x - startingPoint.x) / 2,
             (event.y - offset.y - startingPoint.y) / 2
         );
-
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = resizeCut(currentNode, moveDifference, direction);
             if (tempCut.ellipse !== null) {
@@ -84,11 +87,12 @@ export function resizeMouseMove(event: MouseEvent) {
 /**
  * Alters currentNode's center and radii according the coordinates given by the incoming MouseEvent.
  * This is done if and only if currentNode is legal and a CutNode.
- * This resized CutNode is inserted into the Draw Mode AEGTree if possible.
+ * Then this resized CutNode is inserted into the Draw Mode AEGTree if its position is valid.
  * Otherwise the original CutNode is inserted.
- * The Draw Mode AEGTree is then redrawn.
+ * Then the Draw Mode AEGTree is redrawn.
+ * Then legality is set to false.
  *
- * @param event The event of a mouse up while using the resize tool
+ * @param event Incoming MouseEvent.
  */
 export function resizeMouseUp(event: MouseEvent) {
     if (legalNode) {
@@ -96,7 +100,6 @@ export function resizeMouseUp(event: MouseEvent) {
             (event.x - offset.x - startingPoint.x) / 2,
             (event.y - offset.y - startingPoint.y) / 2
         );
-
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = resizeCut(currentNode, moveDifference, direction);
             if (tempCut.ellipse !== null) {
@@ -113,7 +116,9 @@ export function resizeMouseUp(event: MouseEvent) {
 }
 
 /**
- * Marks legality as false, reinserts currentNode and redraws the Draw Mode AEGTree.
+ * Reinserts the original currentNode if its legal.
+ * Then marks legality as false.
+ * Then redraws the Draw Mode AEGTree.
  */
 export function resizeMouseOut() {
     if (legalNode && currentNode !== null) {

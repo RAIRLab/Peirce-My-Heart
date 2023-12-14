@@ -10,6 +10,9 @@ import {treeContext} from "../treeContext";
 /**
  * Contains methods for manipulating CutNodes on the HTML canvas.
  *
+ * When an CutNode's position is described as being valid or not,
+ * This means that we are determining if it can currently be inserted into the AEGTree without intersection.
+ *
  * @author Dawn Moore
  * @author James Oswald
  * @author Anusha Tiwari
@@ -36,8 +39,10 @@ export function cutMouseDown(event: MouseEvent) {
 
 /**
  * Draws a CutNode on canvas using startingPoint and the coordinates given by the incoming MouseEvent.
- * Color is legal only if this CutNode's Ellipse calculations can be inserted and are greater than the minimum Ellipse size.
- * Redraws the canvas and CutNode regardless of legality. Also draws the guidelines, if that checkbox is active.
+ * Then highlights this CutNode according to its position's validity.
+ * Highlight Color is legal only if this CutNode's Ellipse can be inserted and is greater than the minimum radii values.
+ * Then redraws the canvas and the CutNode regardless of validity.
+ * Then redraws the CutNode guidelines if that checkbox is active.
  *
  * @param event Incoming MouseEvent.
  */
@@ -59,9 +64,9 @@ export function cutMouseMove(event: MouseEvent) {
 }
 
 /**
- * Inserts a CutNode into the Draw Mode AEGTree if possible.
- * This CutNode's Ellipse takes the coordinates given by the incoming MouseEvent into its calculation.
- * Redraws the canvas regardless if the CutNode was inserted.
+ * Inserts a CutNode into the Draw Mode AEGTree if its position valid.
+ * This CutNode's Ellipse uses the coordinates given by the incoming MouseEvent into its calculation.
+ * Then redraws the canvas regardless of this new CutNode's insertion.
  *
  * @param event Incoming MouseEvent.
  */
@@ -79,7 +84,8 @@ export function cutMouseUp(event: MouseEvent) {
 }
 
 /**
- * Marks the mouse as having left canvas and redraws the tree.
+ * Sets wasOut to true.
+ * Then redraws the Draw Mode AEGTree.
  */
 export function cutMouseOut() {
     wasOut = true;

@@ -9,6 +9,9 @@ import {treeContext} from "../treeContext";
 /**
  * Contains methods for manipulating AtomNodes on the HTML canvas.
  *
+ * When an AtomNode's position is described as being valid or not,
+ * This means that we are determining if it can currently be inserted into the AEGTree without intersection.
+ *
  * @author Dawn Moore
  * @author Anusha Tiwari
  */
@@ -35,7 +38,7 @@ let currentAtom: AtomNode = createAtom("A", new Point(0, 0));
 
 /**
  * Checks to see if the key from the incoming KeyboardEvent is in the Latin alphabet.
- * If true, sets currentAtom's identifier to that key.
+ * Then sets currentAtom's identifier to that key if true.
  *
  * @param event Incoming KeyboardEvent.
  */
@@ -53,7 +56,7 @@ export function atomKeyPress(event: KeyboardEvent) {
 
 /**
  * Draws currentAtom on canvas at the coordinates given by the incoming MouseEvent.
- * The color of this drawing may be either legal or illegal if currentAtom is in a position it may be inserted.
+ * Then highlights currentAtom according to its position's validity.
  *
  * @param event Incoming MouseEvent.
  */
@@ -68,7 +71,8 @@ export function atomMouseDown(event: MouseEvent) {
 }
 
 /**
- * Updates currentAtom's coordinates to the coordinates given by the incoming MouseEvent and redraws canvas.
+ * Updates currentAtom's coordinates to the coordinates given by the incoming MouseEvent.
+ * Then updates highlight colors according to its new position's validity.
  *
  * @param event Incoming MouseEvent.
  */
@@ -81,8 +85,8 @@ export function atomMouseMove(event: MouseEvent) {
 }
 
 /**
- * Inserts currentAtom at the coordinates given by the incoming MouseEvent if it is able to be inserted.
- * Redraws the Draw Mode AEGTree regardless.
+ * Inserts currentAtom at the coordinates given by the incoming MouseEvent if valid.
+ * Then redraws the Draw Mode AEGTree regardless.
  *
  * @param event Incoming MouseEvent.
  */
@@ -99,7 +103,8 @@ export function atomMouseUp(event: MouseEvent) {
 }
 
 /**
- * Marks the mouse as having left canvas and redraws the tree.
+ * Sets wasOut to true.
+ * Then redraws the Draw Mode AEGtree.
  */
 export function atomMouseOut() {
     wasOut = true;
@@ -126,7 +131,9 @@ function createAtom(identifier: string, origin: Point): AtomNode {
 }
 
 /**
- * Draws currentAtom as legalColor or illegalColor if it can be inserted into the draw mode AEGTree.
+ * Draws currentAtom as legalColor or illegalColor.
+ * legalColor is chosen if currentAtom's position is valid.
+ * IllegalColor is chose if currentAtom's position is not valid.
  */
 function determineDrawColor() {
     redrawTree(treeContext.tree);

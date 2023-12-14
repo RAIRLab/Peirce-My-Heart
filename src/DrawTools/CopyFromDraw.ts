@@ -30,8 +30,9 @@ let tempTree: AEGTree;
 const selectString = <HTMLParagraphElement>document.getElementById("selectionString");
 
 /**
- * Sets tempTree.
- * Then sets selectedNode to the node at the coordinates given by the incoming MouseEvent.
+ * Sets tempTree to a new AEGTree.
+ * Then sets selectedNode to the lowest node at the coordinates given by the incoming MouseEvent.
+ * Then highlights selectedNode the legal color.
  *
  * @param event Incoming MouseEvent.
  */
@@ -47,8 +48,8 @@ export function copyFromDrawMouseDown(event: MouseEvent) {
 }
 
 /**
- * Sets selectedNode to the node at the coordinates given by the incoming MouseEvent.
- * Currently MouseMove does not allow for node selection. (Can be changed as per team review)
+ * Sets selectedNode to the lowest node at the coordinates given by the incoming MouseEvent.
+ * Currently MouseMove does not allow for node selection. (Can be changed as per team review.)
  *
  * @param event Incoming MouseEvent.
  */
@@ -64,8 +65,9 @@ export function copyFromDrawMouseMove(event: MouseEvent) {
 }
 
 /**
- * Inserts selectedNode and all its children into the treeContext.
- * Then selectedNode is set to null and legality is set to false.
+ * Inserts selectedNode and all its children into treeContext's selectForProof field.
+ * Then sets selectedNode to null.
+ * Then sets legality to false.
  */
 export function copyFromDrawMouseUp() {
     if (legalNode && selectedNode !== null) {
@@ -86,7 +88,9 @@ export function copyFromDrawMouseUp() {
 }
 
 /**
- * Sets selectedNode to null, sets legality to false and redraws the Draw Mode AEGTree.
+ * Sets selectedNode to null.
+ * Then sets legality to false.
+ * Then redraws the Draw Mode AEGTree.
  */
 export function copyFromDrawMouseOut() {
     selectedNode = null;
