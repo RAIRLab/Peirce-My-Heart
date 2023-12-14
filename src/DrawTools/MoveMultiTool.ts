@@ -10,8 +10,8 @@ import {treeContext} from "../treeContext";
 /**
  * Contains methods for moving one or more nodes at a time.
  *
- * When it is said that nodes are "removed" in the documentation,
- * This means that they are removed from the Draw Mode AEGTree but visually are still present.
+ * When a node's position is described as being valid or not,
+ * This means that we are determining if it can currently be inserted into the AEGTree without intersection.
  *
  * @author Dawn Moore
  * @author Anusha Tiwari

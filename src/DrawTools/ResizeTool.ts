@@ -13,6 +13,9 @@ import {treeContext} from "../treeContext";
  * When it is said that a node is "removed" in the documentation,
  * This means that it is removed from the Draw Mode AEGTree but visually is still present.
  *
+ * When a node's position is described as being valid or not,
+ * This means that we are determining if it can currently be inserted into the AEGTree without intersection.
+ *
  * @author Dawn Moore
  */
 

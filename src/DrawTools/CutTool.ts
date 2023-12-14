@@ -10,7 +10,7 @@ import {treeContext} from "../treeContext";
 /**
  * Contains methods for manipulating CutNodes on the HTML canvas.
  *
- * When an CutNode's position is described as being valid or not,
+ * When a CutNode's position is described as being valid or not,
  * This means that we are determining if it can currently be inserted into the AEGTree without intersection.
  *
  * @author Dawn Moore
