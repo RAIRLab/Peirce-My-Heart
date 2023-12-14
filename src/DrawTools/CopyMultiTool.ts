@@ -8,25 +8,26 @@ import {Point} from "../AEG/Point";
 import {treeContext} from "../treeContext";
 
 /**
- * File containing copy node movement event handlers.
+ * Contains methods for copying and pasting one or more nodes at a time.
  *
  * @author Dawn Moore
  * @author Anusha Tiwari
  */
 
-//The initial point the user pressed down.
+//First Point the user clicks.
 let startingPoint: Point;
 
-//The current node and its children we will be moving.
+//Node in question.
 let currentNode: CutNode | AtomNode | null = null;
 
-//Whether or not the node is allowed to be moved (not the sheet).
+//True if currentNode is not The Sheet of Assertion or null (i.e can be copied and pasted.)
 let legalNode: boolean;
 
 /**
- * Takes the starting point and sets the lowest node containing that point that is not the sheet to
- * the current node.
- * @param event The mouse down event while in copyMulti mode.
+ * Sets startingPoint according to the coordinates given by the incoming MouseEvent.
+ * Then sets currentNode to the lowest node containing startingPoint.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function copyMultiMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
@@ -39,10 +40,10 @@ export function copyMultiMouseDown(event: MouseEvent) {
 }
 
 /**
- * If the node selected was legal, draws the node with the difference between the starting position
- * and the current position by altering the point of origin. If the node was a cut node also draws
- * all of the children with the same change in location.
- * @param event The mouse move event while in copyMulti mode
+ * Alters currentNode according to the coordinates given by the incoming MouseEvent.
+ * Then highlights the altered currentNode according to its and all its children's positions' validity.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function copyMultiMouseMove(event: MouseEvent) {
     if (legalNode) {
@@ -70,11 +71,12 @@ export function copyMultiMouseMove(event: MouseEvent) {
 }
 
 /**
- * If the current node is a cut node, and all of its children are in a legal position places it
- * in the current position. If it is not in a legal position, copy failed and nothing is inserted.
- * If the current node is an atom node and is in a legal position inserts it in the tree, otherwise
- * copy failed and nothing is inserted.
- * @param event the mouse up event while in copyMulti mode
+ * Alters the position of currentNode according to the coordinates given by the incoming MouseEvent.
+ * Then inserts the altered currentNode if its position is valid.
+ * Then inserts any children of currentNode if their positions are valid.
+ * Otherwise inserts the original currentNode.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function copyMultiMouseUp(event: MouseEvent) {
     if (legalNode) {
@@ -82,14 +84,12 @@ export function copyMultiMouseUp(event: MouseEvent) {
             event.x - startingPoint.x,
             event.y - startingPoint.y
         );
-
         if (currentNode instanceof CutNode) {
             if (EditModeUtils.validateChildren(treeContext.tree, currentNode, moveDifference)) {
                 EditModeUtils.insertChildren(currentNode, moveDifference);
             }
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = EditModeUtils.alterAtom(currentNode, moveDifference);
-
             if (treeContext.tree.canInsert(tempAtom)) {
                 treeContext.tree.insert(tempAtom);
             }
@@ -100,8 +100,8 @@ export function copyMultiMouseUp(event: MouseEvent) {
 }
 
 /**
- * If the mouse is moved outside of the canvas, sets wasOut to true.
- * Redraws the canvas to clear any drawings not part of the tree.
+ * Sets legality to false.
+ * Then redraws the Draw Mode AEGTree.
  */
 export function copyMultiMouseOut() {
     legalNode = false;
