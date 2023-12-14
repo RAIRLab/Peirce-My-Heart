@@ -5,6 +5,7 @@
  */
 
 import {Point} from "../AEG/Point";
+import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {Ellipse} from "../AEG/Ellipse";
 import {treeContext} from "../treeContext";
@@ -12,9 +13,6 @@ import {offset} from "../SharedToolUtils/DragTool";
 import {legalColor, illegalColor} from "../Themes";
 import {drawCut, redrawTree, drawGuidelines} from "../SharedToolUtils/DrawUtils";
 import {createEllipse, ellipseLargeEnough} from "../SharedToolUtils/EditModeUtils";
-
-//Setting up canvas...
-const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
 
 const showRectElm: HTMLInputElement = <HTMLInputElement>document.getElementById("showRect");
 
@@ -28,7 +26,7 @@ let wasOut: boolean;
  * Sets the canvas' cursor style to crosshair.
  */
 export function cutMouseEnter() {
-    canvas.style.cssText = "cursor: crosshair";
+    changeCursorStyle("cursor: crosshair");
 }
 
 /**
@@ -53,12 +51,12 @@ export function cutMouseMove(event: MouseEvent) {
     newCut.ellipse = createEllipse(startingPoint, currentPoint);
 
     if (!wasOut) {
-        canvas.style.cssText = "cursor: crosshair";
+        changeCursorStyle("cursor: crosshair");
         const legal = treeContext.tree.canInsert(newCut) && ellipseLargeEnough(newCut.ellipse);
         const color = legal ? legalColor() : illegalColor();
 
         if (!legal) {
-            canvas.style.cssText = "cursor: no-drop";
+            changeCursorStyle("cursor: no-drop");
         }
 
         drawCut(newCut, color);
@@ -75,6 +73,7 @@ export function cutMouseMove(event: MouseEvent) {
  * @param event The mouse up event
  */
 export function cutMouseUp(event: MouseEvent) {
+    changeCursorStyle("cursor: default");
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
     const newCut: CutNode = new CutNode(createEllipse(startingPoint, currentPoint));
     if (
@@ -91,7 +90,7 @@ export function cutMouseUp(event: MouseEvent) {
  * Resets the canvas if the mouse ends up out of the canvas.
  */
 export function cutMouseOut() {
-    canvas.style.cssText = "cursor: default";
+    changeCursorStyle("cursor: default");
     wasOut = true;
     redrawTree(treeContext.tree);
 }

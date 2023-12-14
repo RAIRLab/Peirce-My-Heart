@@ -5,15 +5,13 @@
 
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
+import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
 import {cleanCanvas, redrawTree, highlightNode} from "../SharedToolUtils/DrawUtils";
 import {legalColor} from "../Themes";
 import {AEGTree} from "../AEG/AEGTree";
-
-//Setting up canvas...
-const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
 
 //The initial point the user pressed down.
 let currentPoint: Point;
@@ -65,7 +63,7 @@ export function copyFromDrawMouseMove(event: MouseEvent) {
  * MouseUp displays an alert stating that a legal node has been selected
  */
 export function copyFromDrawMouseUp() {
-    canvas.style.cssText = "cursor: default";
+    changeCursorStyle("cursor: default");
     if (legalNode && selectedNode !== null) {
         //If the selected node is the tree, insert its children only
         if (selectedNode instanceof CutNode && selectedNode.ellipse === null) {
@@ -88,7 +86,7 @@ export function copyFromDrawMouseUp() {
  * On MouseOut, the selection is cancelled.
  */
 export function copyFromDrawMouseOut() {
-    canvas.style.cssText = "cursor: default";
+    changeCursorStyle("cursor: default");
     selectedNode = null;
     legalNode = false;
     redrawTree(treeContext.tree);
@@ -125,7 +123,7 @@ function isLegal() {
         //Highlight the selected part by redrawing in legalColor
         highlightNode(selectedNode, legalColor());
 
-        canvas.style.cssText = "cursor: copy";
+        changeCursorStyle("cursor: copy");
 
         //If something was removed, add it back kin
         if (removed) {

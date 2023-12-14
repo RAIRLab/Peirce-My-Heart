@@ -5,15 +5,13 @@
 
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
+import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
 import {drawCut, drawAtom, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
 import {alterAtom, alterCut} from "../SharedToolUtils/EditModeUtils";
-
-//Setting up canvas...
-const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
 
 //The initial point the user pressed down.
 let startingPoint: Point;
@@ -34,7 +32,7 @@ export function moveSingleMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = treeContext.tree.getLowestNode(startingPoint);
     if (currentNode !== treeContext.tree.sheet && currentNode !== null) {
-        canvas.style.cssText = "cursor: grabbing";
+        changeCursorStyle("cursor: grabbing");
         const currentParent = treeContext.tree.getLowestParent(startingPoint);
         if (currentParent !== null) {
             currentParent.remove(startingPoint);
@@ -98,7 +96,7 @@ export function moveSingleMouseMove(event: MouseEvent) {
  * @param event The mouse up event while in moveSingle mode
  */
 export function moveSingleMouseUp(event: MouseEvent) {
-    canvas.style.cssText = "cursor: default";
+    changeCursorStyle("cursor: default");
     if (legalNode) {
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
@@ -133,7 +131,7 @@ export function moveSingleMouseUp(event: MouseEvent) {
  * Redraws the canvas.
  */
 export function moveSingleMouseOut() {
-    canvas.style.cssText = "cursor: default";
+    changeCursorStyle("cursor: default");
     if (legalNode && currentNode !== null) {
         treeContext.tree.insert(currentNode);
     }

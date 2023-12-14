@@ -105,6 +105,15 @@ export function drawGuidelines(original: Point, current: Point, color: string) {
 }
 
 /**
+ * Sets canvas' HTML style tag to the incoming string.
+ *
+ * @param newMouseStyle Incoming string.
+ */
+export function changeCursorStyle(newMouseStyle: string) {
+    canvas.style.cssText = newMouseStyle;
+}
+
+/**
  * Redraws the draw mode AEGTree after a bounding box checkbox is activated.
  */
 function checkBoxRedraw() {
