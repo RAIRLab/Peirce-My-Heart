@@ -26,7 +26,7 @@ let currentNode: CutNode | AtomNode | null = null;
 let legalNode: boolean;
 
 /**
- * Sets startingPoint according to the coordinate given by the incoming MouseEvent.
+ * Sets startingPoint according to the coordinates given by the incoming MouseEvent.
  * Then the node at startingPoint is stored as currentNode if it is not The Sheet of Assertion.
  * Then currentNode is removed from the Draw Mode AEGTree, its children are readded, and it is highlighted as the illegal color.
  *
