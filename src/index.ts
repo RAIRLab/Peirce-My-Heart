@@ -12,23 +12,23 @@ import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 import {toggleHandler} from "./ToggleModes";
 import {ProofNode} from "./AEG/ProofNode";
 
-import * as CutTool from "./DrawModes/CutTool";
-import * as AtomTool from "./DrawModes/AtomTool";
+import * as CutTool from "./DrawTools/CutTool";
+import * as AtomTool from "./DrawTools/AtomTool";
 
 import * as DragTool from "./SharedToolUtils/DragTool";
-import * as MoveSingleTool from "./DrawModes/MoveSingleTool";
-import * as MoveMultiTool from "./DrawModes/MoveMultiTool";
-import * as CopySingleTool from "./DrawModes/CopySingleTool";
-import * as CopyMultiTool from "./DrawModes/CopyMultiTool";
-import * as DeleteSingleTool from "./DrawModes/DeleteSingleTool";
-import * as DeleteMultiTool from "./DrawModes/DeleteMultiTool";
-import * as CopyFromDraw from "./DrawModes/CopyFromDraw";
+import * as MoveSingleTool from "./DrawTools/MoveSingleTool";
+import * as MoveMultiTool from "./DrawTools/MoveMultiTool";
+import * as CopySingleTool from "./DrawTools/CopySingleTool";
+import * as CopyMultiTool from "./DrawTools/CopyMultiTool";
+import * as DeleteSingleTool from "./DrawTools/DeleteSingleTool";
+import * as DeleteMultiTool from "./DrawTools/DeleteMultiTool";
+import * as CopyFromDraw from "./DrawTools/CopyFromDraw";
 
 import * as DoubleCutInsertionTool from "./ProofTools/DoubleCutInsertionTool";
 import * as DoubleCutDeletionTool from "./ProofTools/DoubleCutDeletionTool";
 import * as InsertionTool from "./ProofTools/InsertionTools";
 import * as ErasureTool from "./ProofTools/ErasureTool";
-import * as ResizeTool from "./DrawModes/ResizeTool";
+import * as ResizeTool from "./DrawTools/ResizeTool";
 import * as ProofMoveSingleTool from "./ProofTools/ProofMoveSingleTool";
 import * as ProofMoveMultiTool from "./ProofTools/ProofMoveMultiTool";
 
