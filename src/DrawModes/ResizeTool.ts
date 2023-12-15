@@ -62,7 +62,6 @@ export function resizeMouseMove(event: MouseEvent) {
         );
 
         if (currentNode instanceof CutNode) {
-            changeCursorStyle("cursor: crosshair");
             const tempCut: CutNode = resizeCut(currentNode, moveDifference, direction);
             //This is just to make the lint stop yelling
             if (tempCut.ellipse !== null) {
@@ -71,9 +70,8 @@ export function resizeMouseMove(event: MouseEvent) {
                     treeContext.tree.canInsert(tempCut) && ellipseLargeEnough(tempCut.ellipse);
                 const color = legal ? legalColor() : illegalColor();
 
-                if (!legal) {
-                    changeCursorStyle("cursor: no-drop");
-                }
+                const mouseStyle: string = legal ? "cursor: crosshair" : "cursor: no-drop";
+                changeCursorStyle(mouseStyle);
 
                 drawCut(tempCut, color);
             }

@@ -6,6 +6,7 @@
 import {AEGTree} from "../AEG/AEGTree";
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
+import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
@@ -75,6 +76,10 @@ export function proofResizeMouseMove(event: MouseEvent) {
             //This is just to make the lint stop yelling
             if (tempCut.ellipse !== null) {
                 redrawTree(currentProofTree);
+                const mouseStyle: string = isLegal(tempCut)
+                    ? "cursor: crosshair"
+                    : "cursor: no-drop";
+                changeCursorStyle(mouseStyle);
                 const color = isLegal(tempCut) ? legalColor() : illegalColor();
                 drawCut(tempCut, color);
             }
@@ -113,6 +118,7 @@ export function proofResizeMouseUp(event: MouseEvent) {
  * If the mouse leaves the canvas then it is no longer a legal node and reinserts the original.
  */
 export function proofResizeMouseOut() {
+    changeCursorStyle("cursor: default");
     if (legalNode && currentNode !== null) {
         currentProofTree.insert(currentNode);
     }

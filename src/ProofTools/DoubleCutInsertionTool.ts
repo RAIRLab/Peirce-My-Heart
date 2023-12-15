@@ -6,6 +6,7 @@
 
 import {Point} from "../AEG/Point";
 import {CutNode} from "../AEG/CutNode";
+import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {Ellipse} from "../AEG/Ellipse";
 import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
@@ -25,6 +26,13 @@ let startingPoint: Point;
 let wasOut: boolean;
 
 let currentProofTree: AEGTree;
+
+/**
+ * Sets the canvas' style attribute to crosshair.
+ */
+export function doubleCutInsertionMouseEnter() {
+    changeCursorStyle("cursor: crosshair");
+}
 
 /**
  * Records the current point on the canvas.
@@ -56,6 +64,9 @@ export function doubleCutInsertionMouseMove(event: MouseEvent) {
             currentProofTree.canInsert(smallCut) &&
             ellipseLargeEnough(smallCut.ellipse);
 
+        const mouseStyle: string = legal ? "cursor: crosshair" : "cursor: no-drop";
+        changeCursorStyle(mouseStyle);
+
         const color = legal ? legalColor() : illegalColor();
         drawCut(largeCut, color);
         drawCut(smallCut, color);
@@ -73,6 +84,7 @@ export function doubleCutInsertionMouseMove(event: MouseEvent) {
  * @param event The mouse up event while using double cut insertion tool
  */
 export function doubleCutInsertionMouseUp(event: MouseEvent) {
+    changeCursorStyle("cursor: crosshair");
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
     currentProofTree = getCurrentProofTree();
 
@@ -104,6 +116,7 @@ export function doubleCutInsertionMouseUp(event: MouseEvent) {
  * Resets the canvas if the mouse ends up out of the canvas.
  */
 export function doubleCutInsertionMouseOut() {
+    changeCursorStyle("cursor: default");
     wasOut = true;
     redrawProof();
 }

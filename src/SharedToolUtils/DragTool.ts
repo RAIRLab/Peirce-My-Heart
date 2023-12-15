@@ -1,3 +1,4 @@
+import {changeCursorStyle} from "./DrawUtils";
 import {Point} from "../AEG/Point";
 import {redrawProof, redrawTree} from "./DrawUtils";
 import {treeContext} from "../treeContext";
@@ -9,9 +10,6 @@ import {treeContext} from "../treeContext";
  * @author Anusha Tiwari
  */
 
-//Setting up canvas...
-const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
-
 //Original Point later Points will be compared to.
 let originPoint: Point;
 
@@ -22,10 +20,10 @@ export let offset: Point = new Point(0, 0);
 let wasOut: boolean;
 
 /**
- * Sets the canvas' style tag to grab.
+ * Sets the canvas' style attribute to grab.
  */
 export function dragMouseEnter() {
-    canvas.style.cssText = "cursor: grab";
+    changeCursorStyle("cursor: grab");
 }
 
 /**
@@ -33,7 +31,7 @@ export function dragMouseEnter() {
  * @param event Incoming MouseEvent.
  */
 export function dragMouseDown(event: MouseEvent) {
-    canvas.style.cssText = "cursor: grabbing";
+    changeCursorStyle("cursor: grabbing");
     originPoint = new Point(event.x - offset.x, event.y - offset.y);
     wasOut = false;
 }
@@ -44,7 +42,7 @@ export function dragMouseDown(event: MouseEvent) {
  */
 export function dragMouseMove(event: MouseEvent) {
     if (!wasOut) {
-        canvas.style.cssText = "cursor: grabbing";
+        changeCursorStyle("cursor: grabbing");
         offset = new Point(event.x - originPoint.x, event.y - originPoint.y);
         redrawCorrectTree();
     }
@@ -54,14 +52,14 @@ export function dragMouseMove(event: MouseEvent) {
  * Sets the canvas' style tag to grab.
  */
 export function dragMouseUp() {
-    canvas.style.cssText = "cursor: grab";
+    changeCursorStyle("cursor: grab");
 }
 
 /**
  * Sets wasOut to true and redraws the canvas.
  */
 export function dragMouseOut() {
-    canvas.style.cssText = "cursor: default";
+    changeCursorStyle("cursor: default");
     wasOut = true;
     redrawCorrectTree();
 }

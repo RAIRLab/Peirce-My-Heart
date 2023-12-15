@@ -8,6 +8,7 @@ import {AEGTree} from "../AEG/AEGTree";
 import {ProofNode} from "../AEG/ProofNode";
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
+import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
@@ -43,6 +44,7 @@ export function proofMoveMultiMouseDown(event: MouseEvent) {
     currentNode = currentProofTree.getLowestNode(startingPoint);
 
     if (currentNode !== currentProofTree.sheet && currentNode !== null) {
+        changeCursorStyle("cursor: grabbing");
         currentParent = currentProofTree.getLowestParent(startingPoint);
         if (currentParent !== null) {
             currentParent.remove(startingPoint);
@@ -92,6 +94,7 @@ export function proofMoveMultiMouseMove(event: MouseEvent) {
  */
 export function proofMoveMultiMouseUp(event: MouseEvent) {
     if (legalNode) {
+        changeCursorStyle("cursor: default");
         const nextStep = new ProofNode(currentProofTree, "Multi Move");
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
@@ -118,6 +121,7 @@ export function proofMoveMultiMouseUp(event: MouseEvent) {
  * If the mouse leaves the canvas then reinsert our current node if it is legal and reset the canvas.
  */
 export function proofMoveMultiMouseOut() {
+    changeCursorStyle("cursor: default");
     if (legalNode && currentNode !== null) {
         currentProofTree.insert(currentNode);
     }

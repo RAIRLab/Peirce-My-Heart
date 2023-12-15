@@ -5,6 +5,7 @@
 
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
+import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
@@ -60,6 +61,7 @@ export function insertionMouseDown(event: MouseEvent) {
             //it is being placed in a position which will result in adoption of nodes. This is
             //considered illegal -> mark it as such
             if (currentParent !== null && !(currentParent as CutNode).containsNode(newNode)) {
+                changeCursorStyle("cursor: no-drop");
                 legalPlace = false;
                 EditModeUtils.drawAltered(currentNode, illegalColor(), newPoint);
             } else {
@@ -112,10 +114,14 @@ export function insertionMouseDown(event: MouseEvent) {
                         }
                         legalPlace = color === legalColor() ? true : false;
                         EditModeUtils.drawAltered(currentNode, color, newPoint);
+                        const mouseStyle: string = legalPlace ? "cursor: copy" : "cursor: no-drop";
+                        changeCursorStyle(mouseStyle);
                     } else {
+                        changeCursorStyle("cursor: no-drop");
                         EditModeUtils.drawAltered(currentNode, illegalColor(), newPoint);
                     }
                 } else {
+                    changeCursorStyle("cursor: no-drop");
                     legalPlace = false;
                     EditModeUtils.drawAltered(currentNode, illegalColor(), newPoint);
                 }
@@ -150,6 +156,7 @@ export function insertionMouseMove(event: MouseEvent) {
             //position, it is being placed in a position which will result in adoption of nodes.
             //This is considered illegal -> mark it as such
             if (currentParent !== null && !(currentParent as CutNode).containsNode(newNode)) {
+                changeCursorStyle("cursor: no-drop");
                 legalPlace = false;
                 EditModeUtils.drawAltered(currentNode, illegalColor(), newPoint);
             } else {
@@ -203,10 +210,14 @@ export function insertionMouseMove(event: MouseEvent) {
                         }
                         legalPlace = color === legalColor() ? true : false;
                         EditModeUtils.drawAltered(currentNode, color, newPoint);
+                        const mouseStyle: string = legalPlace ? "cursor: copy" : "cursor: no-drop";
+                        changeCursorStyle(mouseStyle);
                     } else {
+                        changeCursorStyle("cursor: no-drop");
                         EditModeUtils.drawAltered(currentNode, illegalColor(), newPoint);
                     }
                 } else {
+                    changeCursorStyle("cursor: no-drop");
                     legalPlace = false;
                     EditModeUtils.drawAltered(currentNode, illegalColor(), newPoint);
                 }
@@ -220,6 +231,7 @@ export function insertionMouseMove(event: MouseEvent) {
 export function insertionMouseUp(event: MouseEvent) {
     //If it is a legal node and is being placed at a legal position, insert it into the tree
     if (legalNode && legalPlace) {
+        changeCursorStyle("cursor: default");
         //Calculate the point where the node has to be placed
         const newPoint = calculatePoint(event, currentNode);
 
@@ -243,6 +255,7 @@ export function insertionMouseUp(event: MouseEvent) {
 }
 
 export function insertionMouseOut() {
+    changeCursorStyle("cursor: default");
     legalNode = false;
     redrawProof();
 }

@@ -642,6 +642,9 @@ function mouseEnterHandler() {
         case Tool.dragTool:
             DragTool.dragMouseEnter();
             break;
+        case Tool.doubleCutInsertionTool:
+            DoubleCutInsertionTool.doubleCutInsertionMouseEnter();
+            break;
         default:
             break;
     }

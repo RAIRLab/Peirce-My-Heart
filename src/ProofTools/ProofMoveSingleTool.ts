@@ -6,6 +6,7 @@
 import {AEGTree} from "../AEG/AEGTree";
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
+import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
@@ -41,6 +42,7 @@ export function proofMoveSingleMouseDown(event: MouseEvent) {
 
     //If what we have selected is the sheet then it is an invalid selection.
     if (currentNode !== currentProofTree.sheet && currentNode !== null) {
+        changeCursorStyle("cursor: grabbing");
         const currentParent = currentProofTree.getLowestParent(startingPoint);
         if (currentParent !== null) {
             currentParent.remove(startingPoint);
@@ -103,6 +105,7 @@ export function proofMoveSingleMouseMove(event: MouseEvent) {
  */
 export function proofMoveSingleMouseUp(event: MouseEvent) {
     if (legalNode) {
+        changeCursorStyle("cursor: default");
         const nextStep = new ProofNode(currentProofTree, "Single Move");
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
@@ -129,6 +132,7 @@ export function proofMoveSingleMouseUp(event: MouseEvent) {
  * If the mouse leaves the canvas then reinsert our current node if it is legal and reset the canvas.
  */
 export function proofMoveSingleMouseOut() {
+    changeCursorStyle("cursor: default");
     if (legalNode && currentNode !== null) {
         currentProofTree.insert(currentNode);
     }

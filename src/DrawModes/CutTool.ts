@@ -23,7 +23,7 @@ let startingPoint: Point;
 let wasOut: boolean;
 
 /**
- * Sets the canvas' cursor style to crosshair.
+ * Sets the canvas' style attribute to crosshair.
  */
 export function cutMouseEnter() {
     changeCursorStyle("cursor: crosshair");
@@ -51,13 +51,11 @@ export function cutMouseMove(event: MouseEvent) {
     newCut.ellipse = createEllipse(startingPoint, currentPoint);
 
     if (!wasOut) {
-        changeCursorStyle("cursor: crosshair");
         const legal = treeContext.tree.canInsert(newCut) && ellipseLargeEnough(newCut.ellipse);
         const color = legal ? legalColor() : illegalColor();
 
-        if (!legal) {
-            changeCursorStyle("cursor: no-drop");
-        }
+        const mouseStyle: string = legal ? "cursor: crosshair" : "cursor: no-drop";
+        changeCursorStyle(mouseStyle);
 
         drawCut(newCut, color);
 
