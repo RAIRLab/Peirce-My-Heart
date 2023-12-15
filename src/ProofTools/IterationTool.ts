@@ -7,7 +7,7 @@ import {Point} from "../AEG/Point";
 import {Ellipse} from "../AEG/Ellipse";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
 import {drawAtom, redrawProof} from "../SharedToolUtils/DrawUtils";
@@ -76,8 +76,7 @@ export function iterationMouseMove(event: MouseEvent) {
             const tempAtom: AtomNode = EditModeUtils.alterAtom(currentNode, moveDifference);
             drawAtom(tempAtom, color, true);
         }
-        const mouseStyle: string = color === legalColor() ? "cursor: grabbing" : "cursor: no-drop";
-        changeCursorStyle(mouseStyle);
+        determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
     }
 }
 

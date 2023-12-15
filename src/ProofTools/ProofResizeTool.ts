@@ -6,7 +6,7 @@
 import {AEGTree} from "../AEG/AEGTree";
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
-import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
@@ -76,12 +76,9 @@ export function proofResizeMouseMove(event: MouseEvent) {
             //This is just to make the lint stop yelling
             if (tempCut.ellipse !== null) {
                 redrawTree(currentProofTree);
-                const mouseStyle: string = isLegal(tempCut)
-                    ? "cursor: crosshair"
-                    : "cursor: no-drop";
-                changeCursorStyle(mouseStyle);
                 const color = isLegal(tempCut) ? legalColor() : illegalColor();
                 drawCut(tempCut, color);
+                determineAndChangeCursorStyle(color, "cursor: crosshair", "cursor: no-drop");
             }
         }
     }

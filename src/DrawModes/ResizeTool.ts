@@ -5,8 +5,8 @@
 import {Point} from "../AEG/Point";
 import {ellipseLargeEnough, resizeCut} from "../SharedToolUtils/EditModeUtils";
 import {AtomNode} from "../AEG/AtomNode";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
-import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
 import {drawCut, redrawTree, determineDirection} from "../SharedToolUtils/DrawUtils";
@@ -70,8 +70,7 @@ export function resizeMouseMove(event: MouseEvent) {
                     treeContext.tree.canInsert(tempCut) && ellipseLargeEnough(tempCut.ellipse);
                 const color = legal ? legalColor() : illegalColor();
 
-                const mouseStyle: string = legal ? "cursor: crosshair" : "cursor: no-drop";
-                changeCursorStyle(mouseStyle);
+                determineAndChangeCursorStyle(color, "cursor: crosshair", "cursor: no-drop");
 
                 drawCut(tempCut, color);
             }

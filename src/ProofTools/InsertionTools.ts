@@ -5,7 +5,7 @@
 
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
-import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
@@ -114,8 +114,7 @@ export function insertionMouseDown(event: MouseEvent) {
                         }
                         legalPlace = color === legalColor() ? true : false;
                         EditModeUtils.drawAltered(currentNode, color, newPoint);
-                        const mouseStyle: string = legalPlace ? "cursor: copy" : "cursor: no-drop";
-                        changeCursorStyle(mouseStyle);
+                        determineAndChangeCursorStyle(color, "cursor: copy", "cursor: no-drop");
                     } else {
                         changeCursorStyle("cursor: no-drop");
                         EditModeUtils.drawAltered(currentNode, illegalColor(), newPoint);
@@ -210,8 +209,7 @@ export function insertionMouseMove(event: MouseEvent) {
                         }
                         legalPlace = color === legalColor() ? true : false;
                         EditModeUtils.drawAltered(currentNode, color, newPoint);
-                        const mouseStyle: string = legalPlace ? "cursor: copy" : "cursor: no-drop";
-                        changeCursorStyle(mouseStyle);
+                        determineAndChangeCursorStyle(color, "cursor: copy", "cursor: no-drop");
                     } else {
                         changeCursorStyle("cursor: no-drop");
                         EditModeUtils.drawAltered(currentNode, illegalColor(), newPoint);

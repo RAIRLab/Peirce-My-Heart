@@ -8,7 +8,7 @@ import {AEGTree} from "../AEG/AEGTree";
 import {ProofNode} from "../AEG/ProofNode";
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
-import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
@@ -77,16 +77,12 @@ export function proofMoveMultiMouseMove(event: MouseEvent) {
             const tempCut: CutNode = alterCutChildren(currentNode, moveDifference);
             const color = isMoveLegal(currentProofTree, tempCut) ? legalColor() : illegalColor();
             drawAltered(currentNode, color, moveDifference);
-            const mouseStyle: string =
-                color === legalColor() ? "cursor: grabbing" : "cursor: no-drop";
-            changeCursorStyle(mouseStyle);
+            determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
             const color = isMoveLegal(currentProofTree, tempAtom) ? legalColor() : illegalColor();
             drawAtom(tempAtom, color, true);
-            const mouseStyle: string =
-                color === legalColor() ? "cursor: grabbing" : "cursor: no-drop";
-            changeCursorStyle(mouseStyle);
+            determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
         }
     }
 }

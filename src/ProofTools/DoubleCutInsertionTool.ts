@@ -6,7 +6,7 @@
 
 import {Point} from "../AEG/Point";
 import {CutNode} from "../AEG/CutNode";
-import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {Ellipse} from "../AEG/Ellipse";
 import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
@@ -64,10 +64,8 @@ export function doubleCutInsertionMouseMove(event: MouseEvent) {
             currentProofTree.canInsert(smallCut) &&
             ellipseLargeEnough(smallCut.ellipse);
 
-        const mouseStyle: string = legal ? "cursor: crosshair" : "cursor: no-drop";
-        changeCursorStyle(mouseStyle);
-
         const color = legal ? legalColor() : illegalColor();
+        determineAndChangeCursorStyle(color, "cursor: crosshair", "cursor: no-drop");
         drawCut(largeCut, color);
         drawCut(smallCut, color);
 

@@ -5,7 +5,7 @@
 
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
-import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
@@ -79,18 +79,14 @@ export function moveSingleMouseMove(event: MouseEvent) {
             redrawTree(treeContext.tree);
             const color = treeContext.tree.canInsert(tempCut) ? legalColor() : illegalColor();
             drawCut(tempCut, color);
-            const mouseStyle: string =
-                color === legalColor() ? "cursor: grabbing" : "cursor: no-drop";
-            changeCursorStyle(mouseStyle);
+            determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
         } //If the node is an atom, make a temporary atom and check legality, drawing that.
         else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
             redrawTree(treeContext.tree);
             const color = treeContext.tree.canInsert(tempAtom) ? legalColor() : illegalColor();
             drawAtom(tempAtom, color, true);
-            const mouseStyle: string =
-                color === legalColor() ? "cursor: grabbing" : "cursor: no-drop";
-            changeCursorStyle(mouseStyle);
+            determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
         }
     }
 }

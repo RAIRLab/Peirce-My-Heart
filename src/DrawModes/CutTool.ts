@@ -5,7 +5,7 @@
  */
 
 import {Point} from "../AEG/Point";
-import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {Ellipse} from "../AEG/Ellipse";
 import {treeContext} from "../treeContext";
@@ -54,9 +54,7 @@ export function cutMouseMove(event: MouseEvent) {
         const legal = treeContext.tree.canInsert(newCut) && ellipseLargeEnough(newCut.ellipse);
         const color = legal ? legalColor() : illegalColor();
 
-        const mouseStyle: string = legal ? "cursor: crosshair" : "cursor: no-drop";
-        changeCursorStyle(mouseStyle);
-
+        determineAndChangeCursorStyle(color, "cursor: crosshair", "cursor: no-drop");
         drawCut(newCut, color);
 
         if (showRectElm.checked) {

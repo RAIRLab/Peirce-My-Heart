@@ -5,7 +5,7 @@
 
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
-import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
@@ -69,16 +69,12 @@ export function moveMultiMouseMove(event: MouseEvent) {
                 ? legalColor()
                 : illegalColor();
             EditModeUtils.drawAltered(currentNode, color, moveDifference);
-            const mouseStyle: string =
-                color === legalColor() ? "cursor: grabbing" : "cursor: no-drop";
-            changeCursorStyle(mouseStyle);
+            determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = EditModeUtils.alterAtom(currentNode, moveDifference);
             const color = treeContext.tree.canInsert(tempAtom) ? legalColor() : illegalColor();
             drawAtom(tempAtom, color, true);
-            const mouseStyle: string =
-                color === legalColor() ? "cursor: grabbing" : "cursor: no-drop";
-            changeCursorStyle(mouseStyle);
+            determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
         }
     }
 }
