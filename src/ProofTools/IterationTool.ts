@@ -67,7 +67,6 @@ export function iterationMouseMove(event: MouseEvent) {
             event.y - startingPoint.y
         );
 
-        changeCursorStyle("cursor: grabbing");
         redrawProof();
         const currentPoint = new Point(event.x - offset.x, event.y - offset.y);
         const color = isLegal(moveDifference, currentPoint) ? legalColor() : illegalColor();
@@ -77,6 +76,8 @@ export function iterationMouseMove(event: MouseEvent) {
             const tempAtom: AtomNode = EditModeUtils.alterAtom(currentNode, moveDifference);
             drawAtom(tempAtom, color, true);
         }
+        const mouseStyle: string = color === legalColor() ? "cursor: grabbing" : "cursor: no-drop";
+        changeCursorStyle(mouseStyle);
     }
 }
 

@@ -87,11 +87,17 @@ export function proofMoveSingleMouseMove(event: MouseEvent) {
             const tempCut: CutNode = alterCut(currentNode, moveDifference);
             const color = isMoveLegal(currentProofTree, tempCut) ? legalColor() : illegalColor();
             drawCut(tempCut, color);
+            const mouseStyle: string =
+                color === legalColor() ? "cursor: grabbing" : "cursor: no-drop";
+            changeCursorStyle(mouseStyle);
         } //If the node is an atom, make a temporary atom and check legality, drawing that.
         else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
             const color = isMoveLegal(currentProofTree, tempAtom) ? legalColor() : illegalColor();
             drawAtom(tempAtom, color, true);
+            const mouseStyle: string =
+                color === legalColor() ? "cursor: grabbing" : "cursor: no-drop";
+            changeCursorStyle(mouseStyle);
         }
     }
 }

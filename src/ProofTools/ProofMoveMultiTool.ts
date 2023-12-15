@@ -77,10 +77,16 @@ export function proofMoveMultiMouseMove(event: MouseEvent) {
             const tempCut: CutNode = alterCutChildren(currentNode, moveDifference);
             const color = isMoveLegal(currentProofTree, tempCut) ? legalColor() : illegalColor();
             drawAltered(currentNode, color, moveDifference);
+            const mouseStyle: string =
+                color === legalColor() ? "cursor: grabbing" : "cursor: no-drop";
+            changeCursorStyle(mouseStyle);
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
             const color = isMoveLegal(currentProofTree, tempAtom) ? legalColor() : illegalColor();
             drawAtom(tempAtom, color, true);
+            const mouseStyle: string =
+                color === legalColor() ? "cursor: grabbing" : "cursor: no-drop";
+            changeCursorStyle(mouseStyle);
         }
     }
 }

@@ -69,10 +69,16 @@ export function moveMultiMouseMove(event: MouseEvent) {
                 ? legalColor()
                 : illegalColor();
             EditModeUtils.drawAltered(currentNode, color, moveDifference);
+            const mouseStyle: string =
+                color === legalColor() ? "cursor: grabbing" : "cursor: no-drop";
+            changeCursorStyle(mouseStyle);
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = EditModeUtils.alterAtom(currentNode, moveDifference);
             const color = treeContext.tree.canInsert(tempAtom) ? legalColor() : illegalColor();
             drawAtom(tempAtom, color, true);
+            const mouseStyle: string =
+                color === legalColor() ? "cursor: grabbing" : "cursor: no-drop";
+            changeCursorStyle(mouseStyle);
         }
     }
 }
