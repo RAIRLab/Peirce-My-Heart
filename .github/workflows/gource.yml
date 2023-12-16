@@ -1,0 +1,32 @@
+name: Gource Action
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs: 
+  action:
+    timeout-minutes: 8
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 'Checkout'
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    
+    - name: 'Gource Action'
+      uses: nbprojekt/gource-action@v1
+      with:
+        gource_title: 'Peirce My Heart'
+        logo_url: 'https://i.pinimg.com/736x/4e/35/fe/4e35fe64dbcd102d48e1fef43613d6e7.jpg'
+        gource_resolution: '720p'
+        gource_fps: 25
+        gource_time_scale: 0.55
+        gource_user_scale: 0.7
+        gource_font_size: 36
+        
+    - name: 'Upload gource video'
+      uses: actions/upload-artifact@v2
+      with:
+        name: Gource
+        path: ./gource/gource.mp4
