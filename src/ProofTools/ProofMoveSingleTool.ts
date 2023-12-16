@@ -1,9 +1,15 @@
 import {AEGTree} from "../AEG/AEGTree";
 import {alterAtom, alterCut} from "../SharedToolUtils/EditModeUtils";
 import {AtomNode} from "../AEG/AtomNode";
-import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
+import {
+    changeCursorStyle,
+    determineAndChangeCursorStyle,
+    drawAtom,
+    drawCut,
+    redrawProof,
+    redrawTree,
+} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
-import {drawAtom, drawCut, redrawProof, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {getCurrentProofTree, isMoveLegal} from "./ProofToolUtils";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
@@ -12,34 +18,38 @@ import {ProofNode} from "../AEG/ProofNode";
 import {treeContext} from "../treeContext";
 
 /**
- * A tool for proof mode to allow for atom and cut movement so long as the meaning remains the same.
+ * Contains methods for moving one node at a time, on only the same cut level, in only one cut in Proof Mode.
+ *
  * @author Dawn Moore
  */
 
-//The initial point the user pressed down.
+//First Point the user clicks.
 let startingPoint: Point;
 
-//The node selected with the user mouse down.
+//Node in question.
 let currentNode: CutNode | AtomNode | null = null;
 
-//Whether or not the node is allowed to be moved (not the sheet).
+//True if currentNode is not The Sheet of Assertion or null (i.e can be moved.)
 let legalNode: boolean;
 
-//The tree of the current proof step
+//AEGTree at the current proof step.
 let currentProofTree: AEGTree;
 
 /**
- * Retrieves the current location on the window and the lowest node on the tree containing that point
- * If this node is not the sheet then it can be moved, we find it's parent and remove it from that.
- * If the this node has any children reinsert them into the tree so they're not lost.
- * @param event The mouse down event while using proof move single tool
+ * Sets currentProofTree to the current proof tree.
+ * Then sets startingPoint according to the coordinates given by the incoming MouseEvent.
+ * Then sets currentNode to the lowest node containing startingPoint.
+ * Then sets cursor style to grabbing,
+ * removes currentNode, inserts its children,
+ * sets legality to true,
+ * redraws currentProofTree and highlights accordingly if currentNode is not null or The Sheet of Assertion.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function proofMoveSingleMouseDown(event: MouseEvent) {
     currentProofTree = getCurrentProofTree();
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = currentProofTree.getLowestNode(startingPoint);
-
-    //If what we have selected is the sheet then it is an invalid selection.
     if (currentNode !== currentProofTree.sheet && currentNode !== null) {
         changeCursorStyle("cursor: grabbing");
         const currentParent = currentProofTree.getLowestParent(startingPoint);
@@ -48,7 +58,6 @@ export function proofMoveSingleMouseDown(event: MouseEvent) {
         }
 
         if (currentNode instanceof CutNode && currentNode.children.length !== 0) {
-            //The cut node loses custody of its children so that those can still be redrawn.
             for (let i = 0; i < currentNode.children.length; i++) {
                 currentProofTree.insert(currentNode.children[i]);
             }
@@ -56,7 +65,6 @@ export function proofMoveSingleMouseDown(event: MouseEvent) {
         }
         legalNode = true;
 
-        // highlight the chosen node in legal color to show what will be moved
         redrawTree(currentProofTree);
         if (currentNode instanceof AtomNode) {
             drawAtom(currentNode, legalColor(), true);
@@ -69,9 +77,12 @@ export function proofMoveSingleMouseDown(event: MouseEvent) {
 }
 
 /**
- * Calculates the difference in x and y between the starting and current mouse locations.
- * Creates a temporary node with the respective change in position and draws that to show movement.
- * @param event The mouse event while using proof move single tool
+ * Redraws currentProofTree.
+ * Then alters currentNode according to the coordinates given by the incoming MouseEvent.
+ * Then highlights currentNode as either the legal or illegal color depending on move legality.
+ * Then changes cursor style accordingly.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function proofMoveSingleMouseMove(event: MouseEvent) {
     if (legalNode) {
@@ -81,14 +92,12 @@ export function proofMoveSingleMouseMove(event: MouseEvent) {
         );
 
         redrawTree(currentProofTree);
-        //If the node is a cut, and it has an ellipse, make a temporary cut and draw that.
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = alterCut(currentNode, moveDifference);
             const color = isMoveLegal(currentProofTree, tempCut) ? legalColor() : illegalColor();
             drawCut(tempCut, color);
             determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
-        } //If the node is an atom, make a temporary atom and check legality, drawing that.
-        else if (currentNode instanceof AtomNode) {
+        } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
             const color = isMoveLegal(currentProofTree, tempAtom) ? legalColor() : illegalColor();
             drawAtom(tempAtom, color, true);
@@ -98,11 +107,13 @@ export function proofMoveSingleMouseMove(event: MouseEvent) {
 }
 
 /**
- * Calculates the difference in x and y between the starting and current mouse locations.
- * If the node's new position is considered legal then insert it, otherwise insert the original node
- * before it was moved.
- * Add this current tree to the proof history for it to be used later.
- * @param event The mouse up event while using proof move single tool
+ * Sets cursor style to default.
+ * Then queues a Single Move step to be added to the proof history.
+ * Then alters currentNode according to the coordinates given by the incoming MouseEvent.
+ * If this Single Move is valid, then the moved node and queued Single Move step are added to the proof.
+ * Regardless the proof is redrawn and legality is set to false.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function proofMoveSingleMouseUp(event: MouseEvent) {
     if (legalNode) {
@@ -130,7 +141,10 @@ export function proofMoveSingleMouseUp(event: MouseEvent) {
 }
 
 /**
- * If the mouse leaves the canvas then reinsert our current node if it is legal and reset the canvas.
+ * Sets cursor style to default.
+ * Then inserts currentNode into currentProofTree.
+ * Then sets legality to false.
+ * Then redraws the proof.
  */
 export function proofMoveSingleMouseOut() {
     changeCursorStyle("cursor: default");

@@ -18,7 +18,7 @@ let currentProofTree: AEGTree;
 let legalNode: boolean;
 
 /**
- * Gets the AEGTree of the current proof step.
+ * Sets currentProofTree to the AEGTree of the current proof step.
  * Then clears the canvas and highlights all nodes on it as the illegal color.
  */
 export function clearProofMouseDown() {

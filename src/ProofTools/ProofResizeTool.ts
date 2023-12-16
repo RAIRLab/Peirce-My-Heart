@@ -1,8 +1,14 @@
 import {AEGTree} from "../AEG/AEGTree";
 import {AtomNode} from "../AEG/AtomNode";
-import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
+import {
+    changeCursorStyle,
+    determineAndChangeCursorStyle,
+    determineDirection,
+    drawCut,
+    redrawProof,
+    redrawTree,
+} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
-import {determineDirection, drawCut, redrawProof, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {ellipseLargeEnough, resizeCut} from "../SharedToolUtils/EditModeUtils";
 import {getCurrentProofTree, proofCanInsert} from "./ProofToolUtils";
 import {illegalColor, legalColor} from "../Themes";

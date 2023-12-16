@@ -1,9 +1,8 @@
 import {AEGTree} from "../AEG/AEGTree";
-import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
+import {changeCursorStyle, redrawProof} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {getCurrentProofTree} from "./ProofToolUtils";
 import {ProofNode} from "../AEG/ProofNode";
-import {redrawProof} from "../SharedToolUtils/DrawUtils";
 import {treeContext} from "../treeContext";
 
 /**
