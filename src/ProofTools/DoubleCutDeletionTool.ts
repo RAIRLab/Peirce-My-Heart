@@ -2,7 +2,7 @@ import {AEGTree} from "../AEG/AEGTree";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {drawCut, redrawProof, redrawTree} from "../SharedToolUtils/DrawUtils";
-import {getCurrentProofTree} from "./ProofToolsUtils";
+import {getCurrentProofTree} from "./ProofToolUtils";
 import {illegalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";

@@ -1,7 +1,7 @@
 import {AEGTree} from "../AEG/AEGTree";
 import {cleanCanvas, highlightNode, redrawProof} from "../SharedToolUtils/DrawUtils";
 import {deleteButtons} from "../ProofHistory";
-import {getCurrentProofTree} from "./ProofToolsUtils";
+import {getCurrentProofTree} from "./ProofToolUtils";
 import {illegalColor} from "../Themes";
 import {treeContext} from "../treeContext";
 

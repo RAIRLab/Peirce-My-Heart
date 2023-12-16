@@ -4,11 +4,10 @@ import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUti
 import {CutNode} from "../AEG/CutNode";
 import {determineDirection, drawCut, redrawProof, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {ellipseLargeEnough, resizeCut} from "../SharedToolUtils/EditModeUtils";
-import {getCurrentProofTree} from "./ProofToolsUtils";
+import {getCurrentProofTree, proofCanInsert} from "./ProofToolUtils";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
-import {proofCanInsert} from "./ProofToolsUtils";
 import {ProofNode} from "../AEG/ProofNode";
 import {treeContext} from "../treeContext";
 

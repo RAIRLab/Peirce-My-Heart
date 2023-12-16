@@ -28,7 +28,7 @@ import * as DoubleCutInsertionTool from "./ProofTools/DoubleCutInsertionTool";
 import * as DoubleCutDeletionTool from "./ProofTools/DoubleCutDeletionTool";
 import * as InsertionTool from "./ProofTools/InsertionTools";
 import * as ErasureTool from "./ProofTools/ErasureTool";
-import * as ResizeTool from "./DrawTools/ResizeTool";
+import * as DrawResizeTool from "./DrawTools/DrawResizeTool";
 import * as ProofMoveSingleTool from "./ProofTools/ProofMoveSingleTool";
 import * as ProofMoveMultiTool from "./ProofTools/ProofMoveMultiTool";
 
@@ -357,7 +357,7 @@ function mouseDownHandler(event: MouseEvent) {
             DeleteMultiTool.deleteMultiMouseDown(event);
             break;
         case Tool.resizeTool:
-            ResizeTool.resizeMouseDown(event);
+            DrawResizeTool.resizeMouseDown(event);
             break;
         case Tool.copyFromDrawTool:
             CopyFromDraw.copyFromDrawMouseDown(event);
@@ -436,7 +436,7 @@ function mouseMoveHandler(event: MouseEvent) {
                 DeleteMultiTool.deleteMultiMouseMove(event);
                 break;
             case Tool.resizeTool:
-                ResizeTool.resizeMouseMove(event);
+                DrawResizeTool.resizeMouseMove(event);
                 break;
             case Tool.copyFromDrawTool:
                 CopyFromDraw.copyFromDrawMouseMove(event);
@@ -512,7 +512,7 @@ function mouseUpHandler(event: MouseEvent) {
             DeleteMultiTool.deleteMultiMouseUp(event);
             break;
         case Tool.resizeTool:
-            ResizeTool.resizeMouseUp(event);
+            DrawResizeTool.resizeMouseUp(event);
             break;
         case Tool.copyFromDrawTool:
             CopyFromDraw.copyFromDrawMouseUp();
@@ -590,7 +590,7 @@ function mouseOutHandler() {
             DeleteMultiTool.deleteMultiMouseOut();
             break;
         case Tool.resizeTool:
-            ResizeTool.resizeMouseOut();
+            DrawResizeTool.resizeMouseOut();
             break;
         case Tool.copyFromDrawTool:
             CopyFromDraw.copyFromDrawMouseOut();

@@ -1,7 +1,7 @@
 import {AEGTree} from "../AEG/AEGTree";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {getCurrentProofTree} from "./ProofToolsUtils";
+import {getCurrentProofTree} from "./ProofToolUtils";
 import {highlightNode, redrawProof, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {illegalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";

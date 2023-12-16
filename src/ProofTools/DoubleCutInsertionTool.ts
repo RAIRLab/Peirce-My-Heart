@@ -4,7 +4,7 @@ import {createEllipse, ellipseLargeEnough} from "../SharedToolUtils/EditModeUtil
 import {CutNode} from "../AEG/CutNode";
 import {drawCut, drawGuidelines, redrawProof} from "../SharedToolUtils/DrawUtils";
 import {Ellipse} from "../AEG/Ellipse";
-import {getCurrentProofTree} from "./ProofToolsUtils";
+import {getCurrentProofTree} from "./ProofToolUtils";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";

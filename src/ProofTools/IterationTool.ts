@@ -5,7 +5,7 @@ import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUti
 import {CutNode} from "../AEG/CutNode";
 import {drawAtom, redrawProof} from "../SharedToolUtils/DrawUtils";
 import {Ellipse} from "../AEG/Ellipse";
-import {getCurrentProofTree} from "./ProofToolsUtils";
+import {getCurrentProofTree} from "./ProofToolUtils";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
