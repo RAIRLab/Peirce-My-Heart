@@ -7,17 +7,12 @@ import {Point} from "../AEG/Point";
 import {Ellipse} from "../AEG/Ellipse";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
 import {drawAtom, redrawProof} from "../SharedToolUtils/DrawUtils";
 import {legalColor, illegalColor} from "../Themes";
-import {
-    validateChildren,
-    drawAltered,
-    insertChildren,
-    alterAtom,
-    alterCut,
-} from "../SharedToolUtils/EditModeUtils";
+import * as EditModeUtils from "../SharedToolUtils/EditModeUtils";
 import {AEGTree} from "../AEG/AEGTree";
 import {ProofNode} from "../AEG/ProofNode";
 import {getCurrentProofTree} from "./ProofToolsUtils";
@@ -53,6 +48,10 @@ export function iterationMouseDown(event: MouseEvent) {
 
     //So long as we have obtained a node that isn't the sheet we are allowed to select this.
     legalNode = currentNode !== currentProofTree.sheet && currentNode !== null;
+
+    if (legalNode) {
+        changeCursorStyle("cursor: copy");
+    }
 }
 
 /**
@@ -72,11 +71,12 @@ export function iterationMouseMove(event: MouseEvent) {
         const currentPoint = new Point(event.x - offset.x, event.y - offset.y);
         const color = isLegal(moveDifference, currentPoint) ? legalColor() : illegalColor();
         if (currentNode instanceof CutNode) {
-            drawAltered(currentNode, color, moveDifference);
+            EditModeUtils.drawAltered(currentNode, color, moveDifference);
         } else if (currentNode instanceof AtomNode) {
-            const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
+            const tempAtom: AtomNode = EditModeUtils.alterAtom(currentNode, moveDifference);
             drawAtom(tempAtom, color, true);
         }
+        determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
     }
 }
 
@@ -87,6 +87,7 @@ export function iterationMouseMove(event: MouseEvent) {
  */
 export function iterationMouseUp(event: MouseEvent) {
     if (legalNode) {
+        changeCursorStyle("cursor: default");
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
             event.y - startingPoint.y
@@ -94,9 +95,9 @@ export function iterationMouseUp(event: MouseEvent) {
 
         if (isLegal(moveDifference, new Point(event.x - offset.x, event.y - offset.y))) {
             if (currentNode instanceof CutNode) {
-                insertChildren(currentNode, moveDifference, currentProofTree);
+                EditModeUtils.insertChildren(currentNode, moveDifference, currentProofTree);
             } else if (currentNode instanceof AtomNode) {
-                const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
+                const tempAtom: AtomNode = EditModeUtils.alterAtom(currentNode, moveDifference);
                 currentProofTree.insert(tempAtom);
             }
             //Iteration is a new step -> push a new node in the proof, signifying it as such
@@ -111,6 +112,7 @@ export function iterationMouseUp(event: MouseEvent) {
  * If the mouse has left the canvas then assume it is now illegal and reset the tree.
  */
 export function iterationMouseOut() {
+    changeCursorStyle("cursor: default");
     legalNode = false;
     redrawProof();
 }
@@ -131,14 +133,14 @@ function isLegal(moveDifference: Point, currentPoint: Point): boolean {
         //If the currentNode is a cut, then it is legal if it and all if it's children can be placed
         //legally, and if the node we have selected can not be inserted over something else.
         ((currentNode instanceof CutNode &&
-            validateChildren(currentProofTree, currentNode, moveDifference) &&
+            EditModeUtils.validateChildren(currentProofTree, currentNode, moveDifference) &&
             insertChildless(
                 currentProofTree.sheet,
-                alterCut(currentNode, moveDifference).ellipse!
+                EditModeUtils.alterCut(currentNode, moveDifference).ellipse!
             )) ||
             //AtomNodes are legal if they can be inserted in their current location.
             (currentNode instanceof AtomNode &&
-                currentProofTree.canInsert(alterAtom(currentNode, moveDifference))))
+                currentProofTree.canInsert(EditModeUtils.alterAtom(currentNode, moveDifference))))
     );
 }
 

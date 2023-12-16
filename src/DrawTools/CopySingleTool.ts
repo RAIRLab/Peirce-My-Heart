@@ -1,40 +1,45 @@
+import {alterAtom, alterCut} from "../SharedToolUtils/EditModeUtils";
+import {AtomNode} from "../AEG/AtomNode";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
+import {CutNode} from "../AEG/CutNode";
+import {drawAtom, drawCut, redrawTree} from "../SharedToolUtils/DrawUtils";
+import {illegalColor, legalColor} from "../Themes";
+import {offset} from "../SharedToolUtils/DragTool";
+import {Point} from "../AEG/Point";
+import {treeContext} from "../treeContext";
+
 /**
- * File containing single copy movement event handlers.
- * @author Anusha Tiwari
+ * Contains methods for copy and pasting one node at a time.
+ *
+ * When an node's position is described as being valid or not,
+ * This means that we are determining if it can currently be inserted into the AEGTree without intersection.
+ *
  * @author Dawn Moore
+ * @author Anusha Tiwari
  */
 
-import {Point} from "../AEG/Point";
-import {AtomNode} from "../AEG/AtomNode";
-import {CutNode} from "../AEG/CutNode";
-import {treeContext} from "../treeContext";
-import {offset} from "../SharedToolUtils/DragTool";
-import {drawCut, drawAtom, redrawTree} from "../SharedToolUtils/DrawUtils";
-import {legalColor, illegalColor} from "../Themes";
-import {alterAtom, alterCut} from "../SharedToolUtils/EditModeUtils";
-
-//The initial point the user pressed down.
+//First Point the user clicks.
 let startingPoint: Point;
 
-//The node selected with the user mouse down.
+//Node in question.
 let currentNode: CutNode | AtomNode | null = null;
 
-//Whether or not the node is allowed to be moved (not the sheet).
+//True if currentNode is not The Sheet of Assertion or null (i.e can be copied and pasted.)
 let legalNode: boolean;
 
 /**
- * Takes the point the user clicked and stores that for later use. If the lowest node containing
- * that point is not the sheet, then store that as currentNode.
- * @param event The mouse down event while in copySingle mode
+ * Sets startingPoint according to the coordinates given by the incoming MouseEvent.
+ * Then removes the lowest node containing startingPoint.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function copySingleMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     const realNode: CutNode | AtomNode | null = treeContext.tree.getLowestNode(startingPoint);
     const moveDifference: Point = new Point(event.x - startingPoint.x, event.y - startingPoint.y);
     if (realNode !== treeContext.tree.sheet && realNode !== null) {
+        changeCursorStyle("cursor: copy");
         if (realNode instanceof CutNode) {
-            //The cut node loses custody of its children because those do not copy over during
-            //copy single mode
             currentNode = alterCut(realNode, moveDifference);
             currentNode.children = [];
         } else if (realNode instanceof AtomNode) {
@@ -47,11 +52,10 @@ export function copySingleMouseDown(event: MouseEvent) {
 }
 
 /**
- * If the node is legal, and it wasn't out compare the difference between the start and the current.
- * If the node is a cut, creates a new cut with the altered center and checks to see if it can be
- * entered into the current location. If yes draws the cut legal color otherwise illegal color.
- * For atoms instead of altering the center it alters the origin position and does the same check.
- * @param event The mouse move event while in copySingle mode
+ * Alters currentNode according to the coordinates given by the incoming MouseEvent.
+ * Then highlights the altered currentNode according to its position's validity.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function copySingleMouseMove(event: MouseEvent) {
     if (legalNode) {
@@ -59,31 +63,32 @@ export function copySingleMouseMove(event: MouseEvent) {
             event.x - startingPoint.x,
             event.y - startingPoint.y
         );
-        //If the node is a cut, and it has an ellipse, make a temporary cut and draw that.
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = alterCut(currentNode, moveDifference);
-
             redrawTree(treeContext.tree);
             const color = treeContext.tree.canInsert(tempCut) ? legalColor() : illegalColor();
             drawCut(tempCut, color);
+            determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
         } //If the node is an atom, make a temporary atom and check legality, drawing that.
         else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
-
             redrawTree(treeContext.tree);
             const color = treeContext.tree.canInsert(tempAtom) ? legalColor() : illegalColor();
             drawAtom(tempAtom, color, true);
+            determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
         }
     }
 }
 
 /**
- * If the node is legal, and the mouse has not been out compares the start and the current.
- * If the new temporary node is in a legal position inserts the temporary cut as the copied cut.
- * Otherwise copy failed and nothing is inserted.
- * @param event The mouse up event while in copySingle mode
+ * Alters the position of currentNode according to the coordinates given by the incoming MouseEvent.
+ * Then inserts the altered currentNode if its position is valid.
+ * Otherwise inserts the original currentNode.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function copySingleMouseUp(event: MouseEvent) {
+    changeCursorStyle("cursor: default");
     if (legalNode) {
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
@@ -91,15 +96,11 @@ export function copySingleMouseUp(event: MouseEvent) {
         );
         if (currentNode instanceof CutNode && currentNode.ellipse !== null) {
             const tempCut: CutNode = alterCut(currentNode, moveDifference);
-
-            //If the new location is legal, insert the copied cut.
             if (treeContext.tree.canInsert(tempCut)) {
                 treeContext.tree.insert(tempCut);
             }
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
-
-            //If the new location is legal, insert the copied atom.
             if (treeContext.tree.canInsert(tempAtom)) {
                 treeContext.tree.insert(tempAtom);
             }
@@ -110,10 +111,11 @@ export function copySingleMouseUp(event: MouseEvent) {
 }
 
 /**
- * If the mouse is moved outside of the canvas, sets wasOut to true.
- * Redraws the canvas.
+ * Sets legality to false.
+ * Then redraws the Draw Mode AEGTree.
  */
 export function copySingleMouseOut() {
+    changeCursorStyle("cursor: default");
     legalNode = false;
     redrawTree(treeContext.tree);
 }

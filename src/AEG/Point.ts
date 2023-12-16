@@ -1,37 +1,38 @@
 /**
- * Defines a Point.
- * @author Anusha Tiwari
+ * Defines a 2D Point.
+ *
  * @author Ryan Reilly
+ * @author Anusha Tiwari
  */
 export class Point {
     /**
-     * The x coordinate of the point.
+     * x-coordinate of this Point.
      */
     x: number;
 
     /**
-     * The y coordinate of the point.
+     * y-coordinate of this Point.
      */
     y: number;
 
     /**
-     * Constructs a new point at the given coordinates.
-     * @param coordX The specified x coordinate.
-     * @param coordY The specified y coordinate.
+     * Creates a new point at the incoming coordinates.
+     * @param xCoord Incoming x-coordinate.
+     * @param yCoord Incoming y-coordinate.
      * @throws Error on receiving NaN or Infinity values as coordinates.
      */
-    public constructor(coordX: number, coordY: number) {
-        this.x = coordX;
-        this.y = coordY;
+    public constructor(xCoord: number, yCoord: number) {
+        this.x = xCoord;
+        this.y = yCoord;
         if (!Number.isFinite(this.x) || !Number.isFinite(this.y)) {
             throw new Error("NaN or Infinity value(s) were passed in constructing a Point.");
         }
     }
 
     /**
-     * Sets this Point's coordinates according to the incoming numbers.
-     * @param coordX the incoming value for x
-     * @param coordY the incoming value for y
+     * Sets this Point's coordinates according to the incoming coordinates.
+     * @param xCoord Incoming x-coordinate.
+     * @param yCoord Incoming y-coordinate.
      * @throws Error on receiving NaN or Infinity values as coordinates.
      */
     public set(coordX: number, coordY: number) {
@@ -45,9 +46,9 @@ export class Point {
     }
 
     /**
-     * Returns the distance between this Point and the other.
-     * @param otherPoint the other Point
-     * @returns the distance between the two
+     * Calculates and returns the distance between this Point and the other incoming Point.
+     * @param otherPoint Other incoming Point.
+     * @returns Distance between the two Points.
      */
     public distance(otherPoint: Point): number {
         const dx = this.x - otherPoint.x;
@@ -56,8 +57,8 @@ export class Point {
     }
 
     /**
-     * Returns a string representation of the point.
-     * @returns The coordinates of the point in string form.
+     * Creates and returns a readable string representation of this Point.
+     * @returns Coordinates of this Point in string form.
      */
     public toString(): string {
         return "(" + this.x + ", " + this.y + ")";

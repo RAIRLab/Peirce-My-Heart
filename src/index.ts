@@ -12,23 +12,23 @@ import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 import {toggleHandler} from "./ToggleModes";
 import {ProofNode} from "./AEG/ProofNode";
 
-import * as CutTool from "./DrawModes/CutTool";
-import * as AtomTool from "./DrawModes/AtomTool";
+import * as CutTool from "./DrawTools/CutTool";
+import * as AtomTool from "./DrawTools/AtomTool";
 
 import * as DragTool from "./SharedToolUtils/DragTool";
-import * as MoveSingleTool from "./DrawModes/MoveSingleTool";
-import * as MoveMultiTool from "./DrawModes/MoveMultiTool";
-import * as CopySingleTool from "./DrawModes/CopySingleTool";
-import * as CopyMultiTool from "./DrawModes/CopyMultiTool";
-import * as DeleteSingleTool from "./DrawModes/DeleteSingleTool";
-import * as DeleteMultiTool from "./DrawModes/DeleteMultiTool";
-import * as CopyFromDraw from "./DrawModes/CopyFromDraw";
+import * as MoveSingleTool from "./DrawTools/MoveSingleTool";
+import * as MoveMultiTool from "./DrawTools/MoveMultiTool";
+import * as CopySingleTool from "./DrawTools/CopySingleTool";
+import * as CopyMultiTool from "./DrawTools/CopyMultiTool";
+import * as DeleteSingleTool from "./DrawTools/DeleteSingleTool";
+import * as DeleteMultiTool from "./DrawTools/DeleteMultiTool";
+import * as CopyFromDraw from "./DrawTools/CopyFromDraw";
 
 import * as DoubleCutInsertionTool from "./ProofTools/DoubleCutInsertionTool";
 import * as DoubleCutDeletionTool from "./ProofTools/DoubleCutDeletionTool";
 import * as InsertionTool from "./ProofTools/InsertionTools";
 import * as ErasureTool from "./ProofTools/ErasureTool";
-import * as ResizeTool from "./DrawModes/ResizeTool";
+import * as ResizeTool from "./DrawTools/ResizeTool";
 import * as ProofMoveSingleTool from "./ProofTools/ProofMoveSingleTool";
 import * as ProofMoveMultiTool from "./ProofTools/ProofMoveMultiTool";
 
@@ -37,11 +37,6 @@ import * as IterationTool from "./ProofTools/IterationTool";
 import * as ProofResizeTool from "./ProofTools/ProofResizeTool";
 import * as DeiterationTool from "./ProofTools/DeiterationTool";
 import * as ClearProofTool from "./ProofTools/ClearProofTool";
-import {
-    clearProofMouseDown,
-    clearProofMouseOut,
-    clearProofMouseUp,
-} from "./ProofTools/ClearProofTool";
 import {appendStep} from "./ProofHistory";
 
 //Setting up Canvas
@@ -297,6 +292,7 @@ async function loadMode() {
                     for (let i = 0; i < treeContext.proof.length; i++) {
                         appendStep(treeContext.proof[i], i + 1);
                     }
+                    treeContext.currentProofStep = treeContext.proof[treeContext.proof.length - 1];
                     //Redraw our proof
                     redrawProof();
                 }
@@ -494,6 +490,9 @@ function mouseUpHandler(event: MouseEvent) {
         case Tool.atomTool:
             AtomTool.atomMouseUp(event);
             break;
+        case Tool.dragTool:
+            DragTool.dragMouseUp();
+            break;
         case Tool.moveSingleTool:
             MoveSingleTool.moveSingleMouseUp(event);
             break;
@@ -570,7 +569,7 @@ function mouseOutHandler() {
             AtomTool.atomMouseOut();
             break;
         case Tool.dragTool:
-            DragTool.dragMosueOut();
+            DragTool.dragMouseOut();
             break;
         case Tool.moveSingleTool:
             MoveSingleTool.moveSingleMouseOut();
@@ -636,6 +635,19 @@ function mouseOutHandler() {
 }
 
 function mouseEnterHandler() {
+    switch (treeContext.toolState) {
+        case Tool.cutTool:
+            CutTool.cutMouseEnter();
+            break;
+        case Tool.dragTool:
+            DragTool.dragMouseEnter();
+            break;
+        case Tool.doubleCutInsertionTool:
+            DoubleCutInsertionTool.doubleCutInsertionMouseEnter();
+            break;
+        default:
+            break;
+    }
     hasMouseIn = true;
 }
 

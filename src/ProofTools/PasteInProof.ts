@@ -2,6 +2,7 @@
  * File containing insertion node movement event handlers.
  * @author Anusha Tiwari
  */
+import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {redrawProof} from "../SharedToolUtils/DrawUtils";
@@ -31,16 +32,19 @@ export function pasteInProofMouseDown() {
         currentTree.sheet.isEmptySheet()
     ) {
         legalNode = true;
+        changeCursorStyle("cursor: copy");
     }
 }
 
 export function pasteInProofMouseMove() {
+    changeCursorStyle("cursor: default");
     legalNode = false;
     redrawProof();
 }
 
 export function pasteInProofMouseUp() {
     if (legalNode) {
+        changeCursorStyle("cursor: default");
         currentTree.sheet = currentGraphs;
         treeContext.pushToProof(new ProofNode(currentTree, "Pasted"));
     }
@@ -49,6 +53,7 @@ export function pasteInProofMouseUp() {
 }
 
 export function pasteInProofMouseOut() {
+    changeCursorStyle("cursor: default");
     legalNode = false;
     redrawProof();
 }

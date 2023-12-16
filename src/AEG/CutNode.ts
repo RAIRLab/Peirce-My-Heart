@@ -1,31 +1,34 @@
-import {shapeContains} from "./AEGUtils";
 import {AtomNode} from "./AtomNode";
 import {Ellipse} from "./Ellipse";
 import {Point} from "./Point";
+import {shapeContains} from "./AEGUtils";
 
 /**
- * Class that defines a Cut in AEGTree.
- * @author Anusha Tiwari
- * @author Ryan Reilly
+ * Defines a Cut.
+ * Cuts are negations in Peirce's AEG system.
+ * Cuts may be empty, and cuts may contain one or more AtomNodes and CutNodes as children.
+ * Both are valid cuts.
+ *
  * @author James Oswald
+ * @author Ryan Reilly
+ * @author Anusha Tiwari
  */
 export class CutNode {
     /**
-     * The boundary of this node.
+     * Boundary of this CutNode on the HTML canvas.
      */
     private internalEllipse: Ellipse | null; //Null for sheet of assertion
 
     /**
-     * Contains the list of child nodes nested within this node.
+     * List of child nodes contained within this CutNode.
      */
     private internalChildren: (AtomNode | CutNode)[];
 
     /**
-     * Constructs a CutNode with the incoming Ellipse as its boundary box.
-     * @param ellipse (Required) The ellipse to be set as the boundary box of this node.
-     * For Sheet of Assertion, this should be passed as null.
-     * @param childList The list of children nodes nested within this node.
-     * If not passed, defaults to an empty array.
+     * Constructs a CutNode with the incoming Ellipse as its boundary and an incoming list of children.
+     * The list of children is not required, since empty CutNodes are valid.
+     * @param ellipse Incoming Ellipse. For only The Sheet of Assertion, this will be null.
+     * @param childList List of nodes nested within this CutNode.
      */
     public constructor(ellipse: Ellipse | null, childList?: (AtomNode | CutNode)[]) {
         this.internalEllipse = ellipse;
@@ -33,8 +36,8 @@ export class CutNode {
     }
 
     /**
-     * Creates a deep copy of this CutNode
-     * @returns A new CutNode, which is a deep copy of this node
+     * Creates and returns a deep copy (an exact copy not at the same memory address) of this CutNode.
+     * @returns Deep copy of this CutNode.
      */
     public copy(): CutNode {
         let newEllipse: Ellipse | null;
@@ -49,7 +52,7 @@ export class CutNode {
             newEllipse = null;
         }
 
-        // Copy all the nested children individually
+        //Copy all nested children individually.
         if (this.children.length > 0) {
             for (let i = 0; i < this.children.length; i++) {
                 const newChild = this.children[i];
@@ -65,70 +68,86 @@ export class CutNode {
     }
 
     /**
-     * Accessor to get the bounding ellipse of the Cut Node.
-     * @returns The bounding ellipse of this Cut Node
-     * Returns null for Sheet of Assertion
+     * Gets the bounding Ellipse of this CutNode.
+     * @returns Bounding Ellipse of this CutNode. Null for The Sheet of Assertion.
      */
     public get ellipse(): Ellipse | null {
         return this.internalEllipse;
     }
 
     /**
-     * Modifier to set the bounding ellipse of this Cut Node
+     * Sets the bounding Ellipse of this CutNode to the incoming Ellipse.
+     * @param ellipse Incoming Ellipse.
      */
     public set ellipse(ellipse: Ellipse | null) {
         this.internalEllipse = ellipse;
     }
 
     /**
-     * Accessor to get the children (array of nodes nested within) of the Cut Node.
-     * @returns The children of the Cut Node
+     * Gets the children of this CutNode.
+     * @returns Children of this CutNode.
      */
     public get children(): (AtomNode | CutNode)[] {
         return this.internalChildren;
     }
 
     /**
-     * Modifier that sets the children of the Cut Node.
-     * @param list The list of nodes to be added as the children of the Cut Node
+     * Sets the children of this CutNode to the incoming list of AtomNodes and CutNodes.
+     * @param list Incoming list of AtomNodes and CutNodes.
      */
     public set children(list: (AtomNode | CutNode)[]) {
         this.internalChildren = list;
     }
 
     /**
-     * Modifier that adds a child to the Cut Node.
-     * @param child The node to be added as a child of the Cut Node
+     * Adds a child, an AtomNode or CutNode with zero or more children, to this CutNode's children.
+     * @param child AtomNode or CutNode with zero or more children.
      */
     public set child(child: AtomNode | CutNode) {
         this.internalChildren.push(child);
     }
 
     /**
-     * Determines the deepest CutNode in which newNode can fit.
-     * @param newNode the new node
-     * @returns the deepest valid CutNode in which newNode can fit
+     * Completely removes all of this CutNode's children.
+     */
+    public clear() {
+        this.internalChildren = [];
+    }
+
+    /**
+     * Checks whether this CutNode is The Sheet of Assertion and also empty.
+     * @returns True if this is an empty Sheet of Assertion.
+     */
+    public isEmptySheet(): boolean {
+        return this.internalEllipse === null && this.internalChildren.length === 0;
+    }
+
+    /**
+     * Determines and returns the deepest CutNode in which the incoming node can fit.
+     * Deepest here refers to how far down the returned CutNode is in the AEGTree.
+     * @param newNode Incoming node.
+     * @returns Deepest CutNode in which newNode can fit.
      */
     public getCurrentCut(newNode: CutNode | AtomNode): CutNode {
         for (let i = 0; i < this.internalChildren.length; i++) {
             const child: CutNode | AtomNode = this.internalChildren[i];
             if (child instanceof CutNode && child.containsNode(newNode)) {
-                //newNode can be placed at least one layer deeper
+                //Here, newNode can be placed at least one level deeper.
                 return child.getCurrentCut(newNode);
             }
         }
-        return this; //we are at the deepest valid level that newNode can be placed
+        return this; //Here, we are at the deepest level that newNode can fit and be placed.
     }
 
     /**
      * Checks whether the incoming Point is contained within this CutNode.
-     * @param otherPoint The point that might be within this node.
-     * @returns True, if the point is within this node. Else, false.
+     * @param otherPoint Point that may be contained within this CutNode.
+     * @returns True if the Point is contained within this CutNode.
      */
     public containsPoint(otherPoint: Point): boolean {
         if (this.internalEllipse === null) {
-            //This CutNode represents the sheet.
-            //Everything is within the sheet.
+            //This CutNode is The Sheet of Assertion.
+            //Every Point is contained within The Sheet of Assertion.
             return true;
         }
 
@@ -136,14 +155,14 @@ export class CutNode {
     }
 
     /**
-     * Checks whether another node is within this CutNode.
-     * @param otherNode The node that might be within this CutNode.
-     * @returns True, otherNode it is within this CutNode. Else, false.
+     * Checks whether the incoming node is contained within this CutNode.
+     * @param otherNode Node that may be contained within this CutNode.
+     * @returns True if otherNode is contained within this CutNode.
      */
     public containsNode(otherNode: AtomNode | CutNode): boolean {
         if (this.internalEllipse === null) {
-            //This CutNode represents the sheet.
-            //Everything is within the sheet.
+            //This CutNode is The Sheet of Assertion.
+            //Every node is contained within The Sheet of Assertion.
             return true;
         }
 
@@ -155,10 +174,10 @@ export class CutNode {
     }
 
     /**
-     * Recursive method to return the lowest level node containing the given point.
-     * Returns null when this node does not contain the point.
-     * @param incomingPoint The given point on the canvas.
-     * @returns The lowest node containing the node on the tree.
+     * Determines and returns the deepest node containing the incoming Point.
+     * Returns null if this node does not contain the incoming Point.
+     * @param incomingPoint Incoming Point.
+     * @returns Deepest node containing incomingPoint.
      */
     public getLowestNode(incomingPoint: Point): CutNode | AtomNode | null {
         if (!this.containsPoint(incomingPoint)) {
@@ -167,7 +186,7 @@ export class CutNode {
 
         for (let i = 0; i < this.internalChildren.length; i++) {
             if (this.internalChildren[i].containsPoint(incomingPoint)) {
-                //If there are no children this is the lowest node.
+                //If this child has no children itself, this is the deepest node.
                 if (
                     this.internalChildren[i] instanceof AtomNode ||
                     (this.internalChildren[i] instanceof CutNode &&
@@ -175,21 +194,21 @@ export class CutNode {
                 ) {
                     return this.internalChildren[i];
                 } else {
+                    //If this child has children itself, we must look a level deeper.
                     return (this.internalChildren[i] as CutNode).getLowestNode(incomingPoint);
                 }
             }
         }
 
-        //None of the children contain the point, so this is the lowest node containing the point.
+        //None of the children contain incomingPoint, so this is the lowest node containing incomingPoint.
         return this;
     }
 
     /**
-     * Recursive method to return the parent of the lowest node containing the given point.
-     * Returns null when the parent's children do not contain the point. Throws and error if this
-     * does not contain the point.
-     * @param incomingPoint The given point on the canvas.
-     * @returns The parent of the lowest level node.
+     * Determines and returns the parent CutNode of the deepest node containing the incoming Point.
+     * @param incomingPoint Incoming Point.
+     * @throws Error If incomingPoint is not contained in this CutNode.
+     * @returns Parent CutNode of the deepest node containing incomingPoint. Null if none of the children contain incomingPoint.
      */
     public getLowestParent(incomingPoint: Point): CutNode | null {
         if (!this.containsPoint(incomingPoint)) {
@@ -198,7 +217,7 @@ export class CutNode {
 
         for (let i = 0; i < this.internalChildren.length; i++) {
             if (this.internalChildren[i].containsPoint(incomingPoint)) {
-                //If there are no children this is the lowest node.
+                //If this child has no children itself, this is the deepest node.
                 if (
                     this.internalChildren[i] instanceof AtomNode ||
                     (this.internalChildren[i] instanceof CutNode &&
@@ -206,36 +225,44 @@ export class CutNode {
                 ) {
                     return this;
                 } else {
-                    //If the cut child with at least 1 child has children containing the point recurse
+                    //If a CutNode child with at least 1 child itself has children containing incomingPoint,
+                    //We are not at the deepest level containing IncomingPoint and must recurse to find that deepest level.
                     const tempCut: CutNode = this.internalChildren[i] as CutNode;
                     for (let j = 0; j < tempCut.children.length; j++) {
                         if (tempCut.children[j].containsPoint(incomingPoint)) {
                             return tempCut.getLowestParent(incomingPoint);
                         }
                     }
-                    //If none of the children of the child contain the point, but the child does return the parent.
+                    //If none of the children of this child contain incomingPoint, but this child does,
+                    //This child is the deepest node containing incomingPoint.
                     return this;
                 }
             }
         }
-        //If none of this node's children contain the point then it cannot be the parent.
+        //If none of this node's children contain incomingPoint then return null.
         return null;
     }
 
     /**
-     * Finds the level the given node is found at. If the node is found within a different node
-     * acts recursively and increments the level by one and calls this function again.
-     * @param incomingNode The node that is being searched for
-     * @param currentLevel The current level of the tree the recursion is at
-     * @returns The level in the tree it was found in
+     * Determines and returns the deepest level the incoming node is found in.
+     * Here, level refers to the number of cuts in the AEGTree.
+     * For instance, The Sheet of Assertion is level 0,
+     * Inside a CutNode on the Sheet of Assertion would be level 1, so on and so forth.
+     *
+     * If the incoming node is found within a deeper node,
+     * The current cut level is incremented and this function is called with that level as an argument.
+     * @param incomingNode Incoming node.
+     * @param currentLevel Current cut level.
+     * @returns Deepest cut level incomingNode is found in.
      */
     public getLevel(incomingNode: CutNode | AtomNode, currentLevel: number): number {
         for (let i = 0; i < this.internalChildren.length; i++) {
-            //We have found the node as one of this node's children, return current level
+            //We have found incomingNode as one of this node's children, so return the current level.
             if (this.internalChildren[i] === incomingNode) {
                 return currentLevel;
-            } //If the current child is a cut that contains the node then call this function again
-            else if (
+            } else if (
+                //If the current child is a CutNode that contains incomingNode,
+                //then call this function again with the incremented cut level.
                 this.internalChildren[i] instanceof CutNode &&
                 (this.internalChildren[i] as CutNode).containsNode(incomingNode)
             ) {
@@ -245,37 +272,39 @@ export class CutNode {
                 );
             }
         }
-
+        //If we have called getLevel on a CutNode with no children.
         return -1;
     }
 
     /**
-     * Removes the lowest node recognized by this CutNode containing the incoming Point.
-     * @param incomingPoint The incoming Point
-     * @returns True, if the node was successfully removed.
+     * Removes the lowest child of this CutNode that contains the incoming Point.
+     * @param incomingPoint Incoming Point.
+     * @returns True if the node containing incomingPoint was removed.
+     * False if this CutNode nor its children contain incomingPoint.
      */
     public remove(incomingPoint: Point): boolean {
         if (!this.containsPoint(incomingPoint)) {
             return false;
         }
 
-        //We do contain the Point at this stage.
+        //This CutNode definitely contains incomingPoint here.
         for (let i = 0; i < this.children.length; i++) {
             if (this.children[i].containsPoint(incomingPoint)) {
                 if (
-                    this.children[i] instanceof AtomNode || //If the child is childless, the child must be spliced.
+                    this.children[i] instanceof AtomNode ||
                     (this.children[i] instanceof CutNode &&
                         (this.children[i] as CutNode).children.length === 0)
                 ) {
+                    //If the child is childless, the child must be spliced.
                     this.children.splice(i, 1);
                     return true;
                 } else {
-                    //We have a CutNode with more than 0 children.
+                    //Here, we have a CutNode with more than 0 children.
                     for (let j = 0; j < (this.children[i] as CutNode).children.length; j++) {
                         if (
                             (this.children[i] as CutNode).children[j].containsPoint(incomingPoint)
                         ) {
-                            //If the child has children, and one of its children contains the Point, recursion time.
+                            //If the child has children, and one of its children contains the Point, we recurse.
                             if ((this.children[i] as CutNode).children[j] instanceof AtomNode) {
                                 (this.children[i] as CutNode).children.splice(j, 1);
                             } else {
@@ -285,52 +314,79 @@ export class CutNode {
                             }
                         }
                     }
-                    //Here, we have a CutNode with more than 0 children, none of which contained the Point.
-                    //This CutNode is now the lowest node containing the Point, and so, we must remove that child.
+                    //Here, we have a CutNode with more than 0 children, none of which contained incomingPoint.
+                    //This CutNode's child, which is the aforementioned CutNode, is now the deepest node containing incomingPoint.
+                    //So, we must splice that child.
                     this.children.splice(i, 1);
                     return true;
                 }
             }
         }
+        //We cannot remove a CutNode from itself.
         return false;
     }
 
     /**
-     * Removes all of this CutNode's children.
+     * Checks if this CutNode is equal to the incoming CutNode.
+     * They are considered equal if they have the same children and the same number of children.
+     * These children do not have to be in the same order in the children list to be considered equal.
+     *
+     * @param otherCut Incoming CutNode.
+     * @returns True if this CutNode and otherCut are equal by the above metric.
      */
-    public clear() {
-        this.internalChildren = [];
+    public isEqualTo(otherCut: CutNode): boolean {
+        //For two CutNodes to be equal, they must have the same number of children.
+        if (this.children.length === otherCut.children.length) {
+            if (this.children.length === 0) {
+                //If they do not have children, they are empty cuts. Empty cuts are always equal.
+                return true;
+            }
+            //If both have the same number of children, we must check if they are the same children.
+            const thisChildren = this.copy().children;
+            const otherChildren = otherCut.copy().children;
+
+            //If both CutNodes have the same child, remove that child from both lists and continue.
+            //If the same child is not present in both, the CutNodes are not equal.
+            for (let i = 0; i < thisChildren.length; i++) {
+                for (let j = 0; j < otherChildren.length; j++) {
+                    if (
+                        (thisChildren[i] instanceof AtomNode &&
+                            otherChildren[j] instanceof AtomNode &&
+                            (thisChildren[i] as AtomNode).isEqualTo(
+                                otherChildren[j] as AtomNode
+                            )) ||
+                        (thisChildren[i] instanceof CutNode &&
+                            otherChildren[j] instanceof CutNode &&
+                            (thisChildren[i] as CutNode).isEqualTo(otherChildren[j] as CutNode))
+                    ) {
+                        thisChildren.splice(i, 1);
+                        otherChildren.splice(j, 1);
+                        i--;
+                        break;
+                    }
+
+                    if (j === otherChildren.length - 1) {
+                        //Checked all children, but a match was not found. These nodes are not equal.
+                        return false;
+                    }
+                }
+            }
+            //Return if all the children have been matched and removed in both lists.
+            return thisChildren.length === 0 && otherChildren.length === 0;
+        }
+
+        return false;
     }
 
     /**
-     * Returns a string representation of this CutNode.
-     * @returns The children and boundary box of this CutNode.
-     */
-    public toString(): string {
-        let str: string;
-
-        if (this.internalEllipse === null) {
-            str = "Sheet of Assertion of the AEG Tree";
-        } else {
-            str = "A cut node with boundary box of " + this.internalEllipse.toString();
-        }
-
-        if (this.internalChildren.length > 0) {
-            str += ", With nested nodes: " + this.internalChildren.toString();
-        }
-        return str;
-    }
-
-    public isEmptySheet(): boolean {
-        return this.internalEllipse === null && this.internalChildren.length === 0;
-    }
-
-    /**
-     * Constructs a string representation of an AEGTree or a subtree.
-     * () - cut
-     * char - atom
-     * (char char ()) - valid nesting of two chars and a cut inside another cut
-     * @returns an accurate string representation of the AEGTree or a subtree
+     * Creates and returns a string representation of this CutNode and all its children.
+     * This CutNode may be The Sheet of Assertion or the root of any subtree.
+     *
+     * () - CutNode.
+     * char - AtomNode.
+     * (char char ()) - Valid nesting of two AtomNodes and a CutNode inside another CutNode.
+     *
+     * @returns String form of this CutNode and all its children according to the above format.
      * @author James Oswald
      */
     public toFormulaString(): string {
@@ -353,55 +409,21 @@ export class CutNode {
     }
 
     /**
-     * Method that checks if a cut node is equal to another cut node. The are equal if they have
-     * the same children, irrespective of the ordering of nodes within a level
-     * @param otherCut The other cut node we are checking against for equality
-     * @returns True, if they are equal (the same). Else, false
+     * Creates and returns a string representation of this CutNode.
+     * @returns Children and boundary of this CutNode in string form.
      */
-    public isEqualTo(otherCut: CutNode): boolean {
-        //For 2 cuts to be equal, they must have the same number of children
-        if (this.children.length === otherCut.children.length) {
-            if (this.children.length === 0) {
-                //If they do not have children, they are empty cuts
-                //Empty cuts are always equal
-                return true;
-            }
-            //If they have the same number of children, they should be the same children
-            //Make a deep copy and get the list of children of each cut
-            const thisChildren = this.copy().children;
-            const otherChildren = otherCut.copy().children;
+    public toString(): string {
+        let str: string;
 
-            //Iterate through the children of a cut and see if the other cut has the same child
-            //If they have the same child, remove it from the lists and continue
-            //If a child is not present in both, they are not equal
-            for (let i = 0; i < thisChildren.length; i++) {
-                for (let j = 0; j < otherChildren.length; j++) {
-                    if (
-                        (thisChildren[i] instanceof AtomNode &&
-                            otherChildren[j] instanceof AtomNode &&
-                            (thisChildren[i] as AtomNode).isEqualTo(
-                                otherChildren[j] as AtomNode
-                            )) ||
-                        (thisChildren[i] instanceof CutNode &&
-                            otherChildren[j] instanceof CutNode &&
-                            (thisChildren[i] as CutNode).isEqualTo(otherChildren[j] as CutNode))
-                    ) {
-                        thisChildren.splice(i, 1);
-                        otherChildren.splice(j, 1);
-                        i--;
-                        break;
-                    }
-
-                    if (j === otherChildren.length - 1) {
-                        //Checked all children but a match was not found. The nodes are not equal
-                        return false;
-                    }
-                }
-            }
-            //Check if all the children have been matched and returned
-            return thisChildren.length === 0 && otherChildren.length === 0;
+        if (this.internalEllipse === null) {
+            str = "Sheet of Assertion of the AEG Tree";
+        } else {
+            str = "A cut node with boundary box of " + this.internalEllipse.toString();
         }
 
-        return false;
+        if (this.internalChildren.length > 0) {
+            str += ", With nested nodes: " + this.internalChildren.toString();
+        }
+        return str;
     }
 }
