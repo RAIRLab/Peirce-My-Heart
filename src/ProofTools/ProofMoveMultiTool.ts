@@ -1,9 +1,15 @@
 import {AEGTree} from "../AEG/AEGTree";
 import {alterAtom, alterCutChildren, drawAltered} from "../SharedToolUtils/EditModeUtils";
 import {AtomNode} from "../AEG/AtomNode";
-import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
-import {drawAtom, highlightNode, redrawProof, redrawTree} from "../SharedToolUtils/DrawUtils";
+import {
+    changeCursorStyle,
+    determineAndChangeCursorStyle,
+    drawAtom,
+    highlightNode,
+    redrawProof,
+    redrawTree,
+} from "../SharedToolUtils/DrawUtils";
 import {getCurrentProofTree, isMoveLegal} from "./ProofToolUtils";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
@@ -12,29 +18,42 @@ import {ProofNode} from "../AEG/ProofNode";
 import {treeContext} from "../treeContext";
 
 /**
- * A tool to allow for the movement for an atom or a cut and all of it's children so long as the
- * meaning of the proof remains the same.
+ * Contains methods for moving several nodes at a time, on only the same cut level, in only one cut in Proof Mode.
+ *
+ * When it is said that a node is "removed" in the documentation,
+ * This means that it is removed from the Draw Mode AEGTree but visually is still present.
+ *
  * @author Dawn Moore
  */
 
-//The initial point the user pressed down.
+//First Point the user clicks.
 let startingPoint: Point;
 
-//The current node and its children we will be moving.
+//Node in question.
 let currentNode: CutNode | AtomNode | null = null;
 
-//The parent of the node we removed.
+//Lowest parent of currentNode.
 let currentParent: CutNode | null = null;
 
-//Whether or not the node is allowed to be moved (not the sheet).
+//True if currentNode is not The Sheet of Assertion or null (i.e can be moved.)
 let legalNode: boolean;
 
-//The tree of the current proof step
+//AEGTree at the current proof step.
 let currentProofTree: AEGTree;
 
 /**
- * Retrieves the current location on the window and the lowest node on the tree containing that point
- * If this node is not the sheet then it can be moved, we find it's parent and remove it from that.
+ * Sets currentProofTree to the current proof tree.
+ * Then sets startingPoint according to the coordinates given by the incoming MouseEvent.
+ * Then sets currentNode to the lowest node containing startingPoint.
+ *
+ * Then if currentNode is not The Sheet of Assertion or null,
+ *      sets cursor style to grabbing,
+ *      sets currentParent to the lowest CutNode containing startingPoint,
+ *      removes currentNode,
+ *      sets legality to true,
+ *      redraws currentProofTree, and
+ *      highlights currentNode as the legal color.
+ *
  * @param event The mouse down event while using move multiple tool in proof mode
  */
 export function proofMoveMultiMouseDown(event: MouseEvent) {
@@ -49,8 +68,6 @@ export function proofMoveMultiMouseDown(event: MouseEvent) {
             currentParent.remove(startingPoint);
         }
         legalNode = true;
-
-        // highlight the chosen node and its children in legal color to show what will be moved
         redrawTree(currentProofTree);
         highlightNode(currentNode, legalColor());
     } else {
@@ -59,10 +76,12 @@ export function proofMoveMultiMouseDown(event: MouseEvent) {
 }
 
 /**
- * Calculates the difference in x and y between the starting and current mouse locations.
- * Creates a temporary node with the respective changes to all potential children in their
- * respective positions and draws that to show movement.
- * @param event The mouse move event while using move multiple tool in proof mode
+ * Redraws currentProofTree.
+ * Then alters currentNode and its children according to the coordinates given by the incoming MouseEvent.
+ * Then highlights currentNode and its children as either the legal or illegal color depending on the legality of their positions.
+ * Then changes cursor style accordingly.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function proofMoveMultiMouseMove(event: MouseEvent) {
     if (legalNode) {
@@ -87,11 +106,17 @@ export function proofMoveMultiMouseMove(event: MouseEvent) {
 }
 
 /**
- * Calculates the difference in x and y between the starting and current mouse locations.
- * If the node's new position (and any of it's children if it has any) is considered legal then
- * insert it, otherwise insert the original node before it was moved.
- * Add this current tree to the proof history for it to be used later.
- * @param event The mouse up event while using move multiple tool in proof mode
+ * Sets cursor style to default.
+ * Then queues a Multi Move step to be added to the proof history.
+ * Then alters currentNode and its children according to the coordinates given by the incoming MouseEvent.
+ *
+ * Then if the altered node's position and the position of its children are legal,
+ *      adds the queued step to the proof history.
+ *
+ * Then redraws the proof.
+ * Then sets legality to false.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function proofMoveMultiMouseUp(event: MouseEvent) {
     if (legalNode) {
@@ -119,7 +144,10 @@ export function proofMoveMultiMouseUp(event: MouseEvent) {
 }
 
 /**
- * If the mouse leaves the canvas then reinsert our current node if it is legal and reset the canvas.
+ * Sets cursor style to default.
+ * Then inserts currentNode into currentProofTree.
+ * Then sets legality to false.
+ * Then redraws the proof.
  */
 export function proofMoveMultiMouseOut() {
     changeCursorStyle("cursor: default");

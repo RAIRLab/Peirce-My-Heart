@@ -20,6 +20,9 @@ import {treeContext} from "../treeContext";
 /**
  * Contains methods for moving one node at a time, on only the same cut level, in only one cut in Proof Mode.
  *
+ * When it is said that a node is "removed" in the documentation,
+ * This means that it is removed from the Draw Mode AEGTree but visually is still present.
+ *
  * @author Dawn Moore
  */
 
@@ -39,10 +42,11 @@ let currentProofTree: AEGTree;
  * Sets currentProofTree to the current proof tree.
  * Then sets startingPoint according to the coordinates given by the incoming MouseEvent.
  * Then sets currentNode to the lowest node containing startingPoint.
- * Then sets cursor style to grabbing,
- * removes currentNode, inserts its children,
- * sets legality to true,
- * redraws currentProofTree and highlights accordingly if currentNode is not null or The Sheet of Assertion.
+ * Then if currentNode is not null or The Sheet of Assertion,
+ *      sets cursor style to grabbing,
+ *      removes currentNode, inserts its children,
+ *      sets legality to true, and
+ *      redraws currentProofTree and highlights accordingly.
  *
  * @param event Incoming MouseEvent.
  */
