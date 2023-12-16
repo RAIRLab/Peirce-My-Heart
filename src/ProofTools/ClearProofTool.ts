@@ -6,34 +6,32 @@ import {illegalColor} from "../Themes";
 import {treeContext} from "../treeContext";
 
 /**
- * File containing clear proof tool event handlers
+ * Contains methods for clearing the Proof Mode HTML canvas.
+ *
  * @author Anusha Tiwari
  */
 
-//The current tree in the proof chain
+//Current tree in the proof chain.
 let currentProofTree: AEGTree;
 
-//Whether or not the node can be cleared
+//True if currentProofTree can be cleared (i.e within the canvas).
 let legalNode: boolean;
 
 /**
- * Handles the mouseDown event for clearProofTool
- * Gets the tree of the current step and highlights it in the illegal color
+ * Gets the AEGTree of the current proof step.
+ * Then clears the canvas and highlights all nodes on it as the illegal color.
  */
 export function clearProofMouseDown() {
-    //Get the tree of the current step
     currentProofTree = getCurrentProofTree();
-
-    //As long as we are within the canvas, we can legally perform clear
     legalNode = true;
-    //Clear the canvas and redraw the tree in illegal color to show that it will be deleted
     cleanCanvas();
     highlightNode(currentProofTree.sheet, illegalColor());
 }
 
 /**
- * Handles the mouseOut event for clearProofTool
- * If we are within the canvas, delete the proof history buttons and clear the proof
+ * Clears the proof's history buttons.
+ * Then clears the proof.
+ * Then redraws the proof.
  */
 export function clearProofMouseUp() {
     if (legalNode) {
@@ -44,8 +42,8 @@ export function clearProofMouseUp() {
 }
 
 /**
- * Handles the mouseOut event for clearProofTool
- * If we move out of the canvas, the proof cannot be cleared
+ * Sets legality to false.
+ * Then redraws the proof.
  */
 export function clearProofMouseOut() {
     legalNode = false;
