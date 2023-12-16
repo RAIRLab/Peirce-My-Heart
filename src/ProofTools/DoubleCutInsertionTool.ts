@@ -1,21 +1,22 @@
+import {AEGTree} from "../AEG/AEGTree";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
+import {createEllipse, ellipseLargeEnough} from "../SharedToolUtils/EditModeUtils";
+import {CutNode} from "../AEG/CutNode";
+import {drawCut, drawGuidelines, redrawProof} from "../SharedToolUtils/DrawUtils";
+import {Ellipse} from "../AEG/Ellipse";
+import {getCurrentProofTree} from "./ProofToolsUtils";
+import {illegalColor, legalColor} from "../Themes";
+import {offset} from "../SharedToolUtils/DragTool";
+import {Point} from "../AEG/Point";
+import {ProofNode} from "../AEG/ProofNode";
+import {treeContext} from "../treeContext";
+
 /**
  * File containing double cut based events
  * @author Dawn Moore
  * @author James Oswald
+ * @author Anusha Tiwari
  */
-
-import {Point} from "../AEG/Point";
-import {CutNode} from "../AEG/CutNode";
-import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
-import {Ellipse} from "../AEG/Ellipse";
-import {treeContext} from "../treeContext";
-import {offset} from "../SharedToolUtils/DragTool";
-import {legalColor, illegalColor} from "../Themes";
-import {drawCut, redrawProof, drawGuidelines} from "../SharedToolUtils/DrawUtils";
-import {ProofNode} from "../AEG/ProofNode";
-import {AEGTree} from "../AEG/AEGTree";
-import {getCurrentProofTree} from "./ProofToolsUtils";
-import {createEllipse, ellipseLargeEnough} from "../SharedToolUtils/EditModeUtils";
 
 const showRectElm: HTMLInputElement = <HTMLInputElement>document.getElementById("showRect");
 

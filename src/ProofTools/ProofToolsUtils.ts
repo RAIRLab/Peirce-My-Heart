@@ -1,7 +1,13 @@
 import {AEGTree} from "../AEG/AEGTree";
-import {CutNode} from "../AEG/CutNode";
 import {AtomNode} from "../AEG/AtomNode";
+import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
+
+/**
+ * Utilities for proof modes (FIX THIS DESCRIPTION!)
+ * @author Dawn Moore
+ * @author Anusha Tiwari
+ */
 
 /**
  * Get a copy of the AEGTree of the current step in the proof.

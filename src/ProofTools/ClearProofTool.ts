@@ -1,14 +1,14 @@
+import {AEGTree} from "../AEG/AEGTree";
+import {cleanCanvas, highlightNode, redrawProof} from "../SharedToolUtils/DrawUtils";
+import {deleteButtons} from "../ProofHistory";
+import {getCurrentProofTree} from "./ProofToolsUtils";
+import {illegalColor} from "../Themes";
+import {treeContext} from "../treeContext";
+
 /**
  * File containing clear proof tool event handlers
  * @author Anusha Tiwari
  */
-
-import {treeContext} from "../treeContext";
-import {cleanCanvas, highlightNode, redrawProof} from "../SharedToolUtils/DrawUtils";
-import {AEGTree} from "../AEG/AEGTree";
-import {illegalColor} from "../Themes";
-import {deleteButtons} from "../ProofHistory";
-import {getCurrentProofTree} from "./ProofToolsUtils";
 
 //The current tree in the proof chain
 let currentProofTree: AEGTree;

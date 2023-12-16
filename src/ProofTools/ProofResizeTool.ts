@@ -91,6 +91,7 @@ export function proofResizeMouseMove(event: MouseEvent) {
  */
 export function proofResizeMouseUp(event: MouseEvent) {
     if (legalNode) {
+        changeCursorStyle("cursor: default");
         const moveDifference: Point = new Point(
             (event.x - offset.x - startingPoint.x) / 2,
             (event.y - offset.y - startingPoint.y) / 2

@@ -1,19 +1,20 @@
-/**
- * Deletes legal double cuts
- * @author Dawn Moore
- */
-
-import {Point} from "../AEG/Point";
+import {AEGTree} from "../AEG/AEGTree";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {drawCut, redrawProof, redrawTree} from "../SharedToolUtils/DrawUtils";
-import {treeContext} from "../treeContext";
+import {getCurrentProofTree} from "./ProofToolsUtils";
 import {illegalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
+import {Point} from "../AEG/Point";
 import {ProofNode} from "../AEG/ProofNode";
-import {AEGTree} from "../AEG/AEGTree";
-import {reInsertNode, readdChildren} from "../SharedToolUtils/EditModeUtils";
-import {getCurrentProofTree} from "./ProofToolsUtils";
+import {readdChildren, reInsertNode} from "../SharedToolUtils/EditModeUtils";
+import {treeContext} from "../treeContext";
+
+/**
+ * Deletes legal double cuts
+ * @author Dawn Moore
+ * @author Anusha Tiwari
+ */
 
 //The node selected with the user mouse down.
 let currentNode: CutNode | AtomNode | null = null;

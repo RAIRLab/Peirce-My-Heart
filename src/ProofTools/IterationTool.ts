@@ -1,21 +1,22 @@
-/**
- * A tool used to iterated subgraphs on the AEG
- * @author
- */
-
-import {Point} from "../AEG/Point";
-import {Ellipse} from "../AEG/Ellipse";
-import {AtomNode} from "../AEG/AtomNode";
-import {CutNode} from "../AEG/CutNode";
-import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
-import {treeContext} from "../treeContext";
-import {offset} from "../SharedToolUtils/DragTool";
-import {drawAtom, redrawProof} from "../SharedToolUtils/DrawUtils";
-import {legalColor, illegalColor} from "../Themes";
 import * as EditModeUtils from "../SharedToolUtils/EditModeUtils";
 import {AEGTree} from "../AEG/AEGTree";
-import {ProofNode} from "../AEG/ProofNode";
+import {AtomNode} from "../AEG/AtomNode";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
+import {CutNode} from "../AEG/CutNode";
+import {drawAtom, redrawProof} from "../SharedToolUtils/DrawUtils";
+import {Ellipse} from "../AEG/Ellipse";
 import {getCurrentProofTree} from "./ProofToolsUtils";
+import {illegalColor, legalColor} from "../Themes";
+import {offset} from "../SharedToolUtils/DragTool";
+import {Point} from "../AEG/Point";
+import {ProofNode} from "../AEG/ProofNode";
+import {treeContext} from "../treeContext";
+
+/**
+ * A tool used to iterated subgraphs on the AEG
+ * @author Dawn Moore
+ * @author Anusha Tiwari
+ */
 
 //The initial point the user pressed down.
 let startingPoint: Point;

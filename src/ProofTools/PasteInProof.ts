@@ -1,14 +1,15 @@
+import {AEGTree} from "../AEG/AEGTree";
+import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
+import {CutNode} from "../AEG/CutNode";
+import {getCurrentProofTree} from "./ProofToolsUtils";
+import {ProofNode} from "../AEG/ProofNode";
+import {redrawProof} from "../SharedToolUtils/DrawUtils";
+import {treeContext} from "../treeContext";
+
 /**
  * File containing insertion node movement event handlers.
  * @author Anusha Tiwari
  */
-import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
-import {CutNode} from "../AEG/CutNode";
-import {treeContext} from "../treeContext";
-import {redrawProof} from "../SharedToolUtils/DrawUtils";
-import {AEGTree} from "../AEG/AEGTree";
-import {ProofNode} from "../AEG/ProofNode";
-import {getCurrentProofTree} from "./ProofToolsUtils";
 
 //The initial point the user pressed down.
 // let startingPoint: Point;

@@ -1,21 +1,21 @@
+import {AEGTree} from "../AEG/AEGTree";
+import {alterAtom, alterCut} from "../SharedToolUtils/EditModeUtils";
+import {AtomNode} from "../AEG/AtomNode";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
+import {CutNode} from "../AEG/CutNode";
+import {drawAtom, drawCut, redrawProof, redrawTree} from "../SharedToolUtils/DrawUtils";
+import {getCurrentProofTree} from "./ProofToolsUtils";
+import {illegalColor, legalColor} from "../Themes";
+import {isMoveLegal} from "./ProofToolsUtils";
+import {offset} from "../SharedToolUtils/DragTool";
+import {Point} from "../AEG/Point";
+import {ProofNode} from "../AEG/ProofNode";
+import {treeContext} from "../treeContext";
+
 /**
  * A tool for proof mode to allow for atom and cut movement so long as the meaning remains the same.
  * @author Dawn Moore
  */
-
-import {AEGTree} from "../AEG/AEGTree";
-import {Point} from "../AEG/Point";
-import {AtomNode} from "../AEG/AtomNode";
-import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
-import {CutNode} from "../AEG/CutNode";
-import {treeContext} from "../treeContext";
-import {offset} from "../SharedToolUtils/DragTool";
-import {drawCut, drawAtom, redrawTree, redrawProof} from "../SharedToolUtils/DrawUtils";
-import {legalColor, illegalColor} from "../Themes";
-import {alterAtom, alterCut} from "../SharedToolUtils/EditModeUtils";
-import {ProofNode} from "../AEG/ProofNode";
-import {isMoveLegal} from "./ProofToolsUtils";
-import {getCurrentProofTree} from "./ProofToolsUtils";
 
 //The initial point the user pressed down.
 let startingPoint: Point;

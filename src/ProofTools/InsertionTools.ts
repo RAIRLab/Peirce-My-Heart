@@ -1,20 +1,20 @@
+import * as EditModeUtils from "../SharedToolUtils/EditModeUtils";
+import {AEGTree} from "../AEG/AEGTree";
+import {AtomNode} from "../AEG/AtomNode";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
+import {CutNode} from "../AEG/CutNode";
+import {getCurrentProofTree} from "./ProofToolsUtils";
+import {illegalColor, legalColor} from "../Themes";
+import {offset} from "../SharedToolUtils/DragTool";
+import {Point} from "../AEG/Point";
+import {ProofNode} from "../AEG/ProofNode";
+import {redrawProof} from "../SharedToolUtils/DrawUtils";
+import {treeContext} from "../treeContext";
+
 /**
  * File containing insertion node movement event handlers.
  * @author Anusha Tiwari
  */
-
-import {Point} from "../AEG/Point";
-import {AtomNode} from "../AEG/AtomNode";
-import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
-import {CutNode} from "../AEG/CutNode";
-import {treeContext} from "../treeContext";
-import {offset} from "../SharedToolUtils/DragTool";
-import {redrawProof} from "../SharedToolUtils/DrawUtils";
-import {legalColor, illegalColor} from "../Themes";
-import * as EditModeUtils from "../SharedToolUtils/EditModeUtils";
-import {AEGTree} from "../AEG/AEGTree";
-import {ProofNode} from "../AEG/ProofNode";
-import {getCurrentProofTree} from "./ProofToolsUtils";
 
 //The selected subgraph that we will be placing
 let currentNode: CutNode | AtomNode;

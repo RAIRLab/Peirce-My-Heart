@@ -1,19 +1,20 @@
+import {AEGTree} from "../AEG/AEGTree";
+import {AtomNode} from "../AEG/AtomNode";
+import {CutNode} from "../AEG/CutNode";
+import {getCurrentProofTree} from "./ProofToolsUtils";
+import {highlightNode, redrawProof, redrawTree} from "../SharedToolUtils/DrawUtils";
+import {illegalColor} from "../Themes";
+import {offset} from "../SharedToolUtils/DragTool";
+import {Point} from "../AEG/Point";
+import {ProofNode} from "../AEG/ProofNode";
+import {reInsertNode} from "../SharedToolUtils/EditModeUtils";
+import {treeContext} from "../treeContext";
+
 /**
  * Tool to be used during proof mode to perform deiteration on subgraphs on an AEG
  * @author Dawn Moore
+ * @author Anusha Tiwari
  */
-
-import {Point} from "../AEG/Point";
-import {AtomNode} from "../AEG/AtomNode";
-import {CutNode} from "../AEG/CutNode";
-import {redrawProof, highlightNode, redrawTree} from "../SharedToolUtils/DrawUtils";
-import {treeContext} from "../treeContext";
-import {illegalColor} from "../Themes";
-import {offset} from "../SharedToolUtils/DragTool";
-import {ProofNode} from "../AEG/ProofNode";
-import {AEGTree} from "../AEG/AEGTree";
-import {reInsertNode} from "../SharedToolUtils/EditModeUtils";
-import {getCurrentProofTree} from "./ProofToolsUtils";
 
 //The node selected with the user mouse down.
 let currentNode: CutNode | AtomNode | null = null;
