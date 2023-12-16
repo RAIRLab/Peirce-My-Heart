@@ -1,43 +1,55 @@
-/**
- * Resize tool to be used during Proof Mode
- * @author Dawn Moore
- */
-
 import {AEGTree} from "../AEG/AEGTree";
-import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
-import {treeContext} from "../treeContext";
-import {offset} from "../SharedToolUtils/DragTool";
-import {drawCut, redrawProof, redrawTree, determineDirection} from "../SharedToolUtils/DrawUtils";
-import {legalColor, illegalColor} from "../Themes";
-import {ProofNode} from "../AEG/ProofNode";
+import {determineDirection, drawCut, redrawProof, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {ellipseLargeEnough, resizeCut} from "../SharedToolUtils/EditModeUtils";
-import {proofCanInsert} from "./ProofToolsUtils";
 import {getCurrentProofTree} from "./ProofToolsUtils";
+import {illegalColor, legalColor} from "../Themes";
+import {offset} from "../SharedToolUtils/DragTool";
+import {Point} from "../AEG/Point";
+import {proofCanInsert} from "./ProofToolsUtils";
+import {ProofNode} from "../AEG/ProofNode";
+import {treeContext} from "../treeContext";
 
-//The initial point the user pressed down.
+/**
+ * Contains Proof Mode CutNode resizing methods.
+ *
+ * When it is said that a node is "removed" in the documentation,
+ * This means that it is removed from the Draw Mode AEGTree but visually is still present.
+ *
+ * When a CutNode's position is described as being valid or not,
+ * This means that we are determining if it can currently be inserted into the AEGTree without intersection.
+ *
+ * @author Dawn Moore
+ */
+
+//First Point the user clicks.
 let startingPoint: Point;
 
-//The node selected with the user mouse down.
+//Node in question.
 let currentNode: CutNode | AtomNode | null = null;
 
-//Whether or not the node is allowed to be moved (not the sheet).
+//True if currentNode is not The Sheet of Assertion (i.e can be resized.)
 let legalNode: boolean;
 
-//The direction the cut will move in. For x 1 means going to the right and -1 means left.
-//For y 1 means going down and -1 means going up.
+//Direction a CutNode will move in.
+//For x, 1 means going right and -1 means left.
+//For y, 1 means going down and -1 means going up.
+//Defaults to going right and down according to the above details.
 let direction: Point = new Point(1, 1);
 
-//The tree of the current proof step
+//AEGTree at the current proof step.
 let currentProofTree: AEGTree;
 
 /**
- * Takes the point the user clicked and stores that for later use. If the lowest node containing
- * that point is not the sheet, then store that as currentNode and find that node's parent.
- * Removes the node from the parent and reinsert its children if it has any. Cannot be an Atom.
- * @param event The mouse down even while using resize tool in proof mode
+ * Sets startingPoint according to the coordinates given by the incoming MouseEvent.
+ * Then sets currentNode to the lowest node containing startingPoint in currentProofTree if currentNode is a CutNode.
+ * Then removes currentNode.
+ * Then inserts currentNode's children.
+ * Then determines direction.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function proofResizeMouseDown(event: MouseEvent) {
     currentProofTree = getCurrentProofTree();
@@ -60,9 +72,11 @@ export function proofResizeMouseDown(event: MouseEvent) {
 }
 
 /**
- * If the node is legal alters the center and both of the radii. Creates a copy of the current cut
- * So that the original is not altered in any way.
- * @param event The mouse move event while the resize tool is being used in proof mode
+ * Resizes currentNode according to the coordinates given by the incoming MouseEvent and direction.
+ * Then redraws the resize as the legal or illegal color depending on its position's validity.
+ * Then changes the cursor style according to the color.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function proofResizeMouseMove(event: MouseEvent) {
     if (legalNode) {
@@ -73,10 +87,9 @@ export function proofResizeMouseMove(event: MouseEvent) {
 
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = resizeCut(currentNode, moveDifference, direction);
-            //This is just to make the lint stop yelling
             if (tempCut.ellipse !== null) {
                 redrawTree(currentProofTree);
-                const color = isLegal(tempCut) ? legalColor() : illegalColor();
+                const color = isValid(tempCut) ? legalColor() : illegalColor();
                 drawCut(tempCut, color);
                 determineAndChangeCursorStyle(color, "cursor: crosshair", "cursor: no-drop");
             }
@@ -85,9 +98,13 @@ export function proofResizeMouseMove(event: MouseEvent) {
 }
 
 /**
- * If the node is legal creates a new temporary cut and alters the ellipse center and radii.
- * If this new cut can be inserted inserts that into the tree, otherwise reinserts the original.
- * @param event The mouse up event while using resize tool in proof mode
+ * Sets cursor style to default.
+ * Then resizes currentNode according to the coordinates given by the incoming MouseEvent and direction.
+ * If this resize's position is valid, then it is inserted and added as a proof step.
+ * Then the proof is redrawn.
+ * Then legality is set to false.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function proofResizeMouseUp(event: MouseEvent) {
     if (legalNode) {
@@ -99,9 +116,8 @@ export function proofResizeMouseUp(event: MouseEvent) {
 
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = resizeCut(currentNode, moveDifference, direction);
-            //This is just to make the lint stop yelling
             if (tempCut.ellipse !== null) {
-                if (isLegal(tempCut)) {
+                if (isValid(tempCut)) {
                     currentProofTree.insert(tempCut);
                     treeContext.pushToProof(new ProofNode(currentProofTree, "Resize"));
                 }
@@ -113,7 +129,10 @@ export function proofResizeMouseUp(event: MouseEvent) {
 }
 
 /**
- * If the mouse leaves the canvas then it is no longer a legal node and reinserts the original.
+ * Sets cursor style to default.
+ * Then inserts currentNode into currentProofTree.
+ * Then sets legality to false.
+ * Then redraws the proof.
  */
 export function proofResizeMouseOut() {
     changeCursorStyle("cursor: default");
@@ -125,12 +144,18 @@ export function proofResizeMouseOut() {
 }
 
 /**
- * Determines if a node in a given position is legal if it can be inserted, is bigger than our
- * minimum ellipse radii size, and can be inserted into the tree without changing the structure.
- * @param currentCut The cut to be checked to see if it is legal
- * @returns Whether or not the cut in this position is legal
+ * Checks and returns if the incoming CutNode is valid.
+ *
+ * A CutNode is valid if it can be inserted into an AEGTree,
+ * And it is greater than the minimum Ellipse sizes,
+ * And it can be inserted into currentProofTree.
+ *
+ * @see ellipseLargeEnough
+ *
+ * @param currentCut Incoming CutNode.
+ * @returns True if, according to the above details, currentCut is legal.
  */
-function isLegal(currentCut: CutNode): boolean {
+function isValid(currentCut: CutNode): boolean {
     return (
         currentProofTree.canInsert(currentCut) &&
         ellipseLargeEnough(currentCut.ellipse!) &&
