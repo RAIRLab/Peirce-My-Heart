@@ -7,28 +7,31 @@ import {redrawProof} from "../SharedToolUtils/DrawUtils";
 import {treeContext} from "../treeContext";
 
 /**
- * File containing insertion node movement event handlers.
+ * Containing methods for pasting AEGs into Proof Mode.
+ *
  * @author Anusha Tiwari
  */
 
-//The initial point the user pressed down.
-// let startingPoint: Point;
+//AEG in question.
+let currentGraph: CutNode;
 
-//The selected subgraph that we will be placing
-let currentGraphs: CutNode;
-
-//The tree that we are trying to insert the graph into
+//AEGTree we want to insert currentGraph into.
 let currentTree: AEGTree;
 
-//Whether or not applying this rule will result in the creation of a new node for our proof
+//True if we are able to paste into Proof Mode.
 let legalNode: boolean;
 
+/**
+ * Sets currentTree to the current proof tree.
+ * Then sets currentGraph to the sheet in treeContext's selectForProof field.
+ * Then sets legality to true and cursor style to copy if currentGraph has children and currentTree is empty.
+ */
 export function pasteInProofMouseDown() {
     currentTree = getCurrentProofTree();
-    currentGraphs = treeContext.selectForProof.sheet;
+    currentGraph = treeContext.selectForProof.sheet;
 
     if (
-        currentGraphs.children.length > 0 &&
+        currentGraph.children.length > 0 &&
         treeContext.proof.length === 1 &&
         currentTree.sheet.isEmptySheet()
     ) {
@@ -37,22 +40,37 @@ export function pasteInProofMouseDown() {
     }
 }
 
+/**
+ * Sets cursor style to default.
+ * Then sets legality to false.
+ * Then redraws the proof.
+ */
 export function pasteInProofMouseMove() {
     changeCursorStyle("cursor: default");
     legalNode = false;
     redrawProof();
 }
 
+/**
+ * Sets the cursor style to default, sets the proof's Sheet of Assertion to currentGraph, and creates an appropriate proof step if legality is true.
+ * Then sets legality to false.
+ * Then redraws the proof.
+ */
 export function pasteInProofMouseUp() {
     if (legalNode) {
         changeCursorStyle("cursor: default");
-        currentTree.sheet = currentGraphs;
+        currentTree.sheet = currentGraph;
         treeContext.pushToProof(new ProofNode(currentTree, "Pasted"));
     }
     legalNode = false;
     redrawProof();
 }
 
+/**
+ * Sets cursor style to default.
+ * Then sets legality to false.
+ * Then redraws the proof.
+ */
 export function pasteInProofMouseOut() {
     changeCursorStyle("cursor: default");
     legalNode = false;
