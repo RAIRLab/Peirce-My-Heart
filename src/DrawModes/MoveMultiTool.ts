@@ -5,6 +5,7 @@
 
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
@@ -30,6 +31,7 @@ export function moveMultiMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = treeContext.tree.getLowestNode(startingPoint);
     if (currentNode !== treeContext.tree.sheet && currentNode !== null) {
+        changeCursorStyle("cursor: grabbing");
         const currentParent = treeContext.tree.getLowestParent(startingPoint);
         if (currentParent !== null) {
             currentParent.remove(startingPoint);
@@ -67,10 +69,12 @@ export function moveMultiMouseMove(event: MouseEvent) {
                 ? legalColor()
                 : illegalColor();
             EditModeUtils.drawAltered(currentNode, color, moveDifference);
+            determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = EditModeUtils.alterAtom(currentNode, moveDifference);
             const color = treeContext.tree.canInsert(tempAtom) ? legalColor() : illegalColor();
             drawAtom(tempAtom, color, true);
+            determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
         }
     }
 }
@@ -83,6 +87,7 @@ export function moveMultiMouseMove(event: MouseEvent) {
  * @param event the mouse up event while in moveMulti mode
  */
 export function moveMultiMouseUp(event: MouseEvent) {
+    changeCursorStyle("cursor: default");
     if (legalNode) {
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
@@ -114,6 +119,7 @@ export function moveMultiMouseUp(event: MouseEvent) {
  * Redraws the canvas to clear any drawings not part of the tree.
  */
 export function moveMultiMouseOut() {
+    changeCursorStyle("cursor: default");
     if (legalNode && currentNode !== null) {
         treeContext.tree.insert(currentNode);
     }

@@ -5,6 +5,7 @@
 
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
+import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
@@ -62,6 +63,7 @@ export function copyFromDrawMouseMove(event: MouseEvent) {
  * MouseUp displays an alert stating that a legal node has been selected
  */
 export function copyFromDrawMouseUp() {
+    changeCursorStyle("cursor: default");
     if (legalNode && selectedNode !== null) {
         //If the selected node is the tree, insert its children only
         if (selectedNode instanceof CutNode && selectedNode.ellipse === null) {
@@ -84,6 +86,7 @@ export function copyFromDrawMouseUp() {
  * On MouseOut, the selection is cancelled.
  */
 export function copyFromDrawMouseOut() {
+    changeCursorStyle("cursor: default");
     selectedNode = null;
     legalNode = false;
     redrawTree(treeContext.tree);
@@ -119,6 +122,8 @@ function isLegal() {
 
         //Highlight the selected part by redrawing in legalColor
         highlightNode(selectedNode, legalColor());
+
+        changeCursorStyle("cursor: copy");
 
         //If something was removed, add it back kin
         if (removed) {

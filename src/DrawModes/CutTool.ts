@@ -5,6 +5,7 @@
  */
 
 import {Point} from "../AEG/Point";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {Ellipse} from "../AEG/Ellipse";
 import {treeContext} from "../treeContext";
@@ -20,6 +21,13 @@ let startingPoint: Point;
 
 //Tracks if the mouse has ever left canvas disallowing future movements.
 let wasOut: boolean;
+
+/**
+ * Sets the canvas' style attribute to crosshair.
+ */
+export function cutMouseEnter() {
+    changeCursorStyle("cursor: crosshair");
+}
 
 /**
  * Sets the starting point for the ellipse to where the user clicks.
@@ -45,6 +53,8 @@ export function cutMouseMove(event: MouseEvent) {
     if (!wasOut) {
         const legal = treeContext.tree.canInsert(newCut) && ellipseLargeEnough(newCut.ellipse);
         const color = legal ? legalColor() : illegalColor();
+
+        determineAndChangeCursorStyle(color, "cursor: crosshair", "cursor: no-drop");
         drawCut(newCut, color);
 
         if (showRectElm.checked) {
@@ -59,6 +69,7 @@ export function cutMouseMove(event: MouseEvent) {
  * @param event The mouse up event
  */
 export function cutMouseUp(event: MouseEvent) {
+    changeCursorStyle("cursor: default");
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
     const newCut: CutNode = new CutNode(createEllipse(startingPoint, currentPoint));
     if (
@@ -75,6 +86,7 @@ export function cutMouseUp(event: MouseEvent) {
  * Resets the canvas if the mouse ends up out of the canvas.
  */
 export function cutMouseOut() {
+    changeCursorStyle("cursor: default");
     wasOut = true;
     redrawTree(treeContext.tree);
 }

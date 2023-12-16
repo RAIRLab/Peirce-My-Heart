@@ -5,6 +5,7 @@
 import {Point} from "../AEG/Point";
 import {ellipseLargeEnough, resizeCut} from "../SharedToolUtils/EditModeUtils";
 import {AtomNode} from "../AEG/AtomNode";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
@@ -68,6 +69,9 @@ export function resizeMouseMove(event: MouseEvent) {
                 const legal =
                     treeContext.tree.canInsert(tempCut) && ellipseLargeEnough(tempCut.ellipse);
                 const color = legal ? legalColor() : illegalColor();
+
+                determineAndChangeCursorStyle(color, "cursor: crosshair", "cursor: no-drop");
+
                 drawCut(tempCut, color);
             }
         }
@@ -80,6 +84,7 @@ export function resizeMouseMove(event: MouseEvent) {
  * @param event The event of a mouse up while using the resize tool
  */
 export function resizeMouseUp(event: MouseEvent) {
+    changeCursorStyle("cursor: default");
     if (legalNode) {
         const moveDifference: Point = new Point(
             (event.x - offset.x - startingPoint.x) / 2,
@@ -106,6 +111,7 @@ export function resizeMouseUp(event: MouseEvent) {
  * If the mouse leaves the canvas then it is no longer a legal node and reinserts the original.
  */
 export function resizeMouseOut() {
+    changeCursorStyle("cursor: default");
     if (legalNode && currentNode !== null) {
         treeContext.tree.insert(currentNode);
     }

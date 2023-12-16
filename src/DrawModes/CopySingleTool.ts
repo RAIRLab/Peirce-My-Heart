@@ -6,6 +6,7 @@
 
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
@@ -32,6 +33,7 @@ export function copySingleMouseDown(event: MouseEvent) {
     const realNode: CutNode | AtomNode | null = treeContext.tree.getLowestNode(startingPoint);
     const moveDifference: Point = new Point(event.x - startingPoint.x, event.y - startingPoint.y);
     if (realNode !== treeContext.tree.sheet && realNode !== null) {
+        changeCursorStyle("cursor: copy");
         if (realNode instanceof CutNode) {
             //The cut node loses custody of its children because those do not copy over during
             //copy single mode
@@ -66,6 +68,7 @@ export function copySingleMouseMove(event: MouseEvent) {
             redrawTree(treeContext.tree);
             const color = treeContext.tree.canInsert(tempCut) ? legalColor() : illegalColor();
             drawCut(tempCut, color);
+            determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
         } //If the node is an atom, make a temporary atom and check legality, drawing that.
         else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
@@ -73,6 +76,7 @@ export function copySingleMouseMove(event: MouseEvent) {
             redrawTree(treeContext.tree);
             const color = treeContext.tree.canInsert(tempAtom) ? legalColor() : illegalColor();
             drawAtom(tempAtom, color, true);
+            determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
         }
     }
 }
@@ -84,6 +88,7 @@ export function copySingleMouseMove(event: MouseEvent) {
  * @param event The mouse up event while in copySingle mode
  */
 export function copySingleMouseUp(event: MouseEvent) {
+    changeCursorStyle("cursor: default");
     if (legalNode) {
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
@@ -114,6 +119,7 @@ export function copySingleMouseUp(event: MouseEvent) {
  * Redraws the canvas.
  */
 export function copySingleMouseOut() {
+    changeCursorStyle("cursor: default");
     legalNode = false;
     redrawTree(treeContext.tree);
 }

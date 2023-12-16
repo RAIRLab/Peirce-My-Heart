@@ -4,7 +4,7 @@ import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {Ellipse} from "../AEG/Ellipse";
 import {offset} from "./DragTool";
-import {placedColor} from "../Themes";
+import {legalColor, placedColor} from "../Themes";
 import {Point} from "../AEG/Point";
 import {treeContext} from "../treeContext";
 
@@ -102,6 +102,51 @@ export function drawGuidelines(original: Point, current: Point, color: string) {
     const dy: number = original.y - current.y + offset.y;
     ctx.rect(original.x, original.y, -dx, -dy);
     ctx.stroke();
+}
+
+/**
+ * Sets canvas' HTML style tag to the incoming string.
+ *
+ * @param newMouseStyle Incoming string.
+ */
+export function changeCursorStyle(newMouseStyle: string) {
+    canvas.style.cssText = newMouseStyle;
+}
+
+/**
+ * Determines and returns the appropriate cursor style from two incoming cursor style strings based on the incoming color string.
+ * The first incoming cursor style string is the legal cursor string.
+ * The second incoming cursor style string is the illegal cursor string.
+ *
+ * @param color Incoming color string.
+ * @param legalCursorStyle First incoming cursor style string.
+ * @param illegalCursorStyle Second incoming cursor style string.
+ * @returns Appropriate cursor style string from legalCursorStyle and illegalCursorStyle determined from color.
+ */
+function determineCursorStyle(
+    color: string,
+    legalCursorStyle: string,
+    illegalCursorStyle: string
+): string {
+    return color === legalColor() ? legalCursorStyle : illegalCursorStyle;
+}
+
+/**
+ * Determines and returns the appropriate cursor style from two incoming cursor style strings based on the incoming color string.
+ * The first incoming cursor style string is the legal cursor string.
+ * The second incoming cursor style string is the illegal cursor string.
+ * Then sets canvas' HTML style tag to the incoming string.
+ *
+ * @param color Incoming color string.
+ * @param legalCursorStyle First incoming cursor style string.
+ * @param illegalCursorStyle Second incoming cursor style string.
+ */
+export function determineAndChangeCursorStyle(
+    color: string,
+    legalCursorStyle: string,
+    illegalCursorStyle: string
+) {
+    changeCursorStyle(determineCursorStyle(color, legalCursorStyle, illegalCursorStyle));
 }
 
 /**
