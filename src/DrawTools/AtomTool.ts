@@ -1,58 +1,65 @@
-/**
- * File containing atom based event functions.
- * @author Dawn Moore
- */
-
-import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
 import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
-import {treeContext} from "../treeContext";
-import {redrawTree} from "../SharedToolUtils/DrawUtils";
-import {offset} from "../SharedToolUtils/DragTool";
-import {legalColor, illegalColor} from "../Themes";
 import {drawAtom} from "../SharedToolUtils/DrawUtils";
+import {illegalColor, legalColor} from "../Themes";
+import {offset} from "../SharedToolUtils/DragTool";
+import {Point} from "../AEG/Point";
+import {redrawTree} from "../SharedToolUtils/DrawUtils";
+import {treeContext} from "../treeContext";
 
-//Setting Up Canvas
+/**
+ * Contains methods for manipulating AtomNodes on the HTML canvas.
+ *
+ * When an AtomNode's position is described as being valid or not,
+ * This means that we are determining if it can currently be inserted into the AEGTree without intersection.
+ *
+ * @author Dawn Moore
+ * @author Anusha Tiwari
+ */
+
+//Setting Up Canvas...
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
 const res: CanvasRenderingContext2D | null = canvas.getContext("2d");
 if (res === null) {
-    throw Error("2d rendering context not supported");
+    throw Error("2d rendering context not supported.");
 }
 const ctx: CanvasRenderingContext2D = res;
 
-//HTML letter display
+//Letter display next to "Current Atom:" in Draw Mode's Atom Tool toolbar.
 const atomDisplay = <HTMLParagraphElement>document.getElementById("atomDisplay");
 
-//Tracks if the mouse has ever left canvas disallowing future movements.
+//True if the mouse has left canvas.
 let wasOut: boolean;
 
-//Tracks whether the mouse button is currently down.
+//True if the mouse button is currently down.
 let hasMouseDown: boolean;
 
-//The current atom we are creating
+//AtomNode we are creating. Defaults to A at position (0, 0) on canvas.
 let currentAtom: AtomNode = createAtom("A", new Point(0, 0));
 
 /**
- * Checks to see if the pressed key is a valid letter, if yes sets it to the atom node.
- * @param event The keypress event
+ * Checks to see if the key from the incoming KeyboardEvent is in the Latin alphabet.
+ * Then sets currentAtom's identifier to that key if true.
+ *
+ * @param event Incoming KeyboardEvent.
  */
 export function atomKeyPress(event: KeyboardEvent) {
     const regex = new RegExp(/^[A-Za-z]$/);
     if (regex.test(event.key)) {
         currentAtom = createAtom(event.key, new Point(currentAtom.origin.x, currentAtom.origin.y));
 
-        //If the currentAtom is not the default then see if it can be drawn there and draw it.
+        //If currentAtom is not the default then call determineDrawColor().
         if (currentAtom.origin.x !== 0 && currentAtom.origin.y !== 0 && hasMouseDown) {
-            drawLegal();
+            determineDrawColor();
         }
     }
 }
 
 /**
- * If a legal letter has been chosen places it on the canvas.
- * Color is based on whether the atom is in a valid place, determines the atom bounding box.
- * @param event The mouse down event
- * @returns Whether or not the mouse event took place
+ * Draws currentAtom on canvas at the coordinates given by the incoming MouseEvent.
+ * Then highlights currentAtom according to its position's validity.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function atomMouseDown(event: MouseEvent) {
     wasOut = false;
@@ -61,24 +68,28 @@ export function atomMouseDown(event: MouseEvent) {
         currentAtom.identifier,
         new Point(event.clientX - offset.x, event.clientY - offset.y)
     );
-    drawLegal();
+    determineDrawColor();
 }
 
 /**
- * Moves the current atom to the current mouse position, redraws the canvas and redraws the atom.
- * @param event The mouse move event
+ * Updates currentAtom's coordinates to the coordinates given by the incoming MouseEvent.
+ * Then updates highlight colors according to its new position's validity.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function atomMouseMove(event: MouseEvent) {
     currentAtom = createAtom(
         currentAtom.identifier,
         new Point(event.clientX - offset.x, event.clientY - offset.y)
     );
-    drawLegal();
+    determineDrawColor();
 }
 
 /**
- * If the atom is in a valid place, adds it to the tree. Redraws the canvas and resets currentAtom.
- * @param event The mouse up event
+ * Inserts currentAtom at the coordinates given by the incoming MouseEvent if valid.
+ * Then redraws the Draw Mode AEGTree regardless.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function atomMouseUp(event: MouseEvent) {
     changeCursorStyle("cursor: default");
@@ -94,7 +105,8 @@ export function atomMouseUp(event: MouseEvent) {
 }
 
 /**
- * If the mouse leaves the canvas resets the current atom.
+ * Sets wasOut to true.
+ * Then redraws the Draw Mode AEGtree.
  */
 export function atomMouseOut() {
     changeCursorStyle("cursor: default");
@@ -103,10 +115,12 @@ export function atomMouseOut() {
 }
 
 /**
- * Helper function to construct a new atom node with a created width and height based on the font.
- * @param identifier The letter representation of the atom
- * @param origin The original place for the atom to be drawn and the bounding box
- * @returns The newly made atom
+ * Constructs a new AtomNode at the incoming Point.
+ * This AtomNode is created with the incoming string as an identifier and a width and height retrieved from the font's text metrics.
+ *
+ * @param identifier Incoming string.
+ * @param origin Incoming Point.
+ * @returns AtomNode at origin with identifier as its letter and appropriate width and height depending on font.
  */
 function createAtom(identifier: string, origin: Point): AtomNode {
     atomDisplay.innerHTML = identifier;
@@ -120,9 +134,11 @@ function createAtom(identifier: string, origin: Point): AtomNode {
 }
 
 /**
- * Draws the global currentAtom based on if it can be inserted drawing it either legal or illegal.
+ * Draws currentAtom as legalColor or illegalColor.
+ * legalColor is chosen if currentAtom's position is valid.
+ * IllegalColor is chose if currentAtom's position is not valid.
  */
-function drawLegal() {
+function determineDrawColor() {
     redrawTree(treeContext.tree);
     if (!wasOut) {
         if (treeContext.tree.canInsert(currentAtom)) {

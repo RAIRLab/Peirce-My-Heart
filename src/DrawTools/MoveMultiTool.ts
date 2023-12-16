@@ -1,31 +1,41 @@
-/**
- * File containing multi node movement event handlers.
- * @author Dawn Moore
- */
-
-import {Point} from "../AEG/Point";
+import * as EditModeUtils from "../SharedToolUtils/EditModeUtils";
 import {AtomNode} from "../AEG/AtomNode";
 import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
-import {treeContext} from "../treeContext";
-import {offset} from "../SharedToolUtils/DragTool";
 import {drawAtom, highlightNode, redrawTree} from "../SharedToolUtils/DrawUtils";
-import {legalColor, illegalColor} from "../Themes";
-import * as EditModeUtils from "../SharedToolUtils/EditModeUtils";
+import {illegalColor, legalColor} from "../Themes";
+import {offset} from "../SharedToolUtils/DragTool";
+import {Point} from "../AEG/Point";
+import {treeContext} from "../treeContext";
 
-//The initial point the user pressed down.
+/**
+ * Contains methods for moving one or more nodes at a time.
+ *
+ * When a node's position is described as being valid or not,
+ * This means that we are determining if it can currently be inserted into the AEGTree without intersection.
+ *
+ * @author Dawn Moore
+ * @author Anusha Tiwari
+ */
+
+//First Point the user clicks.
 let startingPoint: Point;
 
-//The current node and its children we will be moving.
+//Node in question.
 let currentNode: CutNode | AtomNode | null = null;
 
-//Whether or not the node is allowed to be moved (not the sheet).
+//True if currentNode is not The Sheet of Assertion or null (i.e can be moved.)
 let legalNode: boolean;
 
 /**
- * Takes the starting point and sets the lowest node containing that point that is not the sheet to
- * the current node. Removes that node from its parent.
- * @param event The mouse down event while in moveMulti mode.
+ * Sets startingPoint according to the coordinates given by the incoming MouseEvent.
+ * Then sets currentNode to the lowest node containing startingPoint.
+ * Then removes currentNode.
+ * Then sets legality to true.
+ * Then redraws the Draw Mode AEGTree.
+ * Then highlights currentNode the legal color.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function moveMultiMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
@@ -37,8 +47,6 @@ export function moveMultiMouseDown(event: MouseEvent) {
             currentParent.remove(startingPoint);
         }
         legalNode = true;
-
-        // highlight the chosen node and its children in legal color to show what will be moved
         redrawTree(treeContext.tree);
         highlightNode(currentNode, legalColor());
     } else {
@@ -47,10 +55,10 @@ export function moveMultiMouseDown(event: MouseEvent) {
 }
 
 /**
- * If the node selected was legal, draws the node with the difference between the starting position
- * and the current position by altering the point of origin. If the node was a cut node also draws
- * all of the children with the same change in location.
- * @param event The mouse move event while in moveMulti mode
+ * Draws an altered currentNode according to the coordinates given by the incoming MouseEvent.
+ * Then highlights currentNode according to the legality of it and its children's positions' validity.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function moveMultiMouseMove(event: MouseEvent) {
     if (legalNode) {
@@ -80,11 +88,13 @@ export function moveMultiMouseMove(event: MouseEvent) {
 }
 
 /**
- * If the current node is a cut node, and all of its children are in a legal position places it
- * in the current position. If it is not in a legal position returns the original node to the tree.
- * If the current node is an atom node and is in a legal position adds it to the tree, otherwise
- * readds the original node in the original place.
- * @param event the mouse up event while in moveMulti mode
+ * Sets currentNode according to the coordinates given by the incoming MouseEvent.
+ * Then inserts currentNode into the Draw Mode AEGTree if the positions of it and all its children are legal.
+ * Otherwise inserts the original currentNode.
+ * Then sets legality to false.
+ * Then redraws the Draw Mode AEGTree.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function moveMultiMouseUp(event: MouseEvent) {
     changeCursorStyle("cursor: default");
@@ -93,7 +103,6 @@ export function moveMultiMouseUp(event: MouseEvent) {
             event.x - startingPoint.x,
             event.y - startingPoint.y
         );
-
         if (currentNode instanceof CutNode) {
             if (EditModeUtils.validateChildren(treeContext.tree, currentNode, moveDifference)) {
                 EditModeUtils.insertChildren(currentNode, moveDifference);
@@ -102,7 +111,6 @@ export function moveMultiMouseUp(event: MouseEvent) {
             }
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = EditModeUtils.alterAtom(currentNode, moveDifference);
-
             if (treeContext.tree.canInsert(tempAtom)) {
                 treeContext.tree.insert(tempAtom);
             } else {
@@ -115,8 +123,9 @@ export function moveMultiMouseUp(event: MouseEvent) {
 }
 
 /**
- * If the current node is a legal node returns it to the original position.
- * Redraws the canvas to clear any drawings not part of the tree.
+ * Reinserts the original currentNode and all its children.
+ * Then sets legality to false.
+ * Then redraws the canvas.
  */
 export function moveMultiMouseOut() {
     changeCursorStyle("cursor: default");

@@ -1,32 +1,39 @@
-/**
- * File containing single node movement event handlers.
- * @author Dawn Moore
- */
-
-import {Point} from "../AEG/Point";
+import {alterAtom, alterCut} from "../SharedToolUtils/EditModeUtils";
 import {AtomNode} from "../AEG/AtomNode";
 import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
-import {treeContext} from "../treeContext";
+import {drawAtom, drawCut, redrawTree} from "../SharedToolUtils/DrawUtils";
+import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
-import {drawCut, drawAtom, redrawTree} from "../SharedToolUtils/DrawUtils";
-import {legalColor, illegalColor} from "../Themes";
-import {alterAtom, alterCut} from "../SharedToolUtils/EditModeUtils";
+import {Point} from "../AEG/Point";
+import {treeContext} from "../treeContext";
 
-//The initial point the user pressed down.
+/**
+ * Contains methods for moving one node at a time.
+ *
+ * When a node's position is described as being valid or not,
+ * This means that we are determining if it can currently be inserted into the AEGTree without intersection.
+ *
+ * @author Dawn Moore
+ * @author Anusha Tiwari
+ */
+
+//First Point the user clicks.
 let startingPoint: Point;
 
-//The node selected with the user mouse down.
+//Node in question.
 let currentNode: CutNode | AtomNode | null = null;
 
-//Whether or not the node is allowed to be moved (not the sheet).
+//True if currentNode is not The Sheet of Assertion or null (i.e can be moved.)
 let legalNode: boolean;
 
 /**
- * Takes the point the user clicked and stores that for later use. If the lowest node containing
- * that point is not the sheet, then store that as currentNode and find that node's parent.
- * Removes the node from the parent and reinsert its children if it has any.
- * @param event The mouse down event while in moveSingle mode
+ * Sets startingPoint according to the coordinates given by the incoming MouseEvent.
+ * Then removes the lowest node containing startingPoint.
+ * Then reinserts its children.
+ * Then highlights currentNode the legal color.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function moveSingleMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
@@ -39,7 +46,6 @@ export function moveSingleMouseDown(event: MouseEvent) {
         }
 
         if (currentNode instanceof CutNode && currentNode.children.length !== 0) {
-            //The cut node loses custody of its children so that those can still be redrawn.
             for (let i = 0; i < currentNode.children.length; i++) {
                 treeContext.tree.insert(currentNode.children[i]);
             }
@@ -47,7 +53,6 @@ export function moveSingleMouseDown(event: MouseEvent) {
         }
         legalNode = true;
 
-        // highlight the chosen node in legal color to show what will be moved
         redrawTree(treeContext.tree);
         if (currentNode instanceof AtomNode) {
             drawAtom(currentNode, legalColor(), true);
@@ -60,11 +65,11 @@ export function moveSingleMouseDown(event: MouseEvent) {
 }
 
 /**
- * If the node is legal, and it wasn't out compare the difference between the start and the current.
- * If the node is a cut, creates a new cut with the altered center and checks to see if it can be
- * entered into the current location. If yes draws the cut green otherwise red.
- * For atoms instead of altering the center it alters the origin position and does the same check.
- * @param event The mouse move event while in moveSingle mode
+ * Alters currentNode's position according to the coordinates given by the incoming MouseEvent.
+ * Then redraws the Draw Mode AEGTree.
+ * Then highlights currentNode according to the legality of its position.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function moveSingleMouseMove(event: MouseEvent) {
     if (legalNode) {
@@ -72,10 +77,8 @@ export function moveSingleMouseMove(event: MouseEvent) {
             event.x - startingPoint.x,
             event.y - startingPoint.y
         );
-        //If the node is a cut, and it has an ellipse, make a temporary cut and draw that.
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = alterCut(currentNode, moveDifference);
-
             redrawTree(treeContext.tree);
             const color = treeContext.tree.canInsert(tempCut) ? legalColor() : illegalColor();
             drawCut(tempCut, color);
@@ -92,10 +95,11 @@ export function moveSingleMouseMove(event: MouseEvent) {
 }
 
 /**
- * If the node is legal, and the mouse has not been out compares the start and the current.
- * If the new temporary node is in a legal position inserts the temporary cut as the replacement.
- * Otherwise enters the renters currentNode into the tree at the original point.
- * @param event The mouse up event while in moveSingle mode
+ * Alters currentNode's position according to the coordinates given by the incoming MouseEvent.
+ * Then inserts currentNode if its altered position is valid.
+ * Otherwise reinserts the unaltered currentNode.
+ *
+ * @param event Incoming MouseEvent.
  */
 export function moveSingleMouseUp(event: MouseEvent) {
     changeCursorStyle("cursor: default");
@@ -106,8 +110,6 @@ export function moveSingleMouseUp(event: MouseEvent) {
         );
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = alterCut(currentNode, moveDifference);
-
-            //If the new location is legal, insert the cut otherwise reinsert the cut we removed.
             if (treeContext.tree.canInsert(tempCut)) {
                 treeContext.tree.insert(tempCut);
             } else {
@@ -115,8 +117,6 @@ export function moveSingleMouseUp(event: MouseEvent) {
             }
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
-
-            //If the new location is legal, insert the atom, if not reinsert the atom we removed.
             if (treeContext.tree.canInsert(tempAtom)) {
                 treeContext.tree.insert(tempAtom);
             } else {
@@ -129,8 +129,9 @@ export function moveSingleMouseUp(event: MouseEvent) {
 }
 
 /**
- * If the mouse is moved outside of the canvas, sets wasOut to true and reinserts the node.
- * Redraws the canvas.
+ * Reinserts the original currentNode if legal.
+ * Then sets legality to false.
+ * Then redraws the canvas.
  */
 export function moveSingleMouseOut() {
     changeCursorStyle("cursor: default");
