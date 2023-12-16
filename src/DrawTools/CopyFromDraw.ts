@@ -1,5 +1,6 @@
 import {AEGTree} from "../AEG/AEGTree";
 import {AtomNode} from "../AEG/AtomNode";
+import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {cleanCanvas, highlightNode, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {legalColor} from "../Themes";
@@ -72,6 +73,7 @@ export function copyFromDrawMouseMove(event: MouseEvent) {
  * Then sets legality to false.
  */
 export function copyFromDrawMouseUp() {
+    changeCursorStyle("cursor: default");
     if (legalNode && selectedNode !== null) {
         //If the selected node is the tree, insert its children only
         if (selectedNode instanceof CutNode && selectedNode.ellipse === null) {
@@ -95,6 +97,7 @@ export function copyFromDrawMouseUp() {
  * Then redraws the Draw Mode AEGTree.
  */
 export function copyFromDrawMouseOut() {
+    changeCursorStyle("cursor: default");
     selectedNode = null;
     legalNode = false;
     redrawTree(treeContext.tree);
@@ -132,7 +135,7 @@ function highlightSelection() {
         }
 
         highlightNode(selectedNode, legalColor());
-
+        changeCursorStyle("cursor: copy");
         //If something was removed, add it back in.
         if (removed) {
             tempTree.insert(selectedNode);

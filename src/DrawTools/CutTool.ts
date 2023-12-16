@@ -1,3 +1,4 @@
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {createEllipse, ellipseLargeEnough} from "../SharedToolUtils/EditModeUtils";
 import {CutNode} from "../AEG/CutNode";
 import {drawCut, drawGuidelines, redrawTree} from "../SharedToolUtils/DrawUtils";
@@ -28,6 +29,13 @@ let startingPoint: Point;
 let wasOut: boolean;
 
 /**
+ * Sets the canvas' style attribute to crosshair.
+ */
+export function cutMouseEnter() {
+    changeCursorStyle("cursor: crosshair");
+}
+
+/**
  * Sets startingPoint according to the coordinates given by the incoming MouseEvent.
  *
  * @param event Incoming MouseEvent.
@@ -55,6 +63,8 @@ export function cutMouseMove(event: MouseEvent) {
     if (!wasOut) {
         const legal = treeContext.tree.canInsert(newCut) && ellipseLargeEnough(newCut.ellipse);
         const color = legal ? legalColor() : illegalColor();
+
+        determineAndChangeCursorStyle(color, "cursor: crosshair", "cursor: no-drop");
         drawCut(newCut, color);
 
         if (showRectElm.checked) {
@@ -71,6 +81,7 @@ export function cutMouseMove(event: MouseEvent) {
  * @param event Incoming MouseEvent.
  */
 export function cutMouseUp(event: MouseEvent) {
+    changeCursorStyle("cursor: default");
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
     const newCut: CutNode = new CutNode(createEllipse(startingPoint, currentPoint));
     if (
@@ -88,6 +99,7 @@ export function cutMouseUp(event: MouseEvent) {
  * Then redraws the Draw Mode AEGTree.
  */
 export function cutMouseOut() {
+    changeCursorStyle("cursor: default");
     wasOut = true;
     redrawTree(treeContext.tree);
 }

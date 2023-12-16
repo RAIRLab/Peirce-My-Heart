@@ -490,6 +490,9 @@ function mouseUpHandler(event: MouseEvent) {
         case Tool.atomTool:
             AtomTool.atomMouseUp(event);
             break;
+        case Tool.dragTool:
+            DragTool.dragMouseUp();
+            break;
         case Tool.moveSingleTool:
             MoveSingleTool.moveSingleMouseUp(event);
             break;
@@ -632,6 +635,19 @@ function mouseOutHandler() {
 }
 
 function mouseEnterHandler() {
+    switch (treeContext.toolState) {
+        case Tool.cutTool:
+            CutTool.cutMouseEnter();
+            break;
+        case Tool.dragTool:
+            DragTool.dragMouseEnter();
+            break;
+        case Tool.doubleCutInsertionTool:
+            DoubleCutInsertionTool.doubleCutInsertionMouseEnter();
+            break;
+        default:
+            break;
+    }
     hasMouseIn = true;
 }
 

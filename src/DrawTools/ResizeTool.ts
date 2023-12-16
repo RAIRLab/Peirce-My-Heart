@@ -1,4 +1,5 @@
 import {AtomNode} from "../AEG/AtomNode";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {determineDirection, drawCut, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {ellipseLargeEnough, resizeCut} from "../SharedToolUtils/EditModeUtils";
@@ -83,6 +84,9 @@ export function resizeMouseMove(event: MouseEvent) {
                 const legal =
                     treeContext.tree.canInsert(tempCut) && ellipseLargeEnough(tempCut.ellipse);
                 const color = legal ? legalColor() : illegalColor();
+
+                determineAndChangeCursorStyle(color, "cursor: crosshair", "cursor: no-drop");
+
                 drawCut(tempCut, color);
             }
         }
@@ -100,6 +104,7 @@ export function resizeMouseMove(event: MouseEvent) {
  * @param event Incoming MouseEvent.
  */
 export function resizeMouseUp(event: MouseEvent) {
+    changeCursorStyle("cursor: default");
     if (legalNode) {
         const moveDifference: Point = new Point(
             (event.x - offset.x - startingPoint.x) / 2,
@@ -126,6 +131,7 @@ export function resizeMouseUp(event: MouseEvent) {
  * Then redraws the Draw Mode AEGTree.
  */
 export function resizeMouseOut() {
+    changeCursorStyle("cursor: default");
     if (legalNode && currentNode !== null) {
         treeContext.tree.insert(currentNode);
     }

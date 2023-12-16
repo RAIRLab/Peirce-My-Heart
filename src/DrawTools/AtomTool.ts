@@ -1,4 +1,5 @@
 import {AtomNode} from "../AEG/AtomNode";
+import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {drawAtom} from "../SharedToolUtils/DrawUtils";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
@@ -91,6 +92,7 @@ export function atomMouseMove(event: MouseEvent) {
  * @param event Incoming MouseEvent.
  */
 export function atomMouseUp(event: MouseEvent) {
+    changeCursorStyle("cursor: default");
     currentAtom = createAtom(
         currentAtom.identifier,
         new Point(event.clientX - offset.x, event.clientY - offset.y)
@@ -107,6 +109,7 @@ export function atomMouseUp(event: MouseEvent) {
  * Then redraws the Draw Mode AEGtree.
  */
 export function atomMouseOut() {
+    changeCursorStyle("cursor: default");
     wasOut = true;
     redrawTree(treeContext.tree);
 }
@@ -139,8 +142,10 @@ function determineDrawColor() {
     redrawTree(treeContext.tree);
     if (!wasOut) {
         if (treeContext.tree.canInsert(currentAtom)) {
+            changeCursorStyle("cursor: default");
             drawAtom(currentAtom, legalColor(), true);
         } else {
+            changeCursorStyle("cursor: no-drop");
             drawAtom(currentAtom, illegalColor(), true);
         }
     }

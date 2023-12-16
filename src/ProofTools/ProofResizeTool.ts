@@ -6,6 +6,7 @@
 import {AEGTree} from "../AEG/AEGTree";
 import {Point} from "../AEG/Point";
 import {AtomNode} from "../AEG/AtomNode";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
@@ -77,6 +78,7 @@ export function proofResizeMouseMove(event: MouseEvent) {
                 redrawTree(currentProofTree);
                 const color = isLegal(tempCut) ? legalColor() : illegalColor();
                 drawCut(tempCut, color);
+                determineAndChangeCursorStyle(color, "cursor: crosshair", "cursor: no-drop");
             }
         }
     }
@@ -113,6 +115,7 @@ export function proofResizeMouseUp(event: MouseEvent) {
  * If the mouse leaves the canvas then it is no longer a legal node and reinserts the original.
  */
 export function proofResizeMouseOut() {
+    changeCursorStyle("cursor: default");
     if (legalNode && currentNode !== null) {
         currentProofTree.insert(currentNode);
     }

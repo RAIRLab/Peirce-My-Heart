@@ -1,5 +1,6 @@
 import * as EditModeUtils from "../SharedToolUtils/EditModeUtils";
 import {AtomNode} from "../AEG/AtomNode";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {drawAtom, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {illegalColor, legalColor} from "../Themes";
@@ -36,6 +37,7 @@ export function copyMultiMouseDown(event: MouseEvent) {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = treeContext.tree.getLowestNode(startingPoint);
     if (currentNode !== treeContext.tree.sheet && currentNode !== null) {
+        changeCursorStyle("cursor: copy");
         legalNode = true;
     } else {
         legalNode = false;
@@ -54,7 +56,6 @@ export function copyMultiMouseMove(event: MouseEvent) {
             event.x - startingPoint.x,
             event.y - startingPoint.y
         );
-
         redrawTree(treeContext.tree);
         if (currentNode instanceof CutNode) {
             const color = EditModeUtils.validateChildren(
@@ -65,10 +66,12 @@ export function copyMultiMouseMove(event: MouseEvent) {
                 ? legalColor()
                 : illegalColor();
             EditModeUtils.drawAltered(currentNode, color, moveDifference);
+            determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = EditModeUtils.alterAtom(currentNode, moveDifference);
             const color = treeContext.tree.canInsert(tempAtom) ? legalColor() : illegalColor();
             drawAtom(tempAtom, color, true);
+            determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
         }
     }
 }
@@ -82,6 +85,7 @@ export function copyMultiMouseMove(event: MouseEvent) {
  * @param event Incoming MouseEvent.
  */
 export function copyMultiMouseUp(event: MouseEvent) {
+    changeCursorStyle("cursor: default");
     if (legalNode) {
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
@@ -107,6 +111,7 @@ export function copyMultiMouseUp(event: MouseEvent) {
  * Then redraws the Draw Mode AEGTree.
  */
 export function copyMultiMouseOut() {
+    changeCursorStyle("cursor: default");
     legalNode = false;
     redrawTree(treeContext.tree);
 }

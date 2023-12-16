@@ -7,6 +7,7 @@ import {Point} from "../AEG/Point";
 import {Ellipse} from "../AEG/Ellipse";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {treeContext} from "../treeContext";
 import {offset} from "../SharedToolUtils/DragTool";
 import {drawAtom, redrawProof} from "../SharedToolUtils/DrawUtils";
@@ -47,6 +48,10 @@ export function iterationMouseDown(event: MouseEvent) {
 
     //So long as we have obtained a node that isn't the sheet we are allowed to select this.
     legalNode = currentNode !== currentProofTree.sheet && currentNode !== null;
+
+    if (legalNode) {
+        changeCursorStyle("cursor: copy");
+    }
 }
 
 /**
@@ -71,6 +76,7 @@ export function iterationMouseMove(event: MouseEvent) {
             const tempAtom: AtomNode = EditModeUtils.alterAtom(currentNode, moveDifference);
             drawAtom(tempAtom, color, true);
         }
+        determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
     }
 }
 
@@ -81,6 +87,7 @@ export function iterationMouseMove(event: MouseEvent) {
  */
 export function iterationMouseUp(event: MouseEvent) {
     if (legalNode) {
+        changeCursorStyle("cursor: default");
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
             event.y - startingPoint.y
@@ -105,6 +112,7 @@ export function iterationMouseUp(event: MouseEvent) {
  * If the mouse has left the canvas then assume it is now illegal and reset the tree.
  */
 export function iterationMouseOut() {
+    changeCursorStyle("cursor: default");
     legalNode = false;
     redrawProof();
 }
