@@ -33,7 +33,7 @@ let legalNode: boolean;
  *
  * @param event Incoming MouseEvent.
  */
-export function deleteSingleMouseDown(event: MouseEvent) {
+export function deleteSingleMouseDown(event: MouseEvent): void {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = treeContext.tree.getLowestNode(startingPoint);
     if (currentNode !== null) {
@@ -68,7 +68,7 @@ export function deleteSingleMouseDown(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function deleteSingleMouseMove(event: MouseEvent) {
+export function deleteSingleMouseMove(event: MouseEvent): void {
     if (legalNode && currentNode !== null && (currentNode as CutNode).ellipse !== null) {
         reInsertNode(treeContext.tree, currentNode);
     }
@@ -105,7 +105,7 @@ export function deleteSingleMouseMove(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function deleteSingleMouseUp(event: MouseEvent) {
+export function deleteSingleMouseUp(event: MouseEvent): void {
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
     if (legalNode) {
         const currentNode = treeContext.tree.getLowestNode(newPoint);
@@ -129,7 +129,7 @@ export function deleteSingleMouseUp(event: MouseEvent) {
 /**
  * Reinserts the original currentNode, sets currentNode to null, sets legality to false and redraws the Draw Mode AEGTree.
  */
-export function deleteSingleMouseOut() {
+export function deleteSingleMouseOut(): void {
     if (legalNode && currentNode !== null) {
         reInsertNode(treeContext.tree, currentNode);
     }

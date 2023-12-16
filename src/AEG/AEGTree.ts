@@ -185,7 +185,7 @@ export class AEGTree {
     /**
      * Removes all of The Sheet of Assertion's children.
      */
-    public clear() {
+    public clear(): void {
         this.internalSheet.clear();
     }
 

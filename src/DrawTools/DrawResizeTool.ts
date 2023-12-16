@@ -44,7 +44,7 @@ let direction: Point = new Point(1, 1);
  *
  * @param event Incoming MouseEvent.
  */
-export function resizeMouseDown(event: MouseEvent) {
+export function drawResizeMouseDown(event: MouseEvent): void {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = treeContext.tree.getLowestNode(startingPoint);
     if (currentNode instanceof CutNode && currentNode.ellipse !== null) {
@@ -71,7 +71,7 @@ export function resizeMouseDown(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function resizeMouseMove(event: MouseEvent) {
+export function drawResizeMouseMove(event: MouseEvent): void {
     if (legalNode) {
         const moveDifference: Point = new Point(
             (event.x - offset.x - startingPoint.x) / 2,
@@ -103,7 +103,7 @@ export function resizeMouseMove(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function resizeMouseUp(event: MouseEvent) {
+export function drawResizeMouseUp(event: MouseEvent): void {
     changeCursorStyle("cursor: default");
     if (legalNode) {
         const moveDifference: Point = new Point(
@@ -130,7 +130,7 @@ export function resizeMouseUp(event: MouseEvent) {
  * Then marks legality as false.
  * Then redraws the Draw Mode AEGTree.
  */
-export function resizeMouseOut() {
+export function drawResizeMouseOut(): void {
     changeCursorStyle("cursor: default");
     if (legalNode && currentNode !== null) {
         treeContext.tree.insert(currentNode);

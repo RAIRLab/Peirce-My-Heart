@@ -34,7 +34,7 @@ let legalNode: boolean;
  *
  * @param event Incoming MouseEvent.
  */
-export function deleteMultiMouseDown(event: MouseEvent) {
+export function deleteMultiMouseDown(event: MouseEvent): void {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = treeContext.tree.getLowestNode(startingPoint);
 
@@ -59,7 +59,7 @@ export function deleteMultiMouseDown(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function deleteMultiMouseMove(event: MouseEvent) {
+export function deleteMultiMouseMove(event: MouseEvent): void {
     if (legalNode && currentNode !== null) {
         reInsertNode(treeContext.tree, currentNode);
     }
@@ -94,7 +94,7 @@ export function deleteMultiMouseMove(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function deleteMultiMouseUp(event: MouseEvent) {
+export function deleteMultiMouseUp(event: MouseEvent): void {
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
     if (legalNode) {
         const currentNode = treeContext.tree.getLowestNode(newPoint);
@@ -115,7 +115,7 @@ export function deleteMultiMouseUp(event: MouseEvent) {
  * Then sets legality to false.
  * Then redraws the Draw Mode AEGTree.
  */
-export function deleteMultiMouseOut() {
+export function deleteMultiMouseOut(): void {
     if (legalNode && currentNode !== null) {
         reInsertNode(treeContext.tree, currentNode);
     }

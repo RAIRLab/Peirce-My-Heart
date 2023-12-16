@@ -21,7 +21,7 @@ let legalNode: boolean;
  * Sets currentProofTree to the AEGTree of the current proof step.
  * Then clears the canvas and highlights all nodes on it as the illegal color.
  */
-export function clearProofMouseDown() {
+export function clearProofMouseDown(): void {
     currentProofTree = getCurrentProofTree();
     legalNode = true;
     cleanCanvas();
@@ -33,7 +33,7 @@ export function clearProofMouseDown() {
  * Then clears the proof.
  * Then redraws the proof.
  */
-export function clearProofMouseUp() {
+export function clearProofMouseUp(): void {
     if (legalNode) {
         deleteButtons(-1);
         treeContext.clearProof();
@@ -45,7 +45,7 @@ export function clearProofMouseUp() {
  * Sets legality to false.
  * Then redraws the proof.
  */
-export function clearProofMouseOut() {
+export function clearProofMouseOut(): void {
     legalNode = false;
     redrawProof();
 }

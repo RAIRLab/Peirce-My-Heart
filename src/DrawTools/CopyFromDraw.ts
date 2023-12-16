@@ -37,7 +37,7 @@ const selectString = <HTMLParagraphElement>document.getElementById("selectionStr
  *
  * @param event Incoming MouseEvent.
  */
-export function copyFromDrawMouseDown(event: MouseEvent) {
+export function copyFromDrawMouseDown(event: MouseEvent): void {
     tempTree = new AEGTree(treeContext.tree.sheet);
     //Set our selectForProof tree to a new AEGTree so that a new graph can be selected.
     treeContext.selectForProof.sheet = new AEGTree().sheet;
@@ -56,7 +56,7 @@ export function copyFromDrawMouseDown(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function copyFromDrawMouseMove(event: MouseEvent) {
+export function copyFromDrawMouseMove(event: MouseEvent): void {
     if (legalNode) {
         redrawTree(treeContext.tree);
 
@@ -72,7 +72,7 @@ export function copyFromDrawMouseMove(event: MouseEvent) {
  * Then sets selectedNode to null.
  * Then sets legality to false.
  */
-export function copyFromDrawMouseUp() {
+export function copyFromDrawMouseUp(): void {
     changeCursorStyle("cursor: default");
     if (legalNode && selectedNode !== null) {
         //If the selected node is the tree, insert its children only
@@ -96,7 +96,7 @@ export function copyFromDrawMouseUp() {
  * Then sets legality to false.
  * Then redraws the Draw Mode AEGTree.
  */
-export function copyFromDrawMouseOut() {
+export function copyFromDrawMouseOut(): void {
     changeCursorStyle("cursor: default");
     selectedNode = null;
     legalNode = false;
@@ -106,7 +106,7 @@ export function copyFromDrawMouseOut() {
 /**
  * Removes selectedNode from the Draw Mode AEGTree and draws it as the legal color.
  */
-function highlightSelection() {
+function highlightSelection(): void {
     //Displayed under the "Selected subgraph:" text.
     const tree = new AEGTree();
     let removed = false;

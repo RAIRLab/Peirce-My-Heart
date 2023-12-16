@@ -39,7 +39,7 @@ let currentProofTree: AEGTree;
 /**
  * Sets cursor style to crosshair.
  */
-export function doubleCutInsertionMouseEnter() {
+export function doubleCutInsertionMouseEnter(): void {
     changeCursorStyle("cursor: crosshair");
 }
 
@@ -50,7 +50,7 @@ export function doubleCutInsertionMouseEnter() {
  *
  * @param event Incoming MouseEvent.
  */
-export function doubleCutInsertionMouseDown(event: MouseEvent) {
+export function doubleCutInsertionMouseDown(event: MouseEvent): void {
     startingPoint = new Point(event.clientX - offset.x, event.clientY - offset.y);
     currentProofTree = getCurrentProofTree();
     wasOut = false;
@@ -69,7 +69,7 @@ export function doubleCutInsertionMouseDown(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function doubleCutInsertionMouseMove(event: MouseEvent) {
+export function doubleCutInsertionMouseMove(event: MouseEvent): void {
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
     const largeCut: CutNode = new CutNode(createEllipse(startingPoint, currentPoint));
     const smallCut: CutNode = new CutNode(calcSmallEllipse(<Ellipse>largeCut.ellipse));
@@ -110,7 +110,7 @@ export function doubleCutInsertionMouseMove(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function doubleCutInsertionMouseUp(event: MouseEvent) {
+export function doubleCutInsertionMouseUp(event: MouseEvent): void {
     changeCursorStyle("cursor: crosshair");
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
     currentProofTree = getCurrentProofTree();
@@ -141,7 +141,7 @@ export function doubleCutInsertionMouseUp(event: MouseEvent) {
  * Then sets wasOut to true.
  * Then redraws the proof.
  */
-export function doubleCutInsertionMouseOut() {
+export function doubleCutInsertionMouseOut(): void {
     changeCursorStyle("cursor: default");
     wasOut = true;
     redrawProof();

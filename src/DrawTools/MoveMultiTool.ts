@@ -37,7 +37,7 @@ let legalNode: boolean;
  *
  * @param event Incoming MouseEvent.
  */
-export function moveMultiMouseDown(event: MouseEvent) {
+export function moveMultiMouseDown(event: MouseEvent): void {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = treeContext.tree.getLowestNode(startingPoint);
     if (currentNode !== treeContext.tree.sheet && currentNode !== null) {
@@ -60,7 +60,7 @@ export function moveMultiMouseDown(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function moveMultiMouseMove(event: MouseEvent) {
+export function moveMultiMouseMove(event: MouseEvent): void {
     if (legalNode) {
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
@@ -96,7 +96,7 @@ export function moveMultiMouseMove(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function moveMultiMouseUp(event: MouseEvent) {
+export function moveMultiMouseUp(event: MouseEvent): void {
     changeCursorStyle("cursor: default");
     if (legalNode) {
         const moveDifference: Point = new Point(
@@ -127,7 +127,7 @@ export function moveMultiMouseUp(event: MouseEvent) {
  * Then sets legality to false.
  * Then redraws the canvas.
  */
-export function moveMultiMouseOut() {
+export function moveMultiMouseOut(): void {
     changeCursorStyle("cursor: default");
     if (legalNode && currentNode !== null) {
         treeContext.tree.insert(currentNode);

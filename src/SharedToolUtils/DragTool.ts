@@ -22,7 +22,7 @@ let wasOut: boolean;
 /**
  * Sets the canvas' style attribute to grab.
  */
-export function dragMouseEnter() {
+export function dragMouseEnter(): void {
     changeCursorStyle("cursor: grab");
 }
 
@@ -30,7 +30,7 @@ export function dragMouseEnter() {
  * Sets originPoint to the coordinates of the incoming MouseEvent.
  * @param event Incoming MouseEvent.
  */
-export function dragMouseDown(event: MouseEvent) {
+export function dragMouseDown(event: MouseEvent): void {
     changeCursorStyle("cursor: grabbing");
     originPoint = new Point(event.x - offset.x, event.y - offset.y);
     wasOut = false;
@@ -40,7 +40,7 @@ export function dragMouseDown(event: MouseEvent) {
  * Compares originPoint with the coordinates of the incoming MouseEvent and redraws the tree.
  * @param event Incoming MouseEvent.
  */
-export function dragMouseMove(event: MouseEvent) {
+export function dragMouseMove(event: MouseEvent): void {
     if (!wasOut) {
         changeCursorStyle("cursor: grabbing");
         offset = new Point(event.x - originPoint.x, event.y - originPoint.y);
@@ -51,14 +51,14 @@ export function dragMouseMove(event: MouseEvent) {
 /**
  * Sets the canvas' style tag to grab.
  */
-export function dragMouseUp() {
+export function dragMouseUp(): void {
     changeCursorStyle("cursor: grab");
 }
 
 /**
  * Sets wasOut to true and redraws the canvas.
  */
-export function dragMouseOut() {
+export function dragMouseOut(): void {
     changeCursorStyle("cursor: default");
     wasOut = true;
     redrawCorrectTree();
@@ -67,7 +67,7 @@ export function dragMouseOut() {
 /**
  * Redraws the correct tree based on global mode state.
  */
-function redrawCorrectTree() {
+function redrawCorrectTree(): void {
     if (treeContext.modeState === "Proof") {
         redrawProof();
     } else {

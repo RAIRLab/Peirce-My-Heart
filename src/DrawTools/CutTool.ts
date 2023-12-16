@@ -31,7 +31,7 @@ let wasOut: boolean;
 /**
  * Sets the canvas' style attribute to crosshair.
  */
-export function cutMouseEnter() {
+export function cutMouseEnter(): void {
     changeCursorStyle("cursor: crosshair");
 }
 
@@ -40,7 +40,7 @@ export function cutMouseEnter() {
  *
  * @param event Incoming MouseEvent.
  */
-export function cutMouseDown(event: MouseEvent) {
+export function cutMouseDown(event: MouseEvent): void {
     startingPoint = new Point(event.clientX - offset.x, event.clientY - offset.y);
     wasOut = false;
 }
@@ -54,7 +54,7 @@ export function cutMouseDown(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function cutMouseMove(event: MouseEvent) {
+export function cutMouseMove(event: MouseEvent): void {
     const newCut: CutNode = new CutNode(new Ellipse(new Point(0, 0), 0, 0));
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
     redrawTree(treeContext.tree);
@@ -80,7 +80,7 @@ export function cutMouseMove(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function cutMouseUp(event: MouseEvent) {
+export function cutMouseUp(event: MouseEvent): void {
     changeCursorStyle("cursor: default");
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
     const newCut: CutNode = new CutNode(createEllipse(startingPoint, currentPoint));
@@ -98,7 +98,7 @@ export function cutMouseUp(event: MouseEvent) {
  * Sets wasOut to true.
  * Then redraws the Draw Mode AEGTree.
  */
-export function cutMouseOut() {
+export function cutMouseOut(): void {
     changeCursorStyle("cursor: default");
     wasOut = true;
     redrawTree(treeContext.tree);

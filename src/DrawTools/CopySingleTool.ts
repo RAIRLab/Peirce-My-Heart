@@ -33,7 +33,7 @@ let legalNode: boolean;
  *
  * @param event Incoming MouseEvent.
  */
-export function copySingleMouseDown(event: MouseEvent) {
+export function copySingleMouseDown(event: MouseEvent): void {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     const realNode: CutNode | AtomNode | null = treeContext.tree.getLowestNode(startingPoint);
     const moveDifference: Point = new Point(event.x - startingPoint.x, event.y - startingPoint.y);
@@ -57,7 +57,7 @@ export function copySingleMouseDown(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function copySingleMouseMove(event: MouseEvent) {
+export function copySingleMouseMove(event: MouseEvent): void {
     if (legalNode) {
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
@@ -87,7 +87,7 @@ export function copySingleMouseMove(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function copySingleMouseUp(event: MouseEvent) {
+export function copySingleMouseUp(event: MouseEvent): void {
     changeCursorStyle("cursor: default");
     if (legalNode) {
         const moveDifference: Point = new Point(
@@ -114,7 +114,7 @@ export function copySingleMouseUp(event: MouseEvent) {
  * Sets legality to false.
  * Then redraws the Draw Mode AEGTree.
  */
-export function copySingleMouseOut() {
+export function copySingleMouseOut(): void {
     changeCursorStyle("cursor: default");
     legalNode = false;
     redrawTree(treeContext.tree);

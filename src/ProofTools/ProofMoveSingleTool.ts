@@ -50,7 +50,7 @@ let currentProofTree: AEGTree;
  *
  * @param event Incoming MouseEvent.
  */
-export function proofMoveSingleMouseDown(event: MouseEvent) {
+export function proofMoveSingleMouseDown(event: MouseEvent): void {
     currentProofTree = getCurrentProofTree();
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = currentProofTree.getLowestNode(startingPoint);
@@ -88,7 +88,7 @@ export function proofMoveSingleMouseDown(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function proofMoveSingleMouseMove(event: MouseEvent) {
+export function proofMoveSingleMouseMove(event: MouseEvent): void {
     if (legalNode) {
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
@@ -119,7 +119,7 @@ export function proofMoveSingleMouseMove(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function proofMoveSingleMouseUp(event: MouseEvent) {
+export function proofMoveSingleMouseUp(event: MouseEvent): void {
     if (legalNode) {
         changeCursorStyle("cursor: default");
         const nextStep = new ProofNode(currentProofTree, "Single Move");
@@ -150,7 +150,7 @@ export function proofMoveSingleMouseUp(event: MouseEvent) {
  * Then sets legality to false.
  * Then redraws the proof.
  */
-export function proofMoveSingleMouseOut() {
+export function proofMoveSingleMouseOut(): void {
     changeCursorStyle("cursor: default");
     if (legalNode && currentNode !== null) {
         currentProofTree.insert(currentNode);

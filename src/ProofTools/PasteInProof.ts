@@ -25,7 +25,7 @@ let legalNode: boolean;
  * Then sets currentGraph to the sheet in treeContext's selectForProof field.
  * Then sets legality to true and cursor style to copy if currentGraph has children and currentTree is empty.
  */
-export function pasteInProofMouseDown() {
+export function pasteInProofMouseDown(): void {
     currentTree = getCurrentProofTree();
     currentGraph = treeContext.selectForProof.sheet;
 
@@ -44,7 +44,7 @@ export function pasteInProofMouseDown() {
  * Then sets legality to false.
  * Then redraws the proof.
  */
-export function pasteInProofMouseMove() {
+export function pasteInProofMouseMove(): void {
     changeCursorStyle("cursor: default");
     legalNode = false;
     redrawProof();
@@ -55,7 +55,7 @@ export function pasteInProofMouseMove() {
  * Then sets legality to false.
  * Then redraws the proof.
  */
-export function pasteInProofMouseUp() {
+export function pasteInProofMouseUp(): void {
     if (legalNode) {
         changeCursorStyle("cursor: default");
         currentTree.sheet = currentGraph;
@@ -70,7 +70,7 @@ export function pasteInProofMouseUp() {
  * Then sets legality to false.
  * Then redraws the proof.
  */
-export function pasteInProofMouseOut() {
+export function pasteInProofMouseOut(): void {
     changeCursorStyle("cursor: default");
     legalNode = false;
     redrawProof();

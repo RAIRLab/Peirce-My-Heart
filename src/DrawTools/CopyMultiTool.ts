@@ -33,7 +33,7 @@ let legalNode: boolean;
  *
  * @param event Incoming MouseEvent.
  */
-export function copyMultiMouseDown(event: MouseEvent) {
+export function copyMultiMouseDown(event: MouseEvent): void {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = treeContext.tree.getLowestNode(startingPoint);
     if (currentNode !== treeContext.tree.sheet && currentNode !== null) {
@@ -50,7 +50,7 @@ export function copyMultiMouseDown(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function copyMultiMouseMove(event: MouseEvent) {
+export function copyMultiMouseMove(event: MouseEvent): void {
     if (legalNode) {
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
@@ -84,7 +84,7 @@ export function copyMultiMouseMove(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function copyMultiMouseUp(event: MouseEvent) {
+export function copyMultiMouseUp(event: MouseEvent): void {
     changeCursorStyle("cursor: default");
     if (legalNode) {
         const moveDifference: Point = new Point(
@@ -110,7 +110,7 @@ export function copyMultiMouseUp(event: MouseEvent) {
  * Sets legality to false.
  * Then redraws the Draw Mode AEGTree.
  */
-export function copyMultiMouseOut() {
+export function copyMultiMouseOut(): void {
     changeCursorStyle("cursor: default");
     legalNode = false;
     redrawTree(treeContext.tree);

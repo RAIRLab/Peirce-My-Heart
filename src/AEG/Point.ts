@@ -35,7 +35,7 @@ export class Point {
      * @param yCoord Incoming y-coordinate.
      * @throws Error on receiving NaN or Infinity values as coordinates.
      */
-    public set(coordX: number, coordY: number) {
+    public set(coordX: number, coordY: number): void {
         if (!Number.isFinite(coordX) || !Number.isFinite(coordY)) {
             throw new Error(
                 "NaN or Infinity value(s) were passed in setting " + this + "'s coords."

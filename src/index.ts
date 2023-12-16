@@ -357,7 +357,7 @@ function mouseDownHandler(event: MouseEvent) {
             DeleteMultiTool.deleteMultiMouseDown(event);
             break;
         case Tool.resizeTool:
-            DrawResizeTool.resizeMouseDown(event);
+            DrawResizeTool.drawResizeMouseDown(event);
             break;
         case Tool.copyFromDrawTool:
             CopyFromDraw.copyFromDrawMouseDown(event);
@@ -436,7 +436,7 @@ function mouseMoveHandler(event: MouseEvent) {
                 DeleteMultiTool.deleteMultiMouseMove(event);
                 break;
             case Tool.resizeTool:
-                DrawResizeTool.resizeMouseMove(event);
+                DrawResizeTool.drawResizeMouseMove(event);
                 break;
             case Tool.copyFromDrawTool:
                 CopyFromDraw.copyFromDrawMouseMove(event);
@@ -512,7 +512,7 @@ function mouseUpHandler(event: MouseEvent) {
             DeleteMultiTool.deleteMultiMouseUp(event);
             break;
         case Tool.resizeTool:
-            DrawResizeTool.resizeMouseUp(event);
+            DrawResizeTool.drawResizeMouseUp(event);
             break;
         case Tool.copyFromDrawTool:
             CopyFromDraw.copyFromDrawMouseUp();
@@ -590,7 +590,7 @@ function mouseOutHandler() {
             DeleteMultiTool.deleteMultiMouseOut();
             break;
         case Tool.resizeTool:
-            DrawResizeTool.resizeMouseOut();
+            DrawResizeTool.drawResizeMouseOut();
             break;
         case Tool.copyFromDrawTool:
             CopyFromDraw.copyFromDrawMouseOut();

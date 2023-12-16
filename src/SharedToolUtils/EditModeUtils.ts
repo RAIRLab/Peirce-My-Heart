@@ -64,7 +64,11 @@ export function validateChildren(tree: AEGTree, incomingNode: CutNode, differenc
  * @param color Incoming color string.
  * @param difference Incoming Point.
  */
-export function drawAltered(incomingNode: CutNode | AtomNode, color: string, difference: Point) {
+export function drawAltered(
+    incomingNode: CutNode | AtomNode,
+    color: string,
+    difference: Point
+): void {
     if (incomingNode instanceof CutNode && incomingNode.ellipse !== null) {
         const tempCut: CutNode = alterCut(incomingNode, difference);
         drawCut(tempCut, color);
@@ -93,7 +97,7 @@ export function insertChildren(
     incomingNode: CutNode | AtomNode,
     difference: Point,
     tree?: AEGTree
-) {
+): void {
     const insertTree = tree ? tree : treeContext.tree;
     if (incomingNode instanceof CutNode && incomingNode.ellipse !== null) {
         const tempCut: CutNode = alterCut(incomingNode, difference);
@@ -245,7 +249,7 @@ export function resizeCut(originalCut: CutNode, difference: Point, direction: Po
  * @param tree Incoming AEGTree.
  * @param parentCut Incoming parent CutNode.
  */
-export function readdChildren(tree: AEGTree, parentCut: CutNode) {
+export function readdChildren(tree: AEGTree, parentCut: CutNode): void {
     for (let i = 0; i < parentCut.children.length; i++) {
         if (tree.canInsert(parentCut.children[i])) {
             tree.insert(parentCut.children[i]);
@@ -260,7 +264,7 @@ export function readdChildren(tree: AEGTree, parentCut: CutNode) {
  * @param tree Incoming AEGTree.
  * @param currentNode Incoming node.
  */
-export function reInsertNode(tree: AEGTree, currentNode: AtomNode | CutNode) {
+export function reInsertNode(tree: AEGTree, currentNode: AtomNode | CutNode): void {
     if (currentNode instanceof CutNode && currentNode.ellipse === null) {
         tree.sheet = currentNode;
     } else if (tree.canInsert(currentNode)) {
