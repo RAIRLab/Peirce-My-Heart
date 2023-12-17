@@ -26,7 +26,7 @@ import * as CopyFromDraw from "./DrawTools/CopyFromDraw";
 
 import * as DoubleCutInsertionTool from "./ProofTools/DoubleCutInsertionTool";
 import * as DoubleCutDeletionTool from "./ProofTools/DoubleCutDeletionTool";
-import * as InsertionTool from "./ProofTools/InsertionTools";
+import * as InsertionTool from "./ProofTools/InsertionTool";
 import * as ErasureTool from "./ProofTools/ErasureTool";
 import * as DrawResizeTool from "./DrawTools/DrawResizeTool";
 import * as ProofMoveSingleTool from "./ProofTools/ProofMoveSingleTool";

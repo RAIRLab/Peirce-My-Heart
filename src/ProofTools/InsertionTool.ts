@@ -1,101 +1,128 @@
 import * as EditModeUtils from "../SharedToolUtils/EditModeUtils";
 import {AEGTree} from "../AEG/AEGTree";
 import {AtomNode} from "../AEG/AtomNode";
-import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
+import {
+    changeCursorStyle,
+    determineAndChangeCursorStyle,
+    redrawProof,
+} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {getCurrentProofTree} from "./ProofToolUtils";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
 import {ProofNode} from "../AEG/ProofNode";
-import {redrawProof} from "../SharedToolUtils/DrawUtils";
 import {TreeContext} from "../TreeContext";
 
 /**
- * File containing insertion node movement event handlers.
+ * Contains insertion node movement event handlers.
+ *
+ * Nodes are considered legal if they are graphs and able to be placed.
+ *
  * @author Anusha Tiwari
  */
 
-//The selected subgraph that we will be placing
+//Node in question.
 let currentNode: CutNode | AtomNode;
 
-//The parent identified the position where we are trying to insert the incoming node
+//Parent of currentNode.
 let currentParent: CutNode | AtomNode | null;
 
-//The tree that we are trying to insert the graph into
+//AEGTree we want to insert currentNode into.
 let currentTree: AEGTree;
 
-//Whether or not the node is allowed to be inserted in that place.
+//True if a placement is legal.
 let legalPlace: boolean;
 
-//Whether or not the node being placed is a legal node
+//True if a node is legal.
 let legalNode: boolean;
 
-export function insertionMouseDown(event: MouseEvent) {
-    //Create a deep copy of the tree we are trying to insert the incoming node into so that we can
-    //modify it as needed without affecting the actual structure
+/**
+ * Sets currentTree to the current proof tree.
+ * Then if there are existing steps in the proof and only one node (with any amount of children) was selected for insertion,
+ *      Sets node legality to true,
+ *      Sets currentNode to the one node selected for insertion,
+ *      Sets currentParent according to the parent of the lowest node containing the coordinates given by the incoming MouseEvent, and
+ *      If currentNode comes from Draw Mode canvas,
+ *          If currentParent is not null and currentParent contains an altered currentNode according to the coordinates given by the incoming MouseEvent,
+ *              Sets cursor style to no-drop,
+ *              Sets placement legality to false, and
+ *              Draws the altered currentNode as the illegal color.
+ *          Otherwise,
+ *              If currentParent is not null, currentParent is not the sheet and currentNode is on an even cut level,
+ *                  If the altered currentNode is a CutNode,
+ *                      Sets placement legality to true, and
+ *                      If the altered CutNode now contains any of currentParent's children,
+ *                          Sets placement legality to false.
+ *                  Otherwise,
+ *                      Sets placement legality to true.
+ *              Then if placement legality is true,
+ *                  Alters currentNode according to the coordinates given by the incoming MouseEvent,
+ *                  Highlights the altered currentNode and all its children as either the legal or illegal color if they can be inserted, and
+ *                  Sets cursor style to copy or no-drop depending on the determined color.
+ *              Otherwise,
+ *                  Sets cursor style to no-drop, and
+ *                  Highlights the altered currentNode and all its children as the illegal color.
+ *      Otherwise,
+ *          Sets cursor style to no-drop,
+ *          Sets placement legality to false, and
+ *          Highlights the altered currentNode and all its children as the illegal color.
+ * Otherwise,
+ *      Sets placement legality to false,
+ *      Sets node legality to false, and
+ *      Highlights an altered currentNode and all its children as the illegal color.
+ *
+ * @param event Incoming MouseEvent.
+ */
+export function insertionMouseDown(event: MouseEvent): void {
     currentTree = getCurrentProofTree();
     const selectedNodes = TreeContext.selectForProof.sheet.children;
     const startingPoint = new Point(event.x - offset.x, event.y - offset.y);
 
-    //we can insert only a single subgraph at a time
     if (TreeContext.proof.length > 0 && selectedNodes.length === 1) {
-        //As long as there are graphs to be placed, they are legal nodes
         legalNode = true;
         currentNode = selectedNodes[0];
-
-        //The change in the original position of the node vs the new position we are placing it on
         const newPoint = calculatePoint(event, currentNode);
 
-        //Get node we have clicked to insert within. If the node is an atom node, get its parent cut
         const tempNode = currentTree.getLowestNode(startingPoint);
         const tempParent = currentTree.getLowestParent(startingPoint);
         currentParent = tempNode instanceof AtomNode ? tempParent : tempNode;
 
         if (newPoint) {
-            //Create a temporary node with the altered values of the new node at the location we
-            //are placing it on
             const newNode = EditModeUtils.alterNode(currentNode, newPoint);
 
-            //If the node being placed is not contained within the parent node at the given position,
-            //it is being placed in a position which will result in adoption of nodes. This is
-            //considered illegal -> mark it as such
+            //Insertion does not allow for node adoption (i.e changing parents).
+            //Adopted nodes result in an invalid insertion.
             if (currentParent !== null && !(currentParent as CutNode).containsNode(newNode)) {
                 changeCursorStyle("cursor: no-drop");
                 legalPlace = false;
                 EditModeUtils.drawAltered(currentNode, illegalColor(), newPoint);
             } else {
-                //According to rule of insertion, we can insert 1 graph at a time only on odd levels.
-                //Check to ensure that the new point where we are pasting is on an odd level (for
-                //the placement to be an odd level, its parent must be on an even level).
+                //By insertion, we can insert 1 graph at a time only on odd levels.
+                //This means that currentParent must be on an even level.
                 if (
                     currentParent !== null &&
                     currentParent instanceof CutNode &&
                     currentParent.ellipse !== null &&
                     currentTree.getLevel(currentParent) % 2 === 0
                 ) {
-                    //Insertion also does not allow for adoption of nodes, so check to make sure we are
-                    //not adopting any children of the node we are being placed in
+                    //Insertion also does not allow for node adoption in any children.
                     if (newNode instanceof CutNode) {
                         legalPlace = true;
                         for (let i = 0; i < currentParent.children.length; i++) {
-                            //The new node contains a child of the node it is being placed in - this
-                            //is an illegal placement, as it would result in adoption
+                            //newNode adopted a child of the parent.
                             if (newNode.containsNode(currentParent.children[i])) {
                                 legalPlace = false;
                                 break;
                             }
                         }
                     } else {
-                        //An atom node cannot contain any other nodes. This node is being placed
-                        //at the right level
+                        //AtomNodes cannot contain children.
                         legalPlace = true;
                     }
 
                     if (legalPlace) {
-                        //We have confirmed that the node can be placed at this level without
-                        //adopting any existing nodes. However, we still need to check for any
-                        //collisions within this level
+                        //currentNode can be placed here, but we must check for collisions.
                         let color = "";
                         if (currentNode instanceof CutNode) {
                             const legalChildren = EditModeUtils.validateChildren(
@@ -133,64 +160,60 @@ export function insertionMouseDown(event: MouseEvent) {
     }
 }
 
-export function insertionMouseMove(event: MouseEvent) {
+/**
+ * If node legality is true,
+ *      Redraws the proof,
+ *      Then follows the same control flow as insertionMouseDown.
+ *
+ * @see insertionMouseDown
+ * @param event Incoming MouseEvent (used in drawing an altered currentNode).
+ */
+export function insertionMouseMove(event: MouseEvent): void {
     if (legalNode) {
         const movePoint: Point = new Point(event.x - offset.x, event.y - offset.y);
 
-        //Reset the canvas by redrawing our current proof structure
         redrawProof();
         const newPoint = calculatePoint(event, currentNode);
 
-        //Get node we have clicked to insert within. If the node is an atom node, get its parent
         const tempNode = currentTree.getLowestNode(movePoint);
         const tempParent = currentTree.getLowestParent(movePoint);
         currentParent = tempNode instanceof AtomNode ? tempParent : tempNode;
 
         if (newPoint) {
-            //Create a temporary node with the altered values of the new node at the location we
-            //are placing it on
             const newNode = EditModeUtils.alterNode(currentNode, newPoint);
 
-            //If the node being placed is not contained within the parent node at the given
-            //position, it is being placed in a position which will result in adoption of nodes.
-            //This is considered illegal -> mark it as such
+            //Insertion does not allow for node adoption (i.e changing parents).
+            //Adopted nodes result in an invalid insertion.
             if (currentParent !== null && !(currentParent as CutNode).containsNode(newNode)) {
                 changeCursorStyle("cursor: no-drop");
                 legalPlace = false;
                 EditModeUtils.drawAltered(currentNode, illegalColor(), newPoint);
             } else {
-                //According to rule of insertion, we can insert 1 graph at a time only on odd
-                //levels. Check to ensure that the new point where we are pasting is on an odd
-                //level (for the placement to be an odd level, its parent must be on an even
-                //level).
+                //By insertion, we can insert 1 graph at a time only on odd levels.
+                //This means that currentParent must be on an even level.
                 if (
                     currentParent !== null &&
                     currentParent instanceof CutNode &&
                     currentParent.ellipse !== null &&
                     currentTree.getLevel(currentParent) % 2 === 0
                 ) {
-                    //Insertion also does not allow for adoption of nodes, so check to make
-                    //sure we are not adopting any children of the node we are being placed in
+                    //Insertion also does not allow for node adoption in any children.
                     if (newNode instanceof CutNode) {
                         legalPlace = true;
                         for (let i = 0; i < currentParent.children.length; i++) {
-                            //The new node contains a child of the node it is being placed in - this
-                            //is an illegal placement, as it would result in adoption
+                            //newNode adopted a child of the parent.
                             if (newNode.containsNode(currentParent.children[i])) {
                                 legalPlace = false;
                                 break;
                             }
                         }
                     } else {
-                        //An atom node cannot contain any other nodes. This node is being placed
-                        //at the right level
+                        //AtomNodes cannot contain children.
                         legalPlace = true;
                     }
 
                     if (legalPlace) {
-                        //We have confirmed that the node can be placed at this level without
-                        //adopting any existing nodes. However, we still need to check for any
-                        //collisions within this level
+                        //currentNode can be placed here, but we must check for collisions.
                         let color = "";
                         if (currentNode instanceof CutNode) {
                             const legalChildren = EditModeUtils.validateChildren(
@@ -226,14 +249,23 @@ export function insertionMouseMove(event: MouseEvent) {
     }
 }
 
-export function insertionMouseUp(event: MouseEvent) {
-    //If it is a legal node and is being placed at a legal position, insert it into the tree
+/**
+ * Sets cursor style to default, and
+ * If both currentNode and currentNode's placement are legal,
+ *      If the inserted graph comes from the Draw Mode canvas,
+ *          Inserts the currentNode and any of its children at the coordinates given by the incoming MouseEvent.
+ *          Then adds an Insertion step to the proof history.
+ *
+ * Then redraws the proof.
+ * Then sets node legality to false.
+ *
+ * @param event Incoming MouseEvent.
+ */
+export function insertionMouseUp(event: MouseEvent): void {
+    changeCursorStyle("cursor: default");
     if (legalNode && legalPlace) {
-        changeCursorStyle("cursor: default");
-        //Calculate the point where the node has to be placed
         const newPoint = calculatePoint(event, currentNode);
 
-        //Insert the node, and its children if it has any
         if (newPoint) {
             if (currentNode instanceof CutNode) {
                 EditModeUtils.insertChildren(currentNode, newPoint, currentTree);
@@ -244,7 +276,6 @@ export function insertionMouseUp(event: MouseEvent) {
                 ) as AtomNode;
                 currentTree.insert(tempAtom);
             }
-            //Insertion is a new step -> push a new node in the proof, signifying it as such
             TreeContext.pushToProof(new ProofNode(currentTree, "Insertion"));
         }
     }
@@ -252,18 +283,26 @@ export function insertionMouseUp(event: MouseEvent) {
     legalNode = false;
 }
 
-export function insertionMouseOut() {
+/**
+ * Sets cursor style to default.
+ * Then sets node legality to false.
+ * Then redraws the proof.
+ */
+export function insertionMouseOut(): void {
     changeCursorStyle("cursor: default");
     legalNode = false;
     redrawProof();
 }
 
 /**
- * Calculates the difference between the original position of the node in the draw canvas and the
- * new position we are placing it on the proof canvas
- * @param event The mouse event that identifies our new position
- * @param graph The node we are trying to place
- * @returns The difference between the original position and the new position
+ * Calculates and returns the difference between the position of the incoming node on the Draw Mode canvas
+ *      and the coordinates given by the incoming MouseEvent.
+ *
+ * Returns undefined if no node comes from from Draw Mode.
+ *
+ * @param event Incoming MouseEvent.
+ * @param node Incoming node.
+ * @returns Difference between node's position and the coordinates given by event, or undefined if no node comes from Draw Mode.
  */
 function calculatePoint(event: MouseEvent, node: CutNode | AtomNode): Point | undefined {
     if (node instanceof CutNode && node.ellipse !== null) {
