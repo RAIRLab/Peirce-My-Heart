@@ -15,7 +15,7 @@ import {ProofNode} from "../AEG/ProofNode";
 import {TreeContext} from "../TreeContext";
 
 /**
- * Contains insertion node movement event handlers.
+ * Contains methods for the insertion inference rule.
  *
  * Nodes are considered legal if they are graphs and able to be placed.
  *
