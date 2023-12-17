@@ -13,7 +13,7 @@
         "src/ProofHistory.ts",
         "src/Themes.ts",
         "src/ToggleModes.ts",
-        "src/treeContext.ts"
+        "src/TreeContext.ts"
     ], 
     "tsconfig": "tsconfig.json",
     "out": "public/docs"
