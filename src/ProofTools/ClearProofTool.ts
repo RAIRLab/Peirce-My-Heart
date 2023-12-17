@@ -3,7 +3,7 @@ import {cleanCanvas, highlightNode, redrawProof} from "../SharedToolUtils/DrawUt
 import {deleteButtons} from "../ProofHistory";
 import {getCurrentProofTree} from "./ProofToolUtils";
 import {illegalColor} from "../Themes";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Contains methods for clearing the Proof Mode HTML canvas.
@@ -36,7 +36,7 @@ export function clearProofMouseDown(): void {
 export function clearProofMouseUp(): void {
     if (legalNode) {
         deleteButtons(-1);
-        treeContext.clearProof();
+        TreeContext.clearProof();
         redrawProof();
     }
 }

@@ -8,7 +8,7 @@ import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
 import {ProofNode} from "../AEG/ProofNode";
 import {reInsertNode} from "../SharedToolUtils/EditModeUtils";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Tool to be used during proof mode to perform deiteration on subgraphs on an AEG
@@ -75,7 +75,7 @@ export function deiterationMouseUp(event: MouseEvent) {
             if (currentParent instanceof CutNode) {
                 currentParent.remove(currentPoint);
             }
-            treeContext.pushToProof(new ProofNode(currentProofTree, "Deiteration"));
+            TreeContext.pushToProof(new ProofNode(currentProofTree, "Deiteration"));
         }
     }
 

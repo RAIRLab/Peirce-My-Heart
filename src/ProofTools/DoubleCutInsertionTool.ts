@@ -14,7 +14,7 @@ import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
 import {ProofNode} from "../AEG/ProofNode";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Contains methods for inserting two CutNodes at once on the Proof Mode HTML canvas.
@@ -130,7 +130,7 @@ export function doubleCutInsertionMouseUp(event: MouseEvent): void {
         if (legal) {
             nextProof.tree.insert(largeCut);
             nextProof.tree.insert(smallCut);
-            treeContext.pushToProof(nextProof);
+            TreeContext.pushToProof(nextProof);
         }
     }
     redrawProof();

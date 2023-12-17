@@ -5,7 +5,7 @@ import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
 import {redrawTree} from "../SharedToolUtils/DrawUtils";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Contains methods for manipulating AtomNodes on the HTML canvas.
@@ -97,10 +97,10 @@ export function atomMouseUp(event: MouseEvent): void {
         currentAtom.identifier,
         new Point(event.clientX - offset.x, event.clientY - offset.y)
     );
-    if (treeContext.tree.canInsert(currentAtom) && !wasOut) {
-        treeContext.tree.insert(currentAtom);
+    if (TreeContext.tree.canInsert(currentAtom) && !wasOut) {
+        TreeContext.tree.insert(currentAtom);
     }
-    redrawTree(treeContext.tree);
+    redrawTree(TreeContext.tree);
     hasMouseDown = false;
 }
 
@@ -111,7 +111,7 @@ export function atomMouseUp(event: MouseEvent): void {
 export function atomMouseOut(): void {
     changeCursorStyle("cursor: default");
     wasOut = true;
-    redrawTree(treeContext.tree);
+    redrawTree(TreeContext.tree);
 }
 
 /**
@@ -139,9 +139,9 @@ function createAtom(identifier: string, origin: Point): AtomNode {
  * IllegalColor is chose if currentAtom's position is not valid.
  */
 function determineDrawColor(): void {
-    redrawTree(treeContext.tree);
+    redrawTree(TreeContext.tree);
     if (!wasOut) {
-        if (treeContext.tree.canInsert(currentAtom)) {
+        if (TreeContext.tree.canInsert(currentAtom)) {
             changeCursorStyle("cursor: default");
             drawAtom(currentAtom, legalColor(), true);
         } else {

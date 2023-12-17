@@ -5,7 +5,7 @@ import {drawAtom, drawCut, redrawTree} from "./DrawUtils";
 import {Ellipse} from "../AEG/Ellipse";
 import {offset} from "./DragTool";
 import {Point} from "../AEG/Point";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Collection of methods for move, copy, and delete tools.
@@ -98,7 +98,7 @@ export function insertChildren(
     difference: Point,
     tree?: AEGTree
 ): void {
-    const insertTree = tree ? tree : treeContext.tree;
+    const insertTree = tree ? tree : TreeContext.tree;
     if (incomingNode instanceof CutNode && incomingNode.ellipse !== null) {
         const tempCut: CutNode = alterCut(incomingNode, difference);
         insertTree.insert(tempCut);

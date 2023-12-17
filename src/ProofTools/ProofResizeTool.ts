@@ -15,7 +15,7 @@ import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
 import {ProofNode} from "../AEG/ProofNode";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Contains Proof Mode CutNode resizing methods.
@@ -124,7 +124,7 @@ export function proofResizeMouseUp(event: MouseEvent): void {
             if (tempCut.ellipse !== null) {
                 if (isValid(tempCut)) {
                     currentProofTree.insert(tempCut);
-                    treeContext.pushToProof(new ProofNode(currentProofTree, "Resize"));
+                    TreeContext.pushToProof(new ProofNode(currentProofTree, "Resize"));
                 }
             }
         }

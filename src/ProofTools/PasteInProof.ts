@@ -3,7 +3,7 @@ import {changeCursorStyle, redrawProof} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {getCurrentProofTree} from "./ProofToolUtils";
 import {ProofNode} from "../AEG/ProofNode";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Containing methods for pasting AEGs into Proof Mode.
@@ -27,11 +27,11 @@ let legalNode: boolean;
  */
 export function pasteInProofMouseDown(): void {
     currentTree = getCurrentProofTree();
-    currentGraph = treeContext.selectForProof.sheet;
+    currentGraph = TreeContext.selectForProof.sheet;
 
     if (
         currentGraph.children.length > 0 &&
-        treeContext.proof.length === 1 &&
+        TreeContext.proof.length === 1 &&
         currentTree.sheet.isEmptySheet()
     ) {
         legalNode = true;
@@ -59,7 +59,7 @@ export function pasteInProofMouseUp(): void {
     if (legalNode) {
         changeCursorStyle("cursor: default");
         currentTree.sheet = currentGraph;
-        treeContext.pushToProof(new ProofNode(currentTree, "Pasted"));
+        TreeContext.pushToProof(new ProofNode(currentTree, "Pasted"));
     }
     legalNode = false;
     redrawProof();

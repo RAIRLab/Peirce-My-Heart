@@ -1,7 +1,7 @@
 import {AEGTree} from "../AEG/AEGTree";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Collection of methods used for Proof Mode tools.
@@ -17,10 +17,9 @@ import {treeContext} from "../treeContext";
  */
 export function getCurrentProofTree(): AEGTree {
     const currentTree = new AEGTree();
-    //Check whether the current step has been defined
-    if (treeContext.currentProofStep) {
-        //If it has, get a copy of its tree
-        currentTree.sheet = treeContext.currentProofStep.tree.sheet.copy();
+    //Check whether the current step has been defined.
+    if (TreeContext.currentProofStep) {
+        currentTree.sheet = TreeContext.currentProofStep.tree.sheet.copy();
     }
 
     return currentTree;
@@ -44,9 +43,9 @@ export function isMoveLegal(tree: AEGTree, currentNode: CutNode | AtomNode): boo
  * @returns True if tree and the AEGTree of the current proof step are equal.
  */
 export function proofCanInsert(tree: AEGTree, currentNode: CutNode | AtomNode): boolean {
-    if (treeContext.currentProofStep) {
+    if (TreeContext.currentProofStep) {
         tree.insert(currentNode.copy());
-        return tree.isEqualTo(new AEGTree(treeContext.currentProofStep.tree.sheet));
+        return tree.isEqualTo(new AEGTree(TreeContext.currentProofStep.tree.sheet));
     } else {
         return false;
     }

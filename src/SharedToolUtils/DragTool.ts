@@ -1,7 +1,7 @@
 import {changeCursorStyle} from "./DrawUtils";
 import {Point} from "../AEG/Point";
 import {redrawProof, redrawTree} from "./DrawUtils";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Collection of methods for drag related tools.
@@ -68,9 +68,9 @@ export function dragMouseOut(): void {
  * Redraws the correct tree based on global mode state.
  */
 function redrawCorrectTree(): void {
-    if (treeContext.modeState === "Proof") {
+    if (TreeContext.modeState === "Proof") {
         redrawProof();
     } else {
-        redrawTree(treeContext.tree);
+        redrawTree(TreeContext.tree);
     }
 }

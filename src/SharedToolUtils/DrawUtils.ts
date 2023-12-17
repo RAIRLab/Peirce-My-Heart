@@ -6,7 +6,7 @@ import {Ellipse} from "../AEG/Ellipse";
 import {offset} from "./DragTool";
 import {legalColor, placedColor} from "../Themes";
 import {Point} from "../AEG/Point";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Collection of methods used for drawing on the HTML canvas.
@@ -153,7 +153,7 @@ export function determineAndChangeCursorStyle(
  * Redraws the draw mode AEGTree after a bounding box checkbox is activated.
  */
 function checkBoxRedraw(): void {
-    redrawTree(treeContext.tree);
+    redrawTree(TreeContext.tree);
 }
 
 /**
@@ -224,10 +224,10 @@ export function redrawProof(): void {
     //If this is the first step taken in the proof,
     //Set the current AEGTree as the head of the proof history.
     let tree: AEGTree;
-    if (treeContext.proof.length === 0 || treeContext.currentProofStep === undefined) {
+    if (TreeContext.proof.length === 0 || TreeContext.currentProofStep === undefined) {
         tree = new AEGTree();
     } else {
-        tree = treeContext.currentProofStep.tree;
+        tree = TreeContext.currentProofStep.tree;
     }
 
     cleanCanvas();

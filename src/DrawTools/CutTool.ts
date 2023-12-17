@@ -6,7 +6,7 @@ import {Ellipse} from "../AEG/Ellipse";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Contains methods for manipulating CutNodes on the HTML canvas.
@@ -57,11 +57,11 @@ export function cutMouseDown(event: MouseEvent): void {
 export function cutMouseMove(event: MouseEvent): void {
     const newCut: CutNode = new CutNode(new Ellipse(new Point(0, 0), 0, 0));
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
-    redrawTree(treeContext.tree);
+    redrawTree(TreeContext.tree);
     newCut.ellipse = createEllipse(startingPoint, currentPoint);
 
     if (!wasOut) {
-        const legal = treeContext.tree.canInsert(newCut) && ellipseLargeEnough(newCut.ellipse);
+        const legal = TreeContext.tree.canInsert(newCut) && ellipseLargeEnough(newCut.ellipse);
         const color = legal ? legalColor() : illegalColor();
 
         determineAndChangeCursorStyle(color, "cursor: crosshair", "cursor: no-drop");
@@ -85,13 +85,13 @@ export function cutMouseUp(event: MouseEvent): void {
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
     const newCut: CutNode = new CutNode(createEllipse(startingPoint, currentPoint));
     if (
-        treeContext.tree.canInsert(newCut) &&
+        TreeContext.tree.canInsert(newCut) &&
         !wasOut &&
         ellipseLargeEnough(<Ellipse>newCut.ellipse)
     ) {
-        treeContext.tree.insert(newCut);
+        TreeContext.tree.insert(newCut);
     }
-    redrawTree(treeContext.tree);
+    redrawTree(TreeContext.tree);
 }
 
 /**
@@ -101,5 +101,5 @@ export function cutMouseUp(event: MouseEvent): void {
 export function cutMouseOut(): void {
     changeCursorStyle("cursor: default");
     wasOut = true;
-    redrawTree(treeContext.tree);
+    redrawTree(TreeContext.tree);
 }

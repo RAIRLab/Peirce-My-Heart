@@ -15,7 +15,7 @@ import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
 import {ProofNode} from "../AEG/ProofNode";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Contains methods for moving one node at a time, on only the same cut level, in only one cut in Proof Mode.
@@ -137,7 +137,7 @@ export function proofMoveSingleMouseUp(event: MouseEvent): void {
 
         if (tempNode !== null && isMoveLegal(currentProofTree, tempNode)) {
             nextStep.tree.insert(tempNode);
-            treeContext.pushToProof(nextStep);
+            TreeContext.pushToProof(nextStep);
         }
     }
     redrawProof();

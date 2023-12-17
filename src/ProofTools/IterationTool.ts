@@ -14,7 +14,7 @@ import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
 import {ProofNode} from "../AEG/ProofNode";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Contains methods for iterating nodes and subgraphs on the Proof Mode canvas.
@@ -120,7 +120,7 @@ export function iterationMouseUp(event: MouseEvent): void {
                 const tempAtom: AtomNode = EditModeUtils.alterAtom(currentNode, moveDifference);
                 currentProofTree.insert(tempAtom);
             }
-            treeContext.pushToProof(new ProofNode(currentProofTree, "Iteration"));
+            TreeContext.pushToProof(new ProofNode(currentProofTree, "Iteration"));
         }
     }
     redrawProof();

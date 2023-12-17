@@ -9,7 +9,7 @@ import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
 import {ProofNode} from "../AEG/ProofNode";
 import {redrawProof} from "../SharedToolUtils/DrawUtils";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * File containing insertion node movement event handlers.
@@ -35,11 +35,11 @@ export function insertionMouseDown(event: MouseEvent) {
     //Create a deep copy of the tree we are trying to insert the incoming node into so that we can
     //modify it as needed without affecting the actual structure
     currentTree = getCurrentProofTree();
-    const selectedNodes = treeContext.selectForProof.sheet.children;
+    const selectedNodes = TreeContext.selectForProof.sheet.children;
     const startingPoint = new Point(event.x - offset.x, event.y - offset.y);
 
     //we can insert only a single subgraph at a time
-    if (treeContext.proof.length > 0 && selectedNodes.length === 1) {
+    if (TreeContext.proof.length > 0 && selectedNodes.length === 1) {
         //As long as there are graphs to be placed, they are legal nodes
         legalNode = true;
         currentNode = selectedNodes[0];
@@ -245,7 +245,7 @@ export function insertionMouseUp(event: MouseEvent) {
                 currentTree.insert(tempAtom);
             }
             //Insertion is a new step -> push a new node in the proof, signifying it as such
-            treeContext.pushToProof(new ProofNode(currentTree, "Insertion"));
+            TreeContext.pushToProof(new ProofNode(currentTree, "Insertion"));
         }
     }
     redrawProof();

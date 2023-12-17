@@ -8,7 +8,7 @@ import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
 import {ProofNode} from "../AEG/ProofNode";
 import {readdChildren, reInsertNode} from "../SharedToolUtils/EditModeUtils";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Contains methods for deleting two CutNodes at once on the Proof Mode HTML canvas.
@@ -98,7 +98,7 @@ export function doubleCutDeletionMouseUp(event: MouseEvent): void {
             for (let i = 0; i < lowerCut.children.length; i++) {
                 nextProof.tree.insert(lowerCut.children[i]);
             }
-            treeContext.pushToProof(nextProof);
+            TreeContext.pushToProof(nextProof);
         }
     }
 

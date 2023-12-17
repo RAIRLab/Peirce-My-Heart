@@ -6,7 +6,7 @@ import {drawAtom, drawCut, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Contains methods for moving one node at a time.
@@ -37,23 +37,23 @@ let legalNode: boolean;
  */
 export function moveSingleMouseDown(event: MouseEvent): void {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = treeContext.tree.getLowestNode(startingPoint);
-    if (currentNode !== treeContext.tree.sheet && currentNode !== null) {
+    currentNode = TreeContext.tree.getLowestNode(startingPoint);
+    if (currentNode !== TreeContext.tree.sheet && currentNode !== null) {
         changeCursorStyle("cursor: grabbing");
-        const currentParent = treeContext.tree.getLowestParent(startingPoint);
+        const currentParent = TreeContext.tree.getLowestParent(startingPoint);
         if (currentParent !== null) {
             currentParent.remove(startingPoint);
         }
 
         if (currentNode instanceof CutNode && currentNode.children.length !== 0) {
             for (let i = 0; i < currentNode.children.length; i++) {
-                treeContext.tree.insert(currentNode.children[i]);
+                TreeContext.tree.insert(currentNode.children[i]);
             }
             currentNode.children = [];
         }
         legalNode = true;
 
-        redrawTree(treeContext.tree);
+        redrawTree(TreeContext.tree);
         if (currentNode instanceof AtomNode) {
             drawAtom(currentNode, legalColor(), true);
         } else {
@@ -79,15 +79,15 @@ export function moveSingleMouseMove(event: MouseEvent): void {
         );
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = alterCut(currentNode, moveDifference);
-            redrawTree(treeContext.tree);
-            const color = treeContext.tree.canInsert(tempCut) ? legalColor() : illegalColor();
+            redrawTree(TreeContext.tree);
+            const color = TreeContext.tree.canInsert(tempCut) ? legalColor() : illegalColor();
             drawCut(tempCut, color);
             determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
         } //If the node is an atom, make a temporary atom and check legality, drawing that.
         else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
-            redrawTree(treeContext.tree);
-            const color = treeContext.tree.canInsert(tempAtom) ? legalColor() : illegalColor();
+            redrawTree(TreeContext.tree);
+            const color = TreeContext.tree.canInsert(tempAtom) ? legalColor() : illegalColor();
             drawAtom(tempAtom, color, true);
             determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
         }
@@ -110,20 +110,20 @@ export function moveSingleMouseUp(event: MouseEvent): void {
         );
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = alterCut(currentNode, moveDifference);
-            if (treeContext.tree.canInsert(tempCut)) {
-                treeContext.tree.insert(tempCut);
+            if (TreeContext.tree.canInsert(tempCut)) {
+                TreeContext.tree.insert(tempCut);
             } else {
-                treeContext.tree.insert(currentNode);
+                TreeContext.tree.insert(currentNode);
             }
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
-            if (treeContext.tree.canInsert(tempAtom)) {
-                treeContext.tree.insert(tempAtom);
+            if (TreeContext.tree.canInsert(tempAtom)) {
+                TreeContext.tree.insert(tempAtom);
             } else {
-                treeContext.tree.insert(currentNode);
+                TreeContext.tree.insert(currentNode);
             }
         }
-        redrawTree(treeContext.tree);
+        redrawTree(TreeContext.tree);
     }
     legalNode = false;
 }
@@ -136,8 +136,8 @@ export function moveSingleMouseUp(event: MouseEvent): void {
 export function moveSingleMouseOut(): void {
     changeCursorStyle("cursor: default");
     if (legalNode && currentNode !== null) {
-        treeContext.tree.insert(currentNode);
+        TreeContext.tree.insert(currentNode);
     }
     legalNode = false;
-    redrawTree(treeContext.tree);
+    redrawTree(TreeContext.tree);
 }

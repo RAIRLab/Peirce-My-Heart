@@ -36,7 +36,7 @@ export enum Tool {
     clearProofTool,
 }
 
-export class treeContext {
+export class TreeContext {
     //The current tree on the the canvas, needs to be redrawn upon any updates.
     public static tree: AEGTree = new AEGTree();
 
@@ -60,11 +60,11 @@ export class treeContext {
      * @returns The node denoting the last step in the proof.
      */
     public static getLastProofStep(): ProofNode {
-        if (treeContext.proof.length === 0) {
+        if (TreeContext.proof.length === 0) {
             return new ProofNode(new AEGTree());
         }
 
-        return treeContext.proof[treeContext.proof.length - 1];
+        return TreeContext.proof[TreeContext.proof.length - 1];
     }
 
     /**

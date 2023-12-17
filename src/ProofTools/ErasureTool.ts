@@ -8,7 +8,7 @@ import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
 import {ProofNode} from "../AEG/ProofNode";
 import {reInsertNode} from "../SharedToolUtils/EditModeUtils";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Inference rule for erasure
@@ -77,7 +77,7 @@ export function erasureMouseUp(event: MouseEvent) {
             currentParent.remove(currentPoint);
         }
 
-        treeContext.pushToProof(nextProof);
+        TreeContext.pushToProof(nextProof);
         redrawProof();
     }
 
