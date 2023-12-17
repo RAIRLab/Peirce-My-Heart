@@ -11,60 +11,76 @@ import {reInsertNode} from "../SharedToolUtils/EditModeUtils";
 import {TreeContext} from "../TreeContext";
 
 /**
- * Tool to be used during proof mode to perform deiteration on subgraphs on an AEG
+ * Contains methods for iterating nodes and subgraphs on the Proof Mode canvas.
+ *
  * @author Dawn Moore
  * @author Anusha Tiwari
  */
 
-//The node selected with the user mouse down.
-let currentNode: CutNode | AtomNode | null = null;
-
-//Whether or not the node is allowed to be moved (not the sheet).
-let legalNode: boolean;
-
-//A copy of the tree we are dealing with in this step
-let tempTree: AEGTree;
-
-//The point that the current mouse event is targeting
+//Point the user has recently clicked.
 let currentPoint: Point;
 
-//The current tree in the proof chain
+//Node in question.
+let currentNode: CutNode | AtomNode | null = null;
+
+//True if currentNode is not The Sheet of Assertion (i.e can be moved.)
+let legalNode: boolean;
+
+//AEGTree at the current Proof step.
 let currentProofTree: AEGTree;
 
+//Copy of currentProofTree.
+let tempTree: AEGTree;
+
 /**
- * Determines the lowest node containing the current point and if that is not the sheet is is
- * considered a legal node. If it can also deiterate highlight it and all of it's children.
- * @param event A Mouse up event while using the deiteration tool
+ * Sets currentPoint according to the coordinates given by the incoming MouseEvent.
+ * Then sets currentProofTree to the current proof tree.
+ * Then sets tempTree to a copy of currentProofTree.
+ * Then sets currentNode to the lowest node containing currentPoint.
+ * Then determines legality and highlights any effected nodes as the illegal color.
+ *
+ * @param event Incoming MouseEvent.
  */
-export function deiterationMouseDown(event: MouseEvent) {
+export function deiterationMouseDown(event: MouseEvent): void {
     currentPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentProofTree = getCurrentProofTree();
     tempTree = new AEGTree(currentProofTree.sheet);
     currentNode = currentProofTree.getLowestNode(currentPoint);
-
-    setLegal();
+    determineLegalityAndHighlightAsIllegal();
 }
 
 /**
- * Determines the lowest node containing the current point and if that is not the sheet it is
- * considered a legal node and will be highlighted.
- * @param event A mouse move event while using deiteration tool
+ * Sets currentPoint according to the coordinates given by the incoming MouseEvent.
+ *
+ * Then if currentNode is not null,
+ *      Sets currentNode to the lowest node containing currentPoint,
+ *      Redraws the proof, and
+ *      Determines legality and highlights any effected nodes as the illegal color.
+ *
+ * @param event Incoming MouseEvent.
  */
-export function deiterationMouseMove(event: MouseEvent) {
+export function deiterationMouseMove(event: MouseEvent): void {
     currentPoint = new Point(event.x - offset.x, event.y - offset.y);
     if (currentNode !== null) {
         currentNode = currentProofTree.getLowestNode(currentPoint);
         redrawProof();
-        setLegal();
+        determineLegalityAndHighlightAsIllegal();
     }
 }
 
 /**
- * If the node we currently have is legal, find it's parent and remove the current node from it.
- * Push the new version of the tree onto the proof history array.
- * @param event A mouse up event while using deiteration tool
+ * If legality is true,
+ *      Sets currentPoint to the coordinates given by the incoming MouseEvent, and
+ *      If currentNode is not null and can be deiterated,
+ *          Removes currentPoint.
+ *      Then pushes a "Deiteration" rule to the proof history.
+ *
+ * Then sets legality to false.
+ * Then redraws the proof.
+ *
+ * @param event Incoming MouseEvent.
  */
-export function deiterationMouseUp(event: MouseEvent) {
+export function deiterationMouseUp(event: MouseEvent): void {
     if (legalNode) {
         currentPoint = new Point(event.x - offset.x, event.y - offset.y);
         if (
@@ -78,44 +94,19 @@ export function deiterationMouseUp(event: MouseEvent) {
             TreeContext.pushToProof(new ProofNode(currentProofTree, "Deiteration"));
         }
     }
-
     legalNode = false;
     redrawProof();
 }
 
 /**
- * Helper function to determine if the currently selected node is a legal node and highlight it.
+ * If legality is true and currentNode is not null,
+ *      Reinserts currentNode into tempTree.
+ *
+ * Then sets legality to false.
+ * Then sets currentNode to null.
+ * Then redraws the proof.
  */
-function setLegal() {
-    if (
-        currentNode !== null &&
-        !(currentNode instanceof CutNode && currentNode.ellipse === null) &&
-        canDeiterate(currentProofTree.sheet, currentProofTree.getLevel(currentNode))
-    ) {
-        legalNode = true;
-
-        //Find the parent at the point we are on
-        const tempParent = tempTree.getLowestParent(currentPoint);
-        if (tempParent !== null) {
-            //remove the node from the parent
-            tempParent.remove(currentPoint);
-        }
-
-        //Draw the temp tree, from which the node we want to erase has been removed
-        redrawTree(tempTree);
-        //Highlight the node selected for deiteration in illegal color
-        highlightNode(currentNode, illegalColor());
-        //Insert it back into the temporary tree
-        tempTree.insert(currentNode);
-    } else {
-        legalNode = false;
-    }
-}
-
-/**
- * Reset the current null and make this node illegal until it's selected again, redraws the screen.
- */
-export function deiterationMouseOut() {
+export function deiterationMouseOut(): void {
     if (legalNode && currentNode !== null) {
         reInsertNode(tempTree, currentNode);
     }
@@ -125,17 +116,58 @@ export function deiterationMouseOut() {
 }
 
 /**
- * Searches the tree for an equal match to the node we're attempting to delete/deiterate that is
- * not itself. It cannot go to a level lower than itself and it cannot search any cuts it is not
- * contained by. The Node we search for is the currently selected no currentNode.
- * @param currentParent The current node we are searching the children of
- * @param level The level the node we're searching for is located
- * @returns Whether or not this is a valid deiteration
+ * If currentNode is not null and can be deiterated,
+ *      Sets legality to true, and
+ *      If the lowest parent containing currentPoint is not null,
+ *          Removes currentNode.
+ *      Then redraws temp tree.
+ *      Then highlights currentNode and any effected children as the illegal color, and
+ *      Inserts currentNode into tempTree.
+ *
+ * Otherwise sets legality to false.
+ */
+function determineLegalityAndHighlightAsIllegal(): void {
+    if (
+        currentNode !== null &&
+        !(currentNode instanceof CutNode && currentNode.ellipse === null) &&
+        canDeiterate(currentProofTree.sheet, currentProofTree.getLevel(currentNode))
+    ) {
+        legalNode = true;
+        const tempParent = tempTree.getLowestParent(currentPoint);
+        if (tempParent !== null) {
+            tempParent.remove(currentPoint);
+        }
+        redrawTree(tempTree);
+        highlightNode(currentNode, illegalColor());
+        tempTree.insert(currentNode);
+    } else {
+        legalNode = false;
+    }
+}
+
+/**
+ * Checks and returns if the incoming CutNode can be deiterated at the incoming level number.
+ *
+ * As long as the incoming CutNode has children,
+ *      If a child of the incoming CutNode's currentNode are both Ellipses and currentNode is equal to that child,
+ *          Returns true.
+ *      Otherwise if a child of the incoming CutNode is an AtomNode and currentNode is an AtomNode with the same identifier,
+ *          Returns true.
+ *      Otherwise if a child of the incoming CutNode contains currentNode at a deeper level,
+ *          Sets that child as the new parent to check.
+ *
+ * Then if no equality was found,
+ *      Returns the result of canDeiterate between the new parent to check and its level.
+ *
+ * Otherwise returns false.
+ *
+ * @param currentParent Incoming CutNode.
+ * @param level Incoming level number.
+ * @returns True if currentParent can be deiterated.
  */
 function canDeiterate(currentParent: CutNode, level: number): boolean {
     let potentialParent: CutNode | null = null;
     for (let i = 0; i < currentParent.children.length; i++) {
-        //If both nodes are cuts, and they are equal then we have found a copy higher on the tree
         if (
             currentParent.children[i] instanceof CutNode &&
             currentNode instanceof CutNode &&
@@ -143,17 +175,14 @@ function canDeiterate(currentParent: CutNode, level: number): boolean {
             currentNode.ellipse !== (currentParent.children[i] as CutNode).ellipse
         ) {
             return true;
-        } //If both nodes are atoms, and they both have the same identifier then they are equal
-        else if (
+        } else if (
             currentParent.children[i] instanceof AtomNode &&
             currentNode instanceof AtomNode &&
             (currentParent.children[i] as AtomNode).identifier === currentNode.identifier &&
             currentParent.children[i].toString() !== currentNode.toString()
         ) {
             return true;
-        } //If this cut has the node we're looking for we want to recurse towards it, however
-        //We want to still check the rest of this level so we do it afterwards.
-        else if (
+        } else if (
             currentParent.children[i] instanceof CutNode &&
             (currentParent.children[i] as CutNode).containsNode(currentNode!) &&
             currentProofTree.getLevel(currentParent.children[i]) < level
@@ -162,12 +191,9 @@ function canDeiterate(currentParent: CutNode, level: number): boolean {
         }
     }
 
-    //If we did find the parent of the node we're trying to find an equal of, we look at the next
-    //closest node.
     if (potentialParent !== null) {
         return canDeiterate(potentialParent, level);
     }
 
-    //If there was no equal found then we cannot deiterate.
     return false;
 }

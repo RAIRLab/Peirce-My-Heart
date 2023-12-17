@@ -139,28 +139,30 @@ export function iterationMouseOut(): void {
 }
 
 /**
- * Checks and returns if one incoming Point can be legally iterated to another incoming Point.
- * //needs update
+ * Checks and returns if the latter incoming Point can be legally iterated to the former incoming Point.
  *
- * @param moveDifference Another incoming Point.
- * @param currentPoint One incoming Point.
+ * If currentParent is not null, and
+ *      currentParent contains the former current Point, and
+ *          If currentNode is a CutNode and currentNode's children are valid, and
+ *              currentNode altered by the latter incoming Point is not a parent, or
+ *          currentNode is an AtomNode and currentNode altered by the latter incoming Point can be inserted into currentProofTree,
+ *
+ *      Returns true.
+ *
+ * @param moveDifference Latter incoming Point.
+ * @param currentPoint Former incoming Point.
  * @returns True if currentPoint can be legally iterated to moveDifference.
  */
 function isLegal(moveDifference: Point, currentPoint: Point): boolean {
-    //If the current parent exists and contains our current point then checks whether the node
-    //Is an atom or cut for their own individual legality check.
     return (
         currentParent !== null &&
         currentParent.containsPoint(currentPoint) &&
-        //If the currentNode is a cut, then it is legal if it and all if it's children can be placed
-        //legally, and if the node we have selected can not be inserted over something else.
         ((currentNode instanceof CutNode &&
             EditModeUtils.validateChildren(currentProofTree, currentNode, moveDifference) &&
-            isParent(
+            isNotParent(
                 currentProofTree.sheet,
                 EditModeUtils.alterCut(currentNode, moveDifference).ellipse!
             )) ||
-            //AtomNodes are legal if they can be inserted in their current location.
             (currentNode instanceof AtomNode &&
                 currentProofTree.canInsert(EditModeUtils.alterAtom(currentNode, moveDifference))))
     );
@@ -168,21 +170,25 @@ function isLegal(moveDifference: Point, currentPoint: Point): boolean {
 
 /**
  * Checks and returns if the incoming altered Ellipse contains the incoming CutNode or any of the incoming CutNode's children.
- * //needs update
+ *
+ * As long as the incoming CutNode has children,
+ *      If the incoming altered Ellipse contains the incoming CutNode's child or that child is a parent,
+ *          Returns false.
+ *      Otherwise if the incoming altered Ellipse contains a child of the incoming CutNode that is an AtomNode,
+ *          Returns false.
+ * Otherwise returns true.
  *
  * @param currentNode Incoming CutNode.
  * @param currentEllipse Incoming Ellipse.
- * @returns True if the incoming altered Ellipse does not contain the incoming CutNode or any of the incoming CutNode's children.
+ * @returns True if the currentEllipse does not contain currentNode or any of currentNode's children.
  */
-function isParent(currentNode: CutNode, currentEllipse: Ellipse): boolean {
+function isNotParent(currentNode: CutNode, currentEllipse: Ellipse): boolean {
     for (let i = 0; i < currentNode.children.length; i++) {
         if (currentNode.children[i] instanceof CutNode) {
-            //So long as the ellipse is not null, and either our current cut or any of it's
-            //Children have a child that is contained by our ellipse then it is false
             if (
                 (currentNode.children[i] as CutNode).ellipse instanceof Ellipse &&
                 (currentEllipse.contains((currentNode.children[i] as CutNode).ellipse!) ||
-                    !isParent(currentNode.children[i] as CutNode, currentEllipse))
+                    !isNotParent(currentNode.children[i] as CutNode, currentEllipse))
             ) {
                 return false;
             }
