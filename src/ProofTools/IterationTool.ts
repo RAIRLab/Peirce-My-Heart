@@ -1,9 +1,13 @@
 import * as EditModeUtils from "../SharedToolUtils/EditModeUtils";
 import {AEGTree} from "../AEG/AEGTree";
 import {AtomNode} from "../AEG/AtomNode";
-import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
+import {
+    changeCursorStyle,
+    determineAndChangeCursorStyle,
+    drawAtom,
+    redrawProof,
+} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
-import {drawAtom, redrawProof} from "../SharedToolUtils/DrawUtils";
 import {Ellipse} from "../AEG/Ellipse";
 import {getCurrentProofTree} from "./ProofToolUtils";
 import {illegalColor, legalColor} from "../Themes";
@@ -13,41 +17,47 @@ import {ProofNode} from "../AEG/ProofNode";
 import {treeContext} from "../treeContext";
 
 /**
- * A tool used to iterated subgraphs on the AEG
+ * Contains methods for iterating nodes and subgraphs on the Proof Mode canvas.
+ *
+ * When a node's position is described as being valid or not,
+ * This means that we are determining if it can currently be inserted into the AEGTree without intersection.
+ *
  * @author Dawn Moore
  * @author Anusha Tiwari
  */
 
-//The initial point the user pressed down.
+//First Point the user clicks.
 let startingPoint: Point;
 
-//The current node and its children we will be moving.
+//Node in question.
 let currentNode: CutNode | AtomNode | null = null;
 
-//The parent of the currentNode.
+//Parent of currentNode.
 let currentParent: CutNode | null = null;
 
-//Whether or not the node is allowed to be moved (not the sheet).
+//True if currentNode is not The Sheet of Assertion (i.e can be moved.)
 let legalNode: boolean;
 
-//The tree of the current proof step
+//AEGTree at the current Proof step.
 let currentProofTree: AEGTree;
 
 /**
- * Sets the starting point for future use as well as obtaining the lowest node containing this point.
- * Also obtains the parent of this lowest point for future use as well.
- * @param event The mouse down event while using the iteration tool
+ * Sets currentProofTree to the current proof tree.
+ * Then sets startingPoint according to the incoming MouseEvent.
+ * Then sets currentNode to the lowest node containing startingPoint.
+ * Then sets currentParent to the lowest parent containing startingPoint.
+ * Then sets legality to true if currentNode is not The Sheet of Assertion or null.
+ *
+ * Then if legality is true,
+ *      Sets cursor style to copy.
+ *
+ * @param event Incoming MouseEvent.
  */
-export function iterationMouseDown(event: MouseEvent) {
-    //Make a deep copy of the tree of our latest proof step. Our iteration actions will be performed
-    //on this structure, but they should all be on a new step - we do not want to make any changes
-    //on the existing step
+export function iterationMouseDown(event: MouseEvent): void {
     currentProofTree = getCurrentProofTree();
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = currentProofTree.getLowestNode(startingPoint);
     currentParent = currentProofTree.getLowestParent(startingPoint);
-
-    //So long as we have obtained a node that isn't the sheet we are allowed to select this.
     legalNode = currentNode !== currentProofTree.sheet && currentNode !== null;
 
     if (legalNode) {
@@ -56,12 +66,15 @@ export function iterationMouseDown(event: MouseEvent) {
 }
 
 /**
- * If we have selected a legal node then determines how far it has moved from the original node.
- * If it is a cut node determines if this new position is legal for all of its children and draws
- * that in its correct color. If it's an atom it just checks to see if that is in the correct position.
- * @param event The mouse move event while using the iteration tool
+ * If legality is true,
+ *      Redraws the proof,
+ *      Alters currentNode according to the coordinates received by the incoming MouseEvent,
+ *      Highlights currentNode and any of its children as the legal or illegal color based on its position's validity, and
+ *      Changes cursor style according to the highlight color.
+ *
+ * @param event Incoming MouseEvent.
  */
-export function iterationMouseMove(event: MouseEvent) {
+export function iterationMouseMove(event: MouseEvent): void {
     if (legalNode) {
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
@@ -82,11 +95,17 @@ export function iterationMouseMove(event: MouseEvent) {
 }
 
 /**
- * Checks to see if the node and any of its children are illegal in the new position. If any are
- * illegal does not insert any of them. Redraws the canvas to update this.
- * @param event The mouse out event while using the iteration tool
+ * If legality is true,
+ *      Sets cursor style to default,
+ *      Then if currentNode altered by the coordinates received from the incoming MouseEvent's position is legal,
+ *          Inserts currentNode and any of its children, and
+ *          Adds an Iteration step to the proof history.
+ * Then redraws the proof.
+ * Then sets legality to false.
+ *
+ * @param event Incoming MouseEvent.
  */
-export function iterationMouseUp(event: MouseEvent) {
+export function iterationMouseUp(event: MouseEvent): void {
     if (legalNode) {
         changeCursorStyle("cursor: default");
         const moveDifference: Point = new Point(
@@ -101,7 +120,6 @@ export function iterationMouseUp(event: MouseEvent) {
                 const tempAtom: AtomNode = EditModeUtils.alterAtom(currentNode, moveDifference);
                 currentProofTree.insert(tempAtom);
             }
-            //Iteration is a new step -> push a new node in the proof, signifying it as such
             treeContext.pushToProof(new ProofNode(currentProofTree, "Iteration"));
         }
     }
@@ -110,20 +128,23 @@ export function iterationMouseUp(event: MouseEvent) {
 }
 
 /**
- * If the mouse has left the canvas then assume it is now illegal and reset the tree.
+ * Sets cursor style to default.
+ * Then sets legality to false.
+ * Then redraws the proof.
  */
-export function iterationMouseOut() {
+export function iterationMouseOut(): void {
     changeCursorStyle("cursor: default");
     legalNode = false;
     redrawProof();
 }
 
 /**
- * If the current point is legally iterated (within the parent of the original node)
- * checks if the altered nodes can be inserted, if all of them can returns true.
- * @param moveDifference The change from the currentNodes original position
- * @param currentPoint The current point on the graph the mouse is
- * @returns Whether or not this location is legal
+ * Checks and returns if one incoming Point can be legally iterated to another incoming Point.
+ * //needs update
+ *
+ * @param moveDifference Another incoming Point.
+ * @param currentPoint One incoming Point.
+ * @returns True if currentPoint can be legally iterated to moveDifference.
  */
 function isLegal(moveDifference: Point, currentPoint: Point): boolean {
     //If the current parent exists and contains our current point then checks whether the node
@@ -135,7 +156,7 @@ function isLegal(moveDifference: Point, currentPoint: Point): boolean {
         //legally, and if the node we have selected can not be inserted over something else.
         ((currentNode instanceof CutNode &&
             EditModeUtils.validateChildren(currentProofTree, currentNode, moveDifference) &&
-            insertChildless(
+            isParent(
                 currentProofTree.sheet,
                 EditModeUtils.alterCut(currentNode, moveDifference).ellipse!
             )) ||
@@ -146,13 +167,14 @@ function isLegal(moveDifference: Point, currentPoint: Point): boolean {
 }
 
 /**
- * Determines if the current location and shape of the ellipse would have any children in
- * it's current position, acts recursively for cut nodes starting with the sheet.
- * @param currentNode The current node we are checking in the recursive function starting with the sheet
- * @param currentEllipse The ellipse of the altered cut node we are trying to place
- * @returns Whether or not the node would have any children
+ * Checks and returns if the incoming altered Ellipse contains the incoming CutNode or any of the incoming CutNode's children.
+ * //needs update
+ *
+ * @param currentNode Incoming CutNode.
+ * @param currentEllipse Incoming Ellipse.
+ * @returns True if the incoming altered Ellipse does not contain the incoming CutNode or any of the incoming CutNode's children.
  */
-function insertChildless(currentNode: CutNode, currentEllipse: Ellipse): boolean {
+function isParent(currentNode: CutNode, currentEllipse: Ellipse): boolean {
     for (let i = 0; i < currentNode.children.length; i++) {
         if (currentNode.children[i] instanceof CutNode) {
             //So long as the ellipse is not null, and either our current cut or any of it's
@@ -160,7 +182,7 @@ function insertChildless(currentNode: CutNode, currentEllipse: Ellipse): boolean
             if (
                 (currentNode.children[i] as CutNode).ellipse instanceof Ellipse &&
                 (currentEllipse.contains((currentNode.children[i] as CutNode).ellipse!) ||
-                    !insertChildless(currentNode.children[i] as CutNode, currentEllipse))
+                    !isParent(currentNode.children[i] as CutNode, currentEllipse))
             ) {
                 return false;
             }
@@ -171,6 +193,5 @@ function insertChildless(currentNode: CutNode, currentEllipse: Ellipse): boolean
             return false;
         }
     }
-
     return true;
 }
