@@ -1,10 +1,9 @@
-# PeirceMyHeart (Work In Progress)
+# PeirceMyHeart
 
 [![Code Style: Google](https://img.shields.io/badge/code%20style-google-blueviolet.svg)](https://github.com/google/gts)
 
-A web application for modeling Charles Peirce's Alpha Existential Graph System. In development for
-The State University of New York at Albany Capstone Course ICSI-499.
-Sponsored by James Oswald (RAIR Lab)
+PeirceMyHeart is a web application for modeling Charles Peirce's Alpha Existential Graph System,
+it allows users to construct and prove theorems using Alpha Existential Graphs. 
 
 ## Development
 
