@@ -34,8 +34,7 @@ let tempTree: AEGTree;
 
 /**
  * Sets currentPoint according to the coordinates given by the incoming MouseEvent.
- * Then sets currentNode to the lowest node containing currentPoint.
- * Then determines legality and highlights any effected nodes as the illegal color.
+ * Then sets currentNode, determines legality and highlights accordingly.
  *
  * @param event Incoming MouseEvent.
  */
@@ -67,9 +66,7 @@ export function deiterationMouseMove(event: MouseEvent): void {
 /**
  * If legality is true,
  *      Sets currentPoint to the coordinates given by the incoming MouseEvent, and
- *      If currentNode can be deiterated,
- *          Removes currentPoint.
- *      Then Deiterates currentNode and pushes a "Deiteration" rule to the proof history.
+ *      deiterates the node at currentPoint if able.
  *
  * @param event Incoming MouseEvent.
  */

@@ -45,8 +45,6 @@ export function doubleCutInsertionMouseEnter(): void {
 
 /**
  * Sets startingPoint according to the coordinates given by the incoming MouseEvent.
- * Then sets currentProofTree to the current proof tree.
- * Then sets wasOut to false.
  *
  * @param event Incoming MouseEvent.
  */
@@ -57,15 +55,14 @@ export function doubleCutInsertionMouseDown(event: MouseEvent): void {
 }
 
 /**
- * Determines the size of the outer CutNode in a double cut according to the coordinates given by the incoming MouseEvent.
- * Then determines the size of the inner CutNode of the same double cut according to the Ellipse of the outer CutNode.
- * Then redraws the proof.
+ * Determines the size of the outer CutNode in a double cut according to the coordinates given by
+ * the incoming MouseEvent. Same for the inner CutNode.
  *
  * Then if the mouse has not left canvas and neither Ellipse is null,
  *      Checks if both CutNodes are able to be inserted and are larger than the minimum size, and
- *      Highlights both CutNodes as the legal or illegal color, and changes cursor style accordingly.
- *      Then if showRectElm is checked,
- *          Draws the Ellipses' boundary box in the same color as above.
+ *      Highlights both CutNodes as the legal or illegal color.
+ *
+ * Draws the Ellipses' bounding boxes if that is enabled.
  *
  * @param event Incoming MouseEvent.
  */
@@ -93,21 +90,14 @@ export function doubleCutInsertionMouseMove(event: MouseEvent): void {
 }
 
 /**
- * Sets cursor style to crosshair.
- * Then sets currentProofTree to the current proof tree.
- * Then determines the size of the outer CutNode in the double cut according to the coordinates given by the incoming MouseEvent.
- * Then determines the size of the inner CutNode of the same double cut according to the Ellipse of the outer CutNode.
- * Then queues a Double Cut Insert step to be added to the proof history.
+ * Follows the same control flow as doubleCutInsertionMouseMove.
  *
- * Then if wasOut is false and neither Ellipse is null,
- *      Checks if both CutNodes are able to be inserted and are larger than the minimum size, and
- *      Highlights both CutNodes as the legal or illegal color, and changes cursor style accordingly.
- *      Then if the insertions are legal,
- *          Inserts both cuts, and
- *          Adds the queued step to the proof history.
+ * Then if both CutNodes can be inserted, inserts them and pushes a Double Cut Insert step to
+ * the proof history.
  *
  * Then redraws the proof.
  *
+ * @see doubleCutInsertionMouseMove
  * @param event Incoming MouseEvent.
  */
 export function doubleCutInsertionMouseUp(event: MouseEvent): void {
@@ -137,9 +127,7 @@ export function doubleCutInsertionMouseUp(event: MouseEvent): void {
 }
 
 /**
- * Sets cursor style to default.
- * Then sets wasOut to true.
- * Then redraws the proof.
+ * Sets all fields back to default.
  */
 export function doubleCutInsertionMouseOut(): void {
     changeCursorStyle("cursor: default");

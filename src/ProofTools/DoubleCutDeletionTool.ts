@@ -34,10 +34,8 @@ let tempTree: AEGTree;
 
 /**
  * Sets currentPoint according to the coordinates given by the incoming MouseEvent.
- * Then sets currentProofTree to the current proof tree.
- * Then sets tempTree to a copy of currentProofTree's Sheet of Assertion.
  * Then sets currentNode to the lowest node containing currentPoint.
- * Then determines legality and highlights the affected nodes as the illegal color.
+ * Then determines legality and highlights the effected nodes as the illegal color.
  *
  * @param event Incoming MouseEvent.
  */
@@ -52,11 +50,8 @@ export function doubleCutDeletionMouseDown(event: MouseEvent): void {
 
 /**
  * Sets currentPoint according to the coordinates given by the incoming MouseEvent.
- * Then sets tempTree to a copy of currentProofTree's Sheet of Assertion.
- * Then if currentNode is not null,
- *      Sets currentNode to the lowest node containing currentPoint,
- *      Redraws the proof, and
- *      Determines validity.
+ * Then sets currentNode according to currentPoint, determines legality and highlights
+ * currentNode as the illegal color.
  *
  * @param event Incoming MouseEvent.
  */
@@ -73,13 +68,7 @@ export function doubleCutDeletionMouseMove(event: MouseEvent): void {
 /**
  * Queues a Double Cut Delete step to be added to the proof history.
  * Then sets currentPoint according to the coordinates given by the incoming MouseEvent.
- * Then if legality is true and currentNode is a CutNode,
- *      Retrieves the lowest parent containing currentPoint, and
- *      Retrieves that parent's only child.
- *      Then if the current parent is not null and its only child is a CutNode,
- *          Removes the lowest child node of the current parent containing currentPoint,
- *          Inserts any of the parent's child's children back into the proof AEGTree, and
- *          Adds the queued step to the proof history.
+ * Then, if both CutNodes can legally be removed, removes both and pushes the queued proof step.
  *
  * Then redraws the proof.
  *
@@ -106,12 +95,7 @@ export function doubleCutDeletionMouseUp(event: MouseEvent): void {
 }
 
 /**
- * If legality is true and currentNode is not null,
- *      Reinserts currentNode into tempTree.
- *
- * Then sets currentNode to null.
- * Then sets legality to false.
- * Then redraws the proof.
+ * Reinserts currentNode into tempTree if necessary and sets fields to defaults.
  */
 export function doubleCutDeletionMouseOut(): void {
     if (legalNode && currentNode !== null) {
@@ -125,7 +109,8 @@ export function doubleCutDeletionMouseOut(): void {
 /**
  * Checks and returns if the incoming CutNode is the outer CutNode in a valid double cut.
  *
- * A double cut is considered valid an outer CutNode has one CutNode as its only child and the outer CutNode is not The Sheet of Assertion.
+ * A double cut is considered valid an outer CutNode has one CutNode as its only child and
+ * the outer CutNode is not The Sheet of Assertion.
  *
  * @param currentCut Incoming CutNode.
  * @returns True if the incoming CutNode is the outer CutNode in a valid double cut.
@@ -151,13 +136,7 @@ function highlightDoubleCutAsIllegal(parentCut: CutNode): void {
 }
 
 /**
- * If currentNode is a CutNode and the outer CutNode in a double cut,
- *      Sets legality to true,
- *      Then if the lowest parent containing currentPoint is not null,
- *          Removes the lowest node containing currentPoint, which is the inner CutNode in a double cut, and
- *          Readds the inner CutNode's children to tempTree.
- *      Then redraws tempTree, and
- *      Highlights the detected double cut as the illegal color.
+ * Determines if the selected node is part of a legal double cut and highlights accordingly.
  *
  * Otherwise sets legality to false.
  */

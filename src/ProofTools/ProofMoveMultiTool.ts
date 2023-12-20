@@ -42,19 +42,13 @@ let legalNode: boolean;
 let currentProofTree: AEGTree;
 
 /**
- * Sets currentProofTree to the current proof tree.
- * Then sets startingPoint according to the coordinates given by the incoming MouseEvent.
+ * Sets startingPoint according to the coordinates given by the incoming MouseEvent.
  * Then sets currentNode to the lowest node containing startingPoint.
  *
- * Then if currentNode is not The Sheet of Assertion or null,
- *      sets cursor style to grabbing,
- *      sets currentParent to the lowest CutNode containing startingPoint,
- *      removes currentNode,
- *      sets legality to true,
- *      redraws currentProofTree, and
- *      highlights currentNode as the legal color.
+ * Then, if legal, removes currentNode and highlights it according to its and its children's
+ * positions' validity.
  *
- * @param event The mouse down event while using move multiple tool in proof mode
+ * @param event Incoming MouseEvent.
  */
 export function proofMoveMultiMouseDown(event: MouseEvent): void {
     currentProofTree = getCurrentProofTree();
@@ -76,10 +70,11 @@ export function proofMoveMultiMouseDown(event: MouseEvent): void {
 }
 
 /**
- * Redraws currentProofTree.
- * Then alters currentNode and its children according to the coordinates given by the incoming MouseEvent.
- * Then highlights currentNode and its children as either the legal or illegal color depending on the legality of their positions.
- * Then changes cursor style accordingly.
+ * Alters currentNode and its children according to the coordinates given
+ * by the incoming MouseEvent.
+ *
+ * Then, if legal, removes the altered currentNode and
+ * highlights it according to its and its children's positions' validity.
  *
  * @param event Incoming MouseEvent.
  */
@@ -106,15 +101,11 @@ export function proofMoveMultiMouseMove(event: MouseEvent): void {
 }
 
 /**
- * Sets cursor style to default.
- * Then queues a Multi Move step to be added to the proof history.
- * Then alters currentNode and its children according to the coordinates given by the incoming MouseEvent.
+ * Queues a Multi Move step to be added to the proof history.
+ * Then alters currentNode and its children according to the coordinates given
+ * by the incoming MouseEvent.
  *
- * Then if the altered node's position and the position of its children are legal,
- *      adds the queued step to the proof history.
- *
- * Then redraws the proof.
- * Then sets legality to false.
+ * Then, if legal, inserts the altered currentNode and its children.
  *
  * @param event Incoming MouseEvent.
  */
@@ -144,10 +135,7 @@ export function proofMoveMultiMouseUp(event: MouseEvent): void {
 }
 
 /**
- * Sets cursor style to default.
- * Then inserts currentNode into currentProofTree.
- * Then sets legality to false.
- * Then redraws the proof.
+ * Reinserts currentNode into tempTree if necessary and sets fields to defaults.
  */
 export function proofMoveMultiMouseOut(): void {
     changeCursorStyle("cursor: default");

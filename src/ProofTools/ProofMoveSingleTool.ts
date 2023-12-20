@@ -23,6 +23,10 @@ import {TreeContext} from "../TreeContext";
  * When it is said that a node is "removed" in the documentation,
  * This means that it is removed from the Draw Mode AEGTree but visually is still present.
  *
+ * When a CutNode's position is described as being valid or not,
+ * This means that we are determining if it can currently be inserted into the AEGTree without
+ * intersection.
+ *
  * @author Dawn Moore
  */
 
@@ -39,14 +43,10 @@ let legalNode: boolean;
 let currentProofTree: AEGTree;
 
 /**
- * Sets currentProofTree to the current proof tree.
- * Then sets startingPoint according to the coordinates given by the incoming MouseEvent.
+ * Sets startingPoint according to the coordinates given by the incoming MouseEvent.
  * Then sets currentNode to the lowest node containing startingPoint.
- * Then if currentNode is not null or The Sheet of Assertion,
- *      sets cursor style to grabbing,
- *      removes currentNode, inserts its children,
- *      sets legality to true, and
- *      redraws currentProofTree and highlights accordingly.
+ * Then, if legal, removes currentNode and highlights it according to its
+ * position's validity.
  *
  * @param event Incoming MouseEvent.
  */
@@ -81,10 +81,8 @@ export function proofMoveSingleMouseDown(event: MouseEvent): void {
 }
 
 /**
- * Redraws currentProofTree.
- * Then alters currentNode according to the coordinates given by the incoming MouseEvent.
+ * Alters currentNode according to the coordinates given by the incoming MouseEvent.
  * Then highlights currentNode as either the legal or illegal color depending on move legality.
- * Then changes cursor style accordingly.
  *
  * @param event Incoming MouseEvent.
  */
@@ -111,11 +109,10 @@ export function proofMoveSingleMouseMove(event: MouseEvent): void {
 }
 
 /**
- * Sets cursor style to default.
- * Then queues a Single Move step to be added to the proof history.
+ * Queues a Single Move step to be added to the proof history.
  * Then alters currentNode according to the coordinates given by the incoming MouseEvent.
- * If this Single Move is valid, then the moved node and queued Single Move step are added to the proof.
- * Regardless the proof is redrawn and legality is set to false.
+ * If this Single Move is valid, then the moved node and queued Single Move step are added to
+ * the proof.
  *
  * @param event Incoming MouseEvent.
  */
@@ -145,10 +142,7 @@ export function proofMoveSingleMouseUp(event: MouseEvent): void {
 }
 
 /**
- * Sets cursor style to default.
- * Then inserts currentNode into currentProofTree.
- * Then sets legality to false.
- * Then redraws the proof.
+ * Reinserts currentNode into tempTree if necessary and sets fields to defaults.
  */
 export function proofMoveSingleMouseOut(): void {
     changeCursorStyle("cursor: default");

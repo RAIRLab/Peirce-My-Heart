@@ -24,7 +24,8 @@ import {TreeContext} from "../TreeContext";
  * This means that it is removed from the Draw Mode AEGTree but visually is still present.
  *
  * When a CutNode's position is described as being valid or not,
- * This means that we are determining if it can currently be inserted into the AEGTree without intersection.
+ * This means that we are determining if it can currently be inserted into the AEGTree without
+ * intersection.
  *
  * @author Dawn Moore
  */
@@ -49,7 +50,8 @@ let currentProofTree: AEGTree;
 
 /**
  * Sets startingPoint according to the coordinates given by the incoming MouseEvent.
- * Then sets currentNode to the lowest node containing startingPoint in currentProofTree if currentNode is a CutNode.
+ * Then sets currentNode to the lowest node containing startingPoint in currentProofTree
+ * if currentNode is a CutNode.
  * Then removes currentNode.
  * Then inserts currentNode's children.
  * Then determines direction.
@@ -79,7 +81,6 @@ export function proofResizeMouseDown(event: MouseEvent): void {
 /**
  * Resizes currentNode according to the coordinates given by the incoming MouseEvent and direction.
  * Then redraws the resize as the legal or illegal color depending on its position's validity.
- * Then changes the cursor style according to the color.
  *
  * @param event Incoming MouseEvent.
  */
@@ -103,11 +104,8 @@ export function proofResizeMouseMove(event: MouseEvent): void {
 }
 
 /**
- * Sets cursor style to default.
- * Then resizes currentNode according to the coordinates given by the incoming MouseEvent and direction.
+ * Resizes currentNode according to the coordinates given by the incoming MouseEvent and direction.
  * If this resize's position is valid, then it is inserted and added as a proof step.
- * Then the proof is redrawn.
- * Then legality is set to false.
  *
  * @param event Incoming MouseEvent.
  */
@@ -134,10 +132,7 @@ export function proofResizeMouseUp(event: MouseEvent): void {
 }
 
 /**
- * Sets cursor style to default.
- * Then inserts currentNode into currentProofTree.
- * Then sets legality to false.
- * Then redraws the proof.
+ * Reinserts currentNode into currentProofTree if necessary and sets fields to defaults.
  */
 export function proofResizeMouseOut(): void {
     changeCursorStyle("cursor: default");
