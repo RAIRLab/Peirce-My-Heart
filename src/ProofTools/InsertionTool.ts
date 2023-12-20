@@ -38,39 +38,13 @@ let legalPlace: boolean;
 let legalNode: boolean;
 
 /**
- * Sets currentTree to the current proof tree.
- * Then if there are existing steps in the proof and only one node (with any amount of children) was selected for insertion,
- *      Sets node legality to true,
- *      Sets currentNode to the one node selected for insertion,
- *      Sets currentParent according to the parent of the lowest node containing the coordinates given by the incoming MouseEvent, and
- *      If currentNode comes from Draw Mode canvas,
- *          If currentParent is not null and currentParent contains an altered currentNode according to the coordinates given by the incoming MouseEvent,
- *              Sets cursor style to no-drop,
- *              Sets placement legality to false, and
- *              Draws the altered currentNode as the illegal color.
- *          Otherwise,
- *              If currentParent is not null, currentParent is not the sheet and currentNode is on an even cut level,
- *                  If the altered currentNode is a CutNode,
- *                      Sets placement legality to true, and
- *                      If the altered CutNode now contains any of currentParent's children,
- *                          Sets placement legality to false.
- *                  Otherwise,
- *                      Sets placement legality to true.
- *              Then if placement legality is true,
- *                  Alters currentNode according to the coordinates given by the incoming MouseEvent,
- *                  Highlights the altered currentNode and all its children as either the legal or illegal color if they can be inserted, and
- *                  Sets cursor style to copy or no-drop depending on the determined color.
- *              Otherwise,
- *                  Sets cursor style to no-drop, and
- *                  Highlights the altered currentNode and all its children as the illegal color.
- *      Otherwise,
- *          Sets cursor style to no-drop,
- *          Sets placement legality to false, and
- *          Highlights the altered currentNode and all its children as the illegal color.
- * Otherwise,
- *      Sets placement legality to false,
- *      Sets node legality to false, and
- *      Highlights an altered currentNode and all its children as the illegal color.
+ * Stores the coordinates given by the incoming MouseEvent.
+ * Then determines if it is possible to insert currentNode at these coordinates.
+ * If so, sets legality to true and highlights accordingly.
+ *
+ * It is possible to insert currentNode at these coordinates if
+ * the cut level is odd, and
+ * currentNode and none of its children overlap nodes in the existing proof tree.
  *
  * @param event Incoming MouseEvent.
  */
@@ -250,14 +224,9 @@ export function insertionMouseMove(event: MouseEvent): void {
 }
 
 /**
- * Sets cursor style to default, and
- * If both currentNode and currentNode's placement are legal,
- *      If the inserted graph comes from the Draw Mode canvas,
- *          Inserts the currentNode and any of its children at the coordinates given by the incoming MouseEvent.
- *          Then adds an Insertion step to the proof history.
- *
- * Then redraws the proof.
- * Then sets node legality to false.
+ * Inserts the currentNode and any of its children at the coordinates given
+ * by the incoming MouseEvent.
+ * Then adds an Insertion step to the proof history.
  *
  * @param event Incoming MouseEvent.
  */
@@ -284,9 +253,7 @@ export function insertionMouseUp(event: MouseEvent): void {
 }
 
 /**
- * Sets cursor style to default.
- * Then sets node legality to false.
- * Then redraws the proof.
+ * Sets fields back to defaults.
  */
 export function insertionMouseOut(): void {
     changeCursorStyle("cursor: default");
@@ -295,14 +262,15 @@ export function insertionMouseOut(): void {
 }
 
 /**
- * Calculates and returns the difference between the position of the incoming node on the Draw Mode canvas
- *      and the coordinates given by the incoming MouseEvent.
+ * Calculates and returns the difference between the position of the incoming node on
+ * the Draw Mode canvas and the coordinates given by the incoming MouseEvent.
  *
  * Returns undefined if no node comes from from Draw Mode.
  *
  * @param event Incoming MouseEvent.
  * @param node Incoming node.
- * @returns Difference between node's position and the coordinates given by event, or undefined if no node comes from Draw Mode.
+ * @returns Difference between node's position and the coordinates given by event,
+ * or undefined if no node comes from Draw Mode.
  */
 function calculatePoint(event: MouseEvent, node: CutNode | AtomNode): Point | undefined {
     if (node instanceof CutNode && node.ellipse !== null) {

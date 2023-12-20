@@ -36,8 +36,6 @@ let tempTree: AEGTree;
 
 /**
  * Sets currentPoint according to the coordinates given by the incoming MouseEvent.
- * Then sets currentProofTree to the current proof tree.
- * Then sets tempTree to a copy of currentProofTree.
  * Then sets currentNode to the lowest node containing currentPoint.
  * Then determines legality and highlights accordingly.
  *
@@ -53,12 +51,9 @@ export function erasureMouseDown(event: MouseEvent): void {
 }
 
 /**
- * Sets currentNode according to the coordinates given by the incoming MouseEvent.
- * Then if currentNode is not null,
- *      Sets currentNode to the lowest node containing currentPoint,
- *      Redraws the proof, and
- *      Determines legality and highlights accordingly.
+ * Follows the same control flow as erasureMouseDown.
  *
+ * @see erasureMouseDown
  * @param event Incoming MouseEvent.
  */
 export function erasureMouseMove(event: MouseEvent): void {
@@ -72,14 +67,10 @@ export function erasureMouseMove(event: MouseEvent): void {
 }
 
 /**
- * If legality is true,
- *      Queues an Erasure step to the proof history,
- *      Removes the lowest node containing the coordinates given by the incoming MouseEvent,
- *      Adds the queued Erasure step, and
- *      Redraws the proof.
- *
- * Then sets currentNode to null.
- * Then sets legality to false.
+ * Queues an Erasure step to the proof history.
+ * If legal,
+ *      Removes the lowest node containing the coordinates given by the incoming MouseEvent, and
+ *      Adds the queued Erasure step.
  *
  * @param event Incoming MouseEvent.
  */
@@ -102,12 +93,7 @@ export function erasureMouseUp(event: MouseEvent): void {
 }
 
 /**
- * If legality is true and currentNode is not null,
- *      Reinserts currentNode into tempTree.
- *
- * Then sets currentNode to null.
- * Then sets legality to false.
- * Then redraws the proof.
+ * Reinserts currentNode into tempTree if necessary and sets fields to defaults.
  */
 export function erasureMouseOut(): void {
     if (legalNode && currentNode !== null) {
@@ -120,16 +106,12 @@ export function erasureMouseOut(): void {
 
 /**
  * If currentNode is legal as defined above,
- *      Sets legality to true,
- *      Removes currentNode,
- *      Redraws tempTree,
  *      Highlights currentNode as the illegal color, and
  *      Inserts currentNode into tempTree.
  *
  * Otherwise sets legality to false.
  */
 function determineLegalityAndHighlightAsIllegal(): void {
-    //If the node is not the tree, is not null, and is even it is legal
     if (
         currentNode !== currentProofTree.sheet &&
         currentNode !== null &&
