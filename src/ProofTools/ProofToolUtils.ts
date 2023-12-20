@@ -11,7 +11,8 @@ import {TreeContext} from "../TreeContext";
  */
 
 /**
- * Copies and returns the AEGTree of the current proof step. Returns an empty AEGTree if no steps were taken.
+ * Copies and returns the AEGTree of the current proof step. Returns an empty AEGTree
+ * if no steps were taken.
  *
  * @returns AEGTree of the current proof step.
  */
@@ -26,7 +27,8 @@ export function getCurrentProofTree(): AEGTree {
 }
 
 /**
- * Checks and returns if the incoming node can be inserted into the incoming AEGTree and the proof's copy of the incoming AEGTree.
+ * Checks and returns if the incoming node can be inserted into the incoming AEGTree and
+ * the proof's copy of the incoming AEGTree.
  *
  * @param currentNode Incoming node.
  * @returns True if currentNode can be inserted into tree and the proof's copy of tree.

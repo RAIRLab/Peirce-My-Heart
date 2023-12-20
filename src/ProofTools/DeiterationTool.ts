@@ -34,8 +34,6 @@ let tempTree: AEGTree;
 
 /**
  * Sets currentPoint according to the coordinates given by the incoming MouseEvent.
- * Then sets currentProofTree to the current proof tree.
- * Then sets tempTree to a copy of currentProofTree.
  * Then sets currentNode to the lowest node containing currentPoint.
  * Then determines legality and highlights any effected nodes as the illegal color.
  *
@@ -52,11 +50,9 @@ export function deiterationMouseDown(event: MouseEvent): void {
 /**
  * Sets currentPoint according to the coordinates given by the incoming MouseEvent.
  *
- * Then if currentNode is not null,
- *      Sets currentNode to the lowest node containing currentPoint,
- *      Redraws the proof, and
- *      Determines legality and highlights any effected nodes as the illegal color.
+ * Then follows the same control flow as deiterationMouseDown.
  *
+ * @see deiterationMouseDown
  * @param event Incoming MouseEvent.
  */
 export function deiterationMouseMove(event: MouseEvent): void {
@@ -71,12 +67,9 @@ export function deiterationMouseMove(event: MouseEvent): void {
 /**
  * If legality is true,
  *      Sets currentPoint to the coordinates given by the incoming MouseEvent, and
- *      If currentNode is not null and can be deiterated,
+ *      If currentNode can be deiterated,
  *          Removes currentPoint.
- *      Then pushes a "Deiteration" rule to the proof history.
- *
- * Then sets legality to false.
- * Then redraws the proof.
+ *      Then Deiterates currentNode and pushes a "Deiteration" rule to the proof history.
  *
  * @param event Incoming MouseEvent.
  */
@@ -99,12 +92,7 @@ export function deiterationMouseUp(event: MouseEvent): void {
 }
 
 /**
- * If legality is true and currentNode is not null,
- *      Reinserts currentNode into tempTree.
- *
- * Then sets legality to false.
- * Then sets currentNode to null.
- * Then redraws the proof.
+ * Reinserts currentNode into tempTree if able and sets fields to defaults.
  */
 export function deiterationMouseOut(): void {
     if (legalNode && currentNode !== null) {
@@ -117,11 +105,7 @@ export function deiterationMouseOut(): void {
 
 /**
  * If currentNode is not null and can be deiterated,
- *      Sets legality to true, and
- *      If the lowest parent containing currentPoint is not null,
- *          Removes currentNode.
- *      Then redraws temp tree.
- *      Then highlights currentNode and any effected children as the illegal color, and
+ *      Highlights currentNode and any effected children as the illegal color, and
  *      Inserts currentNode into tempTree.
  *
  * Otherwise sets legality to false.
@@ -148,18 +132,8 @@ function determineLegalityAndHighlightAsIllegal(): void {
 /**
  * Checks and returns if the incoming CutNode can be deiterated at the incoming level number.
  *
- * As long as the incoming CutNode has children,
- *      If a child of the incoming CutNode's currentNode are both Ellipses and currentNode is equal to that child,
- *          Returns true.
- *      Otherwise if a child of the incoming CutNode is an AtomNode and currentNode is an AtomNode with the same identifier,
- *          Returns true.
- *      Otherwise if a child of the incoming CutNode contains currentNode at a deeper level,
- *          Sets that child as the new parent to check.
- *
- * Then if no equality was found,
- *      Returns the result of canDeiterate between the new parent to check and its level.
- *
- * Otherwise returns false.
+ * If a CutNode or AtomNode equal to currentParent is found at a deeper cut level, then it is able
+ * to be deiterated.
  *
  * @param currentParent Incoming CutNode.
  * @param level Incoming level number.

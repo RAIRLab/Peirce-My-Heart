@@ -21,9 +21,7 @@ let currentTree: AEGTree;
 let legalNode: boolean;
 
 /**
- * Sets currentTree to the current proof tree.
- * Then sets currentGraph to the sheet in treeContext's selectForProof field.
- * Then sets legality to true and cursor style to copy if currentGraph has children and currentTree is empty.
+ * Sets fields appropriately.
  */
 export function pasteInProofMouseDown(): void {
     currentTree = getCurrentProofTree();
@@ -40,9 +38,7 @@ export function pasteInProofMouseDown(): void {
 }
 
 /**
- * Sets cursor style to default.
- * Then sets legality to false.
- * Then redraws the proof.
+ * Resets cursor style and redraws proof.
  */
 export function pasteInProofMouseMove(): void {
     changeCursorStyle("cursor: default");
@@ -51,9 +47,7 @@ export function pasteInProofMouseMove(): void {
 }
 
 /**
- * Sets the cursor style to default, sets the proof's Sheet of Assertion to currentGraph, and creates an appropriate proof step if legality is true.
- * Then sets legality to false.
- * Then redraws the proof.
+ * Pushes a "Pasted" step to the proof history and redraws the proof.
  */
 export function pasteInProofMouseUp(): void {
     if (legalNode) {
@@ -66,9 +60,7 @@ export function pasteInProofMouseUp(): void {
 }
 
 /**
- * Sets cursor style to default.
- * Then sets legality to false.
- * Then redraws the proof.
+ * Sets fields back to defaults.
  */
 export function pasteInProofMouseOut(): void {
     changeCursorStyle("cursor: default");

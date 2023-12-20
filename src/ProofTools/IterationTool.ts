@@ -42,14 +42,8 @@ let legalNode: boolean;
 let currentProofTree: AEGTree;
 
 /**
- * Sets currentProofTree to the current proof tree.
- * Then sets startingPoint according to the incoming MouseEvent.
- * Then sets currentNode to the lowest node containing startingPoint.
- * Then sets currentParent to the lowest parent containing startingPoint.
- * Then sets legality to true if currentNode is not The Sheet of Assertion or null.
- *
- * Then if legality is true,
- *      Sets cursor style to copy.
+ * Sets startingPoint according to the incoming MouseEvent.
+ * Then sets all fields above accordingly.
  *
  * @param event Incoming MouseEvent.
  */
@@ -69,8 +63,8 @@ export function iterationMouseDown(event: MouseEvent): void {
  * If legality is true,
  *      Redraws the proof,
  *      Alters currentNode according to the coordinates received by the incoming MouseEvent,
- *      Highlights currentNode and any of its children as the legal or illegal color based on its position's validity, and
- *      Changes cursor style according to the highlight color.
+ *      Highlights currentNode and any of its children as the legal or illegal color based on
+ *      their positions' validity.
  *
  * @param event Incoming MouseEvent.
  */
@@ -96,12 +90,9 @@ export function iterationMouseMove(event: MouseEvent): void {
 
 /**
  * If legality is true,
- *      Sets cursor style to default,
- *      Then if currentNode altered by the coordinates received from the incoming MouseEvent's position is legal,
- *          Inserts currentNode and any of its children, and
- *          Adds an Iteration step to the proof history.
- * Then redraws the proof.
- * Then sets legality to false.
+ *      Alters currentNode according to the coordinates received by the incoming MouseEvent, and
+ *      Iterates the
+ *      altered currentNode to a deeper level in the Proof Mode AEGTree and redraws the proof.
  *
  * @param event Incoming MouseEvent.
  */
@@ -128,9 +119,7 @@ export function iterationMouseUp(event: MouseEvent): void {
 }
 
 /**
- * Sets cursor style to default.
- * Then sets legality to false.
- * Then redraws the proof.
+ * Sets cursor style and all fields to default values.
  */
 export function iterationMouseOut(): void {
     changeCursorStyle("cursor: default");
@@ -141,13 +130,9 @@ export function iterationMouseOut(): void {
 /**
  * Checks and returns if the latter incoming Point can be legally iterated to the former incoming Point.
  *
- * If currentParent is not null, and
- *      currentParent contains the former current Point, and
- *          If currentNode is a CutNode and currentNode's children are valid, and
- *              currentNode altered by the latter incoming Point is not a parent, or
- *          currentNode is an AtomNode and currentNode altered by the latter incoming Point can be inserted into currentProofTree,
- *
- *      Returns true.
+ * If currentNode altered by the former incoming Point can be inserted into the sheet, or
+ *    currentNode is a CutNode that is not a parent of the altered CutNode,
+ *    Then currentPoint can be legally iterated.
  *
  * @param moveDifference Latter incoming Point.
  * @param currentPoint Former incoming Point.
@@ -169,14 +154,10 @@ function isLegal(moveDifference: Point, currentPoint: Point): boolean {
 }
 
 /**
- * Checks and returns if the incoming altered Ellipse contains the incoming CutNode or any of the incoming CutNode's children.
+ * Checks and returns if the incoming Ellipse contains the incoming CutNode or any of the
+ * incoming CutNode's children.
  *
- * As long as the incoming CutNode has children,
- *      If the incoming altered Ellipse contains the incoming CutNode's child or that child is a parent,
- *          Returns false.
- *      Otherwise if the incoming altered Ellipse contains a child of the incoming CutNode that is an AtomNode,
- *          Returns false.
- * Otherwise returns true.
+ * If the incoming Ellipse contains any of currentNode's children, currentEllipse is then a parent.
  *
  * @param currentNode Incoming CutNode.
  * @param currentEllipse Incoming Ellipse.

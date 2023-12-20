@@ -5,7 +5,7 @@
 
 * [Development Tutorial in README](https://github.com/RAIRLab/Peirce-My-Heart#development)
 * [Existential Graphs Website](https://homepages.hass.rpi.edu/heuveb/Research/EG/index.html)
-* [James Oswald's Blog Post on AEGs](https://jamesoswald.dev/posts/alpha-existential-graphs/)
+* [James Oswald's Blog Post on AEGs](https://jamesoswald.dev/posts/alpha-existential-graphs-1/)
 
 ## Feature Requests
 
