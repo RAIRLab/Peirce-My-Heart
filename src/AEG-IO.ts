@@ -6,6 +6,12 @@ import {Point} from "./AEG/Point";
 import {ProofNode} from "./AEG/ProofNode";
 
 /**
+ * Contains methods for loading and saving AEGs.
+ *
+ * @author Anusha Tiwari
+ */
+
+/**
  * Interface for an object describing Sheet of Assertion
  */
 interface sheetObj {

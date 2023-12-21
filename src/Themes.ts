@@ -1,10 +1,12 @@
-/**
- * @author James Oswald
- * This file provides basic utilities for extracting important colors
- * for the application from the CSS themes
- */
-import {TreeContext} from "./TreeContext";
 import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
+import {TreeContext} from "./TreeContext";
+
+/**
+ * Provides basic utilities for extracting important colors
+ * for the application from the CSS themes.
+ *
+ * @author James Oswald
+ */
 
 const themeSelector: HTMLSelectElement = <HTMLSelectElement>document.getElementById("theme-select");
 

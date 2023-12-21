@@ -1,16 +1,18 @@
 /**
- * A program to draw ellipses and atoms.
+ * Implements Charles Peirce's Alpha Existential Graph System and an interactive theorem prover.
+ *
  * @author Dawn Moore
  * @author James Oswald
  * @author Anusha Tiwari
  */
 
 import {AEGTree} from "./AEG/AEGTree";
-import {Tool, TreeContext} from "./TreeContext";
-import {saveFile, loadFile} from "./AEG-IO";
+import {appendStep} from "./ProofHistory";
+import {loadFile, saveFile} from "./AEG-IO";
+import {ProofNode} from "./AEG/ProofNode";
 import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 import {toggleHandler} from "./ToggleModes";
-import {ProofNode} from "./AEG/ProofNode";
+import {Tool, TreeContext} from "./TreeContext";
 
 import * as CutTool from "./DrawTools/CutTool";
 import * as AtomTool from "./DrawTools/AtomTool";
@@ -37,7 +39,6 @@ import * as IterationTool from "./ProofTools/IterationTool";
 import * as ProofResizeTool from "./ProofTools/ProofResizeTool";
 import * as DeiterationTool from "./ProofTools/DeiterationTool";
 import * as ClearProofTool from "./ProofTools/ClearProofTool";
-import {appendStep} from "./ProofHistory";
 
 //Setting up Canvas
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");

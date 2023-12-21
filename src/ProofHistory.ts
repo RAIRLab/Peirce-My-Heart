@@ -1,11 +1,12 @@
+import {ProofNode} from "./AEG/ProofNode";
+import {redrawProof} from "./SharedToolUtils/DrawUtils";
+import {TreeContext} from "./TreeContext";
+
 /**
  * Creates the history bar on the left side of the screen and handles returning to a previous state.
+ *
  * @author Dawn Moore
  */
-
-import {TreeContext} from "./TreeContext";
-import {redrawProof} from "./SharedToolUtils/DrawUtils";
-import {ProofNode} from "./AEG/ProofNode";
 
 /**
  * Creates a button representing the proof step allowing a user to return to that step.
