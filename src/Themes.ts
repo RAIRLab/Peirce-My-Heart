@@ -2,16 +2,19 @@ import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 import {TreeContext} from "./TreeContext";
 
 /**
- * Provides basic utilities for extracting important colors
- * for the application from the CSS themes.
+ * Provides utilities for extracting important colors for the application from the CSS themes.
  *
  * @author James Oswald
  */
 
+//Next to the save button.
 const themeSelector: HTMLSelectElement = <HTMLSelectElement>document.getElementById("theme-select");
 
 /**
- * Computes the value of a variable from a CSS style sheet
+ * Computes the value of an incoming variable from a CSS Style Sheet.
+ *
+ * @param varName Variable from a CSS Style Sheet.
+ * @returns Property value of varName in string form.
  */
 function cssVar(varName: string): string {
     return getComputedStyle(document.body).getPropertyValue(varName);
@@ -22,9 +25,9 @@ let illegalColorStr: string = cssVar("--bad-placement");
 let placedColorStr: string = cssVar("--canvas-items");
 
 /**
- * Redraw the canvas and update the HTML states
+ * Redraws the canvas and updates the HTML states.
  */
-function setTheme() {
+function setTheme(): void {
     /*
     This is a really bad way of doing things, but we have to ensure this
     code is executed AFTER the themeSelector input handler from the library
@@ -50,21 +53,30 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 /**
- * @returns the string color of components not allowed to be placed / dropped on the canvas
+ * Returns the color of illegal components on canvas.
+ * This illegal color is used to highlight nodes for deletion and nodes not allowed to be placed.
+ *
+ * @returns Color of deletions and illegal placements on canvas.
  */
 export function illegalColor(): string {
     return illegalColorStr;
 }
 
 /**
- * @returns the string color of components allowed to be placed / dropped on the canvas
+ * Returns the color of legal placements on canvas.
+ * This legal color is used to highlight nodes in non-intersecting positions.
+ *
+ * @returns Color of legal placements on canvas.
  */
 export function legalColor(): string {
     return legalColorStr;
 }
 
 /**
- * @returns the color of placed components on the canvas
+ * Returns the color of a placed node on canvas.
+ * This placed color is used for nodes that are already in the Draw or Proof Mode AEGTree.
+ *
+ * @returns Color of placed nodes on canvas.
  */
 export function placedColor(): string {
     return placedColorStr;
