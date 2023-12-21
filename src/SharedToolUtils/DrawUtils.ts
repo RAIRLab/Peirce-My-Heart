@@ -6,7 +6,7 @@ import {Ellipse} from "../AEG/Ellipse";
 import {offset} from "./DragTool";
 import {legalColor, placedColor} from "../Themes";
 import {Point} from "../AEG/Point";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Collection of methods used for drawing on the HTML canvas.
@@ -40,7 +40,7 @@ atomCheckBoxes.addEventListener("input", checkBoxRedraw);
  * @param thisCut Incoming CutNode.
  * @param color Incoming color string.
  */
-export function drawCut(thisCut: CutNode, color: string) {
+export function drawCut(thisCut: CutNode, color: string): void {
     const ellipse: Ellipse = <Ellipse>thisCut.ellipse;
     if (ellipse !== null) {
         ctx.strokeStyle = color;
@@ -68,7 +68,7 @@ export function drawCut(thisCut: CutNode, color: string) {
  * @param color Incoming color string.
  * @param currentAtom Incoming flag.
  */
-export function drawAtom(thisAtom: AtomNode, color: string, currentAtom: Boolean) {
+export function drawAtom(thisAtom: AtomNode, color: string, currentAtom: Boolean): void {
     ctx.textBaseline = "bottom";
     const atomMetrics: TextMetrics = ctx.measureText(thisAtom.identifier);
     ctx.fillStyle = color;
@@ -95,7 +95,7 @@ export function drawAtom(thisAtom: AtomNode, color: string, currentAtom: Boolean
  * @param current Incoming current Point.
  * @param color Incoming color string.
  */
-export function drawGuidelines(original: Point, current: Point, color: string) {
+export function drawGuidelines(original: Point, current: Point, color: string): void {
     ctx.beginPath();
     ctx.strokeStyle = color;
     const dx: number = original.x - current.x + offset.x;
@@ -109,7 +109,7 @@ export function drawGuidelines(original: Point, current: Point, color: string) {
  *
  * @param newMouseStyle Incoming string.
  */
-export function changeCursorStyle(newMouseStyle: string) {
+export function changeCursorStyle(newMouseStyle: string): void {
     canvas.style.cssText = newMouseStyle;
 }
 
@@ -145,21 +145,21 @@ export function determineAndChangeCursorStyle(
     color: string,
     legalCursorStyle: string,
     illegalCursorStyle: string
-) {
+): void {
     changeCursorStyle(determineCursorStyle(color, legalCursorStyle, illegalCursorStyle));
 }
 
 /**
  * Redraws the draw mode AEGTree after a bounding box checkbox is activated.
  */
-function checkBoxRedraw() {
-    redrawTree(treeContext.tree);
+function checkBoxRedraw(): void {
+    redrawTree(TreeContext.tree);
 }
 
 /**
  * Completely clears canvas of all drawings.
  */
-export function cleanCanvas() {
+export function cleanCanvas(): void {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
@@ -170,7 +170,7 @@ export function cleanCanvas() {
  * @param tree Incoming AEGTree.
  * @param color Incoming color string.
  */
-export function redrawTree(tree: AEGTree, color?: string) {
+export function redrawTree(tree: AEGTree, color?: string): void {
     cutDisplay.innerHTML = tree.toString();
     cleanCanvas();
     redrawCut(tree.sheet, color);
@@ -183,7 +183,7 @@ export function redrawTree(tree: AEGTree, color?: string) {
  * @param incomingNode Incoming CutNode.
  * @param color Incoming color string. Defaults to the color of a valid placement if not passed in.
  */
-function redrawCut(incomingNode: CutNode, color?: string) {
+function redrawCut(incomingNode: CutNode, color?: string): void {
     for (let i = 0; incomingNode.children.length > i; i++) {
         if (incomingNode.children[i] instanceof AtomNode) {
             redrawAtom(<AtomNode>incomingNode.children[i]);
@@ -212,7 +212,7 @@ function redrawCut(incomingNode: CutNode, color?: string) {
  *
  * @param incomingNode Incoming AtomNode.
  */
-export function redrawAtom(incomingNode: AtomNode) {
+export function redrawAtom(incomingNode: AtomNode): void {
     drawAtom(incomingNode, placedColor(), false);
 }
 
@@ -220,14 +220,14 @@ export function redrawAtom(incomingNode: AtomNode) {
  * Redraws the current proof AEGTree after clearing the canvas.
  * Also updates the proof's tree string.
  */
-export function redrawProof() {
+export function redrawProof(): void {
     //If this is the first step taken in the proof,
     //Set the current AEGTree as the head of the proof history.
     let tree: AEGTree;
-    if (treeContext.proof.length === 0 || treeContext.currentProofStep === undefined) {
+    if (TreeContext.proof.length === 0 || TreeContext.currentProofStep === undefined) {
         tree = new AEGTree();
     } else {
-        tree = treeContext.currentProofStep.tree;
+        tree = TreeContext.currentProofStep.tree;
     }
 
     cleanCanvas();
@@ -241,7 +241,7 @@ export function redrawProof() {
  * @param child Incoming child node.
  * @param color Incoming color string.
  */
-export function highlightNode(child: AtomNode | CutNode, color: string) {
+export function highlightNode(child: AtomNode | CutNode, color: string): void {
     if (child instanceof AtomNode) {
         drawAtom(child, color, false);
     } else if (child instanceof CutNode) {

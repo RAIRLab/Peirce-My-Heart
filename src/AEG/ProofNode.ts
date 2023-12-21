@@ -1,5 +1,5 @@
 import {AEGTree} from "./AEGTree";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Defines a single step in a proof.
@@ -32,6 +32,6 @@ export class ProofNode {
     public constructor(tree?: AEGTree, rule?: string) {
         this.appliedRule = rule ?? "";
         this.tree = new AEGTree(tree?.sheet);
-        this.index = treeContext.proof.length;
+        this.index = TreeContext.proof.length;
     }
 }

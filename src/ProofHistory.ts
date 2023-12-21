@@ -3,7 +3,7 @@
  * @author Dawn Moore
  */
 
-import {treeContext} from "./treeContext";
+import {TreeContext} from "./TreeContext";
 import {redrawProof} from "./SharedToolUtils/DrawUtils";
 import {ProofNode} from "./AEG/ProofNode";
 
@@ -16,13 +16,13 @@ import {ProofNode} from "./AEG/ProofNode";
 export function appendStep(newStep: ProofNode, step?: number) {
     const newDiv = document.createElement("div");
     newDiv.className = "row";
-    const stepNumber = step ? step : treeContext.proof.length;
+    const stepNumber = step ? step : TreeContext.proof.length;
     newDiv.id = "Row: " + stepNumber;
 
     //Create the new button with the function stepBack calling the step it represents
     const button = document.createElement("button");
     button.type = "button";
-    button.id = "Step: " + treeContext.proof.length;
+    button.id = "Step: " + TreeContext.proof.length;
     button.className = "proofNodeButton";
     button.title = newStep.tree.toString();
     button.onclick = function () {
@@ -57,7 +57,7 @@ export function appendStep(newStep: ProofNode, step?: number) {
  * @param selectedStep The selected proof Node that will become the current step
  */
 export function stepBack(selectedStep: ProofNode) {
-    treeContext.currentProofStep = selectedStep;
+    TreeContext.currentProofStep = selectedStep;
     redrawProof();
 }
 
@@ -66,7 +66,7 @@ export function stepBack(selectedStep: ProofNode) {
  * @param stopIndex The index to stop removing buttons.
  */
 export function deleteButtons(stopIndex: number) {
-    for (let i = treeContext.proof.length; i > stopIndex + 1; i--) {
+    for (let i = TreeContext.proof.length; i > stopIndex + 1; i--) {
         document.getElementById("Row: " + i)?.remove();
     }
 }

@@ -1,34 +1,35 @@
+import {AEGTree} from "../AEG/AEGTree";
+import {changeCursorStyle, redrawProof} from "../SharedToolUtils/DrawUtils";
+import {CutNode} from "../AEG/CutNode";
+import {getCurrentProofTree} from "./ProofToolUtils";
+import {ProofNode} from "../AEG/ProofNode";
+import {TreeContext} from "../TreeContext";
+
 /**
- * File containing insertion node movement event handlers.
+ * Containing methods for pasting AEGs into Proof Mode.
+ *
  * @author Anusha Tiwari
  */
-import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
-import {CutNode} from "../AEG/CutNode";
-import {treeContext} from "../treeContext";
-import {redrawProof} from "../SharedToolUtils/DrawUtils";
-import {AEGTree} from "../AEG/AEGTree";
-import {ProofNode} from "../AEG/ProofNode";
-import {getCurrentProofTree} from "./ProofToolsUtils";
 
-//The initial point the user pressed down.
-// let startingPoint: Point;
+//AEG in question.
+let currentGraph: CutNode;
 
-//The selected subgraph that we will be placing
-let currentGraphs: CutNode;
-
-//The tree that we are trying to insert the graph into
+//AEGTree we want to insert currentGraph into.
 let currentTree: AEGTree;
 
-//Whether or not applying this rule will result in the creation of a new node for our proof
+//True if we are able to paste into Proof Mode.
 let legalNode: boolean;
 
-export function pasteInProofMouseDown() {
+/**
+ * Sets fields appropriately.
+ */
+export function pasteInProofMouseDown(): void {
     currentTree = getCurrentProofTree();
-    currentGraphs = treeContext.selectForProof.sheet;
+    currentGraph = TreeContext.selectForProof.sheet;
 
     if (
-        currentGraphs.children.length > 0 &&
-        treeContext.proof.length === 1 &&
+        currentGraph.children.length > 0 &&
+        TreeContext.proof.length === 1 &&
         currentTree.sheet.isEmptySheet()
     ) {
         legalNode = true;
@@ -36,23 +37,32 @@ export function pasteInProofMouseDown() {
     }
 }
 
-export function pasteInProofMouseMove() {
+/**
+ * Resets cursor style and redraws proof.
+ */
+export function pasteInProofMouseMove(): void {
     changeCursorStyle("cursor: default");
     legalNode = false;
     redrawProof();
 }
 
-export function pasteInProofMouseUp() {
+/**
+ * Pushes a "Pasted" step to the proof history and redraws the proof.
+ */
+export function pasteInProofMouseUp(): void {
     if (legalNode) {
         changeCursorStyle("cursor: default");
-        currentTree.sheet = currentGraphs;
-        treeContext.pushToProof(new ProofNode(currentTree, "Pasted"));
+        currentTree.sheet = currentGraph;
+        TreeContext.pushToProof(new ProofNode(currentTree, "Pasted"));
     }
     legalNode = false;
     redrawProof();
 }
 
-export function pasteInProofMouseOut() {
+/**
+ * Sets fields back to defaults.
+ */
+export function pasteInProofMouseOut(): void {
     changeCursorStyle("cursor: default");
     legalNode = false;
     redrawProof();

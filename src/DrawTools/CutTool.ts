@@ -6,7 +6,7 @@ import {Ellipse} from "../AEG/Ellipse";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Contains methods for manipulating CutNodes on the HTML canvas.
@@ -31,7 +31,7 @@ let wasOut: boolean;
 /**
  * Sets the canvas' style attribute to crosshair.
  */
-export function cutMouseEnter() {
+export function cutMouseEnter(): void {
     changeCursorStyle("cursor: crosshair");
 }
 
@@ -40,7 +40,7 @@ export function cutMouseEnter() {
  *
  * @param event Incoming MouseEvent.
  */
-export function cutMouseDown(event: MouseEvent) {
+export function cutMouseDown(event: MouseEvent): void {
     startingPoint = new Point(event.clientX - offset.x, event.clientY - offset.y);
     wasOut = false;
 }
@@ -54,14 +54,14 @@ export function cutMouseDown(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function cutMouseMove(event: MouseEvent) {
+export function cutMouseMove(event: MouseEvent): void {
     const newCut: CutNode = new CutNode(new Ellipse(new Point(0, 0), 0, 0));
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
-    redrawTree(treeContext.tree);
+    redrawTree(TreeContext.tree);
     newCut.ellipse = createEllipse(startingPoint, currentPoint);
 
     if (!wasOut) {
-        const legal = treeContext.tree.canInsert(newCut) && ellipseLargeEnough(newCut.ellipse);
+        const legal = TreeContext.tree.canInsert(newCut) && ellipseLargeEnough(newCut.ellipse);
         const color = legal ? legalColor() : illegalColor();
 
         determineAndChangeCursorStyle(color, "cursor: crosshair", "cursor: no-drop");
@@ -80,26 +80,26 @@ export function cutMouseMove(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function cutMouseUp(event: MouseEvent) {
+export function cutMouseUp(event: MouseEvent): void {
     changeCursorStyle("cursor: default");
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
     const newCut: CutNode = new CutNode(createEllipse(startingPoint, currentPoint));
     if (
-        treeContext.tree.canInsert(newCut) &&
+        TreeContext.tree.canInsert(newCut) &&
         !wasOut &&
         ellipseLargeEnough(<Ellipse>newCut.ellipse)
     ) {
-        treeContext.tree.insert(newCut);
+        TreeContext.tree.insert(newCut);
     }
-    redrawTree(treeContext.tree);
+    redrawTree(TreeContext.tree);
 }
 
 /**
  * Sets wasOut to true.
  * Then redraws the Draw Mode AEGTree.
  */
-export function cutMouseOut() {
+export function cutMouseOut(): void {
     changeCursorStyle("cursor: default");
     wasOut = true;
-    redrawTree(treeContext.tree);
+    redrawTree(TreeContext.tree);
 }

@@ -6,7 +6,7 @@ import {ellipseLargeEnough, resizeCut} from "../SharedToolUtils/EditModeUtils";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Contains Draw Mode CutNode resizing methods.
@@ -14,7 +14,7 @@ import {treeContext} from "../treeContext";
  * When it is said that a node is "removed" in the documentation,
  * This means that it is removed from the Draw Mode AEGTree but visually is still present.
  *
- * When a node's position is described as being valid or not,
+ * When a CutNode's position is described as being valid or not,
  * This means that we are determining if it can currently be inserted into the AEGTree without intersection.
  *
  * @author Dawn Moore
@@ -26,7 +26,7 @@ let startingPoint: Point;
 //Node in question.
 let currentNode: CutNode | AtomNode | null = null;
 
-//True if currentNode is not The Sheet of Assertion (i.e can be moved.)
+//True if currentNode is not The Sheet of Assertion (i.e can be resized.)
 let legalNode: boolean;
 
 //Direction a CutNode will move in.
@@ -44,18 +44,18 @@ let direction: Point = new Point(1, 1);
  *
  * @param event Incoming MouseEvent.
  */
-export function resizeMouseDown(event: MouseEvent) {
+export function drawResizeMouseDown(event: MouseEvent): void {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = treeContext.tree.getLowestNode(startingPoint);
+    currentNode = TreeContext.tree.getLowestNode(startingPoint);
     if (currentNode instanceof CutNode && currentNode.ellipse !== null) {
         legalNode = true;
-        const currentParent = treeContext.tree.getLowestParent(startingPoint);
+        const currentParent = TreeContext.tree.getLowestParent(startingPoint);
         if (currentParent !== null) {
             currentParent.remove(startingPoint);
         }
 
         for (let i = 0; i < currentNode.children.length; i++) {
-            treeContext.tree.insert(currentNode.children[i]);
+            TreeContext.tree.insert(currentNode.children[i]);
         }
         direction = determineDirection(currentNode, startingPoint);
         currentNode.children = [];
@@ -71,7 +71,7 @@ export function resizeMouseDown(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function resizeMouseMove(event: MouseEvent) {
+export function drawResizeMouseMove(event: MouseEvent): void {
     if (legalNode) {
         const moveDifference: Point = new Point(
             (event.x - offset.x - startingPoint.x) / 2,
@@ -80,9 +80,9 @@ export function resizeMouseMove(event: MouseEvent) {
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = resizeCut(currentNode, moveDifference, direction);
             if (tempCut.ellipse !== null) {
-                redrawTree(treeContext.tree);
+                redrawTree(TreeContext.tree);
                 const legal =
-                    treeContext.tree.canInsert(tempCut) && ellipseLargeEnough(tempCut.ellipse);
+                    TreeContext.tree.canInsert(tempCut) && ellipseLargeEnough(tempCut.ellipse);
                 const color = legal ? legalColor() : illegalColor();
 
                 determineAndChangeCursorStyle(color, "cursor: crosshair", "cursor: no-drop");
@@ -103,7 +103,7 @@ export function resizeMouseMove(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function resizeMouseUp(event: MouseEvent) {
+export function drawResizeMouseUp(event: MouseEvent): void {
     changeCursorStyle("cursor: default");
     if (legalNode) {
         const moveDifference: Point = new Point(
@@ -113,14 +113,14 @@ export function resizeMouseUp(event: MouseEvent) {
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = resizeCut(currentNode, moveDifference, direction);
             if (tempCut.ellipse !== null) {
-                if (treeContext.tree.canInsert(tempCut) && ellipseLargeEnough(tempCut.ellipse)) {
-                    treeContext.tree.insert(tempCut);
+                if (TreeContext.tree.canInsert(tempCut) && ellipseLargeEnough(tempCut.ellipse)) {
+                    TreeContext.tree.insert(tempCut);
                 } else {
-                    treeContext.tree.insert(currentNode);
+                    TreeContext.tree.insert(currentNode);
                 }
             }
         }
-        redrawTree(treeContext.tree);
+        redrawTree(TreeContext.tree);
         legalNode = false;
     }
 }
@@ -130,11 +130,11 @@ export function resizeMouseUp(event: MouseEvent) {
  * Then marks legality as false.
  * Then redraws the Draw Mode AEGTree.
  */
-export function resizeMouseOut() {
+export function drawResizeMouseOut(): void {
     changeCursorStyle("cursor: default");
     if (legalNode && currentNode !== null) {
-        treeContext.tree.insert(currentNode);
+        TreeContext.tree.insert(currentNode);
     }
     legalNode = false;
-    redrawTree(treeContext.tree);
+    redrawTree(TreeContext.tree);
 }

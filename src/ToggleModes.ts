@@ -8,7 +8,7 @@ import {AEGTree} from "./AEG/AEGTree";
 import {ProofNode} from "./AEG/ProofNode";
 import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 import {treeString, proofString} from ".";
-import {Tool, treeContext} from "./treeContext";
+import {Tool, TreeContext} from "./TreeContext";
 
 //Flag to signify the mode we are in
 let drawMode = true; //we start in draw mode
@@ -37,24 +37,24 @@ export function toggleHandler(): void {
         proofButtons.style.display = "none";
         proofString.style.display = "none";
         proofHistoryBar.style.display = "none";
-        treeContext.modeState = "Draw";
+        TreeContext.modeState = "Draw";
 
         //cache the proof tree and tool state so that we can load it back in when we toggle again
-        proofCachedAEG = JSON.stringify(treeContext.proof);
-        proofCachedTool = treeContext.toolState;
+        proofCachedAEG = JSON.stringify(TreeContext.proof);
+        proofCachedTool = TreeContext.toolState;
 
         //Load in our saved draw tree and tool state
         let loadedAEG: AEGTree | null = null;
         if (drawCachedAEG !== null) {
-            loadedAEG = loadFile(treeContext.modeState, drawCachedAEG) as AEGTree | null;
+            loadedAEG = loadFile(TreeContext.modeState, drawCachedAEG) as AEGTree | null;
         }
         if (loadedAEG !== null) {
-            treeContext.tree.sheet = loadedAEG.sheet;
+            TreeContext.tree.sheet = loadedAEG.sheet;
         } else {
             throw Error("invalid cached AEG");
         }
-        treeContext.toolState = drawCachedTool;
-        redrawTree(treeContext.tree);
+        TreeContext.toolState = drawCachedTool;
+        redrawTree(TreeContext.tree);
     } else {
         //Display the buttons for Proof Mode
         drawButtons.style.display = "none";
@@ -62,26 +62,26 @@ export function toggleHandler(): void {
         proofButtons.style.display = "block";
         proofString.style.display = "block";
         proofHistoryBar.style.display = "block";
-        treeContext.modeState = "Proof";
+        TreeContext.modeState = "Proof";
 
         //cache the draw tree and tool state so that we can load it back in when we toggle again
-        drawCachedAEG = JSON.stringify(treeContext.tree);
-        drawCachedTool = treeContext.toolState;
+        drawCachedAEG = JSON.stringify(TreeContext.tree);
+        drawCachedTool = TreeContext.toolState;
 
-        if (treeContext.proof.length === 0) {
-            treeContext.pushToProof(new ProofNode());
+        if (TreeContext.proof.length === 0) {
+            TreeContext.pushToProof(new ProofNode());
         }
 
         //Load in our saved proof structure and tool state
         let loadedProof: ProofNode[] | null = null;
         if (proofCachedAEG !== null) {
-            loadedProof = loadFile(treeContext.modeState, proofCachedAEG) as ProofNode[] | null;
+            loadedProof = loadFile(TreeContext.modeState, proofCachedAEG) as ProofNode[] | null;
         }
         if (loadedProof !== null) {
-            treeContext.proof = loadedProof;
+            TreeContext.proof = loadedProof;
         }
         //Reset the state of our tools
-        treeContext.toolState = proofCachedTool;
+        TreeContext.toolState = proofCachedTool;
         redrawProof();
     }
 }

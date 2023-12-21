@@ -6,7 +6,7 @@
  */
 
 import {AEGTree} from "./AEG/AEGTree";
-import {Tool, treeContext} from "./treeContext";
+import {Tool, TreeContext} from "./TreeContext";
 import {saveFile, loadFile} from "./AEG-IO";
 import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 import {toggleHandler} from "./ToggleModes";
@@ -26,9 +26,9 @@ import * as CopyFromDraw from "./DrawTools/CopyFromDraw";
 
 import * as DoubleCutInsertionTool from "./ProofTools/DoubleCutInsertionTool";
 import * as DoubleCutDeletionTool from "./ProofTools/DoubleCutDeletionTool";
-import * as InsertionTool from "./ProofTools/InsertionTools";
+import * as InsertionTool from "./ProofTools/InsertionTool";
 import * as ErasureTool from "./ProofTools/ErasureTool";
-import * as ResizeTool from "./DrawTools/ResizeTool";
+import * as DrawResizeTool from "./DrawTools/DrawResizeTool";
 import * as ProofMoveSingleTool from "./ProofTools/ProofMoveSingleTool";
 import * as ProofMoveMultiTool from "./ProofTools/ProofMoveMultiTool";
 
@@ -71,7 +71,7 @@ let hasMouseDown = false;
 let hasMouseIn = true;
 
 //Window Exports
-window.tree = treeContext.tree;
+window.tree = TreeContext.tree;
 window.treeString = aegStringify(window.tree);
 window.atomTool = Tool.atomTool;
 window.cutTool = Tool.cutTool;
@@ -170,12 +170,12 @@ toolButtons.forEach(button => {
  * @param state The tool that was clicked on
  */
 function setTool(state: Tool) {
-    treeContext.toolState = state;
+    TreeContext.toolState = state;
     cutTools.style.display = "none";
     atomTools.style.display = "none";
     selectionDisplay.style.display = "none";
 
-    switch (treeContext.toolState) {
+    switch (TreeContext.toolState) {
         case Tool.atomTool:
             atomTools.style.display = "block";
             break;
@@ -206,19 +206,19 @@ async function saveMode() {
     let name: string;
     let data: AEGTree | ProofNode[];
 
-    if (treeContext.modeState === "Draw") {
+    if (TreeContext.modeState === "Draw") {
         name = "AEG Tree";
-        data = treeContext.tree;
+        data = TreeContext.tree;
     } else {
-        if (treeContext.proof.length === 0) {
+        if (TreeContext.proof.length === 0) {
             name = "[] \u2192 []";
         } else {
             name =
-                treeContext.proof[0].tree.toString() +
+                TreeContext.proof[0].tree.toString() +
                 "\u2192" +
-                treeContext.getLastProofStep().tree.toString();
+                TreeContext.getLastProofStep().tree.toString();
         }
-        data = treeContext.proof;
+        data = TreeContext.proof;
     }
 
     //Errors caused due to file handler or html download element should not be displayed
@@ -275,24 +275,24 @@ async function loadMode() {
         reader.addEventListener("load", () => {
             const aegData = reader.result;
             if (typeof aegData === "string") {
-                const loadData = loadFile(treeContext.modeState, aegData);
-                if (treeContext.modeState === "Draw") {
+                const loadData = loadFile(TreeContext.modeState, aegData);
+                if (TreeContext.modeState === "Draw") {
                     //Load in the data of our new tree
-                    treeContext.tree = loadData as AEGTree;
+                    TreeContext.tree = loadData as AEGTree;
                     //Redraw our tree
-                    redrawTree(treeContext.tree);
-                } else if (treeContext.modeState === "Proof") {
+                    redrawTree(TreeContext.tree);
+                } else if (TreeContext.modeState === "Proof") {
                     //Clear our current proof
-                    treeContext.clearProof();
+                    TreeContext.clearProof();
                     //Load in the data of the new proof
-                    treeContext.proof = loadData as ProofNode[];
+                    TreeContext.proof = loadData as ProofNode[];
                     //Remove our default start step
                     document.getElementById("Row: 1")?.remove();
                     //Add a button for each step of the proof to the history bar
-                    for (let i = 0; i < treeContext.proof.length; i++) {
-                        appendStep(treeContext.proof[i], i + 1);
+                    for (let i = 0; i < TreeContext.proof.length; i++) {
+                        appendStep(TreeContext.proof[i], i + 1);
                     }
-                    treeContext.currentProofStep = treeContext.proof[treeContext.proof.length - 1];
+                    TreeContext.currentProofStep = TreeContext.proof[TreeContext.proof.length - 1];
                     //Redraw our proof
                     redrawProof();
                 }
@@ -315,7 +315,7 @@ function keyDownHandler(event: KeyboardEvent) {
         event.preventDefault(); //prevents Chrome and such from saving the .html of the current webpage
         saveMode();
     } else {
-        switch (treeContext.toolState) {
+        switch (TreeContext.toolState) {
             case Tool.atomTool:
                 AtomTool.atomKeyPress(event);
                 break;
@@ -328,7 +328,7 @@ function keyDownHandler(event: KeyboardEvent) {
  * @param event The mouse down event
  */
 function mouseDownHandler(event: MouseEvent) {
-    switch (treeContext.toolState) {
+    switch (TreeContext.toolState) {
         case Tool.cutTool:
             CutTool.cutMouseDown(event);
             break;
@@ -357,7 +357,7 @@ function mouseDownHandler(event: MouseEvent) {
             DeleteMultiTool.deleteMultiMouseDown(event);
             break;
         case Tool.resizeTool:
-            ResizeTool.resizeMouseDown(event);
+            DrawResizeTool.drawResizeMouseDown(event);
             break;
         case Tool.copyFromDrawTool:
             CopyFromDraw.copyFromDrawMouseDown(event);
@@ -407,7 +407,7 @@ function mouseDownHandler(event: MouseEvent) {
  */
 function mouseMoveHandler(event: MouseEvent) {
     if (hasMouseDown && hasMouseIn) {
-        switch (treeContext.toolState) {
+        switch (TreeContext.toolState) {
             case Tool.cutTool:
                 CutTool.cutMouseMove(event);
                 break;
@@ -436,7 +436,7 @@ function mouseMoveHandler(event: MouseEvent) {
                 DeleteMultiTool.deleteMultiMouseMove(event);
                 break;
             case Tool.resizeTool:
-                ResizeTool.resizeMouseMove(event);
+                DrawResizeTool.drawResizeMouseMove(event);
                 break;
             case Tool.copyFromDrawTool:
                 CopyFromDraw.copyFromDrawMouseMove(event);
@@ -483,7 +483,7 @@ function mouseMoveHandler(event: MouseEvent) {
  * @param event The mouse up event
  */
 function mouseUpHandler(event: MouseEvent) {
-    switch (treeContext.toolState) {
+    switch (TreeContext.toolState) {
         case Tool.cutTool:
             CutTool.cutMouseUp(event);
             break;
@@ -512,7 +512,7 @@ function mouseUpHandler(event: MouseEvent) {
             DeleteMultiTool.deleteMultiMouseUp(event);
             break;
         case Tool.resizeTool:
-            ResizeTool.resizeMouseUp(event);
+            DrawResizeTool.drawResizeMouseUp(event);
             break;
         case Tool.copyFromDrawTool:
             CopyFromDraw.copyFromDrawMouseUp();
@@ -561,7 +561,7 @@ function mouseUpHandler(event: MouseEvent) {
  * Resets mouse down after use.
  */
 function mouseOutHandler() {
-    switch (treeContext.toolState) {
+    switch (TreeContext.toolState) {
         case Tool.cutTool:
             CutTool.cutMouseOut();
             break;
@@ -590,7 +590,7 @@ function mouseOutHandler() {
             DeleteMultiTool.deleteMultiMouseOut();
             break;
         case Tool.resizeTool:
-            ResizeTool.resizeMouseOut();
+            DrawResizeTool.drawResizeMouseOut();
             break;
         case Tool.copyFromDrawTool:
             CopyFromDraw.copyFromDrawMouseOut();
@@ -635,7 +635,7 @@ function mouseOutHandler() {
 }
 
 function mouseEnterHandler() {
-    switch (treeContext.toolState) {
+    switch (TreeContext.toolState) {
         case Tool.cutTool:
             CutTool.cutMouseEnter();
             break;

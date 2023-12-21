@@ -5,7 +5,7 @@ import {illegalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
 import {reInsertNode} from "../SharedToolUtils/EditModeUtils";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Contains methods for deleting one or more nodes at a time.
@@ -34,20 +34,20 @@ let legalNode: boolean;
  *
  * @param event Incoming MouseEvent.
  */
-export function deleteMultiMouseDown(event: MouseEvent) {
+export function deleteMultiMouseDown(event: MouseEvent): void {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = treeContext.tree.getLowestNode(startingPoint);
+    currentNode = TreeContext.tree.getLowestNode(startingPoint);
 
     if (currentNode !== null) {
-        const currentParent = treeContext.tree.getLowestParent(startingPoint);
+        const currentParent = TreeContext.tree.getLowestParent(startingPoint);
         if (currentParent !== null) {
             currentParent.remove(startingPoint);
         } else {
-            currentNode = treeContext.tree.sheet.copy();
-            treeContext.tree.clear();
+            currentNode = TreeContext.tree.sheet.copy();
+            TreeContext.tree.clear();
         }
         legalNode = true;
-        redrawTree(treeContext.tree);
+        redrawTree(TreeContext.tree);
         highlightNode(currentNode, illegalColor());
     }
 }
@@ -59,13 +59,13 @@ export function deleteMultiMouseDown(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function deleteMultiMouseMove(event: MouseEvent) {
+export function deleteMultiMouseMove(event: MouseEvent): void {
     if (legalNode && currentNode !== null) {
-        reInsertNode(treeContext.tree, currentNode);
+        reInsertNode(TreeContext.tree, currentNode);
     }
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
-    const newNode: CutNode | AtomNode | null = treeContext.tree.getLowestNode(newPoint);
-    const currentParent = treeContext.tree.getLowestParent(newPoint);
+    const newNode: CutNode | AtomNode | null = TreeContext.tree.getLowestNode(newPoint);
+    const currentParent = TreeContext.tree.getLowestParent(newPoint);
     if (legalNode && currentNode !== null && currentParent !== null) {
         legalNode = true;
         if (newNode === null) {
@@ -75,13 +75,13 @@ export function deleteMultiMouseMove(event: MouseEvent) {
             currentParent.remove(newPoint);
             currentNode = newNode;
             legalNode = true;
-            redrawTree(treeContext.tree);
+            redrawTree(TreeContext.tree);
             highlightNode(currentNode, illegalColor());
         }
     } else if (legalNode && currentParent === null) {
-        currentNode = treeContext.tree.sheet.copy();
-        treeContext.tree.clear();
-        redrawTree(treeContext.tree);
+        currentNode = TreeContext.tree.sheet.copy();
+        TreeContext.tree.clear();
+        redrawTree(TreeContext.tree);
         highlightNode(currentNode, illegalColor());
     }
 }
@@ -94,16 +94,16 @@ export function deleteMultiMouseMove(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function deleteMultiMouseUp(event: MouseEvent) {
+export function deleteMultiMouseUp(event: MouseEvent): void {
     const newPoint: Point = new Point(event.x - offset.x, event.y - offset.y);
     if (legalNode) {
-        const currentNode = treeContext.tree.getLowestNode(newPoint);
+        const currentNode = TreeContext.tree.getLowestNode(newPoint);
         if (currentNode !== null && currentNode instanceof CutNode) {
             currentNode.remove(newPoint);
         } else {
-            treeContext.tree.clear();
+            TreeContext.tree.clear();
         }
-        redrawTree(treeContext.tree);
+        redrawTree(TreeContext.tree);
     }
     currentNode = null;
     legalNode = false;
@@ -115,11 +115,11 @@ export function deleteMultiMouseUp(event: MouseEvent) {
  * Then sets legality to false.
  * Then redraws the Draw Mode AEGTree.
  */
-export function deleteMultiMouseOut() {
+export function deleteMultiMouseOut(): void {
     if (legalNode && currentNode !== null) {
-        reInsertNode(treeContext.tree, currentNode);
+        reInsertNode(TreeContext.tree, currentNode);
     }
     currentNode = null;
     legalNode = false;
-    redrawTree(treeContext.tree);
+    redrawTree(TreeContext.tree);
 }

@@ -110,7 +110,7 @@ export class CutNode {
     /**
      * Completely removes all of this CutNode's children.
      */
-    public clear() {
+    public clear(): void {
         this.internalChildren = [];
     }
 

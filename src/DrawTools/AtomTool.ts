@@ -5,7 +5,7 @@ import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
 import {redrawTree} from "../SharedToolUtils/DrawUtils";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Contains methods for manipulating AtomNodes on the HTML canvas.
@@ -43,7 +43,7 @@ let currentAtom: AtomNode = createAtom("A", new Point(0, 0));
  *
  * @param event Incoming KeyboardEvent.
  */
-export function atomKeyPress(event: KeyboardEvent) {
+export function atomKeyPress(event: KeyboardEvent): void {
     const regex = new RegExp(/^[A-Za-z]$/);
     if (regex.test(event.key)) {
         currentAtom = createAtom(event.key, new Point(currentAtom.origin.x, currentAtom.origin.y));
@@ -61,7 +61,7 @@ export function atomKeyPress(event: KeyboardEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function atomMouseDown(event: MouseEvent) {
+export function atomMouseDown(event: MouseEvent): void {
     wasOut = false;
     hasMouseDown = true;
     currentAtom = createAtom(
@@ -77,7 +77,7 @@ export function atomMouseDown(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function atomMouseMove(event: MouseEvent) {
+export function atomMouseMove(event: MouseEvent): void {
     currentAtom = createAtom(
         currentAtom.identifier,
         new Point(event.clientX - offset.x, event.clientY - offset.y)
@@ -91,16 +91,16 @@ export function atomMouseMove(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function atomMouseUp(event: MouseEvent) {
+export function atomMouseUp(event: MouseEvent): void {
     changeCursorStyle("cursor: default");
     currentAtom = createAtom(
         currentAtom.identifier,
         new Point(event.clientX - offset.x, event.clientY - offset.y)
     );
-    if (treeContext.tree.canInsert(currentAtom) && !wasOut) {
-        treeContext.tree.insert(currentAtom);
+    if (TreeContext.tree.canInsert(currentAtom) && !wasOut) {
+        TreeContext.tree.insert(currentAtom);
     }
-    redrawTree(treeContext.tree);
+    redrawTree(TreeContext.tree);
     hasMouseDown = false;
 }
 
@@ -108,10 +108,10 @@ export function atomMouseUp(event: MouseEvent) {
  * Sets wasOut to true.
  * Then redraws the Draw Mode AEGtree.
  */
-export function atomMouseOut() {
+export function atomMouseOut(): void {
     changeCursorStyle("cursor: default");
     wasOut = true;
-    redrawTree(treeContext.tree);
+    redrawTree(TreeContext.tree);
 }
 
 /**
@@ -138,10 +138,10 @@ function createAtom(identifier: string, origin: Point): AtomNode {
  * legalColor is chosen if currentAtom's position is valid.
  * IllegalColor is chose if currentAtom's position is not valid.
  */
-function determineDrawColor() {
-    redrawTree(treeContext.tree);
+function determineDrawColor(): void {
+    redrawTree(TreeContext.tree);
     if (!wasOut) {
-        if (treeContext.tree.canInsert(currentAtom)) {
+        if (TreeContext.tree.canInsert(currentAtom)) {
             changeCursorStyle("cursor: default");
             drawAtom(currentAtom, legalColor(), true);
         } else {

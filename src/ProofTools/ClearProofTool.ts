@@ -1,53 +1,47 @@
+import {AEGTree} from "../AEG/AEGTree";
+import {cleanCanvas, highlightNode, redrawProof} from "../SharedToolUtils/DrawUtils";
+import {deleteButtons} from "../ProofHistory";
+import {getCurrentProofTree} from "./ProofToolUtils";
+import {illegalColor} from "../Themes";
+import {TreeContext} from "../TreeContext";
+
 /**
- * File containing clear proof tool event handlers
+ * Contains methods for clearing the Proof Mode HTML canvas.
+ *
  * @author Anusha Tiwari
  */
 
-import {treeContext} from "../treeContext";
-import {cleanCanvas, highlightNode, redrawProof} from "../SharedToolUtils/DrawUtils";
-import {AEGTree} from "../AEG/AEGTree";
-import {illegalColor} from "../Themes";
-import {deleteButtons} from "../ProofHistory";
-import {getCurrentProofTree} from "./ProofToolsUtils";
-
-//The current tree in the proof chain
+//Current tree in the proof chain.
 let currentProofTree: AEGTree;
 
-//Whether or not the node can be cleared
+//True if currentProofTree can be cleared (i.e within the canvas).
 let legalNode: boolean;
 
 /**
- * Handles the mouseDown event for clearProofTool
- * Gets the tree of the current step and highlights it in the illegal color
+ * Clears the canvas and highlights all nodes on it as the illegal color.
  */
-export function clearProofMouseDown() {
-    //Get the tree of the current step
+export function clearProofMouseDown(): void {
     currentProofTree = getCurrentProofTree();
-
-    //As long as we are within the canvas, we can legally perform clear
     legalNode = true;
-    //Clear the canvas and redraw the tree in illegal color to show that it will be deleted
     cleanCanvas();
     highlightNode(currentProofTree.sheet, illegalColor());
 }
 
 /**
- * Handles the mouseOut event for clearProofTool
- * If we are within the canvas, delete the proof history buttons and clear the proof
+ * Clears the proofs history's buttons and redraws the proof.
  */
-export function clearProofMouseUp() {
+export function clearProofMouseUp(): void {
     if (legalNode) {
         deleteButtons(-1);
-        treeContext.clearProof();
+        TreeContext.clearProof();
         redrawProof();
     }
 }
 
 /**
- * Handles the mouseOut event for clearProofTool
- * If we move out of the canvas, the proof cannot be cleared
+ * Redraws the proof.
  */
-export function clearProofMouseOut() {
+export function clearProofMouseOut(): void {
     legalNode = false;
     redrawProof();
 }

@@ -6,7 +6,7 @@ import {CutNode} from "../AEG/CutNode";
 import {legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Contains methods for copying AEGs to Proof Mode.
@@ -37,13 +37,13 @@ const selectString = <HTMLParagraphElement>document.getElementById("selectionStr
  *
  * @param event Incoming MouseEvent.
  */
-export function copyFromDrawMouseDown(event: MouseEvent) {
-    tempTree = new AEGTree(treeContext.tree.sheet);
+export function copyFromDrawMouseDown(event: MouseEvent): void {
+    tempTree = new AEGTree(TreeContext.tree.sheet);
     //Set our selectForProof tree to a new AEGTree so that a new graph can be selected.
-    treeContext.selectForProof.sheet = new AEGTree().sheet;
+    TreeContext.selectForProof.sheet = new AEGTree().sheet;
 
     currentPoint = new Point(event.x - offset.x, event.y - offset.y);
-    selectedNode = treeContext.tree.getLowestNode(currentPoint);
+    selectedNode = TreeContext.tree.getLowestNode(currentPoint);
 
     highlightSelection();
 }
@@ -56,12 +56,12 @@ export function copyFromDrawMouseDown(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function copyFromDrawMouseMove(event: MouseEvent) {
+export function copyFromDrawMouseMove(event: MouseEvent): void {
     if (legalNode) {
-        redrawTree(treeContext.tree);
+        redrawTree(TreeContext.tree);
 
         currentPoint = new Point(event.x - offset.x, event.y - offset.y);
-        selectedNode = treeContext.tree.getLowestNode(currentPoint);
+        selectedNode = TreeContext.tree.getLowestNode(currentPoint);
 
         highlightSelection();
     }
@@ -72,19 +72,19 @@ export function copyFromDrawMouseMove(event: MouseEvent) {
  * Then sets selectedNode to null.
  * Then sets legality to false.
  */
-export function copyFromDrawMouseUp() {
+export function copyFromDrawMouseUp(): void {
     changeCursorStyle("cursor: default");
     if (legalNode && selectedNode !== null) {
         //If the selected node is the tree, insert its children only
         if (selectedNode instanceof CutNode && selectedNode.ellipse === null) {
             for (let i = 0; i < selectedNode.children.length; i++) {
-                treeContext.selectForProof.insert(selectedNode.children[i]);
+                TreeContext.selectForProof.insert(selectedNode.children[i]);
             }
         } else {
-            treeContext.selectForProof.insert(selectedNode);
+            TreeContext.selectForProof.insert(selectedNode);
         }
 
-        redrawTree(treeContext.tree);
+        redrawTree(TreeContext.tree);
     }
 
     selectedNode = null;
@@ -96,17 +96,17 @@ export function copyFromDrawMouseUp() {
  * Then sets legality to false.
  * Then redraws the Draw Mode AEGTree.
  */
-export function copyFromDrawMouseOut() {
+export function copyFromDrawMouseOut(): void {
     changeCursorStyle("cursor: default");
     selectedNode = null;
     legalNode = false;
-    redrawTree(treeContext.tree);
+    redrawTree(TreeContext.tree);
 }
 
 /**
  * Removes selectedNode from the Draw Mode AEGTree and draws it as the legal color.
  */
-function highlightSelection() {
+function highlightSelection(): void {
     //Displayed under the "Selected subgraph:" text.
     const tree = new AEGTree();
     let removed = false;

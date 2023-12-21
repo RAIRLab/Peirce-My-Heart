@@ -1,73 +1,81 @@
-/**
- * Inference rule for erasure
- * @author Dawn Moore
- */
-
-import {Point} from "../AEG/Point";
+import {AEGTree} from "../AEG/AEGTree";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {treeContext} from "../treeContext";
+import {getCurrentProofTree} from "./ProofToolUtils";
+import {highlightNode, redrawProof, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {illegalColor} from "../Themes";
-import {ProofNode} from "../AEG/ProofNode";
-import {AEGTree} from "../AEG/AEGTree";
-import {reInsertNode} from "../SharedToolUtils/EditModeUtils";
-import {redrawProof, redrawTree, highlightNode} from "../SharedToolUtils/DrawUtils";
 import {offset} from "../SharedToolUtils/DragTool";
-import {getCurrentProofTree} from "./ProofToolsUtils";
-
-//The node selected with the user mouse down.
-let currentNode: CutNode | AtomNode | null = null;
-
-//Whether or not the node is allowed to be moved (not the sheet).
-let legalNode: boolean;
-
-//The current tree in the proof chain
-let currentProofTree: AEGTree;
-
-//A copy of the tree we are dealing with in this step
-let tempTree: AEGTree;
-
-//The point that the current mouse event is targeting
-let currentPoint: Point;
+import {Point} from "../AEG/Point";
+import {ProofNode} from "../AEG/ProofNode";
+import {reInsertNode} from "../SharedToolUtils/EditModeUtils";
+import {TreeContext} from "../TreeContext";
 
 /**
- * Captures the current location, and the node linked with that location.
- * Determines if it is a legal node.
- * @param event The mouse down event while using the erasure tool
+ * Contains methods for the erasure inference rule.
+ *
+ * A node is legal for erasure if the node is not the tree, is not null, and on an even cut level.
+ *
+ * @author Dawn Moore
+ * @author Anusha Tiwari
  */
-export function erasureMouseDown(event: MouseEvent) {
+
+//Point the user has recently clicked.
+let currentPoint: Point;
+
+//Node in question.
+let currentNode: CutNode | AtomNode | null = null;
+
+//True if currentNode is not The Sheet of Assertion (i.e can be erased.)
+let legalNode: boolean;
+
+//AEGTree we want to erase currentNode from.
+let currentProofTree: AEGTree;
+
+//Copy of currentProofTree.
+let tempTree: AEGTree;
+
+/**
+ * Sets currentPoint according to the coordinates given by the incoming MouseEvent.
+ * Then sets currentNode to the lowest node containing currentPoint.
+ * Then determines legality and highlights accordingly.
+ *
+ * @param event Incoming MouseEvent.
+ */
+export function erasureMouseDown(event: MouseEvent): void {
     currentPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentProofTree = getCurrentProofTree();
     tempTree = new AEGTree(currentProofTree.sheet);
     currentNode = currentProofTree.getLowestNode(currentPoint);
 
-    isLegal();
+    determineLegalityAndHighlightAsIllegal();
 }
 
 /**
- * Captures the current location that was moved to and the node linked with that location.
- * Redraws the tree so that any highlights are removed and determines legality.
- * @param event The mouse move event while using the erasure tool
+ * Follows the same control flow as erasureMouseDown.
+ *
+ * @see erasureMouseDown
+ * @param event Incoming MouseEvent.
  */
-export function erasureMouseMove(event: MouseEvent) {
+export function erasureMouseMove(event: MouseEvent): void {
     currentPoint = new Point(event.x - offset.x, event.y - offset.y);
 
     if (currentNode !== null) {
         currentNode = currentProofTree.getLowestNode(currentPoint);
         redrawProof();
-        isLegal();
+        determineLegalityAndHighlightAsIllegal();
     }
 }
 
 /**
- * If the node is legal finds the current location and the lowest parent. If that is not null
- * removes the current node from the tree and redraws the tree to represent that.
- * @param event The mouse move event while using the erasure tool
+ * Queues an Erasure step to the proof history.
+ * If legal,
+ *      Removes the lowest node containing the coordinates given by the incoming MouseEvent, and
+ *      Adds the queued Erasure step.
+ *
+ * @param event Incoming MouseEvent.
  */
-export function erasureMouseUp(event: MouseEvent) {
+export function erasureMouseUp(event: MouseEvent): void {
     if (legalNode) {
-        //Stores the tree of the previous proof so that we can perform double cut actions without
-        //altering that tree
         const nextProof = new ProofNode(currentProofTree, "Erasure");
 
         currentPoint = new Point(event.x - offset.x, event.y - offset.y);
@@ -76,7 +84,7 @@ export function erasureMouseUp(event: MouseEvent) {
             currentParent.remove(currentPoint);
         }
 
-        treeContext.pushToProof(nextProof);
+        TreeContext.pushToProof(nextProof);
         redrawProof();
     }
 
@@ -85,9 +93,9 @@ export function erasureMouseUp(event: MouseEvent) {
 }
 
 /**
- * If the mouse is exited the canvas resets the current node and makes it illegal.
+ * Reinserts currentNode into tempTree if necessary and sets fields to defaults.
  */
-export function erasureMouseOut() {
+export function erasureMouseOut(): void {
     if (legalNode && currentNode !== null) {
         reInsertNode(tempTree, currentNode);
     }
@@ -97,29 +105,26 @@ export function erasureMouseOut() {
 }
 
 /**
- * Determines the legality of the current node.
+ * If currentNode is legal as defined above,
+ *      Highlights currentNode as the illegal color, and
+ *      Inserts currentNode into tempTree.
+ *
+ * Otherwise sets legality to false.
  */
-function isLegal() {
-    //If the node is not the tree, is not null, and is even it is legal
+function determineLegalityAndHighlightAsIllegal(): void {
     if (
         currentNode !== currentProofTree.sheet &&
         currentNode !== null &&
         currentProofTree.getLevel(currentNode) % 2 === 0
     ) {
         legalNode = true;
-
-        //Find the parent at the point we are on
         const tempParent = tempTree.getLowestParent(currentPoint);
         if (tempParent !== null) {
-            //remove the node from the parent
             tempParent.remove(currentPoint);
         }
 
-        //Draw the temp tree, from which the node we want to erase has been removed
         redrawTree(tempTree);
-        //Highlight the node selected for erasure in illegal color
         highlightNode(currentNode, illegalColor());
-        //Insert it back into the temporary tree
         tempTree.insert(currentNode);
     } else {
         legalNode = false;

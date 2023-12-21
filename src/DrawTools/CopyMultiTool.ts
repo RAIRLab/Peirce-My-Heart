@@ -6,7 +6,7 @@ import {drawAtom, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
-import {treeContext} from "../treeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Contains methods for copying and pasting one or more nodes at a time.
@@ -33,10 +33,10 @@ let legalNode: boolean;
  *
  * @param event Incoming MouseEvent.
  */
-export function copyMultiMouseDown(event: MouseEvent) {
+export function copyMultiMouseDown(event: MouseEvent): void {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
-    currentNode = treeContext.tree.getLowestNode(startingPoint);
-    if (currentNode !== treeContext.tree.sheet && currentNode !== null) {
+    currentNode = TreeContext.tree.getLowestNode(startingPoint);
+    if (currentNode !== TreeContext.tree.sheet && currentNode !== null) {
         changeCursorStyle("cursor: copy");
         legalNode = true;
     } else {
@@ -50,16 +50,16 @@ export function copyMultiMouseDown(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function copyMultiMouseMove(event: MouseEvent) {
+export function copyMultiMouseMove(event: MouseEvent): void {
     if (legalNode) {
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
             event.y - startingPoint.y
         );
-        redrawTree(treeContext.tree);
+        redrawTree(TreeContext.tree);
         if (currentNode instanceof CutNode) {
             const color = EditModeUtils.validateChildren(
-                treeContext.tree,
+                TreeContext.tree,
                 currentNode,
                 moveDifference
             )
@@ -69,7 +69,7 @@ export function copyMultiMouseMove(event: MouseEvent) {
             determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = EditModeUtils.alterAtom(currentNode, moveDifference);
-            const color = treeContext.tree.canInsert(tempAtom) ? legalColor() : illegalColor();
+            const color = TreeContext.tree.canInsert(tempAtom) ? legalColor() : illegalColor();
             drawAtom(tempAtom, color, true);
             determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
         }
@@ -84,7 +84,7 @@ export function copyMultiMouseMove(event: MouseEvent) {
  *
  * @param event Incoming MouseEvent.
  */
-export function copyMultiMouseUp(event: MouseEvent) {
+export function copyMultiMouseUp(event: MouseEvent): void {
     changeCursorStyle("cursor: default");
     if (legalNode) {
         const moveDifference: Point = new Point(
@@ -92,17 +92,17 @@ export function copyMultiMouseUp(event: MouseEvent) {
             event.y - startingPoint.y
         );
         if (currentNode instanceof CutNode) {
-            if (EditModeUtils.validateChildren(treeContext.tree, currentNode, moveDifference)) {
+            if (EditModeUtils.validateChildren(TreeContext.tree, currentNode, moveDifference)) {
                 EditModeUtils.insertChildren(currentNode, moveDifference);
             }
         } else if (currentNode instanceof AtomNode) {
             const tempAtom: AtomNode = EditModeUtils.alterAtom(currentNode, moveDifference);
-            if (treeContext.tree.canInsert(tempAtom)) {
-                treeContext.tree.insert(tempAtom);
+            if (TreeContext.tree.canInsert(tempAtom)) {
+                TreeContext.tree.insert(tempAtom);
             }
         }
     }
-    redrawTree(treeContext.tree);
+    redrawTree(TreeContext.tree);
     legalNode = false;
 }
 
@@ -110,8 +110,8 @@ export function copyMultiMouseUp(event: MouseEvent) {
  * Sets legality to false.
  * Then redraws the Draw Mode AEGTree.
  */
-export function copyMultiMouseOut() {
+export function copyMultiMouseOut(): void {
     changeCursorStyle("cursor: default");
     legalNode = false;
-    redrawTree(treeContext.tree);
+    redrawTree(TreeContext.tree);
 }

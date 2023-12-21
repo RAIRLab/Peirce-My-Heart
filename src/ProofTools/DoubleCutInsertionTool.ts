@@ -1,63 +1,78 @@
+import {AEGTree} from "../AEG/AEGTree";
+import {
+    changeCursorStyle,
+    determineAndChangeCursorStyle,
+    drawCut,
+    drawGuidelines,
+    redrawProof,
+} from "../SharedToolUtils/DrawUtils";
+import {createEllipse, ellipseLargeEnough} from "../SharedToolUtils/EditModeUtils";
+import {CutNode} from "../AEG/CutNode";
+import {Ellipse} from "../AEG/Ellipse";
+import {getCurrentProofTree} from "./ProofToolUtils";
+import {illegalColor, legalColor} from "../Themes";
+import {offset} from "../SharedToolUtils/DragTool";
+import {Point} from "../AEG/Point";
+import {ProofNode} from "../AEG/ProofNode";
+import {TreeContext} from "../TreeContext";
+
 /**
- * File containing double cut based events
+ * Contains methods for inserting two CutNodes at once on the Proof Mode HTML canvas.
+ *
  * @author Dawn Moore
  * @author James Oswald
+ * @author Anusha Tiwari
  */
 
-import {Point} from "../AEG/Point";
-import {CutNode} from "../AEG/CutNode";
-import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
-import {Ellipse} from "../AEG/Ellipse";
-import {treeContext} from "../treeContext";
-import {offset} from "../SharedToolUtils/DragTool";
-import {legalColor, illegalColor} from "../Themes";
-import {drawCut, redrawProof, drawGuidelines} from "../SharedToolUtils/DrawUtils";
-import {ProofNode} from "../AEG/ProofNode";
-import {AEGTree} from "../AEG/AEGTree";
-import {getCurrentProofTree} from "./ProofToolsUtils";
-import {createEllipse, ellipseLargeEnough} from "../SharedToolUtils/EditModeUtils";
-
+//Checkbox next to "Show Guidelines:" in Proof Mode's Double Cut Insertion tool.
 const showRectElm: HTMLInputElement = <HTMLInputElement>document.getElementById("showRect");
 
-//The point the ellipse is initially placed.
+//First Point the user clicks.
 let startingPoint: Point;
 
-//Tracks if the mouse has ever left canvas disallowing future movements.
+//True if the mouse has left canvas.
 let wasOut: boolean;
 
+//AEGTree at the current proof step.
 let currentProofTree: AEGTree;
 
 /**
- * Sets the canvas' style attribute to crosshair.
+ * Sets cursor style to crosshair.
  */
-export function doubleCutInsertionMouseEnter() {
+export function doubleCutInsertionMouseEnter(): void {
     changeCursorStyle("cursor: crosshair");
 }
 
 /**
- * Records the current point on the canvas.
- * @param event The double cut event while using the double cut insertion tool
+ * Sets startingPoint according to the coordinates given by the incoming MouseEvent.
+ *
+ * @param event Incoming MouseEvent.
  */
-export function doubleCutInsertionMouseDown(event: MouseEvent) {
+export function doubleCutInsertionMouseDown(event: MouseEvent): void {
     startingPoint = new Point(event.clientX - offset.x, event.clientY - offset.y);
     currentProofTree = getCurrentProofTree();
     wasOut = false;
 }
 
 /**
- * Takes the current location of the mouse and creates a cut based on those points.
- * Creates a smaller ellipse that will also be inserted.
- * If either of them are illegal draws both of them as illegal.
- * @param event The mouse move event while using double cut insertion tool
+ * Determines the size of the outer CutNode in a double cut according to the coordinates given by
+ * the incoming MouseEvent. Same for the inner CutNode.
+ *
+ * Then if the mouse has not left canvas and neither Ellipse is null,
+ *      Checks if both CutNodes are able to be inserted and are larger than the minimum size, and
+ *      Highlights both CutNodes as the legal or illegal color.
+ *
+ * Draws the Ellipses' bounding boxes if that is enabled.
+ *
+ * @param event Incoming MouseEvent.
  */
-export function doubleCutInsertionMouseMove(event: MouseEvent) {
+export function doubleCutInsertionMouseMove(event: MouseEvent): void {
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
     const largeCut: CutNode = new CutNode(createEllipse(startingPoint, currentPoint));
     const smallCut: CutNode = new CutNode(calcSmallEllipse(<Ellipse>largeCut.ellipse));
     redrawProof();
 
     if (!wasOut && largeCut.ellipse !== null && smallCut.ellipse !== null) {
-        //If either ellipse is in an invalid position or too small it cannot be inserted
         const legal =
             currentProofTree.canInsert(largeCut) &&
             ellipseLargeEnough(largeCut.ellipse) &&
@@ -65,10 +80,9 @@ export function doubleCutInsertionMouseMove(event: MouseEvent) {
             ellipseLargeEnough(smallCut.ellipse);
 
         const color = legal ? legalColor() : illegalColor();
-        determineAndChangeCursorStyle(color, "cursor: crosshair", "cursor: no-drop");
         drawCut(largeCut, color);
         drawCut(smallCut, color);
-
+        determineAndChangeCursorStyle(color, "cursor: crosshair", "cursor: no-drop");
         if (showRectElm.checked) {
             drawGuidelines(startingPoint, currentPoint, color);
         }
@@ -76,12 +90,17 @@ export function doubleCutInsertionMouseMove(event: MouseEvent) {
 }
 
 /**
- * Takes the current location of the mouse and creates a cut based on those points.
- * Creates a smaller ellipse that will also be inserted.
- * If either of the cuts are illegal inserts neither of them.
- * @param event The mouse up event while using double cut insertion tool
+ * Follows the same control flow as doubleCutInsertionMouseMove.
+ *
+ * Then if both CutNodes can be inserted, inserts them and pushes a Double Cut Insert step to
+ * the proof history.
+ *
+ * Then redraws the proof.
+ *
+ * @see doubleCutInsertionMouseMove
+ * @param event Incoming MouseEvent.
  */
-export function doubleCutInsertionMouseUp(event: MouseEvent) {
+export function doubleCutInsertionMouseUp(event: MouseEvent): void {
     changeCursorStyle("cursor: crosshair");
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
     currentProofTree = getCurrentProofTree();
@@ -89,12 +108,9 @@ export function doubleCutInsertionMouseUp(event: MouseEvent) {
     const largeCut: CutNode = new CutNode(createEllipse(startingPoint, currentPoint));
     const smallCut: CutNode = new CutNode(calcSmallEllipse(<Ellipse>largeCut.ellipse));
 
-    //Stores the tree of the previous proof so that we can perform double cut actions without
-    //altering that tree
     const nextProof = new ProofNode(currentProofTree, "DC Insert");
 
     if (!wasOut && largeCut.ellipse !== null && smallCut.ellipse !== null) {
-        //If either ellipse is in an invalid position or too small it cannot be inserted
         const legal =
             currentProofTree.canInsert(largeCut) &&
             ellipseLargeEnough(largeCut.ellipse) &&
@@ -104,25 +120,26 @@ export function doubleCutInsertionMouseUp(event: MouseEvent) {
         if (legal) {
             nextProof.tree.insert(largeCut);
             nextProof.tree.insert(smallCut);
-            treeContext.pushToProof(nextProof);
+            TreeContext.pushToProof(nextProof);
         }
     }
     redrawProof();
 }
 
 /**
- * Resets the canvas if the mouse ends up out of the canvas.
+ * Sets all fields back to default.
  */
-export function doubleCutInsertionMouseOut() {
+export function doubleCutInsertionMouseOut(): void {
     changeCursorStyle("cursor: default");
     wasOut = true;
     redrawProof();
 }
 
 /**
- * Creates a new smaller ellipse with 80% of the radius of the original.
- * @param ellipse The original larger ellipse
- * @returns The new smaller ellipse
+ * Creates and returns a new smaller Ellipse with 80% of the radius of the incoming Ellipse.
+ *
+ * @param ellipse Incoming Ellipse.
+ * @returns Smaller Ellipse with radii 80% as large as ellipse.
  */
 function calcSmallEllipse(ellipse: Ellipse): Ellipse {
     return new Ellipse(
