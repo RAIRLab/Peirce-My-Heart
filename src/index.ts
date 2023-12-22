@@ -3,6 +3,7 @@
  *
  * @author Dawn Moore
  * @author James Oswald
+ * @author Ryan Reilly
  * @author Anusha Tiwari
  */
 
@@ -40,7 +41,7 @@ import * as ProofResizeTool from "./ProofTools/ProofResizeTool";
 import * as DeiterationTool from "./ProofTools/DeiterationTool";
 import * as ClearProofTool from "./ProofTools/ClearProofTool";
 
-//Setting up Canvas
+//Setting up canvas...
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -51,7 +52,7 @@ if (res === null) {
 const ctx: CanvasRenderingContext2D = res;
 ctx.font = "35pt arial";
 
-//Global State
+//Global states.
 const cutTools = <HTMLParagraphElement>document.getElementById("cutTools");
 const atomTools = <HTMLParagraphElement>document.getElementById("atomTools");
 export const treeString = <HTMLParagraphElement>document.getElementById("graphString");
@@ -65,13 +66,13 @@ canvas.addEventListener("mouseup", mouseUpHandler);
 canvas.addEventListener("mouseout", mouseOutHandler);
 canvas.addEventListener("mouseenter", mouseEnterHandler);
 
-//Boolean value representing whether the mouse button is down. Assumed to not be down at the start.
+//True if the user's mouse is down. Assumed not to be down at the start.
 let hasMouseDown = false;
 
-//Boolean value representing whether the mouse is in the canvas. Assumed to be in at the start.
+//True if the user's mouse is down. Assumed to be in at the start.
 let hasMouseIn = true;
 
-//Window Exports
+//Global window exports.
 window.tree = TreeContext.tree;
 window.treeString = aegStringify(window.tree);
 window.atomTool = Tool.atomTool;
@@ -140,7 +141,7 @@ declare global {
 
 //Add no-highlight class only when mouse is pressed on a div to ensure that elements in the div are
 //not highlighted any other time
-function setHighlight(event: string, id: string) {
+function setHighlight(event: string, id: string): void {
     const bar = document.getElementById(id);
     switch (event) {
         case "mousedown":
@@ -152,7 +153,7 @@ function setHighlight(event: string, id: string) {
     }
 }
 
-//Active mode button stays pressed down until another mode button is clicked
+//Current tool button stays active until another tool button is clicked.
 const toolButtons = document.querySelectorAll(".toolButton");
 toolButtons.forEach(button => {
     button.addEventListener("click", () => {
@@ -166,11 +167,11 @@ toolButtons.forEach(button => {
 });
 
 /**
- * Updates our global tree content tool and the html display elements according to the tool button
- * that was clicked on
- * @param state The tool that was clicked on
+ * Updates TreeContext and the HTML display elements according to the incoming Tool.
+ *
+ * @param state Incoming Tool.
  */
-function setTool(state: Tool) {
+function setTool(state: Tool): void {
     TreeContext.toolState = state;
     cutTools.style.display = "none";
     atomTools.style.display = "none";
@@ -193,15 +194,16 @@ function setTool(state: Tool) {
 }
 /**
  * Creates and returns the stringification of the incoming data. Uses tab characters as delimiters.
- * @param treeData the incoming data
- * @returns the stringification of the incoming data
+ *
+ * @param treeData Incoming data.
+ * @returns Stringification of treeData.
  */
 export function aegStringify(treeData: AEGTree | ProofNode[]): string {
     return JSON.stringify(treeData, null, "\t");
 }
 
 /**
- * Calls the function to save the file.
+ * Calls appropriate methods to save the current AEGTree as a file.
  */
 async function saveMode() {
     let name: string;
@@ -222,9 +224,9 @@ async function saveMode() {
         data = TreeContext.proof;
     }
 
-    //Errors caused due to file handler or html download element should not be displayed
+    //Errors caused by file handler or HTML download element should not be displayed.
     try {
-        //Slow Download
+        //Slow Download...
         if ("showSaveFilePicker" in window) {
             const saveHandle = await window.showSaveFilePicker({
                 excludeAcceptAllOption: true,
@@ -241,21 +243,21 @@ async function saveMode() {
             });
             saveFile(saveHandle, data);
         } else {
-            //Quick Download
+            //Quick Download...
             const f = document.createElement("a");
             f.href = aegStringify(data);
             f.download = name + ".json";
             f.click();
         }
     } catch (error) {
-        //Catch error but do nothing
+        //Catch error but do nothing. Discussed in Issue #247.
     }
 }
 
 /**
- * Calls the function to load the files.
+ * Calls the appropriate methods to load files and convert them to equivalent AEGTrees.
  */
-async function loadMode() {
+async function loadMode(): Promise<void> {
     try {
         const [fileHandle] = await window.showOpenFilePicker({
             excludeAcceptAllOption: true,
@@ -278,42 +280,42 @@ async function loadMode() {
             if (typeof aegData === "string") {
                 const loadData = loadFile(TreeContext.modeState, aegData);
                 if (TreeContext.modeState === "Draw") {
-                    //Load in the data of our new tree
+                    //Loads data.
                     TreeContext.tree = loadData as AEGTree;
-                    //Redraw our tree
+                    //Redraws tree which is now the parsed loadData.
                     redrawTree(TreeContext.tree);
                 } else if (TreeContext.modeState === "Proof") {
-                    //Clear our current proof
+                    //Clears current proof.
                     TreeContext.clearProof();
-                    //Load in the data of the new proof
+                    //Loads data for the new proof.
                     TreeContext.proof = loadData as ProofNode[];
-                    //Remove our default start step
+                    //Removes default start step.
                     document.getElementById("Row: 1")?.remove();
-                    //Add a button for each step of the proof to the history bar
+                    //Adds button for each step of the loaded proof to the history bar.
                     for (let i = 0; i < TreeContext.proof.length; i++) {
                         appendStep(TreeContext.proof[i], i + 1);
                     }
                     TreeContext.currentProofStep = TreeContext.proof[TreeContext.proof.length - 1];
-                    //Redraw our proof
                     redrawProof();
                 }
             } else {
-                console.log("Loading failed because reading the file was unsuccessful");
+                console.log("Loading failed because reading the file was unsuccessful.");
             }
         });
         reader.readAsText(file);
     } catch (error) {
-        //Do nothing
+        //Do nothing.
     }
 }
 
 /**
- * Calls the respective keydown function depending on current mode.
- * @param event The event of a keypress
+ * Calls appropriate keydown method with the incoming KeyboardEvent.
+ *
+ * @param event Incoming KeyboardEvent.
  */
-function keyDownHandler(event: KeyboardEvent) {
+function keyDownHandler(event: KeyboardEvent): void {
     if (event.ctrlKey && event.key === "s") {
-        event.preventDefault(); //prevents Chrome and such from saving the .html of the current webpage
+        event.preventDefault(); //Prevents Chrome from saving a .html of the current webpage.
         saveMode();
     } else {
         switch (TreeContext.toolState) {
@@ -325,10 +327,32 @@ function keyDownHandler(event: KeyboardEvent) {
 }
 
 /**
- * Calls the respective mouse down function depending on current mode.
- * @param event The mouse down event
+ * Calls appropriate mouseenter handler method depending on tool state.
  */
-function mouseDownHandler(event: MouseEvent) {
+function mouseEnterHandler(): void {
+    switch (TreeContext.toolState) {
+        case Tool.cutTool:
+            CutTool.cutMouseEnter();
+            break;
+        case Tool.dragTool:
+            DragTool.dragMouseEnter();
+            break;
+        case Tool.doubleCutInsertionTool:
+            DoubleCutInsertionTool.doubleCutInsertionMouseEnter();
+            break;
+        default:
+            break;
+    }
+    hasMouseIn = true;
+}
+
+/**
+ * Calls appropriate mousedown handler method, depending on tool state,
+ * with the incoming MouseEvent.
+ *
+ * @param event Incoming MouseEvent.
+ */
+function mouseDownHandler(event: MouseEvent): void {
     switch (TreeContext.toolState) {
         case Tool.cutTool:
             CutTool.cutMouseDown(event);
@@ -403,10 +427,12 @@ function mouseDownHandler(event: MouseEvent) {
 }
 
 /**
- * If mouse down has been used calls the respective mousedown function based on mode.
- * @param event the mouse move event
+ * Calls appropriate mousemove handler method, depending on tool state,
+ * with the incoming MouseEvent.
+ *
+ * @param event Incoming MouseEvent.
  */
-function mouseMoveHandler(event: MouseEvent) {
+function mouseMoveHandler(event: MouseEvent): void {
     if (hasMouseDown && hasMouseIn) {
         switch (TreeContext.toolState) {
             case Tool.cutTool:
@@ -479,11 +505,12 @@ function mouseMoveHandler(event: MouseEvent) {
 }
 
 /**
- * If mouse down has been used calls the respective mouse up function based on mode.
- * Resets mouse down after use.
- * @param event The mouse up event
+ * Calls appropriate mouseup handler method, depending on tool state,
+ * with the incoming MouseEvent.
+ *
+ * @param event Incoming MouseEvent.
  */
-function mouseUpHandler(event: MouseEvent) {
+function mouseUpHandler(event: MouseEvent): void {
     switch (TreeContext.toolState) {
         case Tool.cutTool:
             CutTool.cutMouseUp(event);
@@ -558,10 +585,9 @@ function mouseUpHandler(event: MouseEvent) {
 }
 
 /**
- * If mouse down has been used calls the respective mouse out function based on mode.
- * Resets mouse down after use.
+ * Calls appropriate mouseout handler method depending on tool state.
  */
-function mouseOutHandler() {
+function mouseOutHandler(): void {
     switch (TreeContext.toolState) {
         case Tool.cutTool:
             CutTool.cutMouseOut();
@@ -635,27 +661,10 @@ function mouseOutHandler() {
     hasMouseIn = false;
 }
 
-function mouseEnterHandler() {
-    switch (TreeContext.toolState) {
-        case Tool.cutTool:
-            CutTool.cutMouseEnter();
-            break;
-        case Tool.dragTool:
-            DragTool.dragMouseEnter();
-            break;
-        case Tool.doubleCutInsertionTool:
-            DoubleCutInsertionTool.doubleCutInsertionMouseEnter();
-            break;
-        default:
-            break;
-    }
-    hasMouseIn = true;
-}
-
 /**
- * Resizes the canvas to the current width and height of the window
+ * Changes the canvas' width and height according to the window's on window resize.
  */
-function resizeHandler() {
+function resizeHandler(): void {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
