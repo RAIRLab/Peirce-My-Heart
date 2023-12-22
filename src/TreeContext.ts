@@ -1,14 +1,15 @@
 import {AEGTree} from "./AEG/AEGTree";
-import {ProofNode} from "./AEG/ProofNode";
 import {appendStep, deleteButtons} from "./ProofHistory";
+import {ProofNode} from "./AEG/ProofNode";
 
 /**
- * The global context describing the state of the AEG Tree and other related attributes
+ * Describes the state of the AEGTree and other related attributes.
+ *
  * @author Anusha Tiwari
  */
 
 /**
- * Enum to represent the current drawing mode the program is currently in.
+ * Represents the current tool in use.
  */
 export enum Tool {
     none,
@@ -37,27 +38,28 @@ export enum Tool {
 }
 
 export class TreeContext {
-    //The current tree on the the canvas, needs to be redrawn upon any updates.
+    //Current AEGTree on canvas.
     public static tree: AEGTree = new AEGTree();
 
-    //The proof being constructed
+    //The proof is a series of ProofNodes.
     public static proof: ProofNode[] = [];
 
-    //The node denoting the current step that we are on in the proof
+    //Current step in the proof.
     public static currentProofStep: ProofNode | undefined;
 
-    //The node selected on draw mode which will copy over when we toggle to proof mode.
+    //Node selected with Draw Mode's "Select for copy to Proof Mode" button.
     public static selectForProof: AEGTree = new AEGTree();
 
-    //Used to determine the current mode the program is in.
+    //Tool currently in use.
     public static toolState: Tool = Tool.none;
 
-    //An indicator of the mode that we are currently on
+    //Mode the application is in. Defaults to Draw.
     public static modeState: "Draw" | "Proof" = "Draw";
 
     /**
-     * Method to get the last step in the proof.
-     * @returns The node denoting the last step in the proof.
+     * Returns the most recent step in the proof.
+     *
+     * @returns Most recent step in the proof.
      */
     public static getLastProofStep(): ProofNode {
         if (TreeContext.proof.length === 0) {
@@ -68,20 +70,21 @@ export class TreeContext {
     }
 
     /**
-     * Adds the recently created proof node into the proof array and creates a new button for it.
-     * Sets the current step to this new step. If the current step is not the newest step then
-     * the array up to that step needs to be removed.
-     * @param newStep The new proof node being added to the proof
+     * Adds the incoming ProofNode into proof and creates a new button for the step
+     * in the proof history bar.
+     * Then updates globals accordingly.
+     *
+     * @param newStep Incoming ProofNode.
      */
-    public static pushToProof(newStep: ProofNode) {
+    public static pushToProof(newStep: ProofNode): void {
         if (newStep.appliedRule === "Pasted") {
             this.proof.pop();
             document.getElementById("Row: 1")?.remove();
             newStep.index = 0;
         } else if (this.currentProofStep && this.proof.length > 0) {
-            //Compare the current step we are on and the last step stored in the history
+            //Compare the current step we are on and the last step stored in the history.
             //If they are not the same, we have moved back to a previous step and need to delete
-            //all the steps in between
+            //all the steps in between to prevent timeline clashes.
             if (
                 !this.currentProofStep.tree.isEqualTo(this.proof[this.proof.length - 1].tree) ||
                 this.currentProofStep.appliedRule !== this.proof[this.proof.length - 1].appliedRule
@@ -93,16 +96,15 @@ export class TreeContext {
             }
         }
 
-        //Set the newest performed step as the current step, and it to the proof
         this.currentProofStep = newStep;
         this.proof.push(newStep);
         appendStep(newStep);
     }
 
     /**
-     * Clears the proof by resetting the array and the current step of the proof
+     * Resets the proof history array and eliminates all proof steps.
      */
-    public static clearProof() {
+    public static clearProof(): void {
         deleteButtons(-1);
         this.proof = [];
         this.pushToProof(new ProofNode());

@@ -6,14 +6,20 @@ import {Point} from "./AEG/Point";
 import {ProofNode} from "./AEG/ProofNode";
 
 /**
- * Interface for an object describing Sheet of Assertion
+ * Contains methods for loading and saving AEGs from JSON files.
+ *
+ * @author Anusha Tiwari
+ */
+
+/**
+ * Describes The Sheet of Assertion in JSON files.
  */
 interface sheetObj {
     internalSheet: cutObj;
 }
 
 /**
- * Interface for an object describing a Cut Node
+ * Describes a CutNode in JSON files.
  */
 interface cutObj {
     internalEllipse: {
@@ -25,7 +31,7 @@ interface cutObj {
 }
 
 /**
- * Interface for an object describing an Atom Node
+ * Describes an AtomNode in JSON files.
  */
 interface atomObj {
     internalWidth: number;
@@ -34,18 +40,28 @@ interface atomObj {
     internalOrigin: {x: number; y: number};
 }
 
-interface nodeObj {
+/**
+ * Describes a ProofNode in JSON files.
+ */
+interface proofNodeObj {
     tree: sheetObj;
     appliedRule: string;
 }
 
 /**
- * Function that creates and saves a file containing the given AEG data
- * @param handle The handler for the save file picker
- * @param aegData Serialized JSON string containing the AEG data
+ * Creates and saves a file to the incoming FileSystemFileHandle
+ * and containing the incoming save data.
+ *
+ * The save data will either be an AEGTree from Draw Mode or a series of ProofNodes from Proof Mode.
+ *
+ * @param handle Incoming FileSystemFileHandle.
+ * @param aegData Incoming save data.
  */
-export async function saveFile(handle: FileSystemFileHandle, saveData: AEGTree | ProofNode[]) {
-    const data = JSON.stringify(saveData, null, "\t");
+export async function saveFile(
+    handle: FileSystemFileHandle,
+    saveData: AEGTree | ProofNode[]
+): Promise<void> {
+    const data: string = JSON.stringify(saveData, null, "\t");
 
     const writable = await handle.createWritable();
     await writable.write(data);
@@ -53,13 +69,12 @@ export async function saveFile(handle: FileSystemFileHandle, saveData: AEGTree |
 }
 
 /**
- * Function that takes in data read from a file and converts it into a valid AEG representation.
- * @param mode The mode we are in (Draw mode or proof mode)
- * @param fileData The data read from a file.
- * @returns If in draw mode, returns an AEG representation of the data.
- * If in proof mode, constructs an array of AEGs read from the file.
- * This can be used to build the proof list
- * Returns null if an error occurred
+ * Returns incoming data read from a file as an equivalent AEG representation.
+ * Output depends on the incoming mode string.
+ *
+ * @param mode Incoming mode string.
+ * @param fileData Incoming data read from a file.
+ * @returns AEGTree representation of fileData if in Draw Mode. Otherwise, a series of ProofNodes.
  */
 export function loadFile(mode: "Draw" | "Proof", fileData: string): AEGTree | ProofNode[] {
     const data = JSON.parse(fileData);
@@ -71,7 +86,7 @@ export function loadFile(mode: "Draw" | "Proof", fileData: string): AEGTree | Pr
         //Construct the tree at every step of the proof and store them in an array
         const arr: ProofNode[] = [];
 
-        let node: nodeObj;
+        let node: proofNodeObj;
         for (node of data) {
             const childData: (atomObj | cutObj)[] = node.tree.internalSheet.internalChildren;
             arr.push(new ProofNode(toTree(childData), node.appliedRule));
@@ -82,9 +97,11 @@ export function loadFile(mode: "Draw" | "Proof", fileData: string): AEGTree | Pr
 }
 
 /**
- * Constructs an AEG from the array of JSON objects parsed from our file data.
- * @param childData The array of objects which should be filled in as children of the tree.
- * @returns An AEG Tree representation of our data.
+ * Constructs an AEGTree from the incoming array of JSON node objects.
+ * JSON node objects will be either AtomObjects or CutObjects.
+ *
+ * @param childData Incoming array of JSON node objects.
+ * @returns An equivalent AEGTree representation of childData.
  */
 function toTree(childData: (atomObj | cutObj)[]): AEGTree {
     const tree: AEGTree = new AEGTree();
@@ -92,10 +109,8 @@ function toTree(childData: (atomObj | cutObj)[]): AEGTree {
 
     for (const child of childData) {
         if (Object.prototype.hasOwnProperty.call(child, "internalEllipse")) {
-            //make cut
             children.push(toCut(child as cutObj));
         } else {
-            //Make atom
             children.push(toAtom(child as atomObj));
         }
     }
@@ -105,20 +120,21 @@ function toTree(childData: (atomObj | cutObj)[]): AEGTree {
 }
 
 /**
- * Function that parses a Cut Object into a valid CutNode
- * @param data The Cut Object to be parsed
- * @returns A CutNode
+ * Parses the incoming CutObject and returns an equivalent CutNode.
+ *
+ * @param cutData Incoming CutObject.
+ * @returns CutNode equivalent of cutData.
  */
-function toCut(data: cutObj): CutNode {
+function toCut(cutData: cutObj): CutNode {
     const ellipse: Ellipse = new Ellipse(
-        new Point(data.internalEllipse.center.x, data.internalEllipse.center.y),
-        data.internalEllipse.radiusX,
-        data.internalEllipse.radiusY
+        new Point(cutData.internalEllipse.center.x, cutData.internalEllipse.center.y),
+        cutData.internalEllipse.radiusX,
+        cutData.internalEllipse.radiusY
     );
 
     const children: (AtomNode | CutNode)[] = [];
 
-    for (const child of data.internalChildren) {
+    for (const child of cutData.internalChildren) {
         if ("internalEllipse" in child) {
             children.push(toCut(child));
         } else {
@@ -130,14 +146,15 @@ function toCut(data: cutObj): CutNode {
 }
 
 /**
- * Function that parses an Atom Object into a valid AtomNode
- * @param data The object to be parsed
- * @returns An AtomNode
+ * Parses the incoming AtomObject and returns and equivalent AtomNode.
+ *
+ * @param atomData Incoming AtomObject.
+ * @returns AtomNode equivalent of atomData.
  */
-function toAtom(data: atomObj): AtomNode {
-    const identifier: string = data.internalIdentifier;
+function toAtom(atomData: atomObj): AtomNode {
+    const identifier: string = atomData.internalIdentifier;
 
-    const origin: Point = new Point(data.internalOrigin.x, data.internalOrigin.y);
+    const origin: Point = new Point(atomData.internalOrigin.x, atomData.internalOrigin.y);
 
-    return new AtomNode(identifier, origin, data.internalWidth, data.internalHeight);
+    return new AtomNode(identifier, origin, atomData.internalWidth, atomData.internalHeight);
 }

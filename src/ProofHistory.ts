@@ -1,25 +1,30 @@
+import {ProofNode} from "./AEG/ProofNode";
+import {redrawProof} from "./SharedToolUtils/DrawUtils";
+import {TreeContext} from "./TreeContext";
+
 /**
- * Creates the history bar on the left side of the screen and handles returning to a previous state.
+ * Creates the proof history bar on the left side of the screen
+ * and handles returning to a previous step.
+ *
  * @author Dawn Moore
  */
 
-import {TreeContext} from "./TreeContext";
-import {redrawProof} from "./SharedToolUtils/DrawUtils";
-import {ProofNode} from "./AEG/ProofNode";
-
 /**
- * Creates a button representing the proof step allowing a user to return to that step.
- * Creates a new row, a piece of text, and a button for it.
- * @param newStep The newest step of our proof
- * @param step The number of the step that we are appending
+ * Creates a button representing the incoming ProofNode as a step in the proof history
+ * and allows the user to return to that step.
+ *
+ * @param newStep Incoming ProofNode.
+ * @param step Index of newStep in the history.
  */
-export function appendStep(newStep: ProofNode, step?: number) {
+export function appendStep(newStep: ProofNode, step?: number): void {
     const newDiv = document.createElement("div");
     newDiv.className = "row";
     const stepNumber = step ? step : TreeContext.proof.length;
     newDiv.id = "Row: " + stepNumber;
 
-    //Create the new button with the function stepBack calling the step it represents
+    //Creates the new button.
+    //Calls stepBack to send the user back in the proof history by restoring the AEGTree
+    //at that step.
     const button = document.createElement("button");
     button.type = "button";
     button.id = "Step: " + TreeContext.proof.length;
@@ -29,7 +34,7 @@ export function appendStep(newStep: ProofNode, step?: number) {
         stepBack(newStep);
     };
 
-    //Determine which action was just taken to give the button the corresponding icon.
+    //Determines which type of step was taken to give the created button a corresponding icon.
     const icon = document.createElement("Text");
     icon.className =
         "fa fa-" +
@@ -52,20 +57,22 @@ export function appendStep(newStep: ProofNode, step?: number) {
 }
 
 /**
- * Sets the selected step to be the current step and redraws the canvas to represent this.
- * This will be called when a button representing a proof step is pushed.
- * @param selectedStep The selected proof Node that will become the current step
+ * Sets the incoming ProofNode to be the current step and redraws the canvas to represent that.
+ * Called when a proof step is pushed.
+ *
+ * @param selectedStep Incoming ProofNode.
  */
-export function stepBack(selectedStep: ProofNode) {
+export function stepBack(selectedStep: ProofNode): void {
     TreeContext.currentProofStep = selectedStep;
     redrawProof();
 }
 
 /**
  * Removes buttons related to proof steps that are no longer a part of the proof.
+ *
  * @param stopIndex The index to stop removing buttons.
  */
-export function deleteButtons(stopIndex: number) {
+export function deleteButtons(stopIndex: number): void {
     for (let i = TreeContext.proof.length; i > stopIndex + 1; i--) {
         document.getElementById("Row: " + i)?.remove();
     }

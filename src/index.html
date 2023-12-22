@@ -91,6 +91,14 @@
           </button>
         </div>
         <div class="row">
+          <button type="button" onclick="setTool(doubleCutInsertionTool)" title="Double Cut Insertion" class="toolButton">
+            <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+          </button>
+          <button type="button" onclick="setTool(doubleCutDeletionTool)" title="Double Cut Erase" class="toolButton">
+            <i class="fa fa-times-circle" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="row">
           <button type="button" onclick="setTool(proofMoveSingleTool)" title="Move Single" class="toolButton">
             <i class="fa fa-mouse-pointer" aria-hidden="true"></i>
         </button>
@@ -99,19 +107,11 @@
         </button>
         </div>
         <div class="row">
-          <button type="button" onclick="setTool(proofResizeTool)" title="Resize Single" class="toolButton">
-            <i class="fa fa-arrows-alt" aria-hidden="true"></i>
+          <button type="button" onclick="setTool(iterationTool)" title="Iteration" class="toolButton">
+            <i class="fa fa-expand" aria-hidden="true"></i>
           </button>
-          <button type="button" onclick="setTool(pasteInProofTool)" title="Paste graph from Draw Mode" class="toolButton">
-              <i class="fa fa-files-o" aria-hidden="true"></i>
-          </button>
-        </div>
-        <div class="row">
-          <button type="button" onclick="setTool(doubleCutInsertionTool)" title="Double Cut Insertion" class="toolButton">
-            <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
-          </button>
-          <button type="button" onclick="setTool(doubleCutDeletionTool)" title="Double Cut Erase" class="toolButton">
-            <i class="fa fa-times-circle" aria-hidden="true"></i>
+          <button type="button" onclick="setTool(deiterationTool)" title="Deiteration" class="toolButton">
+            <i class="fa fa-compress" aria-hidden="true"></i>
           </button>
         </div>
         <div class="row">
@@ -123,11 +123,11 @@
           </button>
         </div>
         <div class="row">
-          <button type="button" onclick="setTool(iterationTool)" title="Iteration" class="toolButton">
-            <i class="fa fa-expand" aria-hidden="true"></i>
+          <button type="button" onclick="setTool(proofResizeTool)" title="Resize Single" class="toolButton">
+            <i class="fa fa-arrows-alt" aria-hidden="true"></i>
           </button>
-          <button type="button" onclick="setTool(deiterationTool)" title="Deiteration" class="toolButton">
-            <i class="fa fa-compress" aria-hidden="true"></i>
+          <button type="button" onclick="setTool(pasteInProofTool)" title="Paste graph from Draw Mode" class="toolButton">
+              <i class="fa fa-files-o" aria-hidden="true"></i>
           </button>
         </div>
       </div>
