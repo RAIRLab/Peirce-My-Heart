@@ -17,7 +17,7 @@
     
     
     
-    <script type="module" crossorigin src="/Peirce-My-Heart/assets/index-8b5459ff.js"></script>
+    <script type="module" crossorigin src="/Peirce-My-Heart/assets/index-18b8bec6.js"></script>
     <link rel="stylesheet" href="/Peirce-My-Heart/assets/index-71491c5b.css">
     <link rel="stylesheet" href="/Peirce-My-Heart/assets/themes-62f77642.css">
   </head>
@@ -94,6 +94,14 @@
           </button>
         </div>
         <div class="row">
+          <button type="button" onclick="setTool(doubleCutInsertionTool)" title="Double Cut Insertion" class="toolButton">
+            <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+          </button>
+          <button type="button" onclick="setTool(doubleCutDeletionTool)" title="Double Cut Erase" class="toolButton">
+            <i class="fa fa-times-circle" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="row">
           <button type="button" onclick="setTool(proofMoveSingleTool)" title="Move Single" class="toolButton">
             <i class="fa fa-mouse-pointer" aria-hidden="true"></i>
         </button>
@@ -102,19 +110,11 @@
         </button>
         </div>
         <div class="row">
-          <button type="button" onclick="setTool(proofResizeTool)" title="Resize Single" class="toolButton">
-            <i class="fa fa-arrows-alt" aria-hidden="true"></i>
+          <button type="button" onclick="setTool(iterationTool)" title="Iteration" class="toolButton">
+            <i class="fa fa-expand" aria-hidden="true"></i>
           </button>
-          <button type="button" onclick="setTool(pasteInProofTool)" title="Paste graph from Draw Mode" class="toolButton">
-              <i class="fa fa-files-o" aria-hidden="true"></i>
-          </button>
-        </div>
-        <div class="row">
-          <button type="button" onclick="setTool(doubleCutInsertionTool)" title="Double Cut Insertion" class="toolButton">
-            <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
-          </button>
-          <button type="button" onclick="setTool(doubleCutDeletionTool)" title="Double Cut Erase" class="toolButton">
-            <i class="fa fa-times-circle" aria-hidden="true"></i>
+          <button type="button" onclick="setTool(deiterationTool)" title="Deiteration" class="toolButton">
+            <i class="fa fa-compress" aria-hidden="true"></i>
           </button>
         </div>
         <div class="row">
@@ -126,11 +126,11 @@
           </button>
         </div>
         <div class="row">
-          <button type="button" onclick="setTool(iterationTool)" title="Iteration" class="toolButton">
-            <i class="fa fa-expand" aria-hidden="true"></i>
+          <button type="button" onclick="setTool(proofResizeTool)" title="Resize Single" class="toolButton">
+            <i class="fa fa-arrows-alt" aria-hidden="true"></i>
           </button>
-          <button type="button" onclick="setTool(deiterationTool)" title="Deiteration" class="toolButton">
-            <i class="fa fa-compress" aria-hidden="true"></i>
+          <button type="button" onclick="setTool(pasteInProofTool)" title="Paste graph from Draw Mode" class="toolButton">
+              <i class="fa fa-files-o" aria-hidden="true"></i>
           </button>
         </div>
       </div>
