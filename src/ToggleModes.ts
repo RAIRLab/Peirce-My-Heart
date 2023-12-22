@@ -12,28 +12,32 @@ import {Tool, TreeContext} from "./TreeContext";
  * @author Anusha Tiwari
  */
 
-//Flag to signify the mode we are in
-let drawMode = true; //we start in draw mode
+//True for Draw Mode, false for Proof Mode.
+let drawMode = true;
 
-//This is the AEG that is on the canvas during draw mode
-//It is saved when toggled to proof mode and reloaded when toggled back to draw mode
+//AEG on the canvas in Draw Mode. Stored on Proof Mode toggle and reloaded on Draw Mode toggle.
 let drawCachedAEG: string | null = null;
+//AEG on the canvas in Proof Mode. Stored on Draw Mode toggle and reloaded on Proof Mode toggle.
 let proofCachedAEG: string | null = null;
 
-//This is the tool we were using during draw mode
-//It is saved when toggled to proof mode and reloaded when toggled back to draw mode
+//Tool selected in Draw Mode. Stored on Proof Mode toggle and reloaded on Draw Mode toggle.
 let drawCachedTool: Tool = Tool.none;
+//Tool selected in Proof Mode. Stored on Draw Mode toggle and reloaded on Proof Mode toggle.
 let proofCachedTool: Tool = Tool.none;
 
 const drawButtons = document.getElementById("DrawButtons")!;
 const proofButtons = document.getElementById("ProofButtons")!;
 const proofHistoryBar = <HTMLParagraphElement>document.getElementById("proofHistoryBar");
 
+/**
+ * Caches the states of AEGs and tools for both Draw and Proof Mode.
+ * Updates button visibility accordingly.
+ */
 export function toggleHandler(): void {
-    //Toggle the value of the flag because the mode has been changed
+    //Toggle drawMode since we have switched modes.
     drawMode = !drawMode;
     if (drawMode) {
-        //Display the buttons for Draw Mode
+        //Remove visibility of Proof Mode buttons for Draw Mode.
         drawButtons.style.display = "block";
         treeString.style.display = "block";
         proofButtons.style.display = "none";
@@ -41,11 +45,11 @@ export function toggleHandler(): void {
         proofHistoryBar.style.display = "none";
         TreeContext.modeState = "Draw";
 
-        //cache the proof tree and tool state so that we can load it back in when we toggle again
+        //Cache Proof Mode tree and tool states so we can load them back in on Proof Mode toggle.
         proofCachedAEG = JSON.stringify(TreeContext.proof);
         proofCachedTool = TreeContext.toolState;
 
-        //Load in our saved draw tree and tool state
+        //Load our saved Draw Mode tree and tool states.
         let loadedAEG: AEGTree | null = null;
         if (drawCachedAEG !== null) {
             loadedAEG = loadFile(TreeContext.modeState, drawCachedAEG) as AEGTree | null;
@@ -58,7 +62,7 @@ export function toggleHandler(): void {
         TreeContext.toolState = drawCachedTool;
         redrawTree(TreeContext.tree);
     } else {
-        //Display the buttons for Proof Mode
+        //Display buttons for Proof Mode.
         drawButtons.style.display = "none";
         treeString.style.display = "none";
         proofButtons.style.display = "block";
@@ -66,7 +70,7 @@ export function toggleHandler(): void {
         proofHistoryBar.style.display = "block";
         TreeContext.modeState = "Proof";
 
-        //cache the draw tree and tool state so that we can load it back in when we toggle again
+        //Cache Draw Mode tree and tool states so we can load them back in on Draw Mode toggle.
         drawCachedAEG = JSON.stringify(TreeContext.tree);
         drawCachedTool = TreeContext.toolState;
 
@@ -74,7 +78,7 @@ export function toggleHandler(): void {
             TreeContext.pushToProof(new ProofNode());
         }
 
-        //Load in our saved proof structure and tool state
+        //Load our proof structure and tool state.
         let loadedProof: ProofNode[] | null = null;
         if (proofCachedAEG !== null) {
             loadedProof = loadFile(TreeContext.modeState, proofCachedAEG) as ProofNode[] | null;
@@ -82,7 +86,8 @@ export function toggleHandler(): void {
         if (loadedProof !== null) {
             TreeContext.proof = loadedProof;
         }
-        //Reset the state of our tools
+
+        //Reset our tool states.
         TreeContext.toolState = proofCachedTool;
         redrawProof();
     }
