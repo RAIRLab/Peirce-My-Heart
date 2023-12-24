@@ -3,8 +3,10 @@ import {Point} from "../../src/AEG/Point";
 
 /**
  * Contains comprehensive unit tests on the Point class.
+ *
  * @author Ryan Reilly
  */
+
 const origin: Point = new Point(0, 0);
 describe("Point constructor soliloquy: ", () => {
     test.each([

@@ -10,11 +10,11 @@ import {
 import {CutNode} from "../AEG/CutNode";
 import {Ellipse} from "../AEG/Ellipse";
 import {getCurrentProofTree} from "./ProofToolUtils";
-import {illegalColor, legalColor} from "../Themes";
+import {illegalColor, legalColor} from "../Contexts/Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
-import {ProofNode} from "../AEG/ProofNode";
-import {TreeContext} from "../TreeContext";
+import {ProofNode} from "../Proof/ProofNode";
+import {TreeContext} from "../Contexts/TreeContext";
 
 /**
  * Contains methods for iterating nodes and subgraphs on the Proof Mode canvas.

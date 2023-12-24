@@ -1,11 +1,11 @@
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {drawAtom, drawCut, redrawTree} from "../SharedToolUtils/DrawUtils";
-import {illegalColor} from "../Themes";
+import {illegalColor} from "../Contexts/Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
 import {readdChildren, reInsertNode} from "../SharedToolUtils/EditModeUtils";
-import {TreeContext} from "../TreeContext";
+import {TreeContext} from "../Contexts/TreeContext";
 
 /**
  * Contains methods for deleting one node at a time.

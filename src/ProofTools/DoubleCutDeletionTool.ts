@@ -3,12 +3,12 @@ import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {drawCut, redrawProof, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {getCurrentProofTree} from "./ProofToolUtils";
-import {illegalColor} from "../Themes";
+import {illegalColor} from "../Contexts/Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
-import {ProofNode} from "../AEG/ProofNode";
+import {ProofNode} from "../Proof/ProofNode";
 import {readdChildren, reInsertNode} from "../SharedToolUtils/EditModeUtils";
-import {TreeContext} from "../TreeContext";
+import {TreeContext} from "../Contexts/TreeContext";
 
 /**
  * Contains methods for deleting two CutNodes at once on the Proof Mode HTML canvas.

@@ -2,8 +2,8 @@ import {AEGTree} from "../AEG/AEGTree";
 import {changeCursorStyle, redrawProof} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {getCurrentProofTree} from "./ProofToolUtils";
-import {ProofNode} from "../AEG/ProofNode";
-import {TreeContext} from "../TreeContext";
+import {ProofNode} from "../Proof/ProofNode";
+import {TreeContext} from "../Contexts/TreeContext";
 
 /**
  * Containing methods for pasting AEGs into Proof Mode.

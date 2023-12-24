@@ -1,10 +1,11 @@
 import {describe, expect, test} from "vitest";
-import {Rectangle} from "../../src/AEG/Rectangle";
 import {Ellipse} from "../../src/AEG/Ellipse";
 import {Point} from "../../src/AEG/Point";
+import {Rectangle} from "../../src/AEG/Rectangle";
 
 /**
  * Contains comprehensive tests on the Rectangle class.
+ *
  * @author Ryan Reilly
  */
 

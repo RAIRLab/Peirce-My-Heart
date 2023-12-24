@@ -8,12 +8,12 @@
  */
 
 import {AEGTree} from "./AEG/AEGTree";
-import {appendStep} from "./ProofHistory";
-import {loadFile, saveFile} from "./AEG-IO";
-import {ProofNode} from "./AEG/ProofNode";
+import {appendStep} from "./Proof/ProofHistory";
+import {loadFile, saveFile} from "./Contexts/AEG-IO";
+import {ProofNode} from "./Proof/ProofNode";
 import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
-import {toggleHandler} from "./ToggleModes";
-import {Tool, TreeContext} from "./TreeContext";
+import {toggleHandler} from "./Contexts/ToggleModes";
+import {Tool, TreeContext} from "./Contexts/TreeContext";
 
 import * as CutTool from "./DrawTools/CutTool";
 import * as AtomTool from "./DrawTools/AtomTool";

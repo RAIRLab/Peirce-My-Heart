@@ -1,11 +1,13 @@
-import {describe, test, expect} from "vitest";
 import {AtomNode} from "../../src/AEG/AtomNode";
+import {describe, expect, test} from "vitest";
 import {Point} from "../../src/AEG/Point";
 
 /**
  * Contains comprehensive tests on the AtomNode class.
+ *
  * @author Ryan Reilly
  */
+
 describe("AtomNode constructor soliloquy:", () => {
     const pt: Point = new Point(0, 0);
 

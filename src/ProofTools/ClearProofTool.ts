@@ -1,9 +1,9 @@
 import {AEGTree} from "../AEG/AEGTree";
 import {cleanCanvas, highlightNode, redrawProof} from "../SharedToolUtils/DrawUtils";
-import {deleteButtons} from "../ProofHistory";
+import {deleteButtons} from "../Proof/ProofHistory";
 import {getCurrentProofTree} from "./ProofToolUtils";
-import {illegalColor} from "../Themes";
-import {TreeContext} from "../TreeContext";
+import {illegalColor} from "../Contexts/Themes";
+import {TreeContext} from "../Contexts/TreeContext";
 
 /**
  * Contains methods for clearing the Proof Mode HTML canvas.

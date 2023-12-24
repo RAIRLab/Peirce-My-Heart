@@ -5,7 +5,7 @@ import {drawAtom, drawCut, redrawTree} from "./DrawUtils";
 import {Ellipse} from "../AEG/Ellipse";
 import {offset} from "./DragTool";
 import {Point} from "../AEG/Point";
-import {TreeContext} from "../TreeContext";
+import {TreeContext} from "../Contexts/TreeContext";
 
 /**
  * Collection of methods for move, copy, and delete tools.

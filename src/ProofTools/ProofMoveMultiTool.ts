@@ -11,11 +11,11 @@ import {
     redrawTree,
 } from "../SharedToolUtils/DrawUtils";
 import {getCurrentProofTree, isMoveLegal} from "./ProofToolUtils";
-import {illegalColor, legalColor} from "../Themes";
+import {illegalColor, legalColor} from "../Contexts/Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
-import {ProofNode} from "../AEG/ProofNode";
-import {TreeContext} from "../TreeContext";
+import {ProofNode} from "../Proof/ProofNode";
+import {TreeContext} from "../Contexts/TreeContext";
 
 /**
  * Contains methods for moving several nodes at a time, on only the same cut level, in only one cut in Proof Mode.

@@ -1,11 +1,11 @@
 import {AtomNode} from "../AEG/AtomNode";
 import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {drawAtom} from "../SharedToolUtils/DrawUtils";
-import {illegalColor, legalColor} from "../Themes";
+import {illegalColor, legalColor} from "../Contexts/Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
 import {redrawTree} from "../SharedToolUtils/DrawUtils";
-import {TreeContext} from "../TreeContext";
+import {TreeContext} from "../Contexts/TreeContext";
 
 /**
  * Contains methods for manipulating AtomNodes on the HTML canvas.

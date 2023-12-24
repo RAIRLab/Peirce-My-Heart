@@ -1,9 +1,9 @@
-import {describe, test, expect} from "vitest";
+import {AEGTree} from "../../src/AEG/AEGTree";
 import {AtomNode} from "../../src/AEG/AtomNode";
 import {CutNode} from "../../src/AEG/CutNode";
-import {Point} from "../../src/AEG/Point";
+import {describe, expect, test} from "vitest";
 import {Ellipse} from "../../src/AEG/Ellipse";
-import {AEGTree} from "../../src/AEG/AEGTree";
+import {Point} from "../../src/AEG/Point";
 
 const origin = new Point(0, 0);
 const testCenter = new Point(5, 5);
@@ -11,8 +11,10 @@ const testEllipse = new Ellipse(testCenter, 5, 5);
 
 /**
  * Contains comprehensive tests on the AEGTree class.
+ *
  * @author Ryan Reilly
  */
+
 describe("AEGTree constructor soliloquy:", () => {
     const tree: AEGTree = new AEGTree();
 
