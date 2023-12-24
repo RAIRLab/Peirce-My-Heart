@@ -231,8 +231,8 @@ export function resizeCut(originalCut: CutNode, difference: Point, direction: Po
                     originalCut.ellipse.center.x + difference.x,
                     originalCut.ellipse.center.y + difference.y
                 ),
-                originalCut.ellipse.radiusX + difference.x * direction.x,
-                originalCut.ellipse.radiusY + difference.y * direction.y
+                Math.abs(originalCut.ellipse.radiusX + difference.x * direction.x),
+                Math.abs(originalCut.ellipse.radiusY + difference.y * direction.y)
             )
         );
     } else {
