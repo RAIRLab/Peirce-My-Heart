@@ -39,7 +39,7 @@
     "@playwright/test": "^1.40.1",
     "@types/node": "20.10.4",
     "@types/wicg-file-system-access": "^2023.10.4",
-    "electron": "^28.0.0",
+    "electron": "^28.1.0",
     "electron-packager": "^17.1.2",
     "gts": "^5.2.0",
     "http-server": "^14.1.1",
