@@ -1,13 +1,14 @@
 import {AEGTree} from "../../src/AEG/AEGTree";
 import {AtomNode} from "../../src/AEG/AtomNode";
 import {CutNode} from "../../src/AEG/CutNode";
-import {describe, expect, test} from "vitest";
+import {beforeEach, describe, expect, test} from "vitest";
 import {Ellipse} from "../../src/AEG/Ellipse";
 import {Point} from "../../src/AEG/Point";
 
-const origin = new Point(0, 0);
-const testCenter = new Point(5, 5);
-const testEllipse = new Ellipse(testCenter, 5, 5);
+let tree: AEGTree;
+const origin: Point = new Point(0, 0);
+const testCenter: Point = new Point(5, 5);
+const testEllipse: Ellipse = new Ellipse(testCenter, 5, 5);
 
 /**
  * Contains comprehensive tests on the AEGTree class.
@@ -15,17 +16,17 @@ const testEllipse = new Ellipse(testCenter, 5, 5);
  * @author Ryan R
  */
 
-describe("AEGTree constructor soliloquy:", () => {
-    const tree: AEGTree = new AEGTree();
+beforeEach(() => {
+    tree = new AEGTree();
+});
 
+describe("AEGTree constructor soliloquy:", () => {
     test("AEGTree default constructor should set the root to a null CutNode.", () => {
         expect(tree.sheet).toStrictEqual(new CutNode(null));
     });
 });
 
 describe("AEGTree verify soliloquy:", () => {
-    const tree: AEGTree = new AEGTree();
-
     test("Verification with empty Sheet of Assertion should be successful.", () => {
         expect(tree.verify()).toBeTruthy();
     });
@@ -123,7 +124,7 @@ describe("AEGTree remove soliloquy:", () => {
     });
 
     test("Removing a child of the tree one+ levels deep should be successful.", () => {
-        const coco: CutNode = new CutNode(new Ellipse(origin, 10, 10)); //my friend's cat is named Coco
+        const coco: CutNode = new CutNode(new Ellipse(origin, 10, 10)); //My friend's cat is named Coco
         coco.child = new AtomNode("P", new Point(7, 7), 2, 2);
         tree.insert(coco);
         expect(tree.remove(new Point(6, 6))).toBeTruthy();
@@ -158,8 +159,6 @@ describe("AEGTree clear soliloquy:", () => {
 });
 
 describe("AEGTree toString soliloquy:", () => {
-    const tree: AEGTree = new AEGTree();
-
     test("An empty tree should produce a formula string with only square brackets.", () => {
         expect(tree.toString()).toStrictEqual("[]");
     });
