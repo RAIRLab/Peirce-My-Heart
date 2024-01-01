@@ -1,11 +1,11 @@
-name: Build and Deploy Peirce my Heart
+name: Build and Deploy Peirce my Heart for Electron
 
 on:
   push:
     branches: [ master ]
 
 jobs:
-  build:
+  Build_Electron_Executables:
     timeout-minutes: 5
     runs-on: windows-latest
 

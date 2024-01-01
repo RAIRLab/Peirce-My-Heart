@@ -6,7 +6,7 @@ on:
     branches: [ master ]
 
 jobs:
-  validateHTML:
+  Validate_HTML:
     timeout-minutes: 5
     runs-on: ubuntu-latest
 

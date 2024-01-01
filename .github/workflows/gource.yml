@@ -4,7 +4,7 @@ on:
     branches: [ master ]
 
 jobs: 
-  action:
+  Generate_Gource_Video:
     timeout-minutes: 8
     runs-on: ubuntu-latest
     

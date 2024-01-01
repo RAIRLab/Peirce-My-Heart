@@ -5,7 +5,7 @@ on:
     branches: [ master ]
 
 jobs:
-  test:
+  AEG_Structure_Tests:
     timeout-minutes: 5
     runs-on: ubuntu-latest
 
