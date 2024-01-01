@@ -5,7 +5,7 @@ import {Point} from "../../src/AEG/Point";
 /**
  * Contains comprehensive tests on the AtomNode class.
  *
- * @author Ryan Reilly
+ * @author Ryan R
  */
 
 describe("AtomNode constructor soliloquy:", () => {

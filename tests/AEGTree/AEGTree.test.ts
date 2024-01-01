@@ -12,7 +12,7 @@ const testEllipse = new Ellipse(testCenter, 5, 5);
 /**
  * Contains comprehensive tests on the AEGTree class.
  *
- * @author Ryan Reilly
+ * @author Ryan R
  */
 
 describe("AEGTree constructor soliloquy:", () => {

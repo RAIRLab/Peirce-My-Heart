@@ -10,7 +10,7 @@ import {shapeContains} from "./AEGUtils";
  * Both are valid cuts.
  *
  * @author James Oswald
- * @author Ryan Reilly
+ * @author Ryan R
  * @author Anusha Tiwari
  */
 export class CutNode {

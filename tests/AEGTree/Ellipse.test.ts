@@ -6,7 +6,7 @@ import {Rectangle} from "../../src/AEG/Rectangle";
 /**
  * Contains comprehensive tests on the Ellipse class.
  *
- * @author Ryan Reilly
+ * @author Ryan R
  */
 
 const testCenter: Point = new Point(5, 5);

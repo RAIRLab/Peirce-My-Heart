@@ -4,7 +4,7 @@ import {Point} from "../../src/AEG/Point";
 /**
  * Contains comprehensive unit tests on the Point class.
  *
- * @author Ryan Reilly
+ * @author Ryan R
  */
 
 const origin: Point = new Point(0, 0);

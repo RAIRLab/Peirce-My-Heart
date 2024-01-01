@@ -11,7 +11,7 @@ const testEllipse = new Ellipse(testCenter, 5, 5);
 /**
  * Contains comprehensive tests on the CutNode class.
  *
- * @author Ryan Reilly
+ * @author Ryan R
  */
 
 describe("CutNode constructor soliloquy:", () => {

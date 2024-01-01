@@ -6,7 +6,7 @@ import {Rectangle} from "../../src/AEG/Rectangle";
 /**
  * Contains comprehensive tests on the Rectangle class.
  *
- * @author Ryan Reilly
+ * @author Ryan R
  */
 
 const origin: Point = new Point(0, 0);
