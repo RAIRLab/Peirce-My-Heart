@@ -1,8 +1,8 @@
-import {beforeAll, describe, expect, test} from "vitest";
+import {describe, expect, test} from "vitest";
 import {Ellipse} from "../../src/AEG/Ellipse";
 import {Point} from "../../src/AEG/Point";
 import {Rectangle} from "../../src/AEG/Rectangle";
-import {shapeContains, shapesOverlap} from "../../src/AEG/AEGUtils";
+import {pointInRect, shapeContains, shapesOverlap} from "../../src/AEG/AEGUtils";
 
 /**
  * Contains comprehensive tests all exported AEGUtils methods.
@@ -10,14 +10,11 @@ import {shapeContains, shapesOverlap} from "../../src/AEG/AEGUtils";
  * @author Ryan R
  */
 
-let testRect: Rectangle;
-let testEllipse: Ellipse;
+const testRect: Rectangle = new Rectangle(new Point(0, 10), 10, 10);
+const testEllipse: Ellipse = new Ellipse(new Point(5, 5), 10, 10);
 
-beforeAll(() => {
-    testRect = new Rectangle(new Point(0, 10), 10, 10);
-    testEllipse = new Ellipse(new Point(5, 5), 10, 10);
-});
-
+//It is looking like the Point used in Rectangle actually draws from the top left corner, not
+//bottom left. This will require its own refactor across all files.
 describe("AEGUtils shapesOverlap soliloquy:", () => {
     //Rectangle-on-(otherShape) overlapping starts here
     test.each([
@@ -125,9 +122,32 @@ describe("AEGUtils shapeContains soliloquy:", () => {
 });
 
 describe("AEGUtils pointInRect soliloquy:", () => {
-    test("Skellington!", () => {
-        expect(true).toBeTruthy();
-    });
+    console.log(testRect.getCorners());
+    test.each([
+        [1, 11], //Arbitrary fellas
+        [8, 15],
+    ])(
+        "Rectangle with BL vertex (0, 10) and {w, h} = 10 should contain Point (%f, %f).",
+        (x, y) => {
+            expect(pointInRect(testRect, new Point(x, y))).toBeTruthy();
+        }
+    );
+
+    test.each([
+        [0, 10], //Corners
+        [10, 10],
+        [10, 0],
+        [0, 0],
+        [0, 5], //Midpoints of the edges
+        [10, 5],
+        [5, 10],
+        [5, 0],
+    ])(
+        "Rectangle with BL vertex (0, 10) and {w, h} = 10 should not contain Point (%f, %f).",
+        (x, y) => {
+            expect(pointInRect(testRect, new Point(x, y))).toBeFalsy();
+        }
+    );
 });
 
 describe("AEGUtils signedDistanceFromEllipse soliloquy:", () => {
