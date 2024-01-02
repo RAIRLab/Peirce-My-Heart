@@ -4,7 +4,9 @@
     "lib": ["dom"],
     "rootDir": ".",
     "declaration": false,
-    "types": [ "@types/wicg-file-system-access"]
+    "types": [ "@types/wicg-file-system-access"],
+    "module": "ES2020",
+    "moduleResolution": "Bundler",
   },
   "include": [
     "src/**/*.ts",
