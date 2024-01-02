@@ -176,7 +176,7 @@ describe("CutNode containsNode soliloquy:", () => {
         [0, 0, 5, 5], //Begins outside the CutNode's Ellipse but all other corners are contained within
         [0, 5, 5, 5],
     ])(
-        "CutNode with Ellipse of center (5, 5) and {radX, radY} = 5 should not contain AtomNode with Rectangle of TL vertex (%f, %f) and w = %f, h = %f.",
+        "CutNode with Ellipse of center (5, 5) and {radX, radY} = 5 should not contain AtomNode with Rectangle of BL vertex (%f, %f) and w = %f, h = %f.",
         (x, y, w, h) => {
             expect(cNode.containsNode(new AtomNode("A", new Point(x, y), w, h))).toBeFalsy();
         }
@@ -206,7 +206,7 @@ describe("CutNode containsNode soliloquy:", () => {
         [3, 3, 0.5, 0.5],
         [8, 8, 0.5, 0.5],
     ])(
-        "CutNode with Ellipse of center (5, 5) and {radX, radY} = 5 should contain AtomNode with Rectangle of TL vertex (%f, %f) and w = %f, h = %f.",
+        "CutNode with Ellipse of center (5, 5) and {radX, radY} = 5 should contain AtomNode with Rectangle of BL vertex (%f, %f) and w = %f, h = %f.",
         (x, y, w, h) => {
             expect(cNode.containsNode(new AtomNode("A", new Point(x, y), w, h))).toBeTruthy();
         }

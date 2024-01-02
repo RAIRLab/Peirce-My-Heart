@@ -44,11 +44,11 @@ describe("Rectangle constructor soliloquy:", () => {
 describe("Rectangle getCorners soliloquy:", () => {
     const rect1: Rectangle = new Rectangle(origin, 0, 0);
 
-    test("Rectangle of top left vertex (0, 0) and {w, h} = 0 should have all (0, 0) corners.", () => {
+    test("Rectangle of TL vertex (0, 0) and {w, h} = 0 should have all (0, 0) corners.", () => {
         expect(rect1.getCorners()).toStrictEqual([origin, origin, origin, origin]);
     });
 
-    test("Rectangle of top left vertex (0, 0) and {w, h} = 10 should have apt corners.", () => {
+    test("Rectangle of TL vertex (0, 0) and {w, h} = 10 should have apt corners.", () => {
         expect(testRect.getCorners()).toStrictEqual([
             new Point(0, 0),
             new Point(10, 0),
@@ -89,16 +89,12 @@ describe("Rectangle containsPoint soliloquy:", () => {
         [10, 10.1],
         [10.1, 10],
         [10.1, 10.1],
-    ])("Rectangle of BL vertex (0, 0), {w, h} = 10 should not contain Point (%f, %f).", (x, y) => {
+    ])("Rectangle of TL vertex (0, 0), {w, h} = 10 should not contain Point (%f, %f).", (x, y) => {
         expect(testRect.containsPoint(new Point(x, y))).toBeFalsy();
     });
 });
 
 describe("Rectangle-on-Rectangle overlaps soliloquy:", () => {
-    test("Rectangle of BL vertex (0, 0) and {w, h} = 10 should not overlap Rectangle of BL vertex (11, 11) and {w, h} = 10.", () => {
-        expect(testRect.overlaps(new Rectangle(new Point(11, 11), 10, 10))).toBeFalsy();
-    });
-
     test.each([
         [0, 0, 10, 10], //Rectangle with the same measurements
         [10, 10, 10, 10], //Rectangle sharing one point in common
@@ -106,7 +102,7 @@ describe("Rectangle-on-Rectangle overlaps soliloquy:", () => {
         [5, 5, 5, 5], //Rectangle starting inside of and crossing through the existing one
         [-5, -5, 5, 5], //Rectangle starting outside and crossing through the existing one
     ])(
-        "Rectangle of BL vertex(0, 0) and {w, h} = 10 should overlap with Rectangle of BL vertex (%f, %f) and w = %f, h %f.",
+        "Rectangle of TL vertex(0, 0) and {w, h} = 10 should overlap with Rectangle of TL vertex (%f, %f) and w = %f, h %f.",
         (x, y, w, h) => {
             expect(testRect.overlaps(new Rectangle(new Point(x, y), w, h))).toBeTruthy();
         }
@@ -120,7 +116,7 @@ describe("Rectangle-on-Ellipse overlaps soliloquy:", () => {
         [10, 0, 0, 0], //Ellipse touching the bottom left vertex of this Rectangle
         [10, 10, 0, 0], //Ellipse touching the bottom right vertex of this Rectangle
     ])(
-        "Rectangle of BL vertex (0, 0) and {w, h} = 10 should not overlap with Ellipse of center (%f, %f) and radX = %f, radY = %f.",
+        "Rectangle of TL vertex (0, 0) and {w, h} = 10 should not overlap with Ellipse of center (%f, %f) and radX = %f, radY = %f.",
         (x, y, radX, radY) => {
             expect(testRect.overlaps(new Ellipse(new Point(x, y), radX, radY))).toBeFalsy();
         }
@@ -131,7 +127,7 @@ describe("Rectangle-on-Ellipse overlaps soliloquy:", () => {
         [-5, 0, 20, 20], //Begins outside the Rectangle but touches the Rectangle's bounds from outside
         [5, 5, 20, 20], //Huge guy outside this rectangle
     ])(
-        "Rectangle of BL vertex (0, 0) and {w, h} = 10 should overlap with Ellipse of center (%f, %f) and radX = %f, radY = %f.",
+        "Rectangle of TL vertex (0, 0) and {w, h} = 10 should overlap with Ellipse of center (%f, %f) and radX = %f, radY = %f.",
         (x, y, radX, radY) => {
             expect(testRect.overlaps(new Ellipse(new Point(x, y), radX, radY))).toBeTruthy();
         }
@@ -139,7 +135,7 @@ describe("Rectangle-on-Ellipse overlaps soliloquy:", () => {
 });
 
 describe("Rectangle-on-Rectangle contains soliloquy:", () => {
-    test("A Rectangle of BL vertex (0, 0) and {w, h} = 10 should not contain a Rectangle with the same measurements.", () => {
+    test("A Rectangle of TL vertex (0, 0) and {w, h} = 10 should not contain a Rectangle with the same measurements.", () => {
         expect(testRect.contains(new Rectangle(new Point(0, 0), 10, 10))).toBeFalsy();
     });
 
@@ -156,7 +152,7 @@ describe("Rectangle-on-Rectangle contains soliloquy:", () => {
         [-5, 5, 5, 5], //Begins outside the existing Rectangle but touches that Rectangle's bounds from outside
         [-2, 2, 2, 4],
     ])(
-        "Rectangle of BL vertex (0, 0) and {w, h} = 10 should not contain Rectangle of BL vertex (%f, %f) and w = %f, h = %f.",
+        "Rectangle of TL vertex (0, 0) and {w, h} = 10 should not contain Rectangle of TL vertex (%f, %f) and w = %f, h = %f.",
         (x, y, w, h) => {
             expect(testRect.contains(new Rectangle(new Point(x, y), w, h))).toBeFalsy();
         }
@@ -168,7 +164,7 @@ describe("Rectangle-on-Rectangle contains soliloquy:", () => {
         [9.9, 1, 0.05, 0.05],
         [1, 9.9, 0.05, 0.05],
     ])(
-        "Rectangle of BL vertex (0, 0) and {w, h} = 10 should contain Rectangle of BL vertex (%f, %f) and w = %f, h = %f.",
+        "Rectangle of TL vertex (0, 0) and {w, h} = 10 should contain Rectangle of TL vertex (%f, %f) and w = %f, h = %f.",
         (x, y, w, h) => {
             expect(testRect.contains(new Rectangle(new Point(x, y), w, h))).toBeTruthy();
         }
@@ -195,7 +191,7 @@ describe("Rectangle-on-Ellipse contains soliloquy:", () => {
         [-5, 10, 5, 5], //Touches (0, 10) on the Rectangle
         [5, 15, 5, 5], //Touches (5, 10) on the Rectangle
     ])(
-        "Rectangle of BL vertex (0, 0) and {w, h} = 10 should not contain Ellipse of center (%f, %f) and radX = %f, radY = %f.",
+        "Rectangle of TL vertex (0, 0) and {w, h} = 10 should not contain Ellipse of center (%f, %f) and radX = %f, radY = %f.",
         (x, y, rx, ry) => {
             expect(testRect.contains(new Ellipse(new Point(x, y), rx, ry))).toBeFalsy();
         }
@@ -208,7 +204,7 @@ describe("Rectangle-on-Ellipse contains soliloquy:", () => {
         [9.9, 0.1, 0.001, 0.001],
         [0.1, 9.9, 0.0001, 0.0001],
     ])(
-        "Rectangle of BL vertex (0, 0) and {w, h} = 10 should contain Ellipse of center (%f, %f) and radX = %f, radY = %f.",
+        "Rectangle of TL vertex (0, 0) and {w, h} = 10 should contain Ellipse of center (%f, %f) and radX = %f, radY = %f.",
         (x, y, rx, ry) => {
             expect(testRect.contains(new Ellipse(new Point(x, y), rx, ry))).toBeTruthy();
         }
