@@ -1,6 +1,6 @@
 import {test, expect} from "@playwright/test";
 
-import * as fs from 'fs'; //nabbing the node.js module for file system shenanigans
+import * as fs from "fs"; //nabbing the node.js module for file system shenanigans
 
 let emptyTreeString: string;
 let loneAtomString: string;
@@ -21,13 +21,9 @@ test.beforeAll("Reading expected strings in from .json files...", async () => {
         loneCutString = data;
     });
 
-    fs.readFile(
-        __dirname + "/expectedTrees/disjunction.json",
-        "utf8",
-        (err, data: string) => {
-            disjunctionString = data;
-        }
-    );
+    fs.readFile(__dirname + "/expectedTrees/disjunction.json", "utf8", (err, data: string) => {
+        disjunctionString = data;
+    });
 });
 
 test.beforeEach(async ({page}) => {
