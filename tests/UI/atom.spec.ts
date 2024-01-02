@@ -3,7 +3,7 @@ import {test, expect} from "@playwright/test";
 import fs from "fs"; //nabbing the node.js module for file system shenanigans
 import path from "path";
 
-const __dirname = path.resolve(path.dirname(''));
+const __dirname = path.resolve(path.dirname(""));
 
 let emptyTreeString: string;
 let loneAtomString: string;
