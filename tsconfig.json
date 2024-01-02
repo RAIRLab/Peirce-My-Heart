@@ -5,7 +5,7 @@
     "rootDir": ".",
     "declaration": false,
     "types": [ "@types/wicg-file-system-access"],
-    "module": "ES2015",
+    "module": "ES2020",
     "moduleResolution": "Bundler",
   },
   "include": [

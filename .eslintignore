@@ -1,6 +1,7 @@
 build/
 dist/
 *.config.js
+.prettierrc.js
 public/
 peircemyheart-*
 electron-build/
