@@ -4,4 +4,3 @@ dist/
 .prettierrc.js
 public/
 peircemyheart-*
-electron-build/
