@@ -19,6 +19,7 @@ import * as CutTool from "./DrawTools/CutTool";
 import * as AtomTool from "./DrawTools/AtomTool";
 
 import * as DragTool from "./SharedToolUtils/DragTool";
+import * as ClearTool from "./DrawTools/ClearTool";
 import * as MoveSingleTool from "./DrawTools/MoveSingleTool";
 import * as MoveMultiTool from "./DrawTools/MoveMultiTool";
 import * as CopySingleTool from "./DrawTools/CopySingleTool";
@@ -73,6 +74,7 @@ let hasMouseDown = false;
 let hasMouseIn = true;
 
 //Global window exports.
+//TODO: move these under the global import
 window.tree = TreeContext.tree;
 window.treeString = aegStringify(window.tree);
 window.atomTool = Tool.atomTool;
@@ -100,6 +102,7 @@ window.proofResizeTool = Tool.proofResizeTool;
 window.iterationTool = Tool.iterationTool;
 window.deiterationTool = Tool.deiterationTool;
 window.clearProofTool = Tool.clearProofTool;
+window.clearTool = Tool.clearTool;
 window.setTool = setTool;
 window.setHighlight = setHighlight;
 window.toggleHandler = toggleHandler;
@@ -133,6 +136,7 @@ declare global {
         iterationTool: Tool;
         deiterationTool: Tool;
         clearProofTool: Tool;
+        clearTool: Tool;
         setTool: (state: Tool) => void;
         setHighlight: (event: string, id: string) => void;
         toggleHandler: () => void;
@@ -308,10 +312,13 @@ async function loadMode(): Promise<void> {
     }
 }
 
+//TODO: replace all of this with polymorphism -James
+
 /**
  * Calls appropriate keydown method with the incoming KeyboardEvent.
  *
  * @param event Incoming KeyboardEvent.
+ *
  */
 function keyDownHandler(event: KeyboardEvent): void {
     if (event.ctrlKey && event.key === "s") {
@@ -419,6 +426,9 @@ function mouseDownHandler(event: MouseEvent): void {
             break;
         case Tool.clearProofTool:
             ClearProofTool.clearProofMouseDown();
+            break;
+        case Tool.clearTool:
+            ClearTool.clearMouseDown();
             break;
         default:
             break;
@@ -578,6 +588,9 @@ function mouseUpHandler(event: MouseEvent): void {
         case Tool.clearProofTool:
             ClearProofTool.clearProofMouseUp();
             break;
+        case Tool.clearTool:
+            ClearTool.clearMouseUp();
+            break;
         default:
             break;
     }
@@ -654,6 +667,9 @@ function mouseOutHandler(): void {
             break;
         case Tool.clearProofTool:
             ClearProofTool.clearProofMouseOut();
+            break;
+        case Tool.clearTool:
+            ClearTool.clearMouseOut();
             break;
         default:
             break;

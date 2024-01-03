@@ -35,6 +35,7 @@ export enum Tool {
     iterationTool,
     deiterationTool,
     clearProofTool,
+    clearTool,
 }
 
 export class TreeContext {
