@@ -4,7 +4,7 @@
  */
 
 // Import and initialize the theme-change library.
-import { themeChange } from "theme-change";
+import {themeChange} from "theme-change";
 themeChange();
 
 import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
