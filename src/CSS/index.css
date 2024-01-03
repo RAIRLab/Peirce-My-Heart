@@ -1,3 +1,7 @@
+
+/* Import fork awesome in the main style */
+@import "fork-awesome/css/fork-awesome.css";
+
 body, html{
     margin: 0px;
     width: 100vw;
