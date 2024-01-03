@@ -17,11 +17,7 @@ export default defineConfig(({command, mode}) => {
             outDir: "../build",
             emptyOutDir: true,
             rollupOptions:{
-                input:{
-                    index: resolve(__dirname, root, "index.html"),
-                    about: resolve(__dirname, root, "about.html"),
-                    homepage: resolve(__dirname, root, "aeg.html")
-                }
+                input: resolve(__dirname, root, "index.html"),
             }
         },
         test:{
