@@ -4,7 +4,6 @@ build
 peircemyheart-*
 docs
 public/docs
-electron-build
 test-results/
 playwright-report/
 playwright/.cache/
