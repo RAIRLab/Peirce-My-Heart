@@ -4,9 +4,9 @@ import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {Ellipse} from "../AEG/Ellipse";
 import {offset} from "./DragTool";
-import {legalColor, placedColor} from "../Contexts/Themes";
+import {legalColor, placedColor} from "../Themes";
 import {Point} from "../AEG/Point";
-import {TreeContext} from "../Contexts/TreeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Collection of methods used for drawing on the HTML canvas.

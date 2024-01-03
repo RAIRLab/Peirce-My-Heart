@@ -1,4 +1,4 @@
-import {redrawProof, redrawTree} from "../SharedToolUtils/DrawUtils";
+import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 import {TreeContext} from "./TreeContext";
 
 /**

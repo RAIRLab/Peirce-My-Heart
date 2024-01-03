@@ -1,7 +1,7 @@
 import {changeCursorStyle} from "./DrawUtils";
 import {Point} from "../AEG/Point";
 import {redrawProof, redrawTree} from "./DrawUtils";
-import {TreeContext} from "../Contexts/TreeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Collection of methods for drag related tools.

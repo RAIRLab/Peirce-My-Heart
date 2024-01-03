@@ -3,12 +3,12 @@ import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {getCurrentProofTree} from "./ProofToolUtils";
 import {highlightNode, redrawProof, redrawTree} from "../SharedToolUtils/DrawUtils";
-import {illegalColor} from "../Contexts/Themes";
+import {illegalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
 import {ProofNode} from "../Proof/ProofNode";
 import {reInsertNode} from "../SharedToolUtils/EditModeUtils";
-import {TreeContext} from "../Contexts/TreeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Contains methods for the erasure inference rule.

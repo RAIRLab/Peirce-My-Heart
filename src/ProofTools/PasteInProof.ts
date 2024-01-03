@@ -3,7 +3,7 @@ import {changeCursorStyle, redrawProof} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {getCurrentProofTree} from "./ProofToolUtils";
 import {ProofNode} from "../Proof/ProofNode";
-import {TreeContext} from "../Contexts/TreeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Containing methods for pasting AEGs into Proof Mode.

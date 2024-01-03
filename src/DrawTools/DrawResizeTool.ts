@@ -3,10 +3,10 @@ import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUti
 import {CutNode} from "../AEG/CutNode";
 import {determineDirection, drawCut, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {ellipseLargeEnough, resizeCut} from "../SharedToolUtils/EditModeUtils";
-import {illegalColor, legalColor} from "../Contexts/Themes";
+import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
-import {TreeContext} from "../Contexts/TreeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Contains Draw Mode CutNode resizing methods.

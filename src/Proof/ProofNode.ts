@@ -1,5 +1,5 @@
 import {AEGTree} from "../AEG/AEGTree";
-import {TreeContext} from "../Contexts/TreeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Defines a single step in a proof.

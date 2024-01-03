@@ -1,8 +1,8 @@
-import {AEGTree} from "../AEG/AEGTree";
+import {AEGTree} from "./AEG/AEGTree";
 import {loadFile} from "./AEG-IO";
-import {ProofNode} from "../Proof/ProofNode";
-import {proofString, treeString} from "../index";
-import {redrawProof, redrawTree} from "../SharedToolUtils/DrawUtils";
+import {ProofNode} from "./Proof/ProofNode";
+import {proofString, treeString} from "./index";
+import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 import {Tool, TreeContext} from "./TreeContext";
 
 /**

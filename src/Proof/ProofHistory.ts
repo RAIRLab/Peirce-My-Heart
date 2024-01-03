@@ -1,6 +1,6 @@
 import {ProofNode} from "./ProofNode";
 import {redrawProof} from "../SharedToolUtils/DrawUtils";
-import {TreeContext} from "../Contexts/TreeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Creates the proof history bar on the left side of the screen

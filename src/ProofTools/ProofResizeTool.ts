@@ -11,11 +11,11 @@ import {
 import {CutNode} from "../AEG/CutNode";
 import {ellipseLargeEnough, resizeCut} from "../SharedToolUtils/EditModeUtils";
 import {getCurrentProofTree, proofCanInsert} from "./ProofToolUtils";
-import {illegalColor, legalColor} from "../Contexts/Themes";
+import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
 import {ProofNode} from "../Proof/ProofNode";
-import {TreeContext} from "../Contexts/TreeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Contains Proof Mode CutNode resizing methods.

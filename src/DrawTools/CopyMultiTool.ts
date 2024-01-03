@@ -3,10 +3,10 @@ import {AtomNode} from "../AEG/AtomNode";
 import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {drawAtom, redrawTree} from "../SharedToolUtils/DrawUtils";
-import {illegalColor, legalColor} from "../Contexts/Themes";
+import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
-import {TreeContext} from "../Contexts/TreeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Contains methods for copying and pasting one or more nodes at a time.

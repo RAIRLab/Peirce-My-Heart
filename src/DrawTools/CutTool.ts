@@ -3,10 +3,10 @@ import {createEllipse, ellipseLargeEnough} from "../SharedToolUtils/EditModeUtil
 import {CutNode} from "../AEG/CutNode";
 import {drawCut, drawGuidelines, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {Ellipse} from "../AEG/Ellipse";
-import {illegalColor, legalColor} from "../Contexts/Themes";
+import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
-import {TreeContext} from "../Contexts/TreeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Contains methods for manipulating CutNodes on the HTML canvas.

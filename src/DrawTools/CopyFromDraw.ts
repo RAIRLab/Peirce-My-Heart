@@ -3,10 +3,10 @@ import {AtomNode} from "../AEG/AtomNode";
 import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {cleanCanvas, highlightNode, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
-import {legalColor} from "../Contexts/Themes";
+import {legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
-import {TreeContext} from "../Contexts/TreeContext";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Contains methods for copying AEGs to Proof Mode.
