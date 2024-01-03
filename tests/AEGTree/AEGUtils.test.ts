@@ -157,7 +157,7 @@ describe("AEGUtils shapesIntersect soliloquy:", () => {
         }
     );
 
-    //Ellipse-on-(otherShape) overlapping starts here
+    //Ellipse-on-(otherShape) intersecting starts here
     test.each([
         [0, 5, 10, 10], //Starting at testEllipse's leftmost Point
         [10, 5, 10, 10], //Starting at testEllipse's rightmost Point
@@ -205,9 +205,96 @@ describe("AEGUtils shapesIntersect soliloquy:", () => {
 });
 
 describe("AEGUtils shapeContains soliloquy:", () => {
-    test("Skellington!", () => {
-        expect(shapeContains).toBeTruthy();
-    });
+    //Rectangle-on-(otherShape) containing starts here
+    test.each([
+        [1, 5, 2, 2], //Arbitrary fellas
+        [2, 8, 1, 1],
+    ])(
+        "Rectangle with TL vertex (0, 0), {w, h} = 10 should contain Rectangle of TL vertex (%f, %f) and w = %f and h = %f.",
+        (x, y, w, h) => {
+            expect(shapeContains(testRect, new Rectangle(new Point(x, y), w, h))).toBeTruthy();
+        }
+    );
+
+    test.each([
+        [10, 10, 10, 10], //Rectangle sharing only testRect's BR vertex
+        [0, 10, 10, 10], //Rectangle sharing only testRect's TR vertex
+        [-10, -10, 10, 10], //Rectangle sharing only testRect's TL vertex
+        [-10, 10, 10, 10], //Rectangle sharing only testRect's BL vertex
+    ])(
+        "Rectangle with TL vertex (0, 0), {w, h} = 10 should not contain Rectangle of TL vertex (%f, %f) and w = %f and h = %f.",
+        (x, y, w, h) => {
+            expect(shapeContains(testRect, new Rectangle(new Point(x, y), w, h))).toBeFalsy();
+        }
+    );
+
+    test.each([
+        [5, 5, 1, 1], //Arbitrary fellas
+        [7, 7, 1, 1],
+    ])(
+        "Rectangle with TL vertex (0, 0), {w, h} = 10 should contain Ellipse of center (%f, %f) and radX = %f and radY = %f.",
+        (x, y, rx, ry) => {
+            expect(shapeContains(testRect, new Ellipse(new Point(x, y), rx, ry))).toBeTruthy();
+        }
+    );
+
+    test.each([
+        [5, 5, 15, 1], //Starting in the center of testRect and expanding too far horizontally
+        [5, 5, 1, 15], //Starting in the center of testRect and expanding too far vertically
+        [15, 5, 15, 1], //Starting outside of testRect and expanding too far inside horizontally
+        [5, 15, 1, 15], //Starting outside of testRect and expanding too far inside vertically
+    ])(
+        "Rectangle with TL vertex (0, 0), {w, h} = 10 should not contain Ellipse of center (%f, %f) and radX = %f and radY = %f.",
+        (x, y, rx, ry) => {
+            expect(shapeContains(testRect, new Ellipse(new Point(x, y), rx, ry))).toBeFalsy();
+        }
+    );
+
+    //Ellipse-on-(otherShape) containing starts here
+    test.each([
+        [5, 5, 1, 1], //Arbitrary fellas
+        [3, 3, 0.05, 0.05],
+    ])(
+        "Ellipse with center (5, 5) and {radX, radY} = 10 should contain Rectangle of TL vertex (%f, %f) and w = %f and h = %f.",
+        (x, y, w, h) => {
+            expect(shapeContains(testEllipse, new Rectangle(new Point(x, y), w, h))).toBeTruthy();
+        }
+    );
+
+    test.each([
+        [5, 5, 10, 10], //Starts at testEllipse's center and expands too far
+        [-10, 5, 10, 10], //Touches testEllipse's leftmost Point
+        [-5, 0, 10, 10], //Touches testEllipse's topmost Point
+        [0, 10, 10, 10], //Starts at testEllipse's rightmost Point
+        [5, 10, 10, 10], //Starts at testEllipse's bottommost Point
+    ])(
+        "Ellipse with center (5, 5) and {radX, radY} = 10 should not contain Rectangle of TL vertex (%f, %f) and w = %f and h = %f.",
+        (x, y, w, h) => {
+            expect(shapeContains(testEllipse, new Rectangle(new Point(x, y), w, h))).toBeFalsy();
+        }
+    );
+
+    test.each([
+        [8, 8, 1, 1], //Arbitrary fellas
+        [3, 3, 1, 1],
+    ])(
+        "Ellipse with center (5, 5) and {radX, radY} = 10 should contain Ellipse of center (%f, %f) and radX = %f and radY = %f.",
+        (x, y, rx, ry) => {
+            expect(shapeContains(testEllipse, new Rectangle(new Point(x, y), rx, ry))).toBeTruthy();
+        }
+    );
+
+    test.each([
+        [5, 5, 15, 1], //Starts in the center of testEllipse and expands too far horizontally
+        [5, 5, 1, 15], //Starts in the center of testEllipse and expands too far vertically
+        [15, 5, 15, 1], //Starts in the center of testEllipse and expands too far horizontal
+        [5, 15, 1, 15], //Starts in the center of testEllipse and expands too far vertically
+    ])(
+        "Ellipse with center (5, 5) and {radX, radY} = 10 should not contain Rectangle of TL vertex (%f, %f) and w = %f and h = %f.",
+        (x, y, w, h) => {
+            expect(shapeContains(testEllipse, new Rectangle(new Point(x, y), w, h))).toBeFalsy();
+        }
+    );
 });
 
 describe("AEGUtils pointInRect soliloquy:", () => {
