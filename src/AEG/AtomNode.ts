@@ -6,7 +6,7 @@ import {Rectangle} from "./Rectangle";
  * Atoms are propositions in Peirce's AEG system.
  * Peirce My Heart only handles single character identifiers as of 1.0.0.
  *
- * @author Ryan Reilly
+ * @author Ryan R
  * @author Anusha Tiwari
  */
 export class AtomNode {

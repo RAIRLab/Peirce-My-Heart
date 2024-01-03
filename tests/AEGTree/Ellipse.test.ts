@@ -1,11 +1,12 @@
 import {describe, expect, test} from "vitest";
 import {Ellipse} from "../../src/AEG/Ellipse";
-import {Rectangle} from "../../src/AEG/Rectangle";
 import {Point} from "../../src/AEG/Point";
+import {Rectangle} from "../../src/AEG/Rectangle";
 
 /**
  * Contains comprehensive tests on the Ellipse class.
- * @author Ryan Reilly
+ *
+ * @author Ryan R
  */
 
 const testCenter: Point = new Point(5, 5);
@@ -30,23 +31,23 @@ describe("Ellipse constructor soliloquy:", () => {
 
 describe("Ellipse containsPoint soliloquy:", () => {
     test.each([
-        [0, 0], //we probably should not have our Ellipses be Rectangles. These would be the corners
+        [0, 0], //We probably should not have our Ellipses be Rectangles. These would be the corners
         [0, 10],
         [10, 0],
         [10, 10],
-        [10, 5], //farthest reaches of this Ellipse
+        [10, 5], //Farthest reaches of this Ellipse
         [0, 5],
         [5, 0],
         [5, 10],
-        [100, 100], //arbitrary Points that shouldn't be within
+        [100, 100], //Arbitrary Points that shouldn't be within
         [200, 200],
     ])("Ellipse of center (5, 5), {radX, radY} = 5 should not contain Point (%f, %f).", (x, y) => {
         expect(testEllipse.containsPoint(new Point(x, y))).toBeFalsy();
     });
 
     test.each([
-        [5, 5], //we want this Ellipse to contain its center
-        [6, 6], //arbitrary Points that should be contained within
+        [5, 5], //We want this Ellipse to contain its center
+        [6, 6], //Arbitrary Points that should be contained within
         [4.3, 4.4],
         [9.9, 4.9],
         [5.1, 5.1],
@@ -70,8 +71,8 @@ describe("Ellipse-on-Rectangle overlaps soliloquy:", () => {
     );
 
     test.each([
-        [5, 5, 20, 20], //begins inside the Ellipse but touches the Ellipse's bounds from inside
-        [-5, -5, 10, 10], //begins outside the Ellipse but touches the Ellipse's bounds from outside
+        [5, 5, 20, 20], //Begins inside the Ellipse but touches the Ellipse's bounds from inside
+        [-5, -5, 10, 10], //Begins outside the Ellipse but touches the Ellipse's bounds from outside
     ])(
         "Ellipse of center (5, 5) and {radX, radY} = 5 should overlap with Rectangle of TL vertex (%f, %f) and w = %f, h = %f.",
         (x, y, w, h) => {
@@ -80,7 +81,7 @@ describe("Ellipse-on-Rectangle overlaps soliloquy:", () => {
     );
 
     test.each([
-        [5, 5, 2, 2], //tiny guys
+        [5, 5, 2, 2], //Tiny guys
         [5, 5, 0, 0],
     ])(
         "Ellipse of center (5, 5) and {radX, radY} = 5 should not overlap with Rectangle of TL vertex (%f, %f) and w = %f, h = %f.",
@@ -123,11 +124,11 @@ describe("Ellipse-on-Ellipse overlaps soliloquy:", () => {
 
 describe("Ellipse-on-Rectangle contains soliloquy:", () => {
     test.each([
-        [5, 0, 10, 10], //begins at this Ellipse's topmost Point but top right corner is outside
-        [0, 5, 10, 10], //begins at this Ellipse's leftmost Point
-        [10, 5, 10, 10], //begins at this Ellipse's rightmost Point
-        [5, 10, 10, 10], //begins at this Ellipse's bottommost Point
-        [5, 5, 10, 10], //begins at this Ellipse's center but bottom right corner is outside
+        [5, 0, 10, 10], //Begins at this Ellipse's topmost Point but top right corner is outside
+        [0, 5, 10, 10], //Begins at this Ellipse's leftmost Point
+        [10, 5, 10, 10], //Begins at this Ellipse's rightmost Point
+        [5, 10, 10, 10], //Begins at this Ellipse's bottommost Point
+        [5, 5, 10, 10], //Begins at this Ellipse's center but bottom right corner is outside
     ])(
         "Ellipse of center (5, 5) and {radX, radY} = 5 should not contain Rectangle of TL vertex (%f, %f) and w = %f, h = %f.",
         (x, y, w, h) => {
@@ -136,7 +137,7 @@ describe("Ellipse-on-Rectangle contains soliloquy:", () => {
     );
 
     test.each([
-        [5, 5, 1, 1], //arbitrary fellows
+        [5, 5, 1, 1], //Arbitrary fellows
         [5, 5, 2, 2],
         [7, 7, 0, 0.3],
     ])(
@@ -153,11 +154,11 @@ describe("Ellipse-on-Ellipse contains soliloquy:", () => {
     });
 
     test.each([
-        [5, 0, 10, 10], //begins at this Ellipse's topmost Point but top right corner is outside
-        [0, 5, 10, 10], //begins at this Ellipse's leftmost Point
-        [10, 5, 10, 10], //begins at this Ellipse's rightmost Point
-        [5, 10, 10, 10], //begins at this Ellipse's bottommost Point
-        [5, 5, 10, 10], //begins at this Ellipse's center but expands outward in all directions
+        [5, 0, 10, 10], //Begins at this Ellipse's topmost Point but top right corner is outside
+        [0, 5, 10, 10], //Begins at this Ellipse's leftmost Point
+        [10, 5, 10, 10], //Begins at this Ellipse's rightmost Point
+        [5, 10, 10, 10], //Begins at this Ellipse's bottommost Point
+        [5, 5, 10, 10], //Begins at this Ellipse's center but expands outward in all directions
     ])(
         "Ellipse of center (5, 5) and {radX, radY} = 5 should not contain Ellipse of TL vertex (%f, %f) and radX = %f, radY = %f.",
         (x, y, radX, radY) => {
@@ -166,8 +167,8 @@ describe("Ellipse-on-Ellipse contains soliloquy:", () => {
     );
 
     test.each([
-        [5, 5, 3, 3], //begins at this Ellipse's center and stays inward
-        [2, 2, 0.5, 0.3], //arbitrary guys
+        [5, 5, 3, 3], //Begins at this Ellipse's center and stays inward
+        [2, 2, 0.5, 0.3], //Arbitrary guys
         [6, 6, 0.1, 3],
     ])(
         "Ellipse of center (5, 5) and {radX, radY} = 5 should contain Ellipse of TL vertex (%f, %f) and radX = %f, radY = %f.",

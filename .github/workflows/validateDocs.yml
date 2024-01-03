@@ -5,7 +5,7 @@ on:
     branches: [ master ]
 
 jobs:
-  buildDocs:
+  Build_Documentation:
     timeout-minutes: 5
     runs-on: ubuntu-latest
 

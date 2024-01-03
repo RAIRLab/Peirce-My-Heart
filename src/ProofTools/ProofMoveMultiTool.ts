@@ -14,7 +14,7 @@ import {getCurrentProofTree, isMoveLegal} from "./ProofToolUtils";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
-import {ProofNode} from "../AEG/ProofNode";
+import {ProofNode} from "../Proof/ProofNode";
 import {TreeContext} from "../TreeContext";
 
 /**

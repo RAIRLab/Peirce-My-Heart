@@ -6,14 +6,11 @@
     //Update this with all Library Classes used
     "entryPoints": [
         "src/AEG",
+        "src/Contexts",
         "src/DrawTools",
+        "src/Proof",
         "src/ProofTools",
         "src/SharedToolUtils",
-        "src/AEG-IO.ts",
-        "src/ProofHistory.ts",
-        "src/Themes.ts",
-        "src/ToggleModes.ts",
-        "src/TreeContext.ts"
     ], 
     "tsconfig": "tsconfig.json",
     "out": "public/docs"

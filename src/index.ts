@@ -3,14 +3,14 @@
  *
  * @author Dawn Moore
  * @author James Oswald
- * @author Ryan Reilly
+ * @author Ryan R
  * @author Anusha Tiwari
  */
 
 import {AEGTree} from "./AEG/AEGTree";
-import {appendStep} from "./ProofHistory";
+import {appendStep} from "./Proof/ProofHistory";
 import {loadFile, saveFile} from "./AEG-IO";
-import {ProofNode} from "./AEG/ProofNode";
+import {ProofNode} from "./Proof/ProofNode";
 import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 import {toggleHandler} from "./ToggleModes";
 import {Tool, TreeContext} from "./TreeContext";

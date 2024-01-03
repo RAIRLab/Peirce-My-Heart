@@ -1,4 +1,4 @@
-import {AEGTree} from "./AEGTree";
+import {AEGTree} from "../AEG/AEGTree";
 import {TreeContext} from "../TreeContext";
 
 /**

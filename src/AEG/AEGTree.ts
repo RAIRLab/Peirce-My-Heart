@@ -10,7 +10,7 @@ import {shapesIntersect, shapesOverlap} from "./AEGUtils";
  * This tree is a hierarchical composition of AtomNodes and CutNodes.
  * Its height corresponds to the deepest CutNode nesting within.
  *
- * @author Ryan Reilly
+ * @author Ryan R
  * @author Anusha Tiwari
  */
 export class AEGTree {

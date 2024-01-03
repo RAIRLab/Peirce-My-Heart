@@ -5,7 +5,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build-Electron-Ubuntu:
+  Build_Electron_Ubuntu:
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
@@ -17,7 +17,7 @@ jobs:
       - name: use Vite to compile the application
         run: npm run build-electron
 
-  build-Electron-Windows:
+  Build_Electron_Windows:
     timeout-minutes: 5
     runs-on: windows-latest
 

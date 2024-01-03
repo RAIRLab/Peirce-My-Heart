@@ -1,11 +1,12 @@
 import {describe, expect, test} from "vitest";
-import {Rectangle} from "../../src/AEG/Rectangle";
 import {Ellipse} from "../../src/AEG/Ellipse";
 import {Point} from "../../src/AEG/Point";
+import {Rectangle} from "../../src/AEG/Rectangle";
 
 /**
  * Contains comprehensive tests on the Rectangle class.
- * @author Ryan Reilly
+ *
+ * @author Ryan R
  */
 
 const origin: Point = new Point(0, 0);
@@ -41,13 +42,13 @@ describe("Rectangle constructor soliloquy:", () => {
 });
 
 describe("Rectangle getCorners soliloquy:", () => {
-    const rect1 = new Rectangle(origin, 0, 0);
+    const rect1: Rectangle = new Rectangle(origin, 0, 0);
 
-    test("Rectangle of top left vertex (0, 0) and {w, h} = 0 should have all (0, 0) corners.", () => {
+    test("Rectangle of TL vertex (0, 0) and {w, h} = 0 should have all (0, 0) corners.", () => {
         expect(rect1.getCorners()).toStrictEqual([origin, origin, origin, origin]);
     });
 
-    test("Rectangle of top left vertex (0, 0) and {w, h} = 10 should have apt corners.", () => {
+    test("Rectangle of TL vertex (0, 0) and {w, h} = 10 should have apt corners.", () => {
         expect(testRect.getCorners()).toStrictEqual([
             new Point(0, 0),
             new Point(10, 0),
@@ -67,11 +68,11 @@ describe("Rectangle containsPoint soliloquy:", () => {
     });
 
     test.each([
-        [0, 0], //corners
+        [0, 0], //Corners
         [0, 10],
         [10, 0],
         [10, 10],
-        [0, 5], //edges
+        [0, 5], //Edges
         [5, 0],
         [10, 5],
         [5, 10],
@@ -88,16 +89,12 @@ describe("Rectangle containsPoint soliloquy:", () => {
         [10, 10.1],
         [10.1, 10],
         [10.1, 10.1],
-    ])("Rectangle of TL vertex (0, 0), {w, h} = 10 should contain Point (%f, %f).", (x, y) => {
+    ])("Rectangle of TL vertex (0, 0), {w, h} = 10 should not contain Point (%f, %f).", (x, y) => {
         expect(testRect.containsPoint(new Point(x, y))).toBeFalsy();
     });
 });
 
 describe("Rectangle-on-Rectangle overlaps soliloquy:", () => {
-    test("Rectangle of TL vertex (0, 0) and {w, h} = 10 should not overlap Rectangle of TL vertex (11, 11) and {w, h} = 10.", () => {
-        expect(testRect.overlaps(new Rectangle(new Point(11, 11), 10, 10))).toBeFalsy();
-    });
-
     test.each([
         [0, 0, 10, 10], //Rectangle with the same measurements
         [10, 10, 10, 10], //Rectangle sharing one point in common
@@ -126,9 +123,9 @@ describe("Rectangle-on-Ellipse overlaps soliloquy:", () => {
     );
 
     test.each([
-        [5, 5, 20, 20], //begins inside the Rectangle but touches the Rectangle's bounds from inside
-        [-5, 0, 20, 20], //begins outside the Rectangle but touches the Rectangle's bounds from outside
-        [5, 5, 20, 20], //huge guy outside this rectangle
+        [5, 5, 20, 20], //Begins inside the Rectangle but touches the Rectangle's bounds from inside
+        [-5, 0, 20, 20], //Begins outside the Rectangle but touches the Rectangle's bounds from outside
+        [5, 5, 20, 20], //Huge guy outside this rectangle
     ])(
         "Rectangle of TL vertex (0, 0) and {w, h} = 10 should overlap with Ellipse of center (%f, %f) and radX = %f, radY = %f.",
         (x, y, radX, radY) => {
@@ -143,16 +140,16 @@ describe("Rectangle-on-Rectangle contains soliloquy:", () => {
     });
 
     test.each([
-        [0, 0, 0, 0], //essentially just Points that exist on the existing Rectangle's corners
+        [0, 0, 0, 0], //Points that exist on the existing Rectangle's corners
         [10, 0, 0, 0],
         [0, 10, 0, 0],
         [10, 10, 0, 0],
-        [10, 10, 10, 10], //shares only the bottom right corner of the existing Rectangle
-        [10, 0, 10, 10], //shares just the right side of the existing Rectangle, continues right
-        [0, 10, 10, 10], //shares just the bottom of the existing Rectangle, continues down
-        [5, 5, 5, 5], //begins inside the existing Rectangle but touches that Rectangle's bounds from inside
+        [10, 10, 10, 10], //Shares only the bottom right corner of the existing Rectangle
+        [10, 0, 10, 10], //Shares just the right side of the existing Rectangle, continues right
+        [0, 10, 10, 10], //Shares just the bottom of the existing Rectangle, continues down
+        [5, 5, 5, 5], //Begins inside the existing Rectangle but touches that Rectangle's bounds from inside
         [2, 2, 8, 2],
-        [-5, 5, 5, 5], //begins outside the existing Rectangle but touches that Rectangle's bounds from outside
+        [-5, 5, 5, 5], //Begins outside the existing Rectangle but touches that Rectangle's bounds from outside
         [-2, 2, 2, 4],
     ])(
         "Rectangle of TL vertex (0, 0) and {w, h} = 10 should not contain Rectangle of TL vertex (%f, %f) and w = %f, h = %f.",
@@ -162,7 +159,7 @@ describe("Rectangle-on-Rectangle contains soliloquy:", () => {
     );
 
     test.each([
-        [1, 1, 1, 1], //standard cases
+        [1, 1, 1, 1], //Standard pass cases
         [9.9, 9.9, 0.05, 0.05],
         [9.9, 1, 0.05, 0.05],
         [1, 9.9, 0.05, 0.05],
@@ -176,7 +173,7 @@ describe("Rectangle-on-Rectangle contains soliloquy:", () => {
 
 describe("Rectangle-on-Ellipse contains soliloquy:", () => {
     test.each([
-        [0, 0, 5, 5], //should not contain Ellipses whose centers are on corners or edges
+        [0, 0, 5, 5], //Should not contain Ellipses whose centers are on corners or edges
         [10, 0, 5, 5],
         [0, 10, 5, 5],
         [10, 10, 5, 5],
@@ -184,15 +181,15 @@ describe("Rectangle-on-Ellipse contains soliloquy:", () => {
         [5, 0, 5, 5],
         [10, 5, 5, 5],
         [5, 10, 5, 5],
-        //should not contain Ellipses whose farthest points touch corners or edges
-        [15, 10, 5, 5], //touches (10, 10) on the Rectangle
-        [15, 5, 5, 5], //touches (10, 5) on the Rectangle
-        [15, 0, 5, 5], //touches (10, 0) on the Rectangle
-        [5, -5, 5, 5], //touches (5, 0) on the Rectangle
-        [-5, 0, 5, 5], //touches (0, 0) on the Rectangle
-        [-5, 5, 5, 5], //touches (0, 5) on the Rectangle
-        [-5, 10, 5, 5], //touches (0, 10) on the Rectangle
-        [5, 15, 5, 5], //touches (5, 10) on the Rectangle
+        //Should not contain Ellipses whose farthest points touch corners or edges
+        [15, 10, 5, 5], //Touches (10, 10) on the Rectangle
+        [15, 5, 5, 5], //Touches (10, 5) on the Rectangle
+        [15, 0, 5, 5], //Touches (10, 0) on the Rectangle
+        [5, -5, 5, 5], //Touches (5, 0) on the Rectangle
+        [-5, 0, 5, 5], //Touches (0, 0) on the Rectangle
+        [-5, 5, 5, 5], //Touches (0, 5) on the Rectangle
+        [-5, 10, 5, 5], //Touches (0, 10) on the Rectangle
+        [5, 15, 5, 5], //Touches (5, 10) on the Rectangle
     ])(
         "Rectangle of TL vertex (0, 0) and {w, h} = 10 should not contain Ellipse of center (%f, %f) and radX = %f, radY = %f.",
         (x, y, rx, ry) => {
@@ -201,13 +198,13 @@ describe("Rectangle-on-Ellipse contains soliloquy:", () => {
     );
 
     test.each([
-        [5, 5, 2, 2], //arbitrary Ellipses that should be contained within the Rectangle
+        [5, 5, 2, 2], //Arbitrary Ellipses that should be contained within the Rectangle
         [9.9, 9.9, 0, 0],
         [0.1, 0.1, 0.01, 0.01],
         [9.9, 0.1, 0.001, 0.001],
         [0.1, 9.9, 0.0001, 0.0001],
     ])(
-        "Rectangle of TL vertex (0, 0) and {w, h} = 10 should not contain Ellipse of center (%f, %f) and radX = %f, radY = %f.",
+        "Rectangle of TL vertex (0, 0) and {w, h} = 10 should contain Ellipse of center (%f, %f) and radX = %f, radY = %f.",
         (x, y, rx, ry) => {
             expect(testRect.contains(new Ellipse(new Point(x, y), rx, ry))).toBeTruthy();
         }

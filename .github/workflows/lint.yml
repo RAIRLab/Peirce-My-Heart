@@ -5,7 +5,7 @@ on:
     branches: [ master ]
 
 jobs:
-  lint:
+  Lint:
     timeout-minutes: 5
     runs-on: ubuntu-latest
 

@@ -3,7 +3,7 @@ import {AtomNode} from "./AEG/AtomNode";
 import {CutNode} from "./AEG/CutNode";
 import {Ellipse} from "./AEG/Ellipse";
 import {Point} from "./AEG/Point";
-import {ProofNode} from "./AEG/ProofNode";
+import {ProofNode} from "./Proof/ProofNode";
 
 /**
  * Contains methods for loading and saving AEGs from JSON files.

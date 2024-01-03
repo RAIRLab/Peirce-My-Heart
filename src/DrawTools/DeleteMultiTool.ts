@@ -14,7 +14,7 @@ import {TreeContext} from "../TreeContext";
  * This means that they are removed from the Draw Mode AEGTree but visually are still present.
  *
  * @author Dawn Moore
- * @author Ryan Reilly
+ * @author Ryan R
  */
 
 //First Point the user clicks.
