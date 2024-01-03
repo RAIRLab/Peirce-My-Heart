@@ -1,11 +1,10 @@
 import {AEGTree} from "../../src/AEG/AEGTree";
 import {AtomNode} from "../../src/AEG/AtomNode";
 import {CutNode} from "../../src/AEG/CutNode";
-import {beforeEach, describe, expect, test} from "vitest";
+import {describe, expect, test} from "vitest";
 import {Ellipse} from "../../src/AEG/Ellipse";
 import {Point} from "../../src/AEG/Point";
 
-let tree: AEGTree;
 const origin: Point = new Point(0, 0);
 const testCenter: Point = new Point(5, 5);
 const testEllipse: Ellipse = new Ellipse(testCenter, 5, 5);
@@ -16,17 +15,15 @@ const testEllipse: Ellipse = new Ellipse(testCenter, 5, 5);
  * @author Ryan R
  */
 
-beforeEach(() => {
-    tree = new AEGTree();
-});
-
 describe("AEGTree constructor soliloquy:", () => {
+    const tree = new AEGTree();
     test("AEGTree default constructor should set the root to a null CutNode.", () => {
         expect(tree.sheet).toStrictEqual(new CutNode(null));
     });
 });
 
 describe("AEGTree verify soliloquy:", () => {
+    const tree = new AEGTree();
     test("Verification with empty Sheet of Assertion should be successful.", () => {
         expect(tree.verify()).toBeTruthy();
     });
@@ -159,6 +156,7 @@ describe("AEGTree clear soliloquy:", () => {
 });
 
 describe("AEGTree toString soliloquy:", () => {
+    const tree = new AEGTree();
     test("An empty tree should produce a formula string with only square brackets.", () => {
         expect(tree.toString()).toStrictEqual("[]");
     });

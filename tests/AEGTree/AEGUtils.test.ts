@@ -1,7 +1,5 @@
 import {describe, expect, test} from "vitest";
 import {Ellipse} from "../../src/AEG/Ellipse";
-import {Point} from "../../src/AEG/Point";
-import {Rectangle} from "../../src/AEG/Rectangle";
 import {
     getEllipsePoints,
     pointInRect,
@@ -10,6 +8,8 @@ import {
     shapesOverlap,
     signedDistanceFromEllipse,
 } from "../../src/AEG/AEGUtils";
+import {Point} from "../../src/AEG/Point";
+import {Rectangle} from "../../src/AEG/Rectangle";
 
 /**
  * Contains comprehensive tests all exported AEGUtils methods.

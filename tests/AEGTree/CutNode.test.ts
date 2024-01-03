@@ -1,11 +1,9 @@
 import {AtomNode} from "../../src/AEG/AtomNode";
 import {CutNode} from "../../src/AEG/CutNode";
-import {beforeEach, describe, expect, test} from "vitest";
+import {describe, expect, test} from "vitest";
 import {Ellipse} from "../../src/AEG/Ellipse";
 import {Point} from "../../src/AEG/Point";
 
-let cNode: CutNode;
-let sheetNode: CutNode;
 const origin = new Point(0, 0);
 const testCenter = new Point(5, 5);
 const testEllipse = new Ellipse(testCenter, 5, 5);
@@ -16,12 +14,8 @@ const testEllipse = new Ellipse(testCenter, 5, 5);
  * @author Ryan R
  */
 
-beforeEach(() => {
-    cNode = new CutNode(testEllipse);
-    sheetNode = new CutNode(null);
-});
-
 describe("CutNode constructor soliloquy:", () => {
+    const cNode: CutNode = new CutNode(testEllipse);
     test("CutNode constructor with only one argument passed in should produce a child list of length 0.", () => {
         expect(cNode.children.length).toBe(0);
     });
@@ -78,6 +72,7 @@ describe("CutNode constructor soliloquy:", () => {
 });
 
 describe("CutNode getCurrentCut soliloquy:", () => {
+    const sheetNode: CutNode = new CutNode(null);
     const jay: AtomNode = new AtomNode("J", new Point(6, 6), 3, 3);
 
     test("getCurrentCut should return the CutNode it was called on if that CutNode has no children.", () => {
@@ -106,7 +101,7 @@ describe("CutNode getCurrentCut soliloquy:", () => {
         expect(sheetNode.getCurrentCut(jay)).toStrictEqual(sheetNodeChildCutLarger);
     });
 
-    test.skip("getCurrentCut should return the deepest CutNode that is still larger than the node sent as an argument.", () => {
+    test("getCurrentCut should return the deepest CutNode that is still larger than the node sent as an argument.", () => {
         const smallestButStillBiggerChild: CutNode = new CutNode(new Ellipse(testCenter, 8, 8));
         const sheetNodeChildCutLarger: CutNode = sheetNode.children[4] as CutNode;
         sheetNodeChildCutLarger.child = new CutNode(new Ellipse(testCenter, 9, 9));
@@ -117,6 +112,7 @@ describe("CutNode getCurrentCut soliloquy:", () => {
 });
 
 describe("CutNode containsPoint soliloquy:", () => {
+    const cNode: CutNode = new CutNode(testEllipse);
     test.each([
         [0, 0],
         [1000000, 1000000],
@@ -156,6 +152,8 @@ describe("CutNode containsPoint soliloquy:", () => {
 });
 
 describe("CutNode containsNode soliloquy:", () => {
+    const cNode: CutNode = new CutNode(testEllipse);
+    const sheetNode: CutNode = new CutNode(null);
     test.each([
         [sheetNode],
         [new CutNode(testEllipse)],
@@ -228,6 +226,8 @@ describe("CutNode containsNode soliloquy:", () => {
 });
 
 describe("CutNode remove soliloquy:", () => {
+    const cNode: CutNode = new CutNode(testEllipse);
+    const sheetNode: CutNode = new CutNode(null);
     test("Removing the Sheet of Assertion should return false.", () => {
         expect(sheetNode.remove(new Point(5, 5))).toBeFalsy();
     });
@@ -312,6 +312,7 @@ describe("CutNode clear soliloquy:", () => {
 });
 
 describe("CutNode toString soliloquy:", () => {
+    const sheetNode: CutNode = new CutNode(null);
     test("Sheet of Assertion with no children should produce an appropriate toString.", () => {
         expect(sheetNode.toString()).toStrictEqual("Sheet of Assertion of the AEG Tree");
     });
@@ -329,6 +330,7 @@ describe("CutNode toString soliloquy:", () => {
 });
 
 describe("CutNode toFormulaString soliloquy:", () => {
+    const sheetNode: CutNode = new CutNode(null);
     test("Sheet of assertion should produce a formula string with only square brackets.", () => {
         expect(sheetNode.toFormulaString()).toStrictEqual("[]");
     });
