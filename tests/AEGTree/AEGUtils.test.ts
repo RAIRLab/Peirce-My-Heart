@@ -2,7 +2,13 @@ import {describe, expect, test} from "vitest";
 import {Ellipse} from "../../src/AEG/Ellipse";
 import {Point} from "../../src/AEG/Point";
 import {Rectangle} from "../../src/AEG/Rectangle";
-import {pointInRect, shapeContains, shapesOverlap} from "../../src/AEG/AEGUtils";
+import {
+    getEllipsePoints,
+    pointInRect,
+    shapeContains,
+    shapesOverlap,
+    signedDistanceFromEllipse,
+} from "../../src/AEG/AEGUtils";
 
 /**
  * Contains comprehensive tests all exported AEGUtils methods.
@@ -120,7 +126,6 @@ describe("AEGUtils shapeContains soliloquy:", () => {
 });
 
 describe("AEGUtils pointInRect soliloquy:", () => {
-    console.log(testRect.getCorners());
     test.each([
         [5, 5], //Arbitrary fellas
         [8, 5],
@@ -146,14 +151,52 @@ describe("AEGUtils pointInRect soliloquy:", () => {
     );
 });
 
+//(x-h)^2/rx^2 + (y-k)^2/ry^2 <= 1
+//(x, y) = new point
+//(h, k) = center
 describe("AEGUtils signedDistanceFromEllipse soliloquy:", () => {
-    test("Skellington!", () => {
-        expect(true).toBeTruthy();
-    });
+    test.each([
+        [5, 5], //Point is completely within testEllipse
+        [5, 2],
+        [8, 3],
+    ])(
+        "Distance between Ellipse with center (5, 5) and {radX, radY} = 10 and Point (%f, %f) should be less than 0.",
+        (x, y) => {
+            expect(signedDistanceFromEllipse(testEllipse, new Point(x, y))).toBeLessThan(0);
+        }
+    );
+
+    test.each([
+        [20, 20], //Point is completely outside testEllipse
+        [500, 20000],
+        [8.0, 308.1],
+    ])(
+        "Distance between Ellipse with center (5, 5) and {radX, radY} = 10 and Point (%f, %f) should be greater than 0.",
+        (x, y) => {
+            expect(signedDistanceFromEllipse(testEllipse, new Point(x, y))).toBeGreaterThan(0);
+        }
+    );
+
+    test.each([
+        [5 - Math.sqrt(50), 5 - Math.sqrt(50)], //Point is on testEllipse
+        [5, 15],
+        [5, -5],
+    ])(
+        "Distance between Ellipse with center (5, 5) and {radX, radY} = 10 and Point (%f, %f) should be 0.",
+        (x, y) => {
+            expect(signedDistanceFromEllipse(testEllipse, new Point(x, y))).toBeCloseTo(0);
+        }
+    );
 });
 
 describe("AEGUtils getEllipsePoints soliloquy:", () => {
-    test("Skellington!", () => {
-        expect(true).toBeTruthy();
+    test("Ellipse of center (5, 5) and {radX, radY} = 10 should have appropriate curve points.", () => {
+        const curvePoints: Point[] = getEllipsePoints(testEllipse);
+        expect(curvePoints[0]).toStrictEqual(new Point(15, 5));
+        expect(curvePoints[90].x).toBeCloseTo(5);
+        expect(curvePoints[90].y).toBeCloseTo(15);
+        expect(curvePoints[180]).toStrictEqual(new Point(-5, 5));
+        expect(curvePoints[270].x).toBeCloseTo(5);
+        expect(curvePoints[270].y).toBeCloseTo(-5);
     });
 });
