@@ -1,11 +1,14 @@
-import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
-import {TreeContext} from "./TreeContext";
-
 /**
  * Provides utilities for extracting important colors for the application from the CSS themes.
- *
  * @author James Oswald
  */
+
+// Import and initialize the theme-change library.
+import { themeChange } from "theme-change";
+themeChange();
+
+import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
+import {TreeContext} from "./TreeContext";
 
 //Next to the save button.
 const themeSelector: HTMLSelectElement = <HTMLSelectElement>document.getElementById("theme-select");

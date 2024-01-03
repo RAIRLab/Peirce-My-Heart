@@ -50,5 +50,8 @@
     "vite": "^5.0.10",
     "vite-plugin-singlefile": "^0.13.5",
     "vitest": "^1.1.1"
+  },
+  "dependencies": {
+    "theme-change": "^2.5.0"
   }
 }
