@@ -1,5 +1,5 @@
 /**
- * @file 
+ * @file
  * Contains methods for copying and pasting one or more nodes at a time.
  *
  * When a node's position is described as being valid or not, this means that we are determining

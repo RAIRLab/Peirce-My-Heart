@@ -1,6 +1,6 @@
 /**
- * @file 
- * Contains methods for moving one node at a time, on only the same cut level, 
+ * @file
+ * Contains methods for moving one node at a time, on only the same cut level,
  * in only one cut in Proof Mode. When it is said that a node is "removed" in the documentation,
  * this means that it is removed from the Draw Mode AEGTree but visually is still present.
  *
