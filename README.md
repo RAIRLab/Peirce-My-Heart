@@ -44,7 +44,6 @@ consistent and readable formatting. It provides defaults for the following tools
 
 4. [**Vitest**](https://vitest.dev/) : A unit testing framework native to Vite with support for TypeScript. It allows for github workflow compatibility and running numerous tests with one command.
 
-5. [**Playwright**](https://playwright.dev/) : A UI testing framework compatible with Vite with support for TypeScript, similar to other UI testing frameworks such as Selenium. 
 
 ## Linting
 
@@ -102,15 +101,6 @@ will be jumped to in VSC.
 
 ## Testing
 
-Test your frontend changes! Playwright will open a UI on a bunch of different browsers and
-walk you through the test scripts you write, step by step. Run the following to get started:
-```bash
-npm run uitest
-```
-Optionally, if you would like to run your frontend tests headless, or without any UI, run the following:
-```bash
-npm run uitestHeadless
-```
 Also, test your "backend" changes! Vitest will help here by looking for all .test.ts files in /tests/AEGTree and running them.
 To perform this locally in a terminal, run the following:
 ```bash
@@ -127,7 +117,7 @@ npm run aegtest
 
 /src/ : source code for the application.
 
-/tests/ : testing source .test.ts files made with vitest and .spec.ts files made with Playwright.
+/tests/ : testing source .test.ts files made with vitest
 
 /.eslintignore : list of .js and .ts files the linter shouldn't look at
 
@@ -144,8 +134,6 @@ npm run aegtest
 /package-lock.json : NPM record of all  dependencies and sub-dependencies used for this project.
 
 /package.json : main NPM file, contains information about the project and development dependencies.
-
-/playwright.config.js : Playwright configuration
 
 /README.md : the information file you're reading right now.
 

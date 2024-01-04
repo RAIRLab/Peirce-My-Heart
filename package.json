@@ -15,8 +15,6 @@
     "vsc-debug": "vite serve",
     "live-test": "vitest",
     "aegtest": "vitest run",
-    "uitest": "playwright test --ui",
-    "uitestHeadless": "playwright test",
     "server": "vite serve"
   },
   "repository": {
@@ -36,12 +34,9 @@
   },
   "homepage": "https://github.com/James-Oswald/PeirceMyHeart#readme",
   "devDependencies": {
-    "@playwright/test": "^1.40.1",
     "@types/node": "20.10.6",
     "@types/wicg-file-system-access": "^2023.10.4",
     "gts": "^5.2.0",
-    "http-server": "^14.1.1",
-    "playwright": "^1.40.1",
     "typedoc": "^0.25.4",
     "typescript": "~5.3.3",
     "vite": "^5.0.10",
