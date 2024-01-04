@@ -1,3 +1,16 @@
+/**
+ * @file
+ * Contains Draw Mode CutNode resizing methods.
+ *
+ * When it is said that a node is "removed" in the documentation,
+ * this means that it is removed from the Draw Mode AEGTree but visually is still present.
+ * When a CutNode's position is described as being valid or not,
+ * this means that we are determining if it can currently be inserted into the AEGTree 
+ * without intersection.
+ *
+ * @author Dawn Moore
+ */
+
 import {AtomNode} from "../AEG/AtomNode";
 import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
@@ -7,18 +20,6 @@ import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
 import {TreeContext} from "../TreeContext";
-
-/**
- * Contains Draw Mode CutNode resizing methods.
- *
- * When it is said that a node is "removed" in the documentation,
- * This means that it is removed from the Draw Mode AEGTree but visually is still present.
- *
- * When a CutNode's position is described as being valid or not,
- * This means that we are determining if it can currently be inserted into the AEGTree without intersection.
- *
- * @author Dawn Moore
- */
 
 //First Point the user clicks.
 let startingPoint: Point;

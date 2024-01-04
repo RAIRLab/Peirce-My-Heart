@@ -1,3 +1,10 @@
+/**
+ * Contains methods for inserting two CutNodes at once on the Proof Mode HTML canvas.
+ * @author Dawn Moore
+ * @author James Oswald
+ * @author Anusha Tiwari
+ */
+
 import {AEGTree} from "../AEG/AEGTree";
 import {
     changeCursorStyle,
@@ -15,14 +22,6 @@ import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
 import {ProofNode} from "../Proof/ProofNode";
 import {TreeContext} from "../TreeContext";
-
-/**
- * Contains methods for inserting two CutNodes at once on the Proof Mode HTML canvas.
- *
- * @author Dawn Moore
- * @author James Oswald
- * @author Anusha Tiwari
- */
 
 //Checkbox next to "Show Guidelines:" in Proof Mode's Double Cut Insertion tool.
 const showRectElm: HTMLInputElement = <HTMLInputElement>document.getElementById("showRect");

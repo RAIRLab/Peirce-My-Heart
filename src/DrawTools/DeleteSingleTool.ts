@@ -1,3 +1,13 @@
+/**
+ * Contains methods for deleting one node at a time.
+ *
+ * When it is said that a node is "removed" in the documentation,
+ * this means that it is removed from the Draw Mode AEGTree but visually is still present.
+ *
+ * @author Dawn Moore
+ * @author Ryan R
+ */
+
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {drawAtom, drawCut, redrawTree} from "../SharedToolUtils/DrawUtils";
@@ -6,16 +16,6 @@ import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
 import {readdChildren, reInsertNode} from "../SharedToolUtils/EditModeUtils";
 import {TreeContext} from "../TreeContext";
-
-/**
- * Contains methods for deleting one node at a time.
- *
- * When it is said that a node is "removed" in the documentation,
- * This means that it is removed from the Draw Mode AEGTree but visually is still present.
- *
- * @author Dawn Moore
- * @author Ryan R
- */
 
 //First Point the user clicks.
 let startingPoint: Point;

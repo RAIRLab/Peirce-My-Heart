@@ -1,6 +1,5 @@
 /**
- * Implements Charles Peirce's Alpha Existential Graph System and an interactive theorem prover.
- *
+ * @file Main application code, sets up event listeners, context, window globals
  * @author Dawn Moore
  * @author James Oswald
  * @author Ryan R

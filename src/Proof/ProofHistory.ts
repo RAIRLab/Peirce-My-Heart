@@ -1,13 +1,12 @@
+/**
+ * @file Creates the proof history bar on the left side of the screen
+ * and handles returning to a previous step.
+ * @author Dawn Moore
+ */
+
 import {ProofNode} from "./ProofNode";
 import {redrawProof} from "../SharedToolUtils/DrawUtils";
 import {TreeContext} from "../TreeContext";
-
-/**
- * Creates the proof history bar on the left side of the screen
- * and handles returning to a previous step.
- *
- * @author Dawn Moore
- */
 
 /**
  * Creates a button representing the incoming ProofNode as a step in the proof history

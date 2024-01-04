@@ -1,3 +1,9 @@
+/**
+ * @file Contains methods for deleting two CutNodes at once on the Proof Mode HTML canvas.
+ * @author Dawn Moore
+ * @author Anusha Tiwari
+ */
+
 import {AEGTree} from "../AEG/AEGTree";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
@@ -9,13 +15,6 @@ import {Point} from "../AEG/Point";
 import {ProofNode} from "../Proof/ProofNode";
 import {readdChildren, reInsertNode} from "../SharedToolUtils/EditModeUtils";
 import {TreeContext} from "../TreeContext";
-
-/**
- * Contains methods for deleting two CutNodes at once on the Proof Mode HTML canvas.
- *
- * @author Dawn Moore
- * @author Anusha Tiwari
- */
 
 //Point the user has recently clicked.
 let currentPoint: Point;

@@ -3,8 +3,7 @@ import {Rectangle} from "./Rectangle";
 import {shapeContains, shapesOverlap, signedDistanceFromEllipse} from "./AEGUtils";
 
 /**
- * Defines an Ellipse.
- *
+ * Defines an Ellipse in terms of a center Point and two radii.
  * @author Ryan R
  * @author Anusha Tiwari
  */

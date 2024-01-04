@@ -1,3 +1,14 @@
+/**
+ * @file
+ * Contains methods for copy and pasting one node at a time.
+ *
+ * When an node's position is described as being valid or not, this means that we are determining
+ * if it can currently be inserted into the AEGTree without intersection.
+ *
+ * @author Dawn Moore
+ * @author Anusha Tiwari
+ */
+
 import {alterAtom, alterCut} from "../SharedToolUtils/EditModeUtils";
 import {AtomNode} from "../AEG/AtomNode";
 import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
@@ -7,16 +18,6 @@ import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
 import {TreeContext} from "../TreeContext";
-
-/**
- * Contains methods for copy and pasting one node at a time.
- *
- * When an node's position is described as being valid or not,
- * This means that we are determining if it can currently be inserted into the AEGTree without intersection.
- *
- * @author Dawn Moore
- * @author Anusha Tiwari
- */
 
 //First Point the user clicks.
 let startingPoint: Point;

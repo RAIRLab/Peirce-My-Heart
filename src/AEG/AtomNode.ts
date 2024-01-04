@@ -1,3 +1,9 @@
+/**
+ * @file Contains the AtomNode class, which defines an atom in Peirce's AEG system.
+ * @author Ryan R
+ * @author Anusha Tiwari
+ */
+
 import {Point} from "./Point";
 import {Rectangle} from "./Rectangle";
 
@@ -5,9 +11,6 @@ import {Rectangle} from "./Rectangle";
  * Defines an Atom.
  * Atoms are propositions in Peirce's AEG system.
  * Peirce My Heart only handles single character identifiers as of 1.0.0.
- *
- * @author Ryan R
- * @author Anusha Tiwari
  */
 export class AtomNode {
     /**

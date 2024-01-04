@@ -1,3 +1,8 @@
+/**
+ * @file Containing methods for pasting AEGs into Proof Mode.
+ * @author Anusha Tiwari
+ */
+
 import {AEGTree} from "../AEG/AEGTree";
 import {changeCursorStyle, redrawProof} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
@@ -5,11 +10,6 @@ import {getCurrentProofTree} from "./ProofToolUtils";
 import {ProofNode} from "../Proof/ProofNode";
 import {TreeContext} from "../TreeContext";
 
-/**
- * Containing methods for pasting AEGs into Proof Mode.
- *
- * @author Anusha Tiwari
- */
 
 //AEG in question.
 let currentGraph: CutNode;

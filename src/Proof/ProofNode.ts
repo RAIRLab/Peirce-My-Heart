@@ -1,9 +1,13 @@
+/**
+ * @file contains the ProofNode class, which defines a single step in a proof.
+ * @author Anusha Tiwari
+ */
+
 import {AEGTree} from "../AEG/AEGTree";
 import {TreeContext} from "../TreeContext";
 
 /**
  * Defines a single step in a proof.
- * @author Anusha Tiwari
  */
 export class ProofNode {
     /**
@@ -13,11 +17,13 @@ export class ProofNode {
 
     /**
      * Inference rule applied in this ProofNode.
+     * @todo Make this an enum. -James
      */
     public appliedRule: string;
 
     /**
      * Index of this ProofNode in treeContext.ts' proof array.
+     * @todo Highly unlikely we need this, adds another thing to keep track of and update -James
      */
     public index: number;
 

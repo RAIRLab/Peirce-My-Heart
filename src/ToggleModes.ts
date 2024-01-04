@@ -1,3 +1,9 @@
+/**
+ * @file Contains the event handler to toggle between Draw Mode and Proof Mode.
+ * @author James Oswald
+ * @author Anusha Tiwari
+ */
+
 import {AEGTree} from "./AEG/AEGTree";
 import {loadFile} from "./AEG-IO";
 import {ProofNode} from "./Proof/ProofNode";
@@ -5,12 +11,6 @@ import {proofString, treeString} from "./index";
 import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 import {Tool, TreeContext} from "./TreeContext";
 
-/**
- * Contains the event handler to toggle between Draw Mode and Proof Mode.
- *
- * @author James Oswald
- * @author Anusha Tiwari
- */
 
 //True for Draw Mode, false for Proof Mode.
 let drawMode = true;

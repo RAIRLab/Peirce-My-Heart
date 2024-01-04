@@ -1,15 +1,14 @@
+/**
+ * @file Contains methods for clearing the Proof Mode HTML canvas.
+ * @author Anusha Tiwari
+ */
+
 import {AEGTree} from "../AEG/AEGTree";
 import {cleanCanvas, highlightNode, redrawProof} from "../SharedToolUtils/DrawUtils";
 import {deleteButtons} from "../Proof/ProofHistory";
 import {getCurrentProofTree} from "./ProofToolUtils";
 import {illegalColor} from "../Themes";
 import {TreeContext} from "../TreeContext";
-
-/**
- * Contains methods for clearing the Proof Mode HTML canvas.
- *
- * @author Anusha Tiwari
- */
 
 //Current tree in the proof chain.
 let currentProofTree: AEGTree;

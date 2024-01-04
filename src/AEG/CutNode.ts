@@ -1,3 +1,10 @@
+/**
+ * @file Contains the CutNode class, which defines a cut in Peirce's AEG system.
+ * @author James Oswald
+ * @author Ryan R
+ * @author Anusha Tiwari
+ */
+
 import {AtomNode} from "./AtomNode";
 import {Ellipse} from "./Ellipse";
 import {Point} from "./Point";
@@ -9,9 +16,6 @@ import {shapeContains} from "./AEGUtils";
  * Cuts may be empty, and cuts may contain one or more AtomNodes and CutNodes as children.
  * Both are valid cuts.
  *
- * @author James Oswald
- * @author Ryan R
- * @author Anusha Tiwari
  */
 export class CutNode {
     /**
