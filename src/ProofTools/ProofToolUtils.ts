@@ -1,14 +1,14 @@
-import {AEGTree} from "../AEG/AEGTree";
-import {AtomNode} from "../AEG/AtomNode";
-import {CutNode} from "../AEG/CutNode";
-import {TreeContext} from "../TreeContext";
-
 /**
  * Collection of methods used for Proof Mode tools.
  *
  * @author Dawn Moore
  * @author Anusha Tiwari
  */
+
+import {AEGTree} from "../AEG/AEGTree";
+import {AtomNode} from "../AEG/AtomNode";
+import {CutNode} from "../AEG/CutNode";
+import {TreeContext} from "../TreeContext";
 
 /**
  * Copies and returns the AEGTree of the current proof step. Returns an empty AEGTree

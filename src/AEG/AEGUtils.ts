@@ -1,12 +1,12 @@
-import {Ellipse} from "./Ellipse";
-import {Point} from "./Point";
-import {Rectangle} from "./Rectangle";
-
 /**
  * Collection of methods used by shapes drawn and stored by the AEGTree.
  *
  * @author Anusha Tiwari
  */
+
+import {Ellipse} from "./Ellipse";
+import {Point} from "./Point";
+import {Rectangle} from "./Rectangle";
 
 /**
  * Checks whether one incoming shape overlaps another incoming shape.

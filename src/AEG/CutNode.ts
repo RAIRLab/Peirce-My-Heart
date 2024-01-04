@@ -1,8 +1,3 @@
-import {AtomNode} from "./AtomNode";
-import {Ellipse} from "./Ellipse";
-import {Point} from "./Point";
-import {shapeContains} from "./AEGUtils";
-
 /**
  * Defines a Cut.
  * Cuts are negations in Peirce's AEG system.
@@ -13,6 +8,12 @@ import {shapeContains} from "./AEGUtils";
  * @author Ryan R
  * @author Anusha Tiwari
  */
+
+import {AtomNode} from "./AtomNode";
+import {Ellipse} from "./Ellipse";
+import {Point} from "./Point";
+import {shapeContains} from "./AEGUtils";
+
 export class CutNode {
     /**
      * Boundary of this CutNode on the HTML canvas.

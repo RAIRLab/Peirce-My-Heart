@@ -1,19 +1,19 @@
+/**
+ * Contains comprehensive tests on the AEGTree class.
+ *
+ * @author Ryan R
+ */
+import {describe, expect, test} from "vitest";
+
 import {AEGTree} from "../../src/AEG/AEGTree";
 import {AtomNode} from "../../src/AEG/AtomNode";
 import {CutNode} from "../../src/AEG/CutNode";
-import {describe, expect, test} from "vitest";
 import {Ellipse} from "../../src/AEG/Ellipse";
 import {Point} from "../../src/AEG/Point";
 
 const origin: Point = new Point(0, 0);
 const testCenter: Point = new Point(5, 5);
 const testEllipse: Ellipse = new Ellipse(testCenter, 5, 5);
-
-/**
- * Contains comprehensive tests on the AEGTree class.
- *
- * @author Ryan R
- */
 
 describe("AEGTree constructor soliloquy:", () => {
     const tree = new AEGTree();

@@ -1,3 +1,10 @@
+/**
+ * Contains methods for iterating nodes and subgraphs on the Proof Mode canvas.
+ *
+ * @author Dawn Moore
+ * @author Anusha Tiwari
+ */
+
 import {AEGTree} from "../AEG/AEGTree";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
@@ -9,13 +16,6 @@ import {Point} from "../AEG/Point";
 import {ProofNode} from "../Proof/ProofNode";
 import {reInsertNode} from "../SharedToolUtils/EditModeUtils";
 import {TreeContext} from "../TreeContext";
-
-/**
- * Contains methods for iterating nodes and subgraphs on the Proof Mode canvas.
- *
- * @author Dawn Moore
- * @author Anusha Tiwari
- */
 
 //Point the user has recently clicked.
 let currentPoint: Point;

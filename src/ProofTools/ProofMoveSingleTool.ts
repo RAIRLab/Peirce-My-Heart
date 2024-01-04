@@ -1,3 +1,16 @@
+/**
+ * Contains methods for moving one node at a time, on only the same cut level, in only one cut in Proof Mode.
+ *
+ * When it is said that a node is "removed" in the documentation,
+ * This means that it is removed from the Draw Mode AEGTree but visually is still present.
+ *
+ * When a CutNode's position is described as being valid or not,
+ * This means that we are determining if it can currently be inserted into the AEGTree without
+ * intersection.
+ *
+ * @author Dawn Moore
+ */
+
 import {AEGTree} from "../AEG/AEGTree";
 import {alterAtom, alterCut} from "../SharedToolUtils/EditModeUtils";
 import {AtomNode} from "../AEG/AtomNode";
@@ -16,19 +29,6 @@ import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
 import {ProofNode} from "../Proof/ProofNode";
 import {TreeContext} from "../TreeContext";
-
-/**
- * Contains methods for moving one node at a time, on only the same cut level, in only one cut in Proof Mode.
- *
- * When it is said that a node is "removed" in the documentation,
- * This means that it is removed from the Draw Mode AEGTree but visually is still present.
- *
- * When a CutNode's position is described as being valid or not,
- * This means that we are determining if it can currently be inserted into the AEGTree without
- * intersection.
- *
- * @author Dawn Moore
- */
 
 //First Point the user clicks.
 let startingPoint: Point;

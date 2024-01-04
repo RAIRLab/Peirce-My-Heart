@@ -1,12 +1,12 @@
-import {AtomNode} from "../../src/AEG/AtomNode";
-import {describe, expect, test} from "vitest";
-import {Point} from "../../src/AEG/Point";
-
 /**
  * Contains comprehensive tests on the AtomNode class.
  *
  * @author Ryan R
  */
+import {describe, expect, test} from "vitest";
+
+import {AtomNode} from "../../src/AEG/AtomNode";
+import {Point} from "../../src/AEG/Point";
 
 const atom: AtomNode = new AtomNode("A", new Point(0, 10), 10, 10);
 

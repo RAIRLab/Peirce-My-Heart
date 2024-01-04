@@ -1,3 +1,10 @@
+/**
+ * Collection of methods used for drawing on the HTML canvas.
+ *
+ * @author Dawn Moore
+ * @author Anusha Tiwari
+ */
+
 import {aegStringify} from "../index";
 import {AEGTree} from "../AEG/AEGTree";
 import {AtomNode} from "../AEG/AtomNode";
@@ -7,13 +14,6 @@ import {offset} from "./DragTool";
 import {legalColor, placedColor} from "../Themes";
 import {Point} from "../AEG/Point";
 import {TreeContext} from "../TreeContext";
-
-/**
- * Collection of methods used for drawing on the HTML canvas.
- *
- * @author Dawn Moore
- * @author Anusha Tiwari
- */
 
 //Setting up Canvas...
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");

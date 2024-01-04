@@ -1,11 +1,12 @@
-import {describe, expect, test} from "vitest";
-import {Point} from "../../src/AEG/Point";
-
 /**
  * Contains comprehensive unit tests on the Point class.
  *
  * @author Ryan R
  */
+
+import {describe, expect, test} from "vitest";
+
+import {Point} from "../../src/AEG/Point";
 
 describe("Point constructor soliloquy: ", () => {
     test.each([

@@ -1,4 +1,11 @@
+/**
+ * Contains comprehensive tests all exported AEGUtils methods.
+ *
+ * @author Ryan R
+ */
+
 import {describe, expect, test} from "vitest";
+
 import {Ellipse} from "../../src/AEG/Ellipse";
 import {
     getEllipsePoints,
@@ -10,12 +17,6 @@ import {
 } from "../../src/AEG/AEGUtils";
 import {Point} from "../../src/AEG/Point";
 import {Rectangle} from "../../src/AEG/Rectangle";
-
-/**
- * Contains comprehensive tests all exported AEGUtils methods.
- *
- * @author Ryan R
- */
 
 const testRect: Rectangle = new Rectangle(new Point(0, 0), 10, 10);
 const testEllipse: Ellipse = new Ellipse(new Point(5, 5), 10, 10);

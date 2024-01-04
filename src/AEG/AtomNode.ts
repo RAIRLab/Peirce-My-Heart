@@ -1,6 +1,3 @@
-import {Point} from "./Point";
-import {Rectangle} from "./Rectangle";
-
 /**
  * Defines an Atom.
  * Atoms are propositions in Peirce's AEG system.
@@ -9,6 +6,10 @@ import {Rectangle} from "./Rectangle";
  * @author Ryan R
  * @author Anusha Tiwari
  */
+
+import {Point} from "./Point";
+import {Rectangle} from "./Rectangle";
+
 export class AtomNode {
     /**
      * Proposition of this AtomNode.
