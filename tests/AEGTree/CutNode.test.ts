@@ -1,18 +1,18 @@
+/**
+ * Contains comprehensive tests on the CutNode class.
+ *
+ * @author Ryan R
+ */
+import {describe, expect, test} from "vitest";
+
 import {AtomNode} from "../../src/AEG/AtomNode";
 import {CutNode} from "../../src/AEG/CutNode";
-import {describe, expect, test} from "vitest";
 import {Ellipse} from "../../src/AEG/Ellipse";
 import {Point} from "../../src/AEG/Point";
 
 const origin = new Point(0, 0);
 const testCenter = new Point(5, 5);
 const testEllipse = new Ellipse(testCenter, 5, 5);
-
-/**
- * Contains comprehensive tests on the CutNode class.
- *
- * @author Ryan R
- */
 
 describe("CutNode constructor soliloquy:", () => {
     const cNode: CutNode = new CutNode(testEllipse);

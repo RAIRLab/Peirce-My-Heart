@@ -1,3 +1,10 @@
+/**
+ * Collection of methods for move, copy, and delete tools.
+ *
+ * @author Dawn Moore
+ * @author Anusha Tiwari
+ */
+
 import {AEGTree} from "../AEG/AEGTree";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
@@ -6,13 +13,6 @@ import {Ellipse} from "../AEG/Ellipse";
 import {offset} from "./DragTool";
 import {Point} from "../AEG/Point";
 import {TreeContext} from "../TreeContext";
-
-/**
- * Collection of methods for move, copy, and delete tools.
- *
- * @author Dawn Moore
- * @author Anusha Tiwari
- */
 
 const modeElm: HTMLSelectElement = <HTMLSelectElement>document.getElementById("mode");
 

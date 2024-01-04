@@ -1,10 +1,11 @@
-import {AEGTree} from "../AEG/AEGTree";
-import {TreeContext} from "../TreeContext";
-
 /**
  * Defines a single step in a proof.
  * @author Anusha Tiwari
  */
+
+import {AEGTree} from "../AEG/AEGTree";
+import {TreeContext} from "../TreeContext";
+
 export class ProofNode {
     /**
      * The AEGTree at this proof step.
