@@ -11,13 +11,6 @@ import {proofString, treeString} from "./index";
 import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 import {Tool, TreeContext} from "./TreeContext";
 
-import {AEGTree} from "./AEG/AEGTree";
-import {loadFile} from "./AEG-IO";
-import {ProofNode} from "./Proof/ProofNode";
-import {proofString, treeString} from "./index";
-import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
-import {Tool, TreeContext} from "./TreeContext";
-
 //True for Draw Mode, false for Proof Mode.
 let drawMode = true;
 
