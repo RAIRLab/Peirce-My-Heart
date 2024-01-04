@@ -16,8 +16,6 @@ import {ProofNode} from "../Proof/ProofNode";
 import {reInsertNode} from "../SharedToolUtils/EditModeUtils";
 import {TreeContext} from "../TreeContext";
 
-
-
 //Point the user has recently clicked.
 let currentPoint: Point;
 

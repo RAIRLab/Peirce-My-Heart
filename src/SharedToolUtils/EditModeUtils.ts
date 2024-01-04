@@ -13,8 +13,6 @@ import {offset} from "./DragTool";
 import {Point} from "../AEG/Point";
 import {TreeContext} from "../TreeContext";
 
-
-
 const modeElm: HTMLSelectElement = <HTMLSelectElement>document.getElementById("mode");
 
 /**

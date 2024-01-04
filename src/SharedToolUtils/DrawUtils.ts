@@ -14,7 +14,6 @@ import {legalColor, placedColor} from "../Themes";
 import {Point} from "../AEG/Point";
 import {TreeContext} from "../TreeContext";
 
-
 //Setting up Canvas...
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
 const res: CanvasRenderingContext2D | null = canvas.getContext("2d");

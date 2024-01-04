@@ -1,14 +1,22 @@
-
 /**
  * @file Provides utilities for extracting important colors for the application from the CSS themes.
  * @author James Oswald
  */
+
+import {themeChange} from "theme-change";
 
 import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 import {TreeContext} from "./TreeContext";
 
 //Next to the save button.
 const themeSelector: HTMLSelectElement = <HTMLSelectElement>document.getElementById("theme-select");
+
+//Initialize the theme-change library.
+themeChange();
+
+let legalColorStr: string = cssVar("--good-placement");
+let illegalColorStr: string = cssVar("--bad-placement");
+let placedColorStr: string = cssVar("--canvas-items");
 
 /**
  * Computes the value of an incoming variable from a CSS Style Sheet.
@@ -19,10 +27,6 @@ const themeSelector: HTMLSelectElement = <HTMLSelectElement>document.getElementB
 function cssVar(varName: string): string {
     return getComputedStyle(document.body).getPropertyValue(varName);
 }
-
-let legalColorStr: string = cssVar("--good-placement");
-let illegalColorStr: string = cssVar("--bad-placement");
-let placedColorStr: string = cssVar("--canvas-items");
 
 /**
  * Redraws the canvas and updates the HTML states.

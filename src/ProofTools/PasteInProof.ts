@@ -10,7 +10,6 @@ import {getCurrentProofTree} from "./ProofToolUtils";
 import {ProofNode} from "../Proof/ProofNode";
 import {TreeContext} from "../TreeContext";
 
-
 //AEG in question.
 let currentGraph: CutNode;
 

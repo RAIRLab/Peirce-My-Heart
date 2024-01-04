@@ -1,4 +1,5 @@
 /**
+ * @file
  * Contains methods for deleting one node at a time.
  *
  * When it is said that a node is "removed" in the documentation,

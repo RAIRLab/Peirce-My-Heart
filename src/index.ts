@@ -359,80 +359,79 @@ function mouseEnterHandler(): void {
  * @param event Incoming MouseEvent.
  */
 function mouseDownHandler(event: MouseEvent): void {
-    switch (TreeContext.toolState) {
-        case Tool.cutTool:
-            CutTool.cutMouseDown(event);
-            break;
-        case Tool.atomTool:
-            AtomTool.atomMouseDown(event);
-            break;
-        case Tool.dragTool:
-            DragTool.dragMouseDown(event);
-            break;
-        case Tool.moveSingleTool:
-            MoveSingleTool.moveSingleMouseDown(event);
-            break;
-        case Tool.moveMultiTool:
-            MoveMultiTool.moveMultiMouseDown(event);
-            break;
-        case Tool.copySingleTool:
-            CopySingleTool.copySingleMouseDown(event);
-            break;
-        case Tool.copyMultiTool:
-            CopyMultiTool.copyMultiMouseDown(event);
-            break;
-        case Tool.deleteSingleTool:
-            DeleteSingleTool.deleteSingleMouseDown(event);
-            break;
-        case Tool.deleteMultiTool:
-            DeleteMultiTool.deleteMultiMouseDown(event);
-            break;
-        case Tool.resizeTool:
-            DrawResizeTool.drawResizeMouseDown(event);
-            break;
-        case Tool.copyFromDrawTool:
-            CopyFromDraw.copyFromDrawMouseDown(event);
-            break;
-        case Tool.pasteInProofTool:
-            PasteInProof.pasteInProofMouseDown();
-            break;
-        case Tool.doubleCutInsertionTool:
-            DoubleCutInsertionTool.doubleCutInsertionMouseDown(event);
-            break;
-        case Tool.doubleCutDeletionTool:
-            DoubleCutDeletionTool.doubleCutDeletionMouseDown(event);
-            break;
-        case Tool.insertionTool:
-            InsertionTool.insertionMouseDown(event);
-            break;
-        case Tool.erasureTool:
-            ErasureTool.erasureMouseDown(event);
-            break;
-        case Tool.proofMoveSingleTool:
-            ProofMoveSingleTool.proofMoveSingleMouseDown(event);
-            break;
-        case Tool.proofMoveMultiTool:
-            ProofMoveMultiTool.proofMoveMultiMouseDown(event);
-            break;
-        case Tool.proofResizeTool:
-            ProofResizeTool.proofResizeMouseDown(event);
-            break;
-        case Tool.iterationTool:
-            IterationTool.iterationMouseDown(event);
-            break;
-        case Tool.deiterationTool:
-            DeiterationTool.deiterationMouseDown(event);
-            break;
-        case Tool.clearProofTool:
-            ClearProofTool.clearProofMouseDown();
-            break;
-        case Tool.clearTool:
-            ClearTool.clearMouseDown();
-            break;
-        default:
-            break;
+    if (event.button === 0) {
+        switch (TreeContext.toolState) {
+            case Tool.cutTool:
+                CutTool.cutMouseDown(event);
+                break;
+            case Tool.atomTool:
+                AtomTool.atomMouseDown(event);
+                break;
+            case Tool.dragTool:
+                DragTool.dragMouseDown(event);
+                break;
+            case Tool.moveSingleTool:
+                MoveSingleTool.moveSingleMouseDown(event);
+                break;
+            case Tool.moveMultiTool:
+                MoveMultiTool.moveMultiMouseDown(event);
+                break;
+            case Tool.copySingleTool:
+                CopySingleTool.copySingleMouseDown(event);
+                break;
+            case Tool.copyMultiTool:
+                CopyMultiTool.copyMultiMouseDown(event);
+                break;
+            case Tool.deleteSingleTool:
+                DeleteSingleTool.deleteSingleMouseDown(event);
+                break;
+            case Tool.deleteMultiTool:
+                DeleteMultiTool.deleteMultiMouseDown(event);
+                break;
+            case Tool.resizeTool:
+                DrawResizeTool.drawResizeMouseDown(event);
+                break;
+            case Tool.copyFromDrawTool:
+                CopyFromDraw.copyFromDrawMouseDown(event);
+                break;
+            case Tool.pasteInProofTool:
+                PasteInProof.pasteInProofMouseDown();
+                break;
+            case Tool.doubleCutInsertionTool:
+                DoubleCutInsertionTool.doubleCutInsertionMouseDown(event);
+                break;
+            case Tool.doubleCutDeletionTool:
+                DoubleCutDeletionTool.doubleCutDeletionMouseDown(event);
+                break;
+            case Tool.insertionTool:
+                InsertionTool.insertionMouseDown(event);
+                break;
+            case Tool.erasureTool:
+                ErasureTool.erasureMouseDown(event);
+                break;
+            case Tool.proofMoveSingleTool:
+                ProofMoveSingleTool.proofMoveSingleMouseDown(event);
+                break;
+            case Tool.proofMoveMultiTool:
+                ProofMoveMultiTool.proofMoveMultiMouseDown(event);
+                break;
+            case Tool.proofResizeTool:
+                ProofResizeTool.proofResizeMouseDown(event);
+                break;
+            case Tool.iterationTool:
+                IterationTool.iterationMouseDown(event);
+                break;
+            case Tool.deiterationTool:
+                DeiterationTool.deiterationMouseDown(event);
+                break;
+            case Tool.clearProofTool:
+                ClearProofTool.clearProofMouseDown();
+                break;
+            default:
+                break;
+        }
+        hasMouseDown = true;
     }
-    hasMouseDown = true;
 }
 
 /**
@@ -520,80 +519,79 @@ function mouseMoveHandler(event: MouseEvent): void {
  * @param event Incoming MouseEvent.
  */
 function mouseUpHandler(event: MouseEvent): void {
-    switch (TreeContext.toolState) {
-        case Tool.cutTool:
-            CutTool.cutMouseUp(event);
-            break;
-        case Tool.atomTool:
-            AtomTool.atomMouseUp(event);
-            break;
-        case Tool.dragTool:
-            DragTool.dragMouseUp();
-            break;
-        case Tool.moveSingleTool:
-            MoveSingleTool.moveSingleMouseUp(event);
-            break;
-        case Tool.moveMultiTool:
-            MoveMultiTool.moveMultiMouseUp(event);
-            break;
-        case Tool.copySingleTool:
-            CopySingleTool.copySingleMouseUp(event);
-            break;
-        case Tool.copyMultiTool:
-            CopyMultiTool.copyMultiMouseUp(event);
-            break;
-        case Tool.deleteSingleTool:
-            DeleteSingleTool.deleteSingleMouseUp(event);
-            break;
-        case Tool.deleteMultiTool:
-            DeleteMultiTool.deleteMultiMouseUp(event);
-            break;
-        case Tool.resizeTool:
-            DrawResizeTool.drawResizeMouseUp(event);
-            break;
-        case Tool.copyFromDrawTool:
-            CopyFromDraw.copyFromDrawMouseUp();
-            break;
-        case Tool.pasteInProofTool:
-            PasteInProof.pasteInProofMouseUp();
-            break;
-        case Tool.doubleCutInsertionTool:
-            DoubleCutInsertionTool.doubleCutInsertionMouseUp(event);
-            break;
-        case Tool.doubleCutDeletionTool:
-            DoubleCutDeletionTool.doubleCutDeletionMouseUp(event);
-            break;
-        case Tool.insertionTool:
-            InsertionTool.insertionMouseUp(event);
-            break;
-        case Tool.erasureTool:
-            ErasureTool.erasureMouseUp(event);
-            break;
-        case Tool.proofMoveSingleTool:
-            ProofMoveSingleTool.proofMoveSingleMouseUp(event);
-            break;
-        case Tool.proofMoveMultiTool:
-            ProofMoveMultiTool.proofMoveMultiMouseUp(event);
-            break;
-        case Tool.proofResizeTool:
-            ProofResizeTool.proofResizeMouseUp(event);
-            break;
-        case Tool.iterationTool:
-            IterationTool.iterationMouseUp(event);
-            break;
-        case Tool.deiterationTool:
-            DeiterationTool.deiterationMouseUp(event);
-            break;
-        case Tool.clearProofTool:
-            ClearProofTool.clearProofMouseUp();
-            break;
-        case Tool.clearTool:
-            ClearTool.clearMouseUp();
-            break;
-        default:
-            break;
+    if (event.button === 0) {
+        switch (TreeContext.toolState) {
+            case Tool.cutTool:
+                CutTool.cutMouseUp(event);
+                break;
+            case Tool.atomTool:
+                AtomTool.atomMouseUp(event);
+                break;
+            case Tool.dragTool:
+                DragTool.dragMouseUp();
+                break;
+            case Tool.moveSingleTool:
+                MoveSingleTool.moveSingleMouseUp(event);
+                break;
+            case Tool.moveMultiTool:
+                MoveMultiTool.moveMultiMouseUp(event);
+                break;
+            case Tool.copySingleTool:
+                CopySingleTool.copySingleMouseUp(event);
+                break;
+            case Tool.copyMultiTool:
+                CopyMultiTool.copyMultiMouseUp(event);
+                break;
+            case Tool.deleteSingleTool:
+                DeleteSingleTool.deleteSingleMouseUp(event);
+                break;
+            case Tool.deleteMultiTool:
+                DeleteMultiTool.deleteMultiMouseUp(event);
+                break;
+            case Tool.resizeTool:
+                DrawResizeTool.drawResizeMouseUp(event);
+                break;
+            case Tool.copyFromDrawTool:
+                CopyFromDraw.copyFromDrawMouseUp();
+                break;
+            case Tool.pasteInProofTool:
+                PasteInProof.pasteInProofMouseUp();
+                break;
+            case Tool.doubleCutInsertionTool:
+                DoubleCutInsertionTool.doubleCutInsertionMouseUp(event);
+                break;
+            case Tool.doubleCutDeletionTool:
+                DoubleCutDeletionTool.doubleCutDeletionMouseUp(event);
+                break;
+            case Tool.insertionTool:
+                InsertionTool.insertionMouseUp(event);
+                break;
+            case Tool.erasureTool:
+                ErasureTool.erasureMouseUp(event);
+                break;
+            case Tool.proofMoveSingleTool:
+                ProofMoveSingleTool.proofMoveSingleMouseUp(event);
+                break;
+            case Tool.proofMoveMultiTool:
+                ProofMoveMultiTool.proofMoveMultiMouseUp(event);
+                break;
+            case Tool.proofResizeTool:
+                ProofResizeTool.proofResizeMouseUp(event);
+                break;
+            case Tool.iterationTool:
+                IterationTool.iterationMouseUp(event);
+                break;
+            case Tool.deiterationTool:
+                DeiterationTool.deiterationMouseUp(event);
+                break;
+            case Tool.clearProofTool:
+                ClearProofTool.clearProofMouseUp();
+                break;
+            default:
+                break;
+        }
+        hasMouseDown = false;
     }
-    hasMouseDown = false;
 }
 
 /**

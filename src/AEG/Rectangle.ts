@@ -1,13 +1,14 @@
-import {Ellipse} from "./Ellipse";
-import {Point} from "./Point";
-import {pointInRect, shapeContains, shapesOverlap} from "./AEGUtils";
-
 /**
  * Defines a Rectangle.
  *
  * @author Ryan R
  * @author Anusha Tiwari
  */
+
+import {Ellipse} from "./Ellipse";
+import {Point} from "./Point";
+import {pointInRect, shapeContains, shapesOverlap} from "./AEGUtils";
+
 export class Rectangle {
     /**
      * Starting (top left) vertex of this Rectangle.

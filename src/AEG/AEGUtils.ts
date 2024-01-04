@@ -7,7 +7,6 @@ import {Ellipse} from "./Ellipse";
 import {Point} from "./Point";
 import {Rectangle} from "./Rectangle";
 
-
 /**
  * Checks whether one incoming shape overlaps another incoming shape.
  *

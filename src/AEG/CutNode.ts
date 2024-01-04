@@ -15,7 +15,6 @@ import {shapeContains} from "./AEGUtils";
  * Cuts are negations in Peirce's AEG system.
  * Cuts may be empty, and cuts may contain one or more AtomNodes and CutNodes as children.
  * Both are valid cuts.
- *
  */
 export class CutNode {
     /**

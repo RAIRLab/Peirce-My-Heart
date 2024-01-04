@@ -83,7 +83,7 @@ export function cutMouseMove(event: MouseEvent): void {
  * @param event Incoming MouseEvent.
  */
 export function cutMouseUp(event: MouseEvent): void {
-    changeCursorStyle("cursor: default");
+    changeCursorStyle("cursor: crosshair");
     const currentPoint: Point = new Point(event.clientX - offset.x, event.clientY - offset.y);
     const newCut: CutNode = new CutNode(createEllipse(startingPoint, currentPoint));
     if (

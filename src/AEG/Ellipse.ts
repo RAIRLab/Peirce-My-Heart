@@ -1,12 +1,13 @@
-import {Point} from "./Point";
-import {Rectangle} from "./Rectangle";
-import {shapeContains, shapesOverlap, signedDistanceFromEllipse} from "./AEGUtils";
-
 /**
  * Defines an Ellipse in terms of a center Point and two radii.
  * @author Ryan R
  * @author Anusha Tiwari
  */
+
+import {Point} from "./Point";
+import {Rectangle} from "./Rectangle";
+import {shapeContains, shapesOverlap, signedDistanceFromEllipse} from "./AEGUtils";
+
 export class Ellipse {
     /**
      * Center of this Ellipse.

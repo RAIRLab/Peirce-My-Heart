@@ -9,8 +9,6 @@ import {Point} from "../AEG/Point";
 import {redrawProof, redrawTree} from "./DrawUtils";
 import {TreeContext} from "../TreeContext";
 
-
-
 //Original Point later Points will be compared to.
 let originPoint: Point;
 
