@@ -1,3 +1,11 @@
+/**
+ * Contains methods for the insertion inference rule.
+ *
+ * Nodes are considered legal if they are graphs and able to be placed.
+ *
+ * @author Anusha Tiwari
+ */
+
 import * as EditModeUtils from "../SharedToolUtils/EditModeUtils";
 import {AEGTree} from "../AEG/AEGTree";
 import {AtomNode} from "../AEG/AtomNode";
@@ -13,14 +21,6 @@ import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
 import {ProofNode} from "../Proof/ProofNode";
 import {TreeContext} from "../TreeContext";
-
-/**
- * Contains methods for the insertion inference rule.
- *
- * Nodes are considered legal if they are graphs and able to be placed.
- *
- * @author Anusha Tiwari
- */
 
 //Node in question.
 let currentNode: CutNode | AtomNode;

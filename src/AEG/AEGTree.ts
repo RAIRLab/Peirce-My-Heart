@@ -1,10 +1,3 @@
-import {AtomNode} from "./AtomNode";
-import {CutNode} from "./CutNode";
-import {Ellipse} from "./Ellipse";
-import {Point} from "./Point";
-import {Rectangle} from "./Rectangle";
-import {shapesIntersect, shapesOverlap} from "./AEGUtils";
-
 /**
  * Represents an AEG tree structure.
  * This tree is a hierarchical composition of AtomNodes and CutNodes.
@@ -13,6 +6,14 @@ import {shapesIntersect, shapesOverlap} from "./AEGUtils";
  * @author Ryan R
  * @author Anusha Tiwari
  */
+
+import {AtomNode} from "./AtomNode";
+import {CutNode} from "./CutNode";
+import {Ellipse} from "./Ellipse";
+import {Point} from "./Point";
+import {Rectangle} from "./Rectangle";
+import {shapesIntersect, shapesOverlap} from "./AEGUtils";
+
 export class AEGTree {
     /**
      * The Sheet of Assertion of this AEGTree.

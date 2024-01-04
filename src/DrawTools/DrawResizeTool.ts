@@ -1,13 +1,3 @@
-import {AtomNode} from "../AEG/AtomNode";
-import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
-import {CutNode} from "../AEG/CutNode";
-import {determineDirection, drawCut, redrawTree} from "../SharedToolUtils/DrawUtils";
-import {ellipseLargeEnough, resizeCut} from "../SharedToolUtils/EditModeUtils";
-import {illegalColor, legalColor} from "../Themes";
-import {offset} from "../SharedToolUtils/DragTool";
-import {Point} from "../AEG/Point";
-import {TreeContext} from "../TreeContext";
-
 /**
  * Contains Draw Mode CutNode resizing methods.
  *
@@ -19,6 +9,16 @@ import {TreeContext} from "../TreeContext";
  *
  * @author Dawn Moore
  */
+
+import {AtomNode} from "../AEG/AtomNode";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
+import {CutNode} from "../AEG/CutNode";
+import {determineDirection, drawCut, redrawTree} from "../SharedToolUtils/DrawUtils";
+import {ellipseLargeEnough, resizeCut} from "../SharedToolUtils/EditModeUtils";
+import {illegalColor, legalColor} from "../Themes";
+import {offset} from "../SharedToolUtils/DragTool";
+import {Point} from "../AEG/Point";
+import {TreeContext} from "../TreeContext";
 
 //First Point the user clicks.
 let startingPoint: Point;

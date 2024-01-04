@@ -1,3 +1,13 @@
+/**
+ * Contains methods for iterating nodes and subgraphs on the Proof Mode canvas.
+ *
+ * When a node's position is described as being valid or not,
+ * This means that we are determining if it can currently be inserted into the AEGTree without intersection.
+ *
+ * @author Dawn Moore
+ * @author Anusha Tiwari
+ */
+
 import * as EditModeUtils from "../SharedToolUtils/EditModeUtils";
 import {AEGTree} from "../AEG/AEGTree";
 import {AtomNode} from "../AEG/AtomNode";
@@ -15,16 +25,6 @@ import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
 import {ProofNode} from "../Proof/ProofNode";
 import {TreeContext} from "../TreeContext";
-
-/**
- * Contains methods for iterating nodes and subgraphs on the Proof Mode canvas.
- *
- * When a node's position is described as being valid or not,
- * This means that we are determining if it can currently be inserted into the AEGTree without intersection.
- *
- * @author Dawn Moore
- * @author Anusha Tiwari
- */
 
 //First Point the user clicks.
 let startingPoint: Point;

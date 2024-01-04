@@ -1,13 +1,3 @@
-import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
-import {createEllipse, ellipseLargeEnough} from "../SharedToolUtils/EditModeUtils";
-import {CutNode} from "../AEG/CutNode";
-import {drawCut, drawGuidelines, redrawTree} from "../SharedToolUtils/DrawUtils";
-import {Ellipse} from "../AEG/Ellipse";
-import {illegalColor, legalColor} from "../Themes";
-import {offset} from "../SharedToolUtils/DragTool";
-import {Point} from "../AEG/Point";
-import {TreeContext} from "../TreeContext";
-
 /**
  * Contains methods for manipulating CutNodes on the HTML canvas.
  *
@@ -18,6 +8,16 @@ import {TreeContext} from "../TreeContext";
  * @author James Oswald
  * @author Anusha Tiwari
  */
+
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
+import {createEllipse, ellipseLargeEnough} from "../SharedToolUtils/EditModeUtils";
+import {CutNode} from "../AEG/CutNode";
+import {drawCut, drawGuidelines, redrawTree} from "../SharedToolUtils/DrawUtils";
+import {Ellipse} from "../AEG/Ellipse";
+import {illegalColor, legalColor} from "../Themes";
+import {offset} from "../SharedToolUtils/DragTool";
+import {Point} from "../AEG/Point";
+import {TreeContext} from "../TreeContext";
 
 //Checkbox next to "Show Guidelines:" in Draw Mode' Cut Tool toolbar.
 const showRectElm: HTMLInputElement = <HTMLInputElement>document.getElementById("showRect");

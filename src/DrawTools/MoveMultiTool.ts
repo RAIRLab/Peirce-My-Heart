@@ -1,13 +1,3 @@
-import * as EditModeUtils from "../SharedToolUtils/EditModeUtils";
-import {AtomNode} from "../AEG/AtomNode";
-import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
-import {CutNode} from "../AEG/CutNode";
-import {drawAtom, highlightNode, redrawTree} from "../SharedToolUtils/DrawUtils";
-import {illegalColor, legalColor} from "../Themes";
-import {offset} from "../SharedToolUtils/DragTool";
-import {Point} from "../AEG/Point";
-import {TreeContext} from "../TreeContext";
-
 /**
  * Contains methods for moving one or more nodes at a time.
  *
@@ -17,6 +7,16 @@ import {TreeContext} from "../TreeContext";
  * @author Dawn Moore
  * @author Anusha Tiwari
  */
+
+import * as EditModeUtils from "../SharedToolUtils/EditModeUtils";
+import {AtomNode} from "../AEG/AtomNode";
+import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
+import {CutNode} from "../AEG/CutNode";
+import {drawAtom, highlightNode, redrawTree} from "../SharedToolUtils/DrawUtils";
+import {illegalColor, legalColor} from "../Themes";
+import {offset} from "../SharedToolUtils/DragTool";
+import {Point} from "../AEG/Point";
+import {TreeContext} from "../TreeContext";
 
 //First Point the user clicks.
 let startingPoint: Point;

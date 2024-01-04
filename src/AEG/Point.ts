@@ -4,6 +4,7 @@
  * @author Ryan R
  * @author Anusha Tiwari
  */
+
 export class Point {
     /**
      * x-coordinate of this Point.

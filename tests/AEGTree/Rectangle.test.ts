@@ -1,13 +1,14 @@
-import {describe, expect, test} from "vitest";
-import {Ellipse} from "../../src/AEG/Ellipse";
-import {Point} from "../../src/AEG/Point";
-import {Rectangle} from "../../src/AEG/Rectangle";
-
 /**
  * Contains comprehensive tests on the Rectangle class.
  *
  * @author Ryan R
  */
+
+import {describe, expect, test} from "vitest";
+
+import {Ellipse} from "../../src/AEG/Ellipse";
+import {Point} from "../../src/AEG/Point";
+import {Rectangle} from "../../src/AEG/Rectangle";
 
 const origin: Point = new Point(0, 0);
 const testRect: Rectangle = new Rectangle(origin, 10, 10);

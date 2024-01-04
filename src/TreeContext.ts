@@ -1,12 +1,12 @@
-import {AEGTree} from "./AEG/AEGTree";
-import {appendStep, deleteButtons} from "./Proof/ProofHistory";
-import {ProofNode} from "./Proof/ProofNode";
-
 /**
  * Describes the state of the AEGTree and other related attributes.
  *
  * @author Anusha Tiwari
  */
+
+import {AEGTree} from "./AEG/AEGTree";
+import {appendStep, deleteButtons} from "./Proof/ProofHistory";
+import {ProofNode} from "./Proof/ProofNode";
 
 /**
  * Represents the current tool in use.
