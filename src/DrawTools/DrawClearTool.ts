@@ -15,7 +15,7 @@ let legalNode: boolean;
 /**
  * Clears the canvas and highlights all nodes on it as the illegal color.
  */
-export function clearMouseDown(): void {
+export function drawClearMouseDown(): void {
     legalNode = true;
     cleanCanvas();
     highlightNode(TreeContext.tree.sheet, illegalColor());
@@ -24,7 +24,7 @@ export function clearMouseDown(): void {
 /**
  * Clears the proofs history's buttons and redraws the proof.
  */
-export function clearMouseUp(): void {
+export function drawClearMouseUp(): void {
     if (legalNode) {
         TreeContext.tree = new AEGTree();
         redrawTree(TreeContext.tree);
@@ -34,7 +34,7 @@ export function clearMouseUp(): void {
 /**
  * Redraws the proof.
  */
-export function clearMouseOut(): void {
+export function drawClearMouseOut(): void {
     legalNode = false;
     redrawTree(TreeContext.tree);
 }
