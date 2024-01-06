@@ -3,6 +3,7 @@
  * When a node's position is described as being valid or not,
  * This means that we are determining if it can currently be inserted into the AEGTree without
  * intersection.
+ *
  * @author Dawn Moore
  * @author Anusha Tiwari
  */

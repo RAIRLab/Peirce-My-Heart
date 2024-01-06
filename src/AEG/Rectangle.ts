@@ -1,5 +1,5 @@
 /**
- * Defines a Rectangle.
+ * @file Defines a Rectangle.
  *
  * @author Ryan R
  * @author Anusha Tiwari

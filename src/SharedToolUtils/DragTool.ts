@@ -1,5 +1,6 @@
 /**
- * @file Collection of methods for drag related tools.
+ * @file Contains methods for dragging in Draw Mode and Proof Mode.
+ *
  * @author Dawn Moore
  * @author Anusha Tiwari
  */

@@ -1,5 +1,6 @@
 /**
  * @file Collection of methods used for drawing on the HTML canvas.
+ *
  * @author Dawn Moore
  * @author Anusha Tiwari
  */

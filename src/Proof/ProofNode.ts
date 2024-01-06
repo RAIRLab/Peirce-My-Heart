@@ -1,5 +1,6 @@
 /**
- * @file contains the ProofNode class, which defines a single step in a proof.
+ * @file Contains the ProofNode class, which defines a single step in a proof.
+ *
  * @author Anusha Tiwari
  */
 

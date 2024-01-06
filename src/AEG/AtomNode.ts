@@ -1,5 +1,6 @@
 /**
  * @file Contains the AtomNode class, which defines an atom in Peirce's AEG system.
+ *
  * @author Ryan R
  * @author Anusha Tiwari
  */

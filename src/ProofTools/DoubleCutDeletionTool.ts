@@ -1,5 +1,6 @@
 /**
  * @file Contains methods for deleting two CutNodes at once on the Proof Mode HTML canvas.
+ *
  * @author Dawn Moore
  * @author Anusha Tiwari
  */

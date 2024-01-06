@@ -1,5 +1,6 @@
 /**
  * @file Provides utilities for extracting important colors for the application from the CSS themes.
+ *
  * @author James Oswald
  */
 

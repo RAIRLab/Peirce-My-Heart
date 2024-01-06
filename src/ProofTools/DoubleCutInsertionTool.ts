@@ -1,5 +1,6 @@
 /**
- * Contains methods for inserting two CutNodes at once on the Proof Mode HTML canvas.
+ * @file Contains methods for inserting two CutNodes at once on the Proof Mode HTML canvas.
+ *
  * @author Dawn Moore
  * @author James Oswald
  * @author Anusha Tiwari

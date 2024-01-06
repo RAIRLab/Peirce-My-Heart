@@ -1,5 +1,6 @@
 /**
- * Defines an Ellipse in terms of a center Point and two radii.
+ * @file Defines an Ellipse in terms of a center Point and two radii.
+ *
  * @author Ryan R
  * @author Anusha Tiwari
  */

@@ -1,5 +1,6 @@
 /**
  * @file Contains methods for iterating nodes and subgraphs on the Proof Mode canvas.
+ *
  * @author Dawn Moore
  * @author Anusha Tiwari
  */

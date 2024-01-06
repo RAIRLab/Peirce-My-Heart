@@ -1,5 +1,6 @@
 /**
  * @file Clears the draw mode canvas on click.
+ *
  * @author James Oswald
  */
 

@@ -1,5 +1,6 @@
 /**
  * @file Contains methods for clearing the Proof Mode HTML canvas.
+ *
  * @author Anusha Tiwari
  */
 

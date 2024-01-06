@@ -1,6 +1,5 @@
 /**
- * @file
- * Contains Proof Mode CutNode resizing methods.
+ * @file Contains Proof Mode CutNode resizing methods.
  *
  * When it is said that a node is "removed" in the documentation,
  * this means that it is removed from the Draw Mode AEGTree but visually is still present.

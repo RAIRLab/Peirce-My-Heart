@@ -1,5 +1,5 @@
 /**
- * Contains comprehensive unit tests on the Point class.
+ * @file Contains comprehensive unit tests on the Point class.
  *
  * @author Ryan R
  */

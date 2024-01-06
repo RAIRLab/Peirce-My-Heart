@@ -1,5 +1,6 @@
 /**
  * @file Contains the CutNode class, which defines a cut in Peirce's AEG system.
+ *
  * @author James Oswald
  * @author Ryan R
  * @author Anusha Tiwari

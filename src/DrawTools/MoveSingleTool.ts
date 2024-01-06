@@ -1,6 +1,5 @@
 /**
- * @file
- * Contains methods for moving one node at a time.
+ * @file Contains methods for moving one node at a time.
  *
  * When a node's position is described as being valid or not, this means that we are determining
  * if it can currently be inserted into the AEGTree without intersection.

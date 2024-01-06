@@ -1,5 +1,6 @@
 /**
  * @file Collection of methods used for Proof Mode tools.
+ *
  * @author Dawn Moore
  * @author Anusha Tiwari
  */

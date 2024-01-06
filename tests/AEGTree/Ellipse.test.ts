@@ -1,5 +1,5 @@
 /**
- * Contains comprehensive tests on the Ellipse class.
+ * @file Contains comprehensive tests on the Ellipse class.
  *
  * @author Ryan R
  */

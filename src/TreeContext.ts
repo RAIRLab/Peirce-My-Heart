@@ -1,5 +1,6 @@
 /**
  * @file Describes the state of the AEGTree and other related attributes.
+ *
  * @author Anusha Tiwari
  */
 

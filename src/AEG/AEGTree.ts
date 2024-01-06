@@ -1,5 +1,6 @@
 /**
  * @file Contains the class representing an Alpha Expression Graph (AEG).
+ *
  * @author Ryan R
  * @author Anusha Tiwari
  */

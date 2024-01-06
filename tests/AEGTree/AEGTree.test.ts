@@ -1,5 +1,5 @@
 /**
- * Contains comprehensive tests on the AEGTree class.
+ * @file Contains comprehensive tests on the AEGTree class.
  *
  * @author Ryan R
  */

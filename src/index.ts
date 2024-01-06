@@ -1,5 +1,6 @@
 /**
- * @file Main application code, sets up event listeners, context, window globals
+ * @file Main application code. Sets up event listeners, context and window globals.
+ *
  * @author Dawn Moore
  * @author James Oswald
  * @author Ryan R

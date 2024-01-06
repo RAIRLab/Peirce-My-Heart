@@ -1,5 +1,5 @@
 /**
- * Contains comprehensive tests on the CutNode class.
+ * @file Contains comprehensive tests on the CutNode class.
  *
  * @author Ryan R
  */
