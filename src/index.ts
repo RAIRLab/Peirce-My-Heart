@@ -19,8 +19,8 @@ import * as DrawClearTool from "./DrawTools/DrawClearTool";
 import * as DragTool from "./SharedToolUtils/DragTool";
 import * as AtomTool from "./DrawTools/AtomTool";
 import * as CutTool from "./DrawTools/CutTool";
-import * as MoveSingleTool from "./DrawTools/MoveSingleTool";
-import * as MoveMultiTool from "./DrawTools/MoveMultiTool";
+import * as DrawMoveSingleTool from "./DrawTools/DrawMoveSingleTool";
+import * as DrawMoveMultiTool from "./DrawTools/DrawMoveMultiTool";
 import * as CopySingleTool from "./DrawTools/CopySingleTool";
 import * as CopyMultiTool from "./DrawTools/CopyMultiTool";
 import * as DeleteSingleTool from "./DrawTools/DeleteSingleTool";
@@ -82,8 +82,8 @@ window.dragTool = Tool.dragTool;
 window.aegStringify = aegStringify;
 window.saveMode = saveMode;
 window.loadMode = loadMode;
-window.moveSingleTool = Tool.moveSingleTool;
-window.moveMultiTool = Tool.moveMultiTool;
+window.drawMoveSingleTool = Tool.drawMoveSingleTool;
+window.drawMoveMultiTool = Tool.drawMoveMultiTool;
 window.copySingleTool = Tool.copySingleTool;
 window.copyMultiTool = Tool.copyMultiTool;
 window.deleteSingleTool = Tool.deleteSingleTool;
@@ -116,8 +116,8 @@ declare global {
         saveMode: () => void;
         loadMode: () => void;
         aegStringify: (treeData: AEGTree | ProofNode[]) => string;
-        moveSingleTool: Tool;
-        moveMultiTool: Tool;
+        drawMoveSingleTool: Tool;
+        drawMoveMultiTool: Tool;
         copySingleTool: Tool;
         copyMultiTool: Tool;
         deleteSingleTool: Tool;
@@ -370,11 +370,11 @@ function mouseDownHandler(event: MouseEvent): void {
             case Tool.dragTool:
                 DragTool.dragMouseDown(event);
                 break;
-            case Tool.moveSingleTool:
-                MoveSingleTool.moveSingleMouseDown(event);
+            case Tool.drawMoveSingleTool:
+                DrawMoveSingleTool.drawMoveSingleMouseDown(event);
                 break;
-            case Tool.moveMultiTool:
-                MoveMultiTool.moveMultiMouseDown(event);
+            case Tool.drawMoveMultiTool:
+                DrawMoveMultiTool.drawMoveMultiMouseDown(event);
                 break;
             case Tool.copySingleTool:
                 CopySingleTool.copySingleMouseDown(event);
@@ -455,11 +455,11 @@ function mouseMoveHandler(event: MouseEvent): void {
             case Tool.dragTool:
                 DragTool.dragMouseMove(event);
                 break;
-            case Tool.moveSingleTool:
-                MoveSingleTool.moveSingleMouseMove(event);
+            case Tool.drawMoveSingleTool:
+                DrawMoveSingleTool.drawMoveSingleMouseMove(event);
                 break;
-            case Tool.moveMultiTool:
-                MoveMultiTool.moveMultiMouseMove(event);
+            case Tool.drawMoveMultiTool:
+                DrawMoveMultiTool.drawMoveMultiMouseMove(event);
                 break;
             case Tool.copySingleTool:
                 CopySingleTool.copySingleMouseMove(event);
@@ -533,11 +533,11 @@ function mouseUpHandler(event: MouseEvent): void {
             case Tool.dragTool:
                 DragTool.dragMouseUp();
                 break;
-            case Tool.moveSingleTool:
-                MoveSingleTool.moveSingleMouseUp(event);
+            case Tool.drawMoveSingleTool:
+                DrawMoveSingleTool.drawMoveSingleMouseUp(event);
                 break;
-            case Tool.moveMultiTool:
-                MoveMultiTool.moveMultiMouseUp(event);
+            case Tool.drawMoveMultiTool:
+                DrawMoveMultiTool.drawMoveMultiMouseUp(event);
                 break;
             case Tool.copySingleTool:
                 CopySingleTool.copySingleMouseUp(event);
@@ -614,11 +614,11 @@ function mouseOutHandler(): void {
         case Tool.dragTool:
             DragTool.dragMouseOut();
             break;
-        case Tool.moveSingleTool:
-            MoveSingleTool.moveSingleMouseOut();
+        case Tool.drawMoveSingleTool:
+            DrawMoveSingleTool.drawMoveSingleMouseOut();
             break;
-        case Tool.moveMultiTool:
-            MoveMultiTool.moveMultiMouseOut();
+        case Tool.drawMoveMultiTool:
+            DrawMoveMultiTool.drawMoveMultiMouseOut();
             break;
         case Tool.copySingleTool:
             CopySingleTool.copySingleMouseOut();

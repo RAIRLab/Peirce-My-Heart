@@ -1,5 +1,5 @@
 /**
- * @file Contains methods for moving one or more nodes at a time.
+ * @file Contains methods for moving one node at a time.
  *
  * When a node's position is described as being valid or not, this means that we are determining
  * if it can currently be inserted into the AEGTree without intersection.
@@ -8,11 +8,11 @@
  * @author Anusha Tiwari
  */
 
-import * as EditModeUtils from "../SharedToolUtils/EditModeUtils";
+import {alterAtom, alterCut} from "../SharedToolUtils/EditModeUtils";
 import {AtomNode} from "../AEG/AtomNode";
 import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
-import {drawAtom, highlightNode, redrawTree} from "../SharedToolUtils/DrawUtils";
+import {drawAtom, drawCut, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
@@ -29,15 +29,13 @@ let legalNode: boolean;
 
 /**
  * Sets startingPoint according to the coordinates given by the incoming MouseEvent.
- * Then sets currentNode to the lowest node containing startingPoint.
- * Then removes currentNode.
- * Then sets legality to true.
- * Then redraws the Draw Mode AEGTree.
+ * Then removes the lowest node containing startingPoint.
+ * Then reinserts its children.
  * Then highlights currentNode the legal color.
  *
  * @param event Incoming MouseEvent.
  */
-export function moveMultiMouseDown(event: MouseEvent): void {
+export function drawMoveSingleMouseDown(event: MouseEvent): void {
     startingPoint = new Point(event.x - offset.x, event.y - offset.y);
     currentNode = TreeContext.tree.getLowestNode(startingPoint);
     if (currentNode !== TreeContext.tree.sheet && currentNode !== null) {
@@ -46,40 +44,49 @@ export function moveMultiMouseDown(event: MouseEvent): void {
         if (currentParent !== null) {
             currentParent.remove(startingPoint);
         }
+
+        if (currentNode instanceof CutNode && currentNode.children.length !== 0) {
+            for (let i = 0; i < currentNode.children.length; i++) {
+                TreeContext.tree.insert(currentNode.children[i]);
+            }
+            currentNode.children = [];
+        }
         legalNode = true;
+
         redrawTree(TreeContext.tree);
-        highlightNode(currentNode, legalColor());
+        if (currentNode instanceof AtomNode) {
+            drawAtom(currentNode, legalColor(), true);
+        } else {
+            drawCut(currentNode as CutNode, legalColor());
+        }
     } else {
         legalNode = false;
     }
 }
 
 /**
- * Draws an altered currentNode according to the coordinates given by the incoming MouseEvent.
- * Then highlights currentNode according to the legality of it and its children's positions' validity.
+ * Alters currentNode's position according to the coordinates given by the incoming MouseEvent.
+ * Then redraws the Draw Mode AEGTree.
+ * Then highlights currentNode according to the legality of its position.
  *
  * @param event Incoming MouseEvent.
  */
-export function moveMultiMouseMove(event: MouseEvent): void {
+export function drawMoveSingleMouseMove(event: MouseEvent): void {
     if (legalNode) {
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
             event.y - startingPoint.y
         );
-
-        redrawTree(TreeContext.tree);
         if (currentNode instanceof CutNode) {
-            const color = EditModeUtils.validateChildren(
-                TreeContext.tree,
-                currentNode,
-                moveDifference
-            )
-                ? legalColor()
-                : illegalColor();
-            EditModeUtils.drawAltered(currentNode, color, moveDifference);
+            const tempCut: CutNode = alterCut(currentNode, moveDifference);
+            redrawTree(TreeContext.tree);
+            const color = TreeContext.tree.canInsert(tempCut) ? legalColor() : illegalColor();
+            drawCut(tempCut, color);
             determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
-        } else if (currentNode instanceof AtomNode) {
-            const tempAtom: AtomNode = EditModeUtils.alterAtom(currentNode, moveDifference);
+        } //If the node is an atom, make a temporary atom and check legality, drawing that.
+        else if (currentNode instanceof AtomNode) {
+            const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
+            redrawTree(TreeContext.tree);
             const color = TreeContext.tree.canInsert(tempAtom) ? legalColor() : illegalColor();
             drawAtom(tempAtom, color, true);
             determineAndChangeCursorStyle(color, "cursor: grabbing", "cursor: no-drop");
@@ -88,15 +95,13 @@ export function moveMultiMouseMove(event: MouseEvent): void {
 }
 
 /**
- * Sets currentNode according to the coordinates given by the incoming MouseEvent.
- * Then inserts currentNode into the Draw Mode AEGTree if the positions of it and all its children are legal.
- * Otherwise inserts the original currentNode.
- * Then sets legality to false.
- * Then redraws the Draw Mode AEGTree.
+ * Alters currentNode's position according to the coordinates given by the incoming MouseEvent.
+ * Then inserts currentNode if its altered position is valid.
+ * Otherwise reinserts the unaltered currentNode.
  *
  * @param event Incoming MouseEvent.
  */
-export function moveMultiMouseUp(event: MouseEvent): void {
+export function drawMoveSingleMouseUp(event: MouseEvent): void {
     changeCursorStyle("cursor: default");
     if (legalNode) {
         const moveDifference: Point = new Point(
@@ -104,30 +109,31 @@ export function moveMultiMouseUp(event: MouseEvent): void {
             event.y - startingPoint.y
         );
         if (currentNode instanceof CutNode) {
-            if (EditModeUtils.validateChildren(TreeContext.tree, currentNode, moveDifference)) {
-                EditModeUtils.insertChildren(currentNode, moveDifference);
+            const tempCut: CutNode = alterCut(currentNode, moveDifference);
+            if (TreeContext.tree.canInsert(tempCut)) {
+                TreeContext.tree.insert(tempCut);
             } else {
                 TreeContext.tree.insert(currentNode);
             }
         } else if (currentNode instanceof AtomNode) {
-            const tempAtom: AtomNode = EditModeUtils.alterAtom(currentNode, moveDifference);
+            const tempAtom: AtomNode = alterAtom(currentNode, moveDifference);
             if (TreeContext.tree.canInsert(tempAtom)) {
                 TreeContext.tree.insert(tempAtom);
             } else {
                 TreeContext.tree.insert(currentNode);
             }
         }
+        redrawTree(TreeContext.tree);
     }
-    redrawTree(TreeContext.tree);
     legalNode = false;
 }
 
 /**
- * Reinserts the original currentNode and all its children.
+ * Reinserts the original currentNode if legal.
  * Then sets legality to false.
  * Then redraws the canvas.
  */
-export function moveMultiMouseOut(): void {
+export function drawMoveSingleMouseOut(): void {
     changeCursorStyle("cursor: default");
     if (legalNode && currentNode !== null) {
         TreeContext.tree.insert(currentNode);
