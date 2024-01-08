@@ -37,7 +37,7 @@
     "@types/node": "20.10.7",
     "@types/wicg-file-system-access": "^2023.10.4",
     "gts": "^5.2.0",
-    "typedoc": "^0.25.4",
+    "typedoc": "^0.25.6",
     "typescript": "~5.3.3",
     "vite": "^5.0.11",
     "vite-plugin-singlefile": "^0.13.5",
