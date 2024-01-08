@@ -10,7 +10,7 @@
     <meta name="description" content="A graphical application for modeling Charles Peirce's alpha existential graph system. Includes the ability to construct, save, and load alpha existential graphs, as well as create, save, and load proofs."/>
     <meta name="author" content="Rensselaer Artificial Intelligence and Reasoning Laboratory"/>
     
-    <script type="module" crossorigin src="/Peirce-My-Heart/assets/index-xrx2MGAT.js"></script>
+    <script type="module" crossorigin src="/Peirce-My-Heart/assets/index-7-PBbzG5.js"></script>
     <link rel="stylesheet" crossorigin href="/Peirce-My-Heart/assets/index-j-oNHNFF.css">
   </head>
   <body>
@@ -28,9 +28,9 @@
       <p></p>
       <div id="DrawButtons">
         <div class="row">
-          <a href="./aeg.html" title="About AEG" class="toolButton">
-            <i class="fa fa-info" aria-hidden="true"></i>
-          </a>
+          <button type="button" onclick= "setTool(drawClearTool)" title="Clear Tool" class="toolButton">
+            <i class="fa fa-ban" aria-hidden="true"></i>
+          </button>
           <button type="button" onclick= "setTool(dragTool)" title="Drag Tool" class="toolButton">
             <i class="fa fa-hand-paper-o" aria-hidden="true"></i>
           </button>
@@ -44,10 +44,10 @@
           </button>
         </div>
         <div class = "row">
-          <button type="button" onclick="setTool(moveSingleTool)" title="Move Single Tool" class="toolButton">
+          <button type="button" onclick="setTool(drawMoveSingleTool)" title="Move Single Tool" class="toolButton">
             <i class="fa fa-mouse-pointer" aria-hidden="true"></i>
           </button>
-          <button type="button" onclick="setTool(moveMultiTool)" title="Move Multi Tool" class="toolButton">
+          <button type="button" onclick="setTool(drawMoveMultiTool)" title="Move Multi Tool" class="toolButton">
             <i class="fa fa-arrows" aria-hidden="true"></i>
           </button>
         </div>
@@ -78,7 +78,7 @@
       </div>
       <div id="ProofButtons">
         <div class="row">
-          <button type="button" onclick= "setTool(clearProofTool)" title="Clear Proof" class="toolButton">
+          <button type="button" onclick= "setTool(proofClearTool)" title="Clear Proof" class="toolButton">
             <i class="fa fa-ban" aria-hidden="true"></i>
           </button>
           <button type="button" onclick= "setTool(dragTool)" title="Drag Tool" class="toolButton">
@@ -139,7 +139,8 @@
         <div class="fileButton">
           <div class="toolSetting">
             <p>Theme:</p>
-          </div><select id="theme-select" name="theme-select" data-choose-theme>
+          </div>
+          <select id="theme-select" name="theme-select" data-choose-theme>
             <option value="">Nature</option>
             <option value="Wireframe">Wireframe</option>
             <option value="Dark-Wireframe">Dark-Wireframe</option>
@@ -148,9 +149,11 @@
             <option value="Vampire-Core">Vampire-Core</option>
             <option value="Peircing-the-Galaxy">Peircing-the-Galaxy</option>
             <option value="Ocean-Pearl">Ocean-Pearl</option>
-          </select><button type="button" onclick="saveMode()" title="Save File" class="toolButton">
+          </select>
+          <button type="button" onclick="saveMode()" title="Save File" class="toolButton">
             <i class="fa fa-floppy-o" aria-hidden="true"></i>
-          </button><button type="button" onclick="loadMode()" title="Load File" class="toolButton">
+          </button>
+          <button type="button" onclick="loadMode()" title="Load File" class="toolButton">
             <i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i>
           </button>
         </div>
