@@ -1,5 +1,5 @@
 /**
- * Contains comprehensive tests all exported AEGUtils methods.
+ * @file Contains comprehensive tests all exported AEGUtils methods.
  *
  * @author Ryan R
  */

@@ -1,8 +1,8 @@
 /**
- * Contains methods for copying and pasting one or more nodes at a time.
+ * @file Contains methods for copying and pasting one or more nodes at a time.
  *
- * When a node's position is described as being valid or not,
- * This means that we are determining if it can currently be inserted into the AEGTree without intersection.
+ * When a node's position is described as being valid or not, this means that we are determining
+ * if it can currently be inserted into the AEGTree without intersection.
  *
  * @author Dawn Moore
  * @author Anusha Tiwari

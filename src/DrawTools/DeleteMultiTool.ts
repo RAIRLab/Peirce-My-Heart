@@ -1,8 +1,8 @@
 /**
- * Contains methods for deleting one or more nodes at a time.
+ * @file Contains methods for deleting one or more nodes at a time.
  *
  * When it is said that nodes are "removed" in the documentation,
- * This means that they are removed from the Draw Mode AEGTree but visually are still present.
+ * this means that they are removed from the Draw Mode AEGTree but visually are still present.
  *
  * @author Dawn Moore
  * @author Ryan R

@@ -1,5 +1,5 @@
 /**
- * Contains methods for clearing the Proof Mode HTML canvas.
+ * @file Contains methods for clearing the Proof Mode HTML canvas.
  *
  * @author Anusha Tiwari
  */
@@ -20,7 +20,7 @@ let legalNode: boolean;
 /**
  * Clears the canvas and highlights all nodes on it as the illegal color.
  */
-export function clearProofMouseDown(): void {
+export function proofClearMouseDown(): void {
     currentProofTree = getCurrentProofTree();
     legalNode = true;
     cleanCanvas();
@@ -30,7 +30,7 @@ export function clearProofMouseDown(): void {
 /**
  * Clears the proofs history's buttons and redraws the proof.
  */
-export function clearProofMouseUp(): void {
+export function proofClearMouseUp(): void {
     if (legalNode) {
         deleteButtons(-1);
         TreeContext.clearProof();
@@ -41,7 +41,7 @@ export function clearProofMouseUp(): void {
 /**
  * Redraws the proof.
  */
-export function clearProofMouseOut(): void {
+export function proofClearMouseOut(): void {
     legalNode = false;
     redrawProof();
 }

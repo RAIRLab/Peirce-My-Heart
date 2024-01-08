@@ -1,6 +1,5 @@
 /**
- * Contains methods for the insertion inference rule.
- *
+ * @file Contains methods for the insertion inference rule.
  * Nodes are considered legal if they are graphs and able to be placed.
  *
  * @author Anusha Tiwari

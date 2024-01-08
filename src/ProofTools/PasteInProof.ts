@@ -1,5 +1,5 @@
 /**
- * Contains methods for pasting AEGs into Proof Mode.
+ * @file Contains methods for pasting AEGs into Proof Mode.
  *
  * @author Anusha Tiwari
  */

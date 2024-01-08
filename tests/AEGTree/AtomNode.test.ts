@@ -1,5 +1,5 @@
 /**
- * Contains comprehensive tests on the AtomNode class.
+ * @file Contains comprehensive tests on the AtomNode class.
  *
  * @author Ryan R
  */

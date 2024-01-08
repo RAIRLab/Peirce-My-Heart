@@ -1,5 +1,5 @@
 /**
- * Contains comprehensive tests on the Rectangle class.
+ * @file Contains comprehensive tests on the Rectangle class.
  *
  * @author Ryan R
  */

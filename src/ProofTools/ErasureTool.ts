@@ -1,6 +1,5 @@
 /**
- * Contains methods for the erasure inference rule.
- *
+ * @file Contains methods for the erasure inference rule.
  * A node is legal for erasure if the node is not the tree, is not null, and on an even cut level.
  *
  * @author Dawn Moore

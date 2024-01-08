@@ -11,19 +11,13 @@ export default defineConfig(({command, mode}) => {
     let root = "src"
     return {
         root: root,
-        base: mode === "electron" ? "" : "/Peirce-My-Heart/",
+        base: "/Peirce-My-Heart/",
         publicDir: "../public/",
         build:{
-            //only minify if you're trying to debug in the chrome debugger, otherwise use vsc debug
-            //minify: mode === "production", 
-            outDir: mode === "electron" ? "../electron-build" : "../build",
+            outDir: "../build",
             emptyOutDir: true,
             rollupOptions:{
-                input:{
-                    index: resolve(__dirname, root, "index.html"),
-                    about: resolve(__dirname, root, "about.html"),
-                    homepage: resolve(__dirname, root, "aeg.html")
-                }
+                input: resolve(__dirname, root, "index.html"),
             }
         },
         test:{

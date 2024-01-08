@@ -1,8 +1,9 @@
 /**
- * Contains methods for manipulating AtomNodes on the HTML canvas.
+ * @file Contains methods for manipulating AtomNodes on the HTML canvas.
  *
  * When an AtomNode's position is described as being valid or not,
- * This means that we are determining if it can currently be inserted into the AEGTree without intersection.
+ * this means that we are determining if it can currently be inserted into the
+ * AEGTree without intersection.
  *
  * @author Dawn Moore
  * @author Anusha Tiwari

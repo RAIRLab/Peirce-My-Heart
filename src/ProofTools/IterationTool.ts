@@ -1,8 +1,8 @@
 /**
- * Contains methods for iterating nodes and subgraphs on the Proof Mode canvas.
- *
+ * @file Contains methods for iterating nodes and subgraphs on the Proof Mode canvas.
  * When a node's position is described as being valid or not,
- * This means that we are determining if it can currently be inserted into the AEGTree without intersection.
+ * This means that we are determining if it can currently be inserted into the AEGTree without
+ * intersection.
  *
  * @author Dawn Moore
  * @author Anusha Tiwari
@@ -128,11 +128,10 @@ export function iterationMouseOut(): void {
 }
 
 /**
- * Checks and returns if the latter incoming Point can be legally iterated to the former incoming Point.
- *
- * If currentNode altered by the former incoming Point can be inserted into the sheet, or
- *    currentNode is a CutNode that is not a parent of the altered CutNode,
- *    Then currentPoint can be legally iterated.
+ * Checks and returns if the latter incoming Point can be legally iterated to the former incoming
+ * Point. If currentNode altered by the former incoming Point can be inserted into the sheet, or
+ * currentNode is a CutNode that is not a parent of the altered CutNode, then currentPoint can be
+ * legally iterated.
  *
  * @param moveDifference Latter incoming Point.
  * @param currentPoint Former incoming Point.
@@ -161,7 +160,8 @@ function isLegal(moveDifference: Point, currentPoint: Point): boolean {
  *
  * @param currentNode Incoming CutNode.
  * @param currentEllipse Incoming Ellipse.
- * @returns True if the currentEllipse does not contain currentNode or any of currentNode's children.
+ * @returns True if the currentEllipse does not contain currentNode or any of currentNode's
+ *          children.
  */
 function isNotParent(currentNode: CutNode, currentEllipse: Ellipse): boolean {
     for (let i = 0; i < currentNode.children.length; i++) {

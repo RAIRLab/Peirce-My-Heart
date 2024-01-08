@@ -1,5 +1,5 @@
 /**
- * Implements Charles Peirce's Alpha Existential Graph System and an interactive theorem prover.
+ * @file Main application code. Sets up event listeners, context and window globals.
  *
  * @author Dawn Moore
  * @author James Oswald
@@ -15,31 +15,31 @@ import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 import {toggleHandler} from "./ToggleModes";
 import {Tool, TreeContext} from "./TreeContext";
 
-import * as CutTool from "./DrawTools/CutTool";
-import * as AtomTool from "./DrawTools/AtomTool";
-
+import * as DrawClearTool from "./DrawTools/DrawClearTool";
 import * as DragTool from "./SharedToolUtils/DragTool";
-import * as MoveSingleTool from "./DrawTools/MoveSingleTool";
-import * as MoveMultiTool from "./DrawTools/MoveMultiTool";
+import * as AtomTool from "./DrawTools/AtomTool";
+import * as CutTool from "./DrawTools/CutTool";
+import * as DrawMoveSingleTool from "./DrawTools/DrawMoveSingleTool";
+import * as DrawMoveMultiTool from "./DrawTools/DrawMoveMultiTool";
 import * as CopySingleTool from "./DrawTools/CopySingleTool";
 import * as CopyMultiTool from "./DrawTools/CopyMultiTool";
 import * as DeleteSingleTool from "./DrawTools/DeleteSingleTool";
 import * as DeleteMultiTool from "./DrawTools/DeleteMultiTool";
+import * as DrawResizeTool from "./DrawTools/DrawResizeTool";
 import * as CopyFromDraw from "./DrawTools/CopyFromDraw";
+
+import * as ProofClearTool from "./ProofTools/ProofClearTool";
 
 import * as DoubleCutInsertionTool from "./ProofTools/DoubleCutInsertionTool";
 import * as DoubleCutDeletionTool from "./ProofTools/DoubleCutDeletionTool";
-import * as InsertionTool from "./ProofTools/InsertionTool";
-import * as ErasureTool from "./ProofTools/ErasureTool";
-import * as DrawResizeTool from "./DrawTools/DrawResizeTool";
 import * as ProofMoveSingleTool from "./ProofTools/ProofMoveSingleTool";
 import * as ProofMoveMultiTool from "./ProofTools/ProofMoveMultiTool";
-
-import * as PasteInProof from "./ProofTools/PasteInProof";
 import * as IterationTool from "./ProofTools/IterationTool";
-import * as ProofResizeTool from "./ProofTools/ProofResizeTool";
 import * as DeiterationTool from "./ProofTools/DeiterationTool";
-import * as ClearProofTool from "./ProofTools/ClearProofTool";
+import * as InsertionTool from "./ProofTools/InsertionTool";
+import * as ErasureTool from "./ProofTools/ErasureTool";
+import * as ProofResizeTool from "./ProofTools/ProofResizeTool";
+import * as PasteInProof from "./ProofTools/PasteInProof";
 
 //Setting up canvas...
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -73,6 +73,7 @@ let hasMouseDown = false;
 let hasMouseIn = true;
 
 //Global window exports.
+//TODO: move these under the global import
 window.tree = TreeContext.tree;
 window.treeString = aegStringify(window.tree);
 window.atomTool = Tool.atomTool;
@@ -81,8 +82,8 @@ window.dragTool = Tool.dragTool;
 window.aegStringify = aegStringify;
 window.saveMode = saveMode;
 window.loadMode = loadMode;
-window.moveSingleTool = Tool.moveSingleTool;
-window.moveMultiTool = Tool.moveMultiTool;
+window.drawMoveSingleTool = Tool.drawMoveSingleTool;
+window.drawMoveMultiTool = Tool.drawMoveMultiTool;
 window.copySingleTool = Tool.copySingleTool;
 window.copyMultiTool = Tool.copyMultiTool;
 window.deleteSingleTool = Tool.deleteSingleTool;
@@ -99,7 +100,8 @@ window.proofMoveMultiTool = Tool.proofMoveMultiTool;
 window.proofResizeTool = Tool.proofResizeTool;
 window.iterationTool = Tool.iterationTool;
 window.deiterationTool = Tool.deiterationTool;
-window.clearProofTool = Tool.clearProofTool;
+window.proofClearTool = Tool.proofClearTool;
+window.drawClearTool = Tool.drawClearTool;
 window.setTool = setTool;
 window.setHighlight = setHighlight;
 window.toggleHandler = toggleHandler;
@@ -114,8 +116,8 @@ declare global {
         saveMode: () => void;
         loadMode: () => void;
         aegStringify: (treeData: AEGTree | ProofNode[]) => string;
-        moveSingleTool: Tool;
-        moveMultiTool: Tool;
+        drawMoveSingleTool: Tool;
+        drawMoveMultiTool: Tool;
         copySingleTool: Tool;
         copyMultiTool: Tool;
         deleteSingleTool: Tool;
@@ -132,7 +134,8 @@ declare global {
         proofResizeTool: Tool;
         iterationTool: Tool;
         deiterationTool: Tool;
-        clearProofTool: Tool;
+        proofClearTool: Tool;
+        drawClearTool: Tool;
         setTool: (state: Tool) => void;
         setHighlight: (event: string, id: string) => void;
         toggleHandler: () => void;
@@ -308,10 +311,13 @@ async function loadMode(): Promise<void> {
     }
 }
 
+//TODO: replace all of this with polymorphism -James
+
 /**
  * Calls appropriate keydown method with the incoming KeyboardEvent.
  *
  * @param event Incoming KeyboardEvent.
+ *
  */
 function keyDownHandler(event: KeyboardEvent): void {
     if (event.ctrlKey && event.key === "s") {
@@ -364,11 +370,11 @@ function mouseDownHandler(event: MouseEvent): void {
             case Tool.dragTool:
                 DragTool.dragMouseDown(event);
                 break;
-            case Tool.moveSingleTool:
-                MoveSingleTool.moveSingleMouseDown(event);
+            case Tool.drawMoveSingleTool:
+                DrawMoveSingleTool.drawMoveSingleMouseDown(event);
                 break;
-            case Tool.moveMultiTool:
-                MoveMultiTool.moveMultiMouseDown(event);
+            case Tool.drawMoveMultiTool:
+                DrawMoveMultiTool.drawMoveMultiMouseDown(event);
                 break;
             case Tool.copySingleTool:
                 CopySingleTool.copySingleMouseDown(event);
@@ -418,8 +424,11 @@ function mouseDownHandler(event: MouseEvent): void {
             case Tool.deiterationTool:
                 DeiterationTool.deiterationMouseDown(event);
                 break;
-            case Tool.clearProofTool:
-                ClearProofTool.clearProofMouseDown();
+            case Tool.proofClearTool:
+                ProofClearTool.proofClearMouseDown();
+                break;
+            case Tool.drawClearTool:
+                DrawClearTool.drawClearMouseDown();
                 break;
             default:
                 break;
@@ -446,11 +455,11 @@ function mouseMoveHandler(event: MouseEvent): void {
             case Tool.dragTool:
                 DragTool.dragMouseMove(event);
                 break;
-            case Tool.moveSingleTool:
-                MoveSingleTool.moveSingleMouseMove(event);
+            case Tool.drawMoveSingleTool:
+                DrawMoveSingleTool.drawMoveSingleMouseMove(event);
                 break;
-            case Tool.moveMultiTool:
-                MoveMultiTool.moveMultiMouseMove(event);
+            case Tool.drawMoveMultiTool:
+                DrawMoveMultiTool.drawMoveMultiMouseMove(event);
                 break;
             case Tool.copySingleTool:
                 CopySingleTool.copySingleMouseMove(event);
@@ -524,11 +533,11 @@ function mouseUpHandler(event: MouseEvent): void {
             case Tool.dragTool:
                 DragTool.dragMouseUp();
                 break;
-            case Tool.moveSingleTool:
-                MoveSingleTool.moveSingleMouseUp(event);
+            case Tool.drawMoveSingleTool:
+                DrawMoveSingleTool.drawMoveSingleMouseUp(event);
                 break;
-            case Tool.moveMultiTool:
-                MoveMultiTool.moveMultiMouseUp(event);
+            case Tool.drawMoveMultiTool:
+                DrawMoveMultiTool.drawMoveMultiMouseUp(event);
                 break;
             case Tool.copySingleTool:
                 CopySingleTool.copySingleMouseUp(event);
@@ -578,8 +587,11 @@ function mouseUpHandler(event: MouseEvent): void {
             case Tool.deiterationTool:
                 DeiterationTool.deiterationMouseUp(event);
                 break;
-            case Tool.clearProofTool:
-                ClearProofTool.clearProofMouseUp();
+            case Tool.proofClearTool:
+                ProofClearTool.proofClearMouseUp();
+                break;
+            case Tool.drawClearTool:
+                DrawClearTool.drawClearMouseUp();
                 break;
             default:
                 break;
@@ -602,11 +614,11 @@ function mouseOutHandler(): void {
         case Tool.dragTool:
             DragTool.dragMouseOut();
             break;
-        case Tool.moveSingleTool:
-            MoveSingleTool.moveSingleMouseOut();
+        case Tool.drawMoveSingleTool:
+            DrawMoveSingleTool.drawMoveSingleMouseOut();
             break;
-        case Tool.moveMultiTool:
-            MoveMultiTool.moveMultiMouseOut();
+        case Tool.drawMoveMultiTool:
+            DrawMoveMultiTool.drawMoveMultiMouseOut();
             break;
         case Tool.copySingleTool:
             CopySingleTool.copySingleMouseOut();
@@ -656,8 +668,11 @@ function mouseOutHandler(): void {
         case Tool.deiterationTool:
             DeiterationTool.deiterationMouseOut();
             break;
-        case Tool.clearProofTool:
-            ClearProofTool.clearProofMouseOut();
+        case Tool.proofClearTool:
+            ProofClearTool.proofClearMouseOut();
+            break;
+        case Tool.drawClearTool:
+            DrawClearTool.drawClearMouseOut();
             break;
         default:
             break;

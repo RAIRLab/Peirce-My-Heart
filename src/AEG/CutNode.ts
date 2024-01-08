@@ -1,8 +1,5 @@
 /**
- * Defines a Cut.
- * Cuts are negations in Peirce's AEG system.
- * Cuts may be empty, and cuts may contain one or more AtomNodes and CutNodes as children.
- * Both are valid cuts.
+ * @file Contains the CutNode class, which defines a cut in Peirce's AEG system.
  *
  * @author James Oswald
  * @author Ryan R
@@ -14,6 +11,12 @@ import {Ellipse} from "./Ellipse";
 import {Point} from "./Point";
 import {shapeContains} from "./AEGUtils";
 
+/**
+ * Defines a Cut.
+ * Cuts are negations in Peirce's AEG system.
+ * Cuts may be empty, and cuts may contain one or more AtomNodes and CutNodes as children.
+ * Both are valid cuts.
+ */
 export class CutNode {
     /**
      * Boundary of this CutNode on the HTML canvas.

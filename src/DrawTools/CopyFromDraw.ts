@@ -1,5 +1,5 @@
 /**
- * Contains methods for copying AEGs to Proof Mode.
+ * @file Contains methods for copying AEGs to Proof Mode.
  *
  * @author Dawn Moore
  * @author Anusha Tiwari

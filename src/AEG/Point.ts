@@ -1,5 +1,5 @@
 /**
- * Defines a 2D Point.
+ * @file Defines a 2D Point.
  *
  * @author Ryan R
  * @author Anusha Tiwari

@@ -1,7 +1,5 @@
 /**
- * Represents an AEG tree structure.
- * This tree is a hierarchical composition of AtomNodes and CutNodes.
- * Its height corresponds to the deepest CutNode nesting within.
+ * @file Contains the class representing an Alpha Expression Graph (AEG).
  *
  * @author Ryan R
  * @author Anusha Tiwari
@@ -14,6 +12,11 @@ import {Point} from "./Point";
 import {Rectangle} from "./Rectangle";
 import {shapesIntersect, shapesOverlap} from "./AEGUtils";
 
+/**
+ * Represents an AEG tree structure.
+ * This tree is a hierarchical composition of AtomNodes and CutNodes.
+ * Its height corresponds to the deepest CutNode nesting within.
+ */
 export class AEGTree {
     /**
      * The Sheet of Assertion of this AEGTree.

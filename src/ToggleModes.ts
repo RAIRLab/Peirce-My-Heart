@@ -1,5 +1,5 @@
 /**
- * Contains the event handler to toggle between Draw Mode and Proof Mode.
+ * @file Contains the event handler to toggle between Draw Mode and Proof Mode.
  *
  * @author James Oswald
  * @author Anusha Tiwari

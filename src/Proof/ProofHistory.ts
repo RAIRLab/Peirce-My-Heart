@@ -1,5 +1,5 @@
 /**
- * Creates the proof history bar on the left side of the screen
+ * @file Creates the proof history bar on the left side of the screen
  * and handles returning to a previous step.
  *
  * @author Dawn Moore

@@ -1,5 +1,5 @@
 /**
- * Describes the state of the AEGTree and other related attributes.
+ * @file Describes the state of the AEGTree and other related attributes.
  *
  * @author Anusha Tiwari
  */
@@ -16,8 +16,8 @@ export enum Tool {
     atomTool,
     cutTool,
     dragTool,
-    moveSingleTool,
-    moveMultiTool,
+    drawMoveSingleTool,
+    drawMoveMultiTool,
     copySingleTool,
     copyMultiTool,
     deleteSingleTool,
@@ -34,7 +34,8 @@ export enum Tool {
     proofResizeTool,
     iterationTool,
     deiterationTool,
-    clearProofTool,
+    proofClearTool,
+    drawClearTool,
 }
 
 export class TreeContext {
