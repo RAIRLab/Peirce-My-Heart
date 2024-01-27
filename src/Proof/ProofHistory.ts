@@ -7,6 +7,7 @@
 
 import {ProofNode} from "./ProofNode";
 import {redrawProof} from "../SharedToolUtils/DrawUtils";
+import {ProofModeMove} from "./ProofModeMove";
 import {TreeContext} from "../TreeContext";
 
 /**
@@ -36,20 +37,43 @@ export function appendStep(newStep: ProofNode, step?: number): void {
 
     //Determines which type of step was taken to give the created button a corresponding icon.
     const icon = document.createElement("Text");
-    icon.className =
-        "fa fa-" +
-        {
-            "Single Move": "mouse-pointer",
-            "Multi Move": "arrows",
-            Resize: "arrows-alt",
-            "DC Insert": "dot-circle-o",
-            "DC Delete": "times-circle",
-            Insertion: "plus",
-            Erasure: "trash",
-            Iteration: "expand",
-            Deiteration: "compress",
-            Pasted: "files-o",
-        }[newStep.appliedRule];
+
+    let iconString = "";
+
+    switch (newStep.appliedRule) {
+        case ProofModeMove.DC_INSERT:
+            iconString = "dot-circle-o";
+            break;
+        case ProofModeMove.DC_DELETE:
+            iconString = "times-circle";
+            break;
+        case ProofModeMove.MOVE_SINGLE:
+            iconString = "mouse-pointer";
+            break;
+        case ProofModeMove.MOVE_MULTI:
+            iconString = "arrows";
+            break;
+        case ProofModeMove.ITERATION:
+            iconString = "expand";
+            break;
+        case ProofModeMove.DEITERATION:
+            iconString = "compress";
+            break;
+        case ProofModeMove.INSERTION:
+            iconString = "plus";
+            break;
+        case ProofModeMove.ERASURE:
+            iconString = "trash";
+            break;
+        case ProofModeMove.RESIZE:
+            iconString = "arrows-alt";
+            break;
+        case ProofModeMove.PASTE_GRAPH:
+            iconString = "files-o";
+            break;
+    }
+
+    icon.className = "fa fa-" + iconString;
 
     button.appendChild(icon);
     newDiv.appendChild(button);

@@ -27,6 +27,7 @@ import {getCurrentProofTree, proofCanInsert} from "./ProofToolUtils";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
+import {ProofModeMove} from "../Proof/ProofModeMove";
 import {ProofNode} from "../Proof/ProofNode";
 import {TreeContext} from "../TreeContext";
 
@@ -122,7 +123,7 @@ export function proofResizeMouseUp(event: MouseEvent): void {
             if (tempCut.ellipse !== null) {
                 if (isValid(tempCut)) {
                     currentProofTree.insert(tempCut);
-                    TreeContext.pushToProof(new ProofNode(currentProofTree, "Resize"));
+                    TreeContext.pushToProof(new ProofNode(currentProofTree, ProofModeMove.RESIZE));
                 }
             }
         }

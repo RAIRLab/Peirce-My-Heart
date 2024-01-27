@@ -28,6 +28,7 @@ import {getCurrentProofTree, isMoveLegal} from "./ProofToolUtils";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
+import {ProofModeMove} from "../Proof/ProofModeMove";
 import {ProofNode} from "../Proof/ProofNode";
 import {TreeContext} from "../TreeContext";
 
@@ -120,7 +121,7 @@ export function proofMoveSingleMouseMove(event: MouseEvent): void {
 export function proofMoveSingleMouseUp(event: MouseEvent): void {
     if (legalNode) {
         changeCursorStyle("cursor: default");
-        const nextStep = new ProofNode(currentProofTree, "Single Move");
+        const nextStep = new ProofNode(currentProofTree, ProofModeMove.MOVE_SINGLE);
         const moveDifference: Point = new Point(
             event.x - startingPoint.x,
             event.y - startingPoint.y

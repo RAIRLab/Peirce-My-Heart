@@ -5,9 +5,10 @@
  */
 
 import {AEGTree} from "./AEG/AEGTree";
-import {DrawModeStack} from "./History/DrawModeStack";
-import {DrawModeNode} from "./History/DrawModeNode";
 import {appendStep, deleteButtons} from "./Proof/ProofHistory";
+import {DrawModeNode} from "./History/DrawModeNode";
+import {DrawModeStack} from "./History/DrawModeStack";
+import {ProofModeMove} from "./Proof/ProofModeMove";
 import {ProofNode} from "./Proof/ProofNode";
 
 /**
@@ -91,7 +92,7 @@ export class TreeContext {
      * @param newStep Incoming ProofNode.
      */
     public static pushToProof(newStep: ProofNode): void {
-        if (newStep.appliedRule === "Pasted") {
+        if (newStep.appliedRule === ProofModeMove.PASTE_GRAPH) {
             this.proof.pop();
             document.getElementById("Row: 1")?.remove();
             newStep.index = 0;

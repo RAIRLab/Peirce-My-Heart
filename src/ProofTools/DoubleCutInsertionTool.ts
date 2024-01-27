@@ -21,6 +21,7 @@ import {getCurrentProofTree} from "./ProofToolUtils";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
+import {ProofModeMove} from "../Proof/ProofModeMove";
 import {ProofNode} from "../Proof/ProofNode";
 import {TreeContext} from "../TreeContext";
 
@@ -108,7 +109,7 @@ export function doubleCutInsertionMouseUp(event: MouseEvent): void {
     const largeCut: CutNode = new CutNode(createEllipse(startingPoint, currentPoint));
     const smallCut: CutNode = new CutNode(calcSmallEllipse(<Ellipse>largeCut.ellipse));
 
-    const nextProof = new ProofNode(currentProofTree, "DC Insert");
+    const nextProof = new ProofNode(currentProofTree, ProofModeMove.DC_INSERT);
 
     if (!wasOut && largeCut.ellipse !== null && smallCut.ellipse !== null) {
         const legal =
