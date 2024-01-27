@@ -5,6 +5,8 @@
  */
 
 import {AEGTree} from "./AEG/AEGTree";
+import {DrawModeStack} from "./History/DrawModeStack";
+import {DrawModeNode} from "./History/DrawModeNode";
 import {appendStep, deleteButtons} from "./Proof/ProofHistory";
 import {ProofNode} from "./Proof/ProofNode";
 
@@ -42,6 +44,9 @@ export class TreeContext {
     //Current AEGTree on canvas.
     public static tree: AEGTree = new AEGTree();
 
+    //For undoing and redoing changes in Draw Mode.
+    public static drawHistory: DrawModeStack = new DrawModeStack();
+
     //The proof is a series of ProofNodes.
     public static proof: ProofNode[] = [];
 
@@ -56,6 +61,14 @@ export class TreeContext {
 
     //Mode the application is in. Defaults to Draw.
     public static modeState: "Draw" | "Proof" = "Draw";
+
+    /**
+     * Pops the most recent draw mode move from drawHistory and changes tree accordingly.
+     */
+    public static undoDrawStep(): void {
+        const mostRecentStep: DrawModeNode = this.drawHistory.pop();
+        this.tree = mostRecentStep.tree;
+    }
 
     /**
      * Returns the most recent step in the proof.

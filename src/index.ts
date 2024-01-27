@@ -311,18 +311,31 @@ async function loadMode(): Promise<void> {
     }
 }
 
+async function handleUndo(): Promise<void> {
+    TreeContext.undoDrawStep();
+}
+
+async function handleRedo(): Promise<void> {
+    console.log("");
+}
+
 //TODO: replace all of this with polymorphism -James
 
 /**
  * Calls appropriate keydown method with the incoming KeyboardEvent.
  *
  * @param event Incoming KeyboardEvent.
- *
  */
 function keyDownHandler(event: KeyboardEvent): void {
-    if (event.ctrlKey && event.key === "s") {
+    if (event.ctrlKey) {
         event.preventDefault(); //Prevents Chrome from saving a .html of the current webpage.
-        saveMode();
+        if (event.key === "s") {
+            saveMode();
+        } else if (event.key === "z") {
+            handleUndo();
+        } else if (event.key === "y") {
+            handleRedo();
+        }
     } else {
         switch (TreeContext.toolState) {
             case Tool.atomTool:
