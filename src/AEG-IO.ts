@@ -9,6 +9,7 @@ import {AtomNode} from "./AEG/AtomNode";
 import {CutNode} from "./AEG/CutNode";
 import {Ellipse} from "./AEG/Ellipse";
 import {Point} from "./AEG/Point";
+import {ProofModeMove} from "./Proof/ProofModeMove";
 import {ProofNode} from "./Proof/ProofNode";
 
 /**
@@ -45,7 +46,7 @@ interface atomObj {
  */
 interface proofNodeObj {
     tree: sheetObj;
-    appliedRule: string;
+    appliedRule: ProofModeMove;
 }
 
 /**
