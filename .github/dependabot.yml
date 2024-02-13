@@ -19,6 +19,7 @@ updates:
     schedule:
       interval: "weekly"
       day: "sunday"
-    all-gh-actions-dependencies:
+    groups:
+      all-gh-actions-dependencies:
         patterns: 
         - "*"
