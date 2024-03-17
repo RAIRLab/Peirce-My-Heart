@@ -12,7 +12,7 @@ export class DrawModeNode {
     public appliedMove: DrawModeMove;
 
     public constructor(tree?: AEGTree, appliedMove?: DrawModeMove) {
-        this.tree = new AEGTree(tree?.sheet);
+        this.tree = new AEGTree(tree?.sheet) ?? new AEGTree();
         this.appliedMove = appliedMove ?? DrawModeMove.CLEAR;
     }
 }

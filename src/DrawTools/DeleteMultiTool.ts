@@ -10,6 +10,7 @@
 
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
+import {DrawModeMove} from "../History/DrawModeMove";
 import {highlightNode, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {illegalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
@@ -104,6 +105,7 @@ export function deleteMultiMouseUp(event: MouseEvent): void {
             TreeContext.tree.clear();
         }
         redrawTree(TreeContext.tree);
+        TreeContext.pushToDrawStack(DrawModeMove.DELETE_MULTI);
     }
     currentNode = null;
     legalNode = false;

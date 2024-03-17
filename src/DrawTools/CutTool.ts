@@ -14,6 +14,7 @@ import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUti
 import {createEllipse, ellipseLargeEnough} from "../SharedToolUtils/EditModeUtils";
 import {CutNode} from "../AEG/CutNode";
 import {drawCut, drawGuidelines, redrawTree} from "../SharedToolUtils/DrawUtils";
+import {DrawModeMove} from "../History/DrawModeMove";
 import {Ellipse} from "../AEG/Ellipse";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
@@ -91,6 +92,7 @@ export function cutMouseUp(event: MouseEvent): void {
         ellipseLargeEnough(<Ellipse>newCut.ellipse)
     ) {
         TreeContext.tree.insert(newCut);
+        TreeContext.pushToDrawStack(DrawModeMove.DRAW_CUT);
     }
     redrawTree(TreeContext.tree);
 }

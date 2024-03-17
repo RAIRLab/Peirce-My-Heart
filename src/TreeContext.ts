@@ -6,10 +6,12 @@
 
 import {AEGTree} from "./AEG/AEGTree";
 import {appendStep, deleteButtons} from "./Proof/ProofHistory";
+import {DrawModeMove} from "./History/DrawModeMove";
 import {DrawModeNode} from "./History/DrawModeNode";
 import {DrawModeStack} from "./History/DrawModeStack";
 import {ProofModeMove} from "./Proof/ProofModeMove";
 import {ProofNode} from "./Proof/ProofNode";
+import {redrawTree} from "./SharedToolUtils/DrawUtils";
 
 /**
  * Represents the current tool in use.
@@ -64,11 +66,34 @@ export class TreeContext {
     public static modeState: "Draw" | "Proof" = "Draw";
 
     /**
+     * Adds the incoming DrawModeMove and the current tree to drawHistory.
+     *
+     * @param newlyAppliedStep Incoming DrawModeMove.
+     */
+    public static pushToDrawStack(newlyAppliedStep: DrawModeMove): void {
+        this.drawHistory.push(new DrawModeNode(this.tree, newlyAppliedStep));
+    }
+
+    /**
      * Pops the most recent draw mode move from drawHistory and changes tree accordingly.
      */
     public static undoDrawStep(): void {
-        const mostRecentStep: DrawModeNode = this.drawHistory.pop();
-        this.tree = mostRecentStep.tree;
+        const mostRecentStep: DrawModeNode | null = this.drawHistory.pop();
+
+        let newTree: AEGTree;
+
+        if (mostRecentStep === null || this.drawHistory.peek() === null) {
+            newTree = new AEGTree();
+            this.tree = newTree;
+            redrawTree(newTree);
+            return;
+        }
+
+        this.tree = new AEGTree(this.drawHistory.peek().tree.sheet);
+
+        newTree = new AEGTree(this.drawHistory.peek().tree.sheet);
+
+        redrawTree(newTree);
     }
 
     /**

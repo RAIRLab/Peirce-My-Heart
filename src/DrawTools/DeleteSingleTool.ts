@@ -11,6 +11,7 @@
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {drawAtom, drawCut, redrawTree} from "../SharedToolUtils/DrawUtils";
+import {DrawModeMove} from "../History/DrawModeMove";
 import {illegalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
@@ -120,6 +121,7 @@ export function deleteSingleMouseUp(event: MouseEvent): void {
             readdChildren(TreeContext.tree, currentNode);
         }
         redrawTree(TreeContext.tree);
+        TreeContext.pushToDrawStack(DrawModeMove.DELETE_SINGLE);
     }
 
     currentNode = null;

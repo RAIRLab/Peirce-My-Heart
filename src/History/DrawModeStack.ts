@@ -17,15 +17,20 @@ export class DrawModeStack {
         this.history.push(incomingMove);
     }
 
-    public pop(): DrawModeNode {
+    public pop(): DrawModeNode | null {
+        if (this.history.length === 0) {
+            return null;
+        }
+
         const poppedNode: DrawModeNode = this.history[this.history.length - 1];
 
-        this.history.splice(this.history.length - 2, this.history.length - 1);
-
+        this.history.splice(this.history.length - 1, 1);
         return poppedNode;
     }
 
     public peek(): DrawModeNode {
-        return this.history[this.history.length - 1];
+        return this.history.length !== 0
+            ? this.history[this.history.length - 1]
+            : new DrawModeNode();
     }
 }
