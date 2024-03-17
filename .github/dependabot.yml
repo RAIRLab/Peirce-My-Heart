@@ -10,3 +10,16 @@ updates:
     schedule:
       interval: "weekly"
       day: "sunday"
+    groups:
+      all-npm-dependencies:
+        patterns: 
+        - "*"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    groups:
+      all-gh-actions-dependencies:
+        patterns: 
+        - "*"
