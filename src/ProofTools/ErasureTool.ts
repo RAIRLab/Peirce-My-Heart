@@ -14,8 +14,8 @@ import {highlightNode, redrawProof, redrawTree} from "../SharedToolUtils/DrawUti
 import {illegalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
-import {ProofModeMove} from "../Proof/ProofModeMove";
-import {ProofNode} from "../Proof/ProofNode";
+import {ProofModeMove} from "../ProofHistory/ProofModeMove";
+import {ProofModeNode} from "../ProofHistory/ProofModeNode";
 import {reInsertNode} from "../SharedToolUtils/EditModeUtils";
 import {TreeContext} from "../TreeContext";
 
@@ -76,7 +76,7 @@ export function erasureMouseMove(event: MouseEvent): void {
  */
 export function erasureMouseUp(event: MouseEvent): void {
     if (legalNode) {
-        const nextProof = new ProofNode(currentProofTree, ProofModeMove.ERASURE);
+        const nextProof = new ProofModeNode(currentProofTree, ProofModeMove.ERASURE);
 
         currentPoint = new Point(event.x - offset.x, event.y - offset.y);
         const currentParent = nextProof.tree.getLowestParent(currentPoint);

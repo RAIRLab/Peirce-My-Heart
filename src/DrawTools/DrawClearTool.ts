@@ -6,7 +6,7 @@
 
 import {AEGTree} from "../AEG/AEGTree";
 import {cleanCanvas, highlightNode, redrawTree} from "../SharedToolUtils/DrawUtils";
-import {DrawModeMove} from "../History/DrawModeMove";
+import {DrawModeMove} from "../DrawHistory/DrawModeMove";
 import {illegalColor} from "../Themes";
 import {TreeContext} from "../TreeContext";
 

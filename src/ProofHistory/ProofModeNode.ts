@@ -11,7 +11,7 @@ import {TreeContext} from "../TreeContext";
 /**
  * Defines a single step in a proof.
  */
-export class ProofNode {
+export class ProofModeNode {
     /**
      * The AEGTree at this proof step.
      */

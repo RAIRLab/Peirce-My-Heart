@@ -13,8 +13,8 @@ import {getCurrentProofTree} from "./ProofToolUtils";
 import {illegalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
-import {ProofModeMove} from "../Proof/ProofModeMove";
-import {ProofNode} from "../Proof/ProofNode";
+import {ProofModeMove} from "../ProofHistory/ProofModeMove";
+import {ProofModeNode} from "../ProofHistory/ProofModeNode";
 import {readdChildren, reInsertNode} from "../SharedToolUtils/EditModeUtils";
 import {TreeContext} from "../TreeContext";
 
@@ -76,7 +76,7 @@ export function doubleCutDeletionMouseMove(event: MouseEvent): void {
  * @param event Incoming MouseEvent.
  */
 export function doubleCutDeletionMouseUp(event: MouseEvent): void {
-    const nextProof = new ProofNode(currentProofTree, ProofModeMove.DC_DELETE);
+    const nextProof = new ProofModeNode(currentProofTree, ProofModeMove.DC_DELETE);
     currentPoint = new Point(event.x - offset.x, event.y - offset.y);
 
     if (legalNode && currentNode instanceof CutNode) {

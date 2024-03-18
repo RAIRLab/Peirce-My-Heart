@@ -6,7 +6,7 @@
  */
 
 import {ProofModeMove} from "./ProofModeMove";
-import {ProofNode} from "./ProofNode";
+import {ProofModeNode} from "./ProofModeNode";
 import {redrawProof} from "../SharedToolUtils/DrawUtils";
 import {TreeContext} from "../TreeContext";
 
@@ -17,7 +17,7 @@ import {TreeContext} from "../TreeContext";
  * @param newStep Incoming ProofNode.
  * @param step Index of newStep in the history.
  */
-export function appendStep(newStep: ProofNode, step?: number): void {
+export function appendStep(newStep: ProofModeNode, step?: number): void {
     const newDiv = document.createElement("div");
     newDiv.className = "row";
     const stepNumber = step ? step : TreeContext.proof.length;
@@ -86,7 +86,7 @@ export function appendStep(newStep: ProofNode, step?: number): void {
  *
  * @param selectedStep Incoming ProofNode.
  */
-export function stepBack(selectedStep: ProofNode): void {
+export function stepBack(selectedStep: ProofModeNode): void {
     TreeContext.currentProofStep = selectedStep;
     redrawProof();
 }
@@ -102,6 +102,9 @@ export function deleteButtons(stopIndex: number): void {
     }
 }
 
+/**
+ * Removes the most recent move's button from the proof bar.
+ */
 export function deleteMostRecentButton(): void {
     document.getElementById("Row: " + TreeContext.proof.length)?.remove();
 }

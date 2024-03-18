@@ -14,7 +14,7 @@ import {AtomNode} from "../AEG/AtomNode";
 import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {determineDirection, drawCut, redrawTree} from "../SharedToolUtils/DrawUtils";
-import {DrawModeMove} from "../History/DrawModeMove";
+import {DrawModeMove} from "../DrawHistory/DrawModeMove";
 import {ellipseLargeEnough, resizeCut} from "../SharedToolUtils/EditModeUtils";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";

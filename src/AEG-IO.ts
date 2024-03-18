@@ -9,8 +9,8 @@ import {AtomNode} from "./AEG/AtomNode";
 import {CutNode} from "./AEG/CutNode";
 import {Ellipse} from "./AEG/Ellipse";
 import {Point} from "./AEG/Point";
-import {ProofModeMove} from "./Proof/ProofModeMove";
-import {ProofNode} from "./Proof/ProofNode";
+import {ProofModeMove} from "./ProofHistory/ProofModeMove";
+import {ProofModeNode} from "./ProofHistory/ProofModeNode";
 
 /**
  * Describes The Sheet of Assertion in JSON files.
@@ -53,14 +53,14 @@ interface proofNodeObj {
  * Creates and saves a file to the incoming FileSystemFileHandle
  * and containing the incoming save data.
  *
- * The save data will either be an AEGTree from Draw Mode or a series of ProofNodes from Proof Mode.
+ * The save data will either be an AEGTree from Draw Mode or a series of ProofModeNodes from Proof Mode.
  *
  * @param handle Incoming FileSystemFileHandle.
  * @param aegData Incoming save data.
  */
 export async function saveFile(
     handle: FileSystemFileHandle,
-    saveData: AEGTree | ProofNode[]
+    saveData: AEGTree | ProofModeNode[]
 ): Promise<void> {
     const data: string = JSON.stringify(saveData, null, "\t");
 
@@ -75,9 +75,9 @@ export async function saveFile(
  *
  * @param mode Incoming mode string.
  * @param fileData Incoming data read from a file.
- * @returns AEGTree representation of fileData if in Draw Mode. Otherwise, a series of ProofNodes.
+ * @returns AEGTree representation of fileData if in Draw Mode. Otherwise, a series of ProofModeNodes.
  */
-export function loadFile(mode: "Draw" | "Proof", fileData: string): AEGTree | ProofNode[] {
+export function loadFile(mode: "Draw" | "Proof", fileData: string): AEGTree | ProofModeNode[] {
     const data = JSON.parse(fileData);
 
     if (mode === "Draw") {
@@ -85,12 +85,12 @@ export function loadFile(mode: "Draw" | "Proof", fileData: string): AEGTree | Pr
         return toTree(childData);
     } else {
         //Construct the tree at every step of the proof and store them in an array
-        const arr: ProofNode[] = [];
+        const arr: ProofModeNode[] = [];
 
         let node: proofNodeObj;
         for (node of data) {
             const childData: (atomObj | cutObj)[] = node.tree.internalSheet.internalChildren;
-            arr.push(new ProofNode(toTree(childData), node.appliedRule));
+            arr.push(new ProofModeNode(toTree(childData), node.appliedRule));
         }
 
         return arr;

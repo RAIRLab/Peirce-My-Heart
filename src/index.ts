@@ -8,9 +8,9 @@
  */
 
 import {AEGTree} from "./AEG/AEGTree";
-import {appendStep} from "./Proof/ProofHistory";
+import {appendStep} from "./ProofHistory/ProofHistory";
 import {loadFile, saveFile} from "./AEG-IO";
-import {ProofNode} from "./Proof/ProofNode";
+import {ProofModeNode} from "./ProofHistory/ProofModeNode";
 import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 import {toggleHandler} from "./ToggleModes";
 import {Tool, TreeContext} from "./TreeContext";
@@ -60,11 +60,11 @@ export const proofString = <HTMLParagraphElement>document.getElementById("proofS
 const selectionDisplay = <HTMLParagraphElement>document.getElementById("toProofTools");
 
 window.addEventListener("keydown", keyDownHandler);
+canvas.addEventListener("mouseenter", mouseEnterHandler);
 canvas.addEventListener("mousedown", mouseDownHandler);
 canvas.addEventListener("mousemove", mouseMoveHandler);
 canvas.addEventListener("mouseup", mouseUpHandler);
 canvas.addEventListener("mouseout", mouseOutHandler);
-canvas.addEventListener("mouseenter", mouseEnterHandler);
 
 //True if the user's mouse is down. Assumed not to be down at the start.
 let hasMouseDown = false;
@@ -115,7 +115,7 @@ declare global {
         dragTool: Tool;
         saveMode: () => void;
         loadMode: () => void;
-        aegStringify: (treeData: AEGTree | ProofNode[]) => string;
+        aegStringify: (treeData: AEGTree | ProofModeNode[]) => string;
         drawMoveSingleTool: Tool;
         drawMoveMultiTool: Tool;
         copySingleTool: Tool;
@@ -201,7 +201,7 @@ function setTool(state: Tool): void {
  * @param treeData Incoming data.
  * @returns Stringification of treeData.
  */
-export function aegStringify(treeData: AEGTree | ProofNode[]): string {
+export function aegStringify(treeData: AEGTree | ProofModeNode[]): string {
     return JSON.stringify(treeData, null, "\t");
 }
 
@@ -210,7 +210,7 @@ export function aegStringify(treeData: AEGTree | ProofNode[]): string {
  */
 async function saveMode() {
     let name: string;
-    let data: AEGTree | ProofNode[];
+    let data: AEGTree | ProofModeNode[];
 
     if (TreeContext.modeState === "Draw") {
         name = "AEG Tree";
@@ -291,7 +291,7 @@ async function loadMode(): Promise<void> {
                     //Clears current proof.
                     TreeContext.clearProof();
                     //Loads data for the new proof.
-                    TreeContext.proof = loadData as ProofNode[];
+                    TreeContext.proof = loadData as ProofModeNode[];
                     //Removes default start step.
                     document.getElementById("Row: 1")?.remove();
                     //Adds button for each step of the loaded proof to the history bar.
@@ -311,6 +311,9 @@ async function loadMode(): Promise<void> {
     }
 }
 
+/**
+ * Handles CTRL+Z undo operations according to whether the program is in Draw or Proof Mode.
+ */
 async function handleUndo(): Promise<void> {
     if (TreeContext.modeState === "Draw") {
         TreeContext.undoDrawStep();
@@ -319,6 +322,9 @@ async function handleUndo(): Promise<void> {
     }
 }
 
+/**
+ * Handles CTRL+Y redo operations according to whether the program is in Draw or Proof Mode.
+ */
 async function handleRedo(): Promise<void> {
     if (TreeContext.modeState === "Draw") {
         TreeContext.redoDrawStep();
@@ -336,7 +342,7 @@ async function handleRedo(): Promise<void> {
  */
 function keyDownHandler(event: KeyboardEvent): void {
     if (event.ctrlKey) {
-        event.preventDefault(); //Prevents Chrome from saving a .html of the current webpage.
+        event.preventDefault(); //Prevents Chrome from performing default behavior.
         if (event.key === "s") {
             saveMode();
         } else if (event.key === "z") {

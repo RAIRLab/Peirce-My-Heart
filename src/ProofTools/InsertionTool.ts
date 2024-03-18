@@ -18,8 +18,8 @@ import {getCurrentProofTree} from "./ProofToolUtils";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
-import {ProofModeMove} from "../Proof/ProofModeMove";
-import {ProofNode} from "../Proof/ProofNode";
+import {ProofModeMove} from "../ProofHistory/ProofModeMove";
+import {ProofModeNode} from "../ProofHistory/ProofModeNode";
 import {TreeContext} from "../TreeContext";
 
 //Node in question.
@@ -245,7 +245,7 @@ export function insertionMouseUp(event: MouseEvent): void {
                 ) as AtomNode;
                 currentTree.insert(tempAtom);
             }
-            TreeContext.pushToProof(new ProofNode(currentTree, ProofModeMove.INSERTION));
+            TreeContext.pushToProof(new ProofModeNode(currentTree, ProofModeMove.INSERTION));
         }
     }
     redrawProof();
