@@ -5,13 +5,13 @@
  */
 
 import {AEGTree} from "./AEG/AEGTree";
-import {appendStep, deleteButtons} from "./Proof/ProofHistory";
+import {appendStep, deleteButtons, deleteMostRecentButton, stepBack} from "./Proof/ProofHistory";
 import {DrawModeMove} from "./History/DrawModeMove";
 import {DrawModeNode} from "./History/DrawModeNode";
 import {DrawModeStack} from "./History/DrawModeStack";
 import {ProofModeMove} from "./Proof/ProofModeMove";
 import {ProofNode} from "./Proof/ProofNode";
-import {redrawTree} from "./SharedToolUtils/DrawUtils";
+import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 
 /**
  * Represents the current tool in use.
@@ -77,6 +77,7 @@ export class TreeContext {
     public static pushToDrawStack(newlyAppliedStep: DrawModeMove): void {
         if (this.recentlyUndoneOrRedoneMove) {
             this.drawHistoryRedoStack.clear();
+            this.recentlyUndoneOrRedoneMove = false;
         }
         this.drawHistoryUndoStack.push(new DrawModeNode(this.tree, newlyAppliedStep));
     }
@@ -87,12 +88,9 @@ export class TreeContext {
     public static undoDrawStep(): void {
         const mostRecentStep: DrawModeNode | null = this.drawHistoryUndoStack.pop();
 
-        let newTree: AEGTree;
-
         if (mostRecentStep === null || this.drawHistoryUndoStack.peek() === null) {
-            newTree = new AEGTree();
-            this.tree = newTree;
-            redrawTree(newTree);
+            this.tree = new AEGTree();
+            redrawTree(this.tree);
             return;
         }
 
@@ -100,9 +98,7 @@ export class TreeContext {
 
         this.tree = new AEGTree(this.drawHistoryUndoStack.peek().tree.sheet);
 
-        newTree = new AEGTree(this.drawHistoryUndoStack.peek().tree.sheet);
-
-        redrawTree(newTree);
+        redrawTree(this.tree);
 
         this.recentlyUndoneOrRedoneMove = true;
     }
@@ -120,11 +116,26 @@ export class TreeContext {
         //here and below are all supposed to be drawHistoryRedoStack but that ruins the behavior
         this.tree = new AEGTree(this.drawHistoryUndoStack.peek().tree.sheet);
 
-        const newTree: AEGTree = new AEGTree(this.drawHistoryUndoStack.peek().tree.sheet);
-
-        redrawTree(newTree);
+        redrawTree(this.tree);
 
         this.recentlyUndoneOrRedoneMove = true;
+    }
+
+    public static undoProofStep(): void {
+        if (this.proof.length <= 1) {
+            return;
+        }
+
+        const stepToRemove: ProofNode = this.proof[this.proof.length - 1 - 1];
+
+        this.tree = new AEGTree(stepToRemove.tree.sheet);
+        this.proof.splice(this.proof.length - 1, 1)[0];
+        stepBack(this.proof[this.proof.length - 1]);
+        redrawProof();
+    }
+
+    public static redoProofStep(): void {
+        redrawProof();
     }
 
     /**

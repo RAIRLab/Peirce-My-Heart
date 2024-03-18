@@ -312,11 +312,19 @@ async function loadMode(): Promise<void> {
 }
 
 async function handleUndo(): Promise<void> {
-    TreeContext.undoDrawStep();
+    if (TreeContext.modeState === "Draw") {
+        TreeContext.undoDrawStep();
+    } else {
+        TreeContext.undoProofStep();
+    }
 }
 
 async function handleRedo(): Promise<void> {
-    TreeContext.redoDrawStep();
+    if (TreeContext.modeState === "Draw") {
+        TreeContext.redoDrawStep();
+    } else {
+        TreeContext.redoProofStep();
+    }
 }
 
 //TODO: replace all of this with polymorphism -James

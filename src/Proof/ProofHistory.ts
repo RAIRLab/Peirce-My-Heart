@@ -5,9 +5,9 @@
  * @author Dawn Moore
  */
 
+import {ProofModeMove} from "./ProofModeMove";
 import {ProofNode} from "./ProofNode";
 import {redrawProof} from "../SharedToolUtils/DrawUtils";
-import {ProofModeMove} from "./ProofModeMove";
 import {TreeContext} from "../TreeContext";
 
 /**
@@ -100,4 +100,8 @@ export function deleteButtons(stopIndex: number): void {
     for (let i = TreeContext.proof.length; i > stopIndex + 1; i--) {
         document.getElementById("Row: " + i)?.remove();
     }
+}
+
+export function deleteMostRecentButton(): void {
+    document.getElementById("Row: " + TreeContext.proof.length)?.remove();
 }
