@@ -28,10 +28,6 @@ export class DrawModeStack {
         return poppedNode;
     }
 
-    public topple(indexToToppleFrom: number): void {
-        this.history.splice(indexToToppleFrom, this.history.length - 1 - indexToToppleFrom);
-    }
-
     public clear(): void {
         this.history = [];
     }

@@ -10,6 +10,7 @@ import {DrawModeMove} from "./History/DrawModeMove";
 import {DrawModeNode} from "./History/DrawModeNode";
 import {DrawModeStack} from "./History/DrawModeStack";
 import {ProofModeMove} from "./Proof/ProofModeMove";
+import {ProofModeStack} from "./Proof/ProofModeStack";
 import {ProofNode} from "./Proof/ProofNode";
 import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 
@@ -52,7 +53,11 @@ export class TreeContext {
 
     public static drawHistoryRedoStack: DrawModeStack = new DrawModeStack();
 
-    private static recentlyUndoneOrRedoneMove = false;
+    private static recentlyUndoneOrRedoneDrawMove = false;
+
+    public static proofHistoryRedoStack: ProofModeStack = new ProofModeStack();
+
+    private static recentlyUndoneOrRedoneProofMove = false;
 
     //The proof is a series of ProofNodes.
     public static proof: ProofNode[] = [];
@@ -75,9 +80,9 @@ export class TreeContext {
      * @param newlyAppliedStep Incoming DrawModeMove.
      */
     public static pushToDrawStack(newlyAppliedStep: DrawModeMove): void {
-        if (this.recentlyUndoneOrRedoneMove) {
+        if (this.recentlyUndoneOrRedoneDrawMove) {
             this.drawHistoryRedoStack.clear();
-            this.recentlyUndoneOrRedoneMove = false;
+            this.recentlyUndoneOrRedoneDrawMove = false;
         }
         this.drawHistoryUndoStack.push(new DrawModeNode(this.tree, newlyAppliedStep));
     }
@@ -100,7 +105,7 @@ export class TreeContext {
 
         redrawTree(this.tree);
 
-        this.recentlyUndoneOrRedoneMove = true;
+        this.recentlyUndoneOrRedoneDrawMove = true;
     }
 
     public static redoDrawStep(): void {
@@ -112,29 +117,48 @@ export class TreeContext {
 
         this.drawHistoryUndoStack.push(mostRecentStep);
 
-        //i seem to have accidentally made the correct procedure by copy/pasting the incorrect name
-        //here and below are all supposed to be drawHistoryRedoStack but that ruins the behavior
         this.tree = new AEGTree(this.drawHistoryUndoStack.peek().tree.sheet);
 
         redrawTree(this.tree);
 
-        this.recentlyUndoneOrRedoneMove = true;
+        this.recentlyUndoneOrRedoneDrawMove = true;
     }
 
     public static undoProofStep(): void {
         if (this.proof.length <= 1) {
+            this.clearProof();
             return;
         }
 
-        const stepToRemove: ProofNode = this.proof[this.proof.length - 1 - 1];
+        const stepToRemove: ProofNode = this.proof[this.proof.length - 1];
 
-        this.tree = new AEGTree(stepToRemove.tree.sheet);
-        this.proof.splice(this.proof.length - 1, 1)[0];
+        deleteMostRecentButton();
+
+        this.proofHistoryRedoStack.push(stepToRemove);
+
+        this.proof.splice(this.proof.length - 1, 1)[0]; //.pop();
         stepBack(this.proof[this.proof.length - 1]);
         redrawProof();
+
+        this.recentlyUndoneOrRedoneProofMove = true;
     }
 
     public static redoProofStep(): void {
+        if (this.proofHistoryRedoStack.history.length === 0) {
+            return;
+        }
+
+        const mostRecentStep: ProofNode | null = this.proofHistoryRedoStack.pop();
+
+        if (mostRecentStep === null || this.proof[this.proof.length - 1] === null) {
+            return;
+        }
+
+        this.recentlyUndoneOrRedoneProofMove = false;
+
+        this.pushToProof(mostRecentStep);
+
+        stepBack(this.proof[this.proof.length - 1]);
         redrawProof();
     }
 
@@ -159,6 +183,11 @@ export class TreeContext {
      * @param newStep Incoming ProofNode.
      */
     public static pushToProof(newStep: ProofNode): void {
+        if (this.recentlyUndoneOrRedoneProofMove) {
+            this.proofHistoryRedoStack.clear();
+            this.recentlyUndoneOrRedoneProofMove = false;
+        }
+
         if (newStep.appliedRule === ProofModeMove.PASTE_GRAPH) {
             this.proof.pop();
             document.getElementById("Row: 1")?.remove();
