@@ -316,7 +316,7 @@ async function handleUndo(): Promise<void> {
 }
 
 async function handleRedo(): Promise<void> {
-    console.log("");
+    TreeContext.redoDrawStep();
 }
 
 //TODO: replace all of this with polymorphism -James

@@ -47,8 +47,12 @@ export class TreeContext {
     //Current AEGTree on canvas.
     public static tree: AEGTree = new AEGTree();
 
-    //For undoing and redoing changes in Draw Mode.
-    public static drawHistory: DrawModeStack = new DrawModeStack();
+    //For undoing changes in Draw Mode.
+    public static drawHistoryUndoStack: DrawModeStack = new DrawModeStack();
+
+    public static drawHistoryRedoStack: DrawModeStack = new DrawModeStack();
+
+    private static recentlyUndoneOrRedoneMove = false;
 
     //The proof is a series of ProofNodes.
     public static proof: ProofNode[] = [];
@@ -71,29 +75,56 @@ export class TreeContext {
      * @param newlyAppliedStep Incoming DrawModeMove.
      */
     public static pushToDrawStack(newlyAppliedStep: DrawModeMove): void {
-        this.drawHistory.push(new DrawModeNode(this.tree, newlyAppliedStep));
+        if (this.recentlyUndoneOrRedoneMove) {
+            this.drawHistoryRedoStack.clear();
+        }
+        this.drawHistoryUndoStack.push(new DrawModeNode(this.tree, newlyAppliedStep));
     }
 
     /**
      * Pops the most recent draw mode move from drawHistory and changes tree accordingly.
      */
     public static undoDrawStep(): void {
-        const mostRecentStep: DrawModeNode | null = this.drawHistory.pop();
+        const mostRecentStep: DrawModeNode | null = this.drawHistoryUndoStack.pop();
 
         let newTree: AEGTree;
 
-        if (mostRecentStep === null || this.drawHistory.peek() === null) {
+        if (mostRecentStep === null || this.drawHistoryUndoStack.peek() === null) {
             newTree = new AEGTree();
             this.tree = newTree;
             redrawTree(newTree);
             return;
         }
 
-        this.tree = new AEGTree(this.drawHistory.peek().tree.sheet);
+        this.drawHistoryRedoStack.push(mostRecentStep);
 
-        newTree = new AEGTree(this.drawHistory.peek().tree.sheet);
+        this.tree = new AEGTree(this.drawHistoryUndoStack.peek().tree.sheet);
+
+        newTree = new AEGTree(this.drawHistoryUndoStack.peek().tree.sheet);
 
         redrawTree(newTree);
+
+        this.recentlyUndoneOrRedoneMove = true;
+    }
+
+    public static redoDrawStep(): void {
+        const mostRecentStep: DrawModeNode | null = this.drawHistoryRedoStack.pop();
+
+        if (mostRecentStep === null || this.drawHistoryUndoStack.peek() === null) {
+            return;
+        }
+
+        this.drawHistoryUndoStack.push(mostRecentStep);
+
+        //i seem to have accidentally made the correct procedure by copy/pasting the incorrect name
+        //here and below are all supposed to be drawHistoryRedoStack but that ruins the behavior
+        this.tree = new AEGTree(this.drawHistoryUndoStack.peek().tree.sheet);
+
+        const newTree: AEGTree = new AEGTree(this.drawHistoryUndoStack.peek().tree.sheet);
+
+        redrawTree(newTree);
+
+        this.recentlyUndoneOrRedoneMove = true;
     }
 
     /**

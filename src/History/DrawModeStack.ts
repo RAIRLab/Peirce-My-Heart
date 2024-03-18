@@ -28,6 +28,14 @@ export class DrawModeStack {
         return poppedNode;
     }
 
+    public topple(indexToToppleFrom: number): void {
+        this.history.splice(indexToToppleFrom, this.history.length - 1 - indexToToppleFrom);
+    }
+
+    public clear(): void {
+        this.history = [];
+    }
+
     public peek(): DrawModeNode {
         return this.history.length !== 0
             ? this.history[this.history.length - 1]
