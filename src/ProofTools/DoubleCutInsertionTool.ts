@@ -73,14 +73,8 @@ export function doubleCutInsertionMouseMove(event: MouseEvent): void {
     const smallCut: CutNode = new CutNode(calcSmallEllipse(<Ellipse>largeCut.ellipse));
     redrawProof();
 
-    if (!wasOut && largeCut.ellipse !== null && smallCut.ellipse !== null) {
-        const legal =
-            currentProofTree.canInsert(largeCut) &&
-            ellipseLargeEnough(largeCut.ellipse) &&
-            currentProofTree.canInsert(smallCut) &&
-            ellipseLargeEnough(smallCut.ellipse);
-
-        const color = legal ? legalColor() : illegalColor();
+    if (!wasOut) {
+        const color = selectAndHighlightHandler(largeCut, smallCut) ? legalColor() : illegalColor();
         drawCut(largeCut, color);
         drawCut(smallCut, color);
         determineAndChangeCursorStyle(color, "cursor: crosshair", "cursor: no-drop");
@@ -111,18 +105,10 @@ export function doubleCutInsertionMouseUp(event: MouseEvent): void {
 
     const nextProof = new ProofModeNode(currentProofTree, ProofModeMove.DC_INSERT);
 
-    if (!wasOut && largeCut.ellipse !== null && smallCut.ellipse !== null) {
-        const legal =
-            currentProofTree.canInsert(largeCut) &&
-            ellipseLargeEnough(largeCut.ellipse) &&
-            currentProofTree.canInsert(smallCut) &&
-            ellipseLargeEnough(smallCut.ellipse);
-
-        if (legal) {
-            nextProof.tree.insert(largeCut);
-            nextProof.tree.insert(smallCut);
-            TreeContext.pushToProof(nextProof);
-        }
+    if (!wasOut && selectAndHighlightHandler(largeCut, smallCut)) {
+        nextProof.tree.insert(largeCut);
+        nextProof.tree.insert(smallCut);
+        TreeContext.pushToProof(nextProof);
     }
     redrawProof();
 }
@@ -148,4 +134,42 @@ function calcSmallEllipse(ellipse: Ellipse): Ellipse {
         Math.floor(ellipse.radiusX * 0.8),
         Math.floor(ellipse.radiusY * 0.8)
     );
+}
+
+/**
+ * Determines if the two cuts are both in legal positions, are considered larger enough to be legal
+ * and ensures the larger cut will not have any children except the smaller cut.
+ * @param largeCut The outer cut of the double cut being drawn
+ * @param smallCut The inner cut of the double cut being drawn
+ * @returns If the current double cut is in a valid position for placement
+ */
+function selectAndHighlightHandler(largeCut: CutNode, smallCut: CutNode): boolean {
+    return (
+        largeCut.ellipse !== null &&
+        smallCut.ellipse !== null &&
+        currentProofTree.canInsert(largeCut) &&
+        ellipseLargeEnough(largeCut.ellipse) &&
+        currentProofTree.canInsert(smallCut) &&
+        ellipseLargeEnough(smallCut.ellipse) &&
+        largeCutChildrenCheck(largeCut, smallCut)
+    );
+}
+
+/**
+ * Creates a copy of the current tree, and the current cuts and inserts them into the copied tree.
+ * If the inserted larger cut has any children besides the inner cut then it is not a valid double cut
+ * and returns false.
+ * @param largeCut The outer cut of the double cut being drawn
+ * @param smallCut The inner cut of the double cut being drawn
+ * @returns Whether or not the larger cut will only have the inner cut as a child
+ */
+function largeCutChildrenCheck(largeCut: CutNode, smallCut: CutNode): boolean {
+    const treeCopy: AEGTree = new AEGTree(currentProofTree.sheet);
+    const largeCutCopy: CutNode = new CutNode(largeCut.ellipse);
+    const smallCutCopy: CutNode = new CutNode(smallCut.ellipse);
+
+    treeCopy.insert(largeCutCopy);
+    treeCopy.insert(smallCutCopy);
+
+    return largeCutCopy.children.length === 1;
 }
