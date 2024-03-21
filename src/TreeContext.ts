@@ -13,9 +13,7 @@ import {
 } from "./ProofHistory/ProofHistory";
 import {DrawModeMove} from "./DrawHistory/DrawModeMove";
 import {DrawModeNode} from "./DrawHistory/DrawModeNode";
-import {DrawModeStack} from "./DrawHistory/DrawModeStack";
 import {ProofModeMove} from "./ProofHistory/ProofModeMove";
-import {ProofModeStack} from "./ProofHistory/ProofModeStack";
 import {ProofModeNode} from "./ProofHistory/ProofModeNode";
 import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 
@@ -54,22 +52,22 @@ export class TreeContext {
     public static tree: AEGTree = new AEGTree();
 
     //For undoing changes in Draw Mode.
-    public static drawHistoryUndoStack: DrawModeStack = new DrawModeStack();
+    public static drawHistoryUndoStack: DrawModeNode[] = [];
 
     //For redoing changes in Draw Mode.
-    public static drawHistoryRedoStack: DrawModeStack = new DrawModeStack();
+    public static drawHistoryRedoStack: DrawModeNode[] = [];
 
     //Determines when to clear drawHistoryRedoStack.
     private static recentlyUndoneOrRedoneDrawMove = false;
 
+    //The proof is a series of ProofNodes.
+    public static proof: ProofModeNode[] = [];
+
     //For redoing changes in Proof Mode.
-    public static proofHistoryRedoStack: ProofModeStack = new ProofModeStack();
+    public static proofHistoryRedoStack: ProofModeNode[] = [];
 
     //Determines when to clear proofHistoryRedoStack.
     private static recentlyUndoneOrRedoneProofMove = false;
-
-    //The proof is a series of ProofNodes.
-    public static proof: ProofModeNode[] = [];
 
     //Current step in the proof.
     public static currentProofStep: ProofModeNode | undefined;
@@ -90,7 +88,7 @@ export class TreeContext {
      */
     public static pushToDrawStack(newlyAppliedStep: DrawModeMove): void {
         if (this.recentlyUndoneOrRedoneDrawMove) {
-            this.drawHistoryRedoStack.clear();
+            this.drawHistoryRedoStack = [];
             this.recentlyUndoneOrRedoneDrawMove = false;
         }
         this.drawHistoryUndoStack.push(new DrawModeNode(this.tree, newlyAppliedStep));
@@ -100,9 +98,12 @@ export class TreeContext {
      * Pops the most recent Draw Mode move from drawHistoryUndoStack and changes tree accordingly.
      */
     public static undoDrawStep(): void {
-        const mostRecentStep: DrawModeNode | null = this.drawHistoryUndoStack.pop();
+        const mostRecentStep: DrawModeNode | undefined = this.drawHistoryUndoStack.pop();
 
-        if (mostRecentStep === null || this.drawHistoryUndoStack.peek() === null) {
+        if (
+            mostRecentStep === undefined ||
+            this.drawHistoryUndoStack[this.drawHistoryUndoStack.length - 1] === undefined
+        ) {
             this.tree = new AEGTree();
             redrawTree(this.tree);
             return;
@@ -110,7 +111,9 @@ export class TreeContext {
 
         this.drawHistoryRedoStack.push(mostRecentStep);
 
-        this.tree = new AEGTree(this.drawHistoryUndoStack.peek().tree.sheet);
+        this.tree = new AEGTree(
+            this.drawHistoryUndoStack[this.drawHistoryUndoStack.length - 1].tree.sheet
+        );
 
         redrawTree(this.tree);
 
@@ -121,15 +124,20 @@ export class TreeContext {
      * Pops the most recent Draw Mode move from drawHistoryRedoStack and changes tree accordingly.
      */
     public static redoDrawStep(): void {
-        const mostRecentStep: DrawModeNode | null = this.drawHistoryRedoStack.pop();
+        const mostRecentStep: DrawModeNode | undefined = this.drawHistoryRedoStack.pop();
 
-        if (mostRecentStep === null || this.drawHistoryUndoStack.peek() === null) {
+        if (
+            mostRecentStep === undefined ||
+            this.drawHistoryUndoStack[this.drawHistoryUndoStack.length - 1] === undefined
+        ) {
             return;
         }
 
         this.drawHistoryUndoStack.push(mostRecentStep);
 
-        this.tree = new AEGTree(this.drawHistoryUndoStack.peek().tree.sheet);
+        this.tree = new AEGTree(
+            this.drawHistoryUndoStack[this.drawHistoryUndoStack.length - 1].tree.sheet
+        );
 
         redrawTree(this.tree);
 
@@ -162,13 +170,13 @@ export class TreeContext {
      * Pops the most recent Proof Mode move from proofHistoryRedoStack and updates proof bar.
      */
     public static redoProofStep(): void {
-        if (this.proofHistoryRedoStack.history.length === 0) {
+        if (this.proofHistoryRedoStack.length === 0) {
             return;
         }
 
-        const mostRecentStep: ProofModeNode | null = this.proofHistoryRedoStack.pop();
+        const mostRecentStep: ProofModeNode | undefined = this.proofHistoryRedoStack.pop();
 
-        if (mostRecentStep === null || this.proof[this.proof.length - 1] === null) {
+        if (mostRecentStep === undefined || this.proof[this.proof.length - 1] === undefined) {
             return;
         }
 
@@ -202,7 +210,7 @@ export class TreeContext {
      */
     public static pushToProof(newStep: ProofModeNode): void {
         if (this.recentlyUndoneOrRedoneProofMove) {
-            this.proofHistoryRedoStack.clear();
+            this.proofHistoryRedoStack = [];
             this.recentlyUndoneOrRedoneProofMove = false;
         }
 
