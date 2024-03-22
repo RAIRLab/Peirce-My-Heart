@@ -7,7 +7,7 @@
 
 import {AEGTree} from "./AEG/AEGTree";
 import {loadFile} from "./AEG-IO";
-import {ProofNode} from "./Proof/ProofNode";
+import {ProofModeNode} from "./ProofHistory/ProofModeNode";
 import {proofString, treeString} from "./index";
 import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 import {Tool, TreeContext} from "./TreeContext";
@@ -75,13 +75,13 @@ export function toggleHandler(): void {
         drawCachedTool = TreeContext.toolState;
 
         if (TreeContext.proof.length === 0) {
-            TreeContext.pushToProof(new ProofNode());
+            TreeContext.pushToProof(new ProofModeNode());
         }
 
         //Load our proof structure and tool state.
-        let loadedProof: ProofNode[] | null = null;
+        let loadedProof: ProofModeNode[] | null = null;
         if (proofCachedAEG !== null) {
-            loadedProof = loadFile(TreeContext.modeState, proofCachedAEG) as ProofNode[] | null;
+            loadedProof = loadFile(TreeContext.modeState, proofCachedAEG) as ProofModeNode[] | null;
         }
         if (loadedProof !== null) {
             TreeContext.proof = loadedProof;

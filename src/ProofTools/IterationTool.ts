@@ -23,7 +23,7 @@ import {getCurrentProofTree} from "./ProofToolUtils";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
-import {ProofNode} from "../Proof/ProofNode";
+import {ProofModeMove, ProofModeNode} from "../ProofHistory/ProofModeNode";
 import {TreeContext} from "../TreeContext";
 
 //First Point the user clicks.
@@ -111,7 +111,7 @@ export function iterationMouseUp(event: MouseEvent): void {
                 const tempAtom: AtomNode = EditModeUtils.alterAtom(currentNode, moveDifference);
                 currentProofTree.insert(tempAtom);
             }
-            TreeContext.pushToProof(new ProofNode(currentProofTree, "Iteration"));
+            TreeContext.pushToProof(new ProofModeNode(currentProofTree, ProofModeMove.ITERATION));
         }
     }
     redrawProof();

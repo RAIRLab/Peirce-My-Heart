@@ -6,6 +6,7 @@
 
 import {AEGTree} from "../AEG/AEGTree";
 import {cleanCanvas, highlightNode, redrawTree} from "../SharedToolUtils/DrawUtils";
+import {DrawModeMove} from "../DrawHistory/DrawModeNode";
 import {illegalColor} from "../Themes";
 import {TreeContext} from "../TreeContext";
 
@@ -28,6 +29,7 @@ export function drawClearMouseUp(): void {
     if (legalNode) {
         TreeContext.tree = new AEGTree();
         redrawTree(TreeContext.tree);
+        TreeContext.pushToDrawStack(DrawModeMove.CLEAR);
     }
 }
 

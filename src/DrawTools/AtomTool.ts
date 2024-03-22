@@ -12,6 +12,7 @@
 import {AtomNode} from "../AEG/AtomNode";
 import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {drawAtom} from "../SharedToolUtils/DrawUtils";
+import {DrawModeMove} from "../DrawHistory/DrawModeNode";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
@@ -100,6 +101,7 @@ export function atomMouseUp(event: MouseEvent): void {
     );
     if (TreeContext.tree.canInsert(currentAtom) && !wasOut) {
         TreeContext.tree.insert(currentAtom);
+        TreeContext.pushToDrawStack(DrawModeMove.DRAW_ATOM);
     }
     redrawTree(TreeContext.tree);
     hasMouseDown = false;
@@ -117,11 +119,13 @@ export function atomMouseOut(): void {
 
 /**
  * Constructs a new AtomNode at the incoming Point.
- * This AtomNode is created with the incoming string as an identifier and a width and height retrieved from the font's text metrics.
+ * This AtomNode is created with the incoming string as an identifier and a width
+ * and height retrieved from the font's text metrics.
  *
  * @param identifier Incoming string.
  * @param origin Incoming Point.
- * @returns AtomNode at origin with identifier as its letter and appropriate width and height depending on font.
+ * @returns AtomNode at origin with identifier as its letter and appropriate width
+ * and height depending on font.
  */
 function createAtom(identifier: string, origin: Point): AtomNode {
     atomDisplay.innerHTML = identifier;
@@ -137,7 +141,7 @@ function createAtom(identifier: string, origin: Point): AtomNode {
 /**
  * Draws currentAtom as legalColor or illegalColor.
  * legalColor is chosen if currentAtom's position is valid.
- * IllegalColor is chose if currentAtom's position is not valid.
+ * IllegalColor is chosen if currentAtom's position is not valid.
  */
 function determineDrawColor(): void {
     redrawTree(TreeContext.tree);
