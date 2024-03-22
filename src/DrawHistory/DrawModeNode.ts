@@ -1,11 +1,25 @@
 /**
  * @file Contains the DrawModeNode class, which defines a step taken in Draw Mode.
+ * Also contains the DrawModeMove enum.
  *
  * @author Ryan R
  */
 
 import {AEGTree} from "../AEG/AEGTree";
-import {DrawModeMove} from "./DrawModeMove";
+
+export enum DrawModeMove {
+    CLEAR,
+    DRAW_ATOM,
+    DRAW_CUT,
+    MOVE_SINGLE,
+    MOVE_MULTI,
+    COPY_SINGLE,
+    COPY_MULTI,
+    DELETE_SINGLE,
+    DELETE_MULTI,
+    RESIZE,
+    COPY_GRAPH,
+}
 
 export class DrawModeNode {
     public tree: AEGTree;

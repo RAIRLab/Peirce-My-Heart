@@ -13,8 +13,7 @@ import {getCurrentProofTree} from "./ProofToolUtils";
 import {illegalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
-import {ProofModeMove} from "../ProofHistory/ProofModeMove";
-import {ProofModeNode} from "../ProofHistory/ProofModeNode";
+import {ProofModeMove, ProofModeNode} from "../ProofHistory/ProofModeNode";
 import {readdChildren, reInsertNode} from "../SharedToolUtils/EditModeUtils";
 import {TreeContext} from "../TreeContext";
 

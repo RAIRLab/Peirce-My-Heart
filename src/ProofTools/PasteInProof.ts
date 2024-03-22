@@ -8,8 +8,7 @@ import {AEGTree} from "../AEG/AEGTree";
 import {changeCursorStyle, redrawProof} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {getCurrentProofTree} from "./ProofToolUtils";
-import {ProofModeMove} from "../ProofHistory/ProofModeMove";
-import {ProofModeNode} from "../ProofHistory/ProofModeNode";
+import {ProofModeMove, ProofModeNode} from "../ProofHistory/ProofModeNode";
 import {TreeContext} from "../TreeContext";
 
 //AEG in question.

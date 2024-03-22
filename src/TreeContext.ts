@@ -11,10 +11,8 @@ import {
     deleteMostRecentButton,
     stepBack,
 } from "./ProofHistory/ProofHistory";
-import {DrawModeMove} from "./DrawHistory/DrawModeMove";
-import {DrawModeNode} from "./DrawHistory/DrawModeNode";
-import {ProofModeMove} from "./ProofHistory/ProofModeMove";
-import {ProofModeNode} from "./ProofHistory/ProofModeNode";
+import {DrawModeMove, DrawModeNode} from "./DrawHistory/DrawModeNode";
+import {ProofModeMove, ProofModeNode} from "./ProofHistory/ProofModeNode";
 import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 
 /**

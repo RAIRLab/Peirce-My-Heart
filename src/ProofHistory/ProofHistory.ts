@@ -5,10 +5,23 @@
  * @author Dawn Moore
  */
 
-import {ProofModeMove} from "./ProofModeMove";
-import {ProofModeNode} from "./ProofModeNode";
+import {ProofModeMove, ProofModeNode} from "./ProofModeNode";
 import {redrawProof} from "../SharedToolUtils/DrawUtils";
 import {TreeContext} from "../TreeContext";
+
+const proofMoveToIconStringDict: {[key in ProofModeMove]: string} = {
+    [ProofModeMove.CLEAR]: "",
+    [ProofModeMove.DC_INSERT]: "dot-circle-o",
+    [ProofModeMove.DC_DELETE]: "times-circle",
+    [ProofModeMove.MOVE_SINGLE]: "mouse-pointer",
+    [ProofModeMove.MOVE_MULTI]: "arrows",
+    [ProofModeMove.ITERATION]: "expand",
+    [ProofModeMove.DEITERATION]: "compress",
+    [ProofModeMove.INSERTION]: "plus",
+    [ProofModeMove.ERASURE]: "trash",
+    [ProofModeMove.RESIZE]: "arrows-alt",
+    [ProofModeMove.PASTE_GRAPH]: "files-o",
+};
 
 /**
  * Creates a button representing the incoming ProofNode as a step in the proof history
@@ -38,40 +51,7 @@ export function appendStep(newStep: ProofModeNode, step?: number): void {
     //Determines which type of step was taken to give the created button a corresponding icon.
     const icon = document.createElement("Text");
 
-    let iconString = "";
-
-    switch (newStep.appliedRule) {
-        case ProofModeMove.DC_INSERT:
-            iconString = "dot-circle-o";
-            break;
-        case ProofModeMove.DC_DELETE:
-            iconString = "times-circle";
-            break;
-        case ProofModeMove.MOVE_SINGLE:
-            iconString = "mouse-pointer";
-            break;
-        case ProofModeMove.MOVE_MULTI:
-            iconString = "arrows";
-            break;
-        case ProofModeMove.ITERATION:
-            iconString = "expand";
-            break;
-        case ProofModeMove.DEITERATION:
-            iconString = "compress";
-            break;
-        case ProofModeMove.INSERTION:
-            iconString = "plus";
-            break;
-        case ProofModeMove.ERASURE:
-            iconString = "trash";
-            break;
-        case ProofModeMove.RESIZE:
-            iconString = "arrows-alt";
-            break;
-        case ProofModeMove.PASTE_GRAPH:
-            iconString = "files-o";
-            break;
-    }
+    const iconString = proofMoveToIconStringDict[newStep.appliedRule];
 
     icon.className = "fa fa-" + iconString;
 

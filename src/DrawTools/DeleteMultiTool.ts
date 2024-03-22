@@ -10,7 +10,7 @@
 
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
-import {DrawModeMove} from "../DrawHistory/DrawModeMove";
+import {DrawModeMove} from "../DrawHistory/DrawModeNode";
 import {highlightNode, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {illegalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";

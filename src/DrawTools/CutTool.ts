@@ -14,7 +14,7 @@ import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUti
 import {createEllipse, ellipseLargeEnough} from "../SharedToolUtils/EditModeUtils";
 import {CutNode} from "../AEG/CutNode";
 import {drawCut, drawGuidelines, redrawTree} from "../SharedToolUtils/DrawUtils";
-import {DrawModeMove} from "../DrawHistory/DrawModeMove";
+import {DrawModeMove} from "../DrawHistory/DrawModeNode";
 import {Ellipse} from "../AEG/Ellipse";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";

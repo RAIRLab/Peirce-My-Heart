@@ -9,8 +9,7 @@ import {AtomNode} from "./AEG/AtomNode";
 import {CutNode} from "./AEG/CutNode";
 import {Ellipse} from "./AEG/Ellipse";
 import {Point} from "./AEG/Point";
-import {ProofModeMove} from "./ProofHistory/ProofModeMove";
-import {ProofModeNode} from "./ProofHistory/ProofModeNode";
+import {ProofModeMove, ProofModeNode} from "./ProofHistory/ProofModeNode";
 
 /**
  * Describes The Sheet of Assertion in JSON files.

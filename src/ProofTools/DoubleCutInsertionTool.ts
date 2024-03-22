@@ -21,8 +21,7 @@ import {getCurrentProofTree} from "./ProofToolUtils";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
-import {ProofModeMove} from "../ProofHistory/ProofModeMove";
-import {ProofModeNode} from "../ProofHistory/ProofModeNode";
+import {ProofModeMove, ProofModeNode} from "../ProofHistory/ProofModeNode";
 import {TreeContext} from "../TreeContext";
 
 //Checkbox next to "Show Guidelines:" in Proof Mode's Double Cut Insertion tool.

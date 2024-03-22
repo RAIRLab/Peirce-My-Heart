@@ -10,7 +10,7 @@ import {AtomNode} from "../AEG/AtomNode";
 import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {cleanCanvas, highlightNode, redrawTree} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
-import {DrawModeMove} from "../DrawHistory/DrawModeMove";
+import {DrawModeMove} from "../DrawHistory/DrawModeNode";
 import {legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
