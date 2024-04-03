@@ -98,12 +98,12 @@ export class TreeContext {
     public static undoDrawStep(): void {
         const mostRecentStep: DrawModeNode | undefined = this.drawHistoryUndoStack.pop();
 
-        if (
-            mostRecentStep === undefined ||
-            this.drawHistoryUndoStack[this.drawHistoryUndoStack.length - 1] === undefined
-        ) {
+        if (mostRecentStep === undefined) {
+            return;
+        } else if (this.drawHistoryUndoStack[this.drawHistoryUndoStack.length - 1] === undefined) {
             this.tree = new AEGTree();
             redrawTree(this.tree);
+            this.drawHistoryRedoStack.push(mostRecentStep);
             return;
         }
 
@@ -124,18 +124,18 @@ export class TreeContext {
     public static redoDrawStep(): void {
         const mostRecentStep: DrawModeNode | undefined = this.drawHistoryRedoStack.pop();
 
-        if (
-            mostRecentStep === undefined ||
-            this.drawHistoryUndoStack[this.drawHistoryUndoStack.length - 1] === undefined
-        ) {
+        if (mostRecentStep === undefined) {
+            return;
+        } else if (this.drawHistoryRedoStack[this.drawHistoryRedoStack.length - 1] === undefined) {
+            this.tree = new AEGTree(mostRecentStep.tree.sheet);
+            redrawTree(this.tree);
+            this.drawHistoryUndoStack.push(mostRecentStep);
             return;
         }
 
         this.drawHistoryUndoStack.push(mostRecentStep);
 
-        this.tree = new AEGTree(
-            this.drawHistoryUndoStack[this.drawHistoryUndoStack.length - 1].tree.sheet
-        );
+        this.tree = new AEGTree(mostRecentStep.tree.sheet);
 
         redrawTree(this.tree);
 
