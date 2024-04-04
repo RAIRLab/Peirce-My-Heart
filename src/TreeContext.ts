@@ -147,17 +147,22 @@ export class TreeContext {
      */
     public static undoProofStep(): void {
         if (this.proof.length <= 1) {
-            this.clearProof();
             return;
         }
 
-        const stepToRemove: ProofModeNode = this.proof[this.proof.length - 1];
+        const mostRecentStep: ProofModeNode | undefined = this.proof.pop();
+
+        if (mostRecentStep === undefined) {
+            return;
+        } else if (this.proof.length === 0) {
+            deleteMostRecentButton();
+            return;
+        }
 
         deleteMostRecentButton();
 
-        this.proofHistoryRedoStack.push(stepToRemove);
+        this.proofHistoryRedoStack.push(mostRecentStep);
 
-        this.proof.pop();
         stepBack(this.proof[this.proof.length - 1]);
         redrawProof();
 
@@ -174,7 +179,13 @@ export class TreeContext {
 
         const mostRecentStep: ProofModeNode | undefined = this.proofHistoryRedoStack.pop();
 
-        if (mostRecentStep === undefined || this.proof[this.proof.length - 1] === undefined) {
+        if (mostRecentStep === undefined) {
+            return;
+        } else if (
+            this.proofHistoryRedoStack[this.proofHistoryRedoStack.length - 1] === undefined
+        ) {
+            this.pushToProof(mostRecentStep);
+            redrawProof();
             return;
         }
 
@@ -182,7 +193,7 @@ export class TreeContext {
 
         this.pushToProof(mostRecentStep);
 
-        stepBack(this.proof[this.proof.length - 1]);
+        stepBack(mostRecentStep);
         redrawProof();
     }
 

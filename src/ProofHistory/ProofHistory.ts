@@ -86,5 +86,5 @@ export function deleteButtons(stopIndex: number): void {
  * Removes the most recent move's button from the proof bar.
  */
 export function deleteMostRecentButton(): void {
-    document.getElementById("Row: " + TreeContext.proof.length)?.remove();
+    document.getElementById("Row: " + (TreeContext.proof.length + 1))?.remove();
 }
