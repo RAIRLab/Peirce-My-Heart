@@ -5,9 +5,23 @@
  * @author Dawn Moore
  */
 
-import {ProofNode} from "./ProofNode";
+import {ProofModeMove, ProofModeNode} from "./ProofModeNode";
 import {redrawProof} from "../SharedToolUtils/DrawUtils";
 import {TreeContext} from "../TreeContext";
+
+const proofMoveToIconStringDict: {[key in ProofModeMove]: string} = {
+    [ProofModeMove.CLEAR]: "",
+    [ProofModeMove.DC_INSERT]: "dot-circle-o",
+    [ProofModeMove.DC_DELETE]: "times-circle",
+    [ProofModeMove.MOVE_SINGLE]: "mouse-pointer",
+    [ProofModeMove.MOVE_MULTI]: "arrows",
+    [ProofModeMove.ITERATION]: "expand",
+    [ProofModeMove.DEITERATION]: "compress",
+    [ProofModeMove.INSERTION]: "plus",
+    [ProofModeMove.ERASURE]: "trash",
+    [ProofModeMove.RESIZE]: "arrows-alt",
+    [ProofModeMove.PASTE_GRAPH]: "files-o",
+};
 
 /**
  * Creates a button representing the incoming ProofNode as a step in the proof history
@@ -16,7 +30,7 @@ import {TreeContext} from "../TreeContext";
  * @param newStep Incoming ProofNode.
  * @param step Index of newStep in the history.
  */
-export function appendStep(newStep: ProofNode, step?: number): void {
+export function appendStep(newStep: ProofModeNode, step?: number): void {
     const newDiv = document.createElement("div");
     newDiv.className = "row";
     const stepNumber = step ? step : TreeContext.proof.length;
@@ -36,20 +50,10 @@ export function appendStep(newStep: ProofNode, step?: number): void {
 
     //Determines which type of step was taken to give the created button a corresponding icon.
     const icon = document.createElement("Text");
-    icon.className =
-        "fa fa-" +
-        {
-            "Single Move": "mouse-pointer",
-            "Multi Move": "arrows",
-            Resize: "arrows-alt",
-            "DC Insert": "dot-circle-o",
-            "DC Delete": "times-circle",
-            Insertion: "plus",
-            Erasure: "trash",
-            Iteration: "expand",
-            Deiteration: "compress",
-            Pasted: "files-o",
-        }[newStep.appliedRule];
+
+    const iconString = proofMoveToIconStringDict[newStep.appliedRule];
+
+    icon.className = "fa fa-" + iconString;
 
     button.appendChild(icon);
     newDiv.appendChild(button);
@@ -62,7 +66,7 @@ export function appendStep(newStep: ProofNode, step?: number): void {
  *
  * @param selectedStep Incoming ProofNode.
  */
-export function stepBack(selectedStep: ProofNode): void {
+export function stepBack(selectedStep: ProofModeNode): void {
     TreeContext.currentProofStep = selectedStep;
     redrawProof();
 }
@@ -76,4 +80,11 @@ export function deleteButtons(stopIndex: number): void {
     for (let i = TreeContext.proof.length; i > stopIndex + 1; i--) {
         document.getElementById("Row: " + i)?.remove();
     }
+}
+
+/**
+ * Removes the most recent move's button from the proof bar.
+ */
+export function deleteMostRecentButton(): void {
+    document.getElementById("Row: " + (TreeContext.proof.length + 1))?.remove();
 }

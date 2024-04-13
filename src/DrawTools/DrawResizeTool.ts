@@ -14,6 +14,7 @@ import {AtomNode} from "../AEG/AtomNode";
 import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {determineDirection, drawCut, redrawTree} from "../SharedToolUtils/DrawUtils";
+import {DrawModeMove} from "../DrawHistory/DrawModeNode";
 import {ellipseLargeEnough, resizeCut} from "../SharedToolUtils/EditModeUtils";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
@@ -122,6 +123,7 @@ export function drawResizeMouseUp(event: MouseEvent): void {
         }
         redrawTree(TreeContext.tree);
         legalNode = false;
+        TreeContext.pushToDrawStack(DrawModeMove.RESIZE);
     }
 }
 

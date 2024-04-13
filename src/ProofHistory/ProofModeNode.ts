@@ -7,10 +7,24 @@
 import {AEGTree} from "../AEG/AEGTree";
 import {TreeContext} from "../TreeContext";
 
+export enum ProofModeMove {
+    CLEAR,
+    DC_INSERT,
+    DC_DELETE,
+    MOVE_SINGLE,
+    MOVE_MULTI,
+    ITERATION,
+    DEITERATION,
+    INSERTION,
+    ERASURE,
+    RESIZE,
+    PASTE_GRAPH,
+}
+
 /**
  * Defines a single step in a proof.
  */
-export class ProofNode {
+export class ProofModeNode {
     /**
      * The AEGTree at this proof step.
      */
@@ -18,9 +32,8 @@ export class ProofNode {
 
     /**
      * Inference rule applied in this ProofNode.
-     * @todo Make this an enum. -James
      */
-    public appliedRule: string;
+    public appliedRule: ProofModeMove;
 
     /**
      * Index of this ProofNode in treeContext.ts' proof array.
@@ -36,8 +49,8 @@ export class ProofNode {
      * @param rule Inference rule applied.
      * If not passed in, appliedRule will be set as an empty string.
      */
-    public constructor(tree?: AEGTree, rule?: string) {
-        this.appliedRule = rule ?? "";
+    public constructor(tree?: AEGTree, rule?: ProofModeMove) {
+        this.appliedRule = rule ?? ProofModeMove.CLEAR;
         this.tree = new AEGTree(tree?.sheet);
         this.index = TreeContext.proof.length;
     }

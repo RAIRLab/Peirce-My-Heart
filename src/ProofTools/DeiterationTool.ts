@@ -13,7 +13,7 @@ import {highlightNode, redrawProof, redrawTree} from "../SharedToolUtils/DrawUti
 import {illegalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
-import {ProofNode} from "../Proof/ProofNode";
+import {ProofModeMove, ProofModeNode} from "../ProofHistory/ProofModeNode";
 import {reInsertNode} from "../SharedToolUtils/EditModeUtils";
 import {TreeContext} from "../TreeContext";
 
@@ -81,7 +81,7 @@ export function deiterationMouseUp(event: MouseEvent): void {
             if (currentParent instanceof CutNode) {
                 currentParent.remove(currentPoint);
             }
-            TreeContext.pushToProof(new ProofNode(currentProofTree, "Deiteration"));
+            TreeContext.pushToProof(new ProofModeNode(currentProofTree, ProofModeMove.DEITERATION));
         }
     }
     legalNode = false;
