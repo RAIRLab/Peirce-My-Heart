@@ -51,11 +51,8 @@ p {
     box-shadow: var(--mode-btn-shadow);
     color: var(--mode-btn-icon-color);
     text-align: center;
-}
 
 .toolButton:active {
-    transform: translateY(2px);
-}
 
 .toolButtonPressed {
     -webkit-box-shadow: var(--mode-btn-press-shadow); 
@@ -156,7 +153,6 @@ p {
     -webkit-user-select: none; 
     user-select: none; 
 }
-
 .toggle-switch {
     position: relative;
     display: block;
