@@ -57,7 +57,7 @@ export function toggleHandler(): void {
         if (loadedAEG !== null) {
             TreeContext.tree.sheet = loadedAEG.sheet;
         } else {
-            throw Error("invalid cached AEG");
+            throw Error("Invalidly cached AEG.");
         }
         TreeContext.toolState = drawCachedTool;
         redrawTree(TreeContext.tree);
