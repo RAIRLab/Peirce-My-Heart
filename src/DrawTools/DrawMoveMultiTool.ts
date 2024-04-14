@@ -13,6 +13,7 @@ import {AtomNode} from "../AEG/AtomNode";
 import {changeCursorStyle, determineAndChangeCursorStyle} from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {drawAtom, highlightNode, redrawTree} from "../SharedToolUtils/DrawUtils";
+import {DrawModeMove} from "../DrawHistory/DrawModeNode";
 import {illegalColor, legalColor} from "../Themes";
 import {offset} from "../SharedToolUtils/DragTool";
 import {Point} from "../AEG/Point";
@@ -117,6 +118,7 @@ export function drawMoveMultiMouseUp(event: MouseEvent): void {
                 TreeContext.tree.insert(currentNode);
             }
         }
+        TreeContext.pushToDrawStack(DrawModeMove.MOVE_MULTI);
     }
     redrawTree(TreeContext.tree);
     legalNode = false;

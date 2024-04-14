@@ -5,8 +5,15 @@
  */
 
 import {AEGTree} from "./AEG/AEGTree";
-import {appendStep, deleteButtons} from "./Proof/ProofHistory";
-import {ProofNode} from "./Proof/ProofNode";
+import {
+    appendStep,
+    deleteButtons,
+    deleteMostRecentButton,
+    stepBack,
+} from "./ProofHistory/ProofHistory";
+import {DrawModeMove, DrawModeNode} from "./DrawHistory/DrawModeNode";
+import {ProofModeMove, ProofModeNode} from "./ProofHistory/ProofModeNode";
+import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 
 /**
  * Represents the current tool in use.
@@ -42,11 +49,26 @@ export class TreeContext {
     //Current AEGTree on canvas.
     public static tree: AEGTree = new AEGTree();
 
+    //For undoing changes in Draw Mode.
+    public static drawHistoryUndoStack: DrawModeNode[] = [];
+
+    //For redoing changes in Draw Mode.
+    public static drawHistoryRedoStack: DrawModeNode[] = [];
+
+    //Determines when to clear drawHistoryRedoStack.
+    private static recentlyUndoneOrRedoneDrawMove = false;
+
     //The proof is a series of ProofNodes.
-    public static proof: ProofNode[] = [];
+    public static proof: ProofModeNode[] = [];
+
+    //For redoing changes in Proof Mode.
+    public static proofHistoryRedoStack: ProofModeNode[] = [];
+
+    //Determines when to clear proofHistoryRedoStack.
+    private static recentlyUndoneOrRedoneProofMove = false;
 
     //Current step in the proof.
-    public static currentProofStep: ProofNode | undefined;
+    public static currentProofStep: ProofModeNode | undefined;
 
     //Node selected with Draw Mode's "Select for copy to Proof Mode" button.
     public static selectForProof: AEGTree = new AEGTree();
@@ -58,13 +80,131 @@ export class TreeContext {
     public static modeState: "Draw" | "Proof" = "Draw";
 
     /**
+     * Adds the incoming DrawModeMove and the current tree to drawHistory.
+     *
+     * @param newlyAppliedStep Incoming DrawModeMove.
+     */
+    public static pushToDrawStack(newlyAppliedStep: DrawModeMove): void {
+        if (this.recentlyUndoneOrRedoneDrawMove) {
+            this.drawHistoryRedoStack = [];
+            this.recentlyUndoneOrRedoneDrawMove = false;
+        }
+        this.drawHistoryUndoStack.push(new DrawModeNode(this.tree, newlyAppliedStep));
+    }
+
+    /**
+     * Pops the most recent Draw Mode move from drawHistoryUndoStack and changes tree accordingly.
+     */
+    public static undoDrawStep(): void {
+        const mostRecentStep: DrawModeNode | undefined = this.drawHistoryUndoStack.pop();
+
+        if (mostRecentStep === undefined) {
+            return;
+        } else if (this.drawHistoryUndoStack[this.drawHistoryUndoStack.length - 1] === undefined) {
+            this.tree = new AEGTree();
+            redrawTree(this.tree);
+            this.drawHistoryRedoStack.push(mostRecentStep);
+            return;
+        }
+
+        this.drawHistoryRedoStack.push(mostRecentStep);
+
+        this.tree = new AEGTree(
+            this.drawHistoryUndoStack[this.drawHistoryUndoStack.length - 1].tree.sheet
+        );
+
+        redrawTree(this.tree);
+
+        this.recentlyUndoneOrRedoneDrawMove = true;
+    }
+
+    /**
+     * Pops the most recent Draw Mode move from drawHistoryRedoStack and changes tree accordingly.
+     */
+    public static redoDrawStep(): void {
+        const mostRecentStep: DrawModeNode | undefined = this.drawHistoryRedoStack.pop();
+
+        if (mostRecentStep === undefined) {
+            return;
+        } else if (this.drawHistoryRedoStack[this.drawHistoryRedoStack.length - 1] === undefined) {
+            this.tree = new AEGTree(mostRecentStep.tree.sheet);
+            redrawTree(this.tree);
+            this.drawHistoryUndoStack.push(mostRecentStep);
+            return;
+        }
+
+        this.drawHistoryUndoStack.push(mostRecentStep);
+
+        this.tree = new AEGTree(mostRecentStep.tree.sheet);
+
+        redrawTree(this.tree);
+
+        this.recentlyUndoneOrRedoneDrawMove = true;
+    }
+
+    /**
+     * Undoes the most recent Proof Mode move and deletes that button.
+     */
+    public static undoProofStep(): void {
+        if (this.proof.length <= 1) {
+            return;
+        }
+
+        const mostRecentStep: ProofModeNode | undefined = this.proof.pop();
+
+        if (mostRecentStep === undefined) {
+            return;
+        } else if (this.proof.length === 0) {
+            deleteMostRecentButton();
+            return;
+        }
+
+        deleteMostRecentButton();
+
+        this.proofHistoryRedoStack.push(mostRecentStep);
+
+        stepBack(this.proof[this.proof.length - 1]);
+        redrawProof();
+
+        this.recentlyUndoneOrRedoneProofMove = true;
+    }
+
+    /**
+     * Pops the most recent Proof Mode move from proofHistoryRedoStack and updates proof bar.
+     */
+    public static redoProofStep(): void {
+        if (this.proofHistoryRedoStack.length === 0) {
+            return;
+        }
+
+        const mostRecentStep: ProofModeNode | undefined = this.proofHistoryRedoStack.pop();
+
+        if (mostRecentStep === undefined) {
+            return;
+        } else if (
+            this.proofHistoryRedoStack[this.proofHistoryRedoStack.length - 1] === undefined
+        ) {
+            this.pushToProof(mostRecentStep);
+            redrawProof();
+            return;
+        }
+
+        this.recentlyUndoneOrRedoneProofMove = false;
+
+        this.pushToProof(mostRecentStep);
+
+        stepBack(mostRecentStep);
+        redrawProof();
+    }
+
+    /**
      * Returns the most recent step in the proof.
      *
      * @returns Most recent step in the proof.
      */
-    public static getLastProofStep(): ProofNode {
+    public static getLastProofStep(): ProofModeNode {
         if (TreeContext.proof.length === 0) {
-            return new ProofNode(new AEGTree());
+            return new ProofModeNode(new AEGTree());
         }
 
         return TreeContext.proof[TreeContext.proof.length - 1];
@@ -77,8 +217,13 @@ export class TreeContext {
      *
      * @param newStep Incoming ProofNode.
      */
-    public static pushToProof(newStep: ProofNode): void {
-        if (newStep.appliedRule === "Pasted") {
+    public static pushToProof(newStep: ProofModeNode): void {
+        if (this.recentlyUndoneOrRedoneProofMove) {
+            this.proofHistoryRedoStack = [];
+            this.recentlyUndoneOrRedoneProofMove = false;
+        }
+
+        if (newStep.appliedRule === ProofModeMove.PASTE_GRAPH) {
             this.proof.pop();
             document.getElementById("Row: 1")?.remove();
             newStep.index = 0;
@@ -108,7 +253,7 @@ export class TreeContext {
     public static clearProof(): void {
         deleteButtons(-1);
         this.proof = [];
-        this.pushToProof(new ProofNode());
+        this.pushToProof(new ProofModeNode());
         this.currentProofStep = this.proof[0];
     }
 }
