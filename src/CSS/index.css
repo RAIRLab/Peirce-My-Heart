@@ -52,7 +52,7 @@ p {
     color: var(--mode-btn-icon-color);
     text-align: center;
 }
-
+/**/
 .toolButton:active {
     transform: translateY(2px);
 }
