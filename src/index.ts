@@ -217,12 +217,12 @@ async function saveMode(): Promise<void> {
         data = TreeContext.tree;
     } else {
         if (TreeContext.proof.length === 1) {
-            name = "Empty Proof";
+            name = "One-Step Proof";
         } else {
             name =
-                TreeContext.proof[0].tree.toDownloadString() +
-                "___YIELDS___" +
-                TreeContext.getLastProofStep().tree.toDownloadString();
+                TreeContext.proof[0].tree.toString() +
+                " PROVES " +
+                TreeContext.getLastProofStep().tree.toString();
         }
         data = TreeContext.proof;
     }

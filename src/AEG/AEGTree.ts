@@ -259,17 +259,6 @@ export class AEGTree {
     }
 
     /**
-     * Returns a formatted string for downloaded proof files.
-     * This format was introduced for proof files having their auto-generated names displayed on
-     * applications like Discord.
-     *
-     * @returns Formatted string for downloaded proof files.
-     */
-    public toDownloadString(): string {
-        return this.internalSheet.toDownloadString();
-    }
-
-    /**
      * Returns a string representation of this AEGTree.
      *
      * @returns Structured ordering of all children in this AEGTree in string form.

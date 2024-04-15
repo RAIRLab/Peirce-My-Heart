@@ -413,32 +413,6 @@ export class CutNode {
     }
 
     /**
-     * Creates and returns a formatted string for this CutNode and its children.
-     * As opposed to the above format, this auto-generated format
-     * can be displayed on applications like Discord.
-     *
-     * @returns Friendlier auto-generated string format.
-     */
-    public toDownloadString(): string {
-        let downloadString = "";
-
-        for (const child of this.internalChildren) {
-            if (child instanceof AtomNode) {
-                downloadString += child.identifier;
-            } else if (child instanceof CutNode) {
-                downloadString += child.toDownloadString();
-            }
-            downloadString += " ";
-        }
-        downloadString = downloadString.slice(0, -1);
-
-        if (downloadString === "") {
-            downloadString += "NO_ASSUMPTIONS";
-        }
-        return downloadString;
-    }
-
-    /**
      * Creates and returns a string representation of this CutNode.
      * @returns Children and boundary of this CutNode in string form.
      */
