@@ -208,7 +208,7 @@ export function aegStringify(treeData: AEGTree | ProofModeNode[]): string {
 /**
  * Calls appropriate methods to save the current AEGTree as a file.
  */
-async function saveMode() {
+async function saveMode(): Promise<void> {
     let name: string;
     let data: AEGTree | ProofModeNode[];
 
@@ -216,12 +216,12 @@ async function saveMode() {
         name = "AEG Tree";
         data = TreeContext.tree;
     } else {
-        if (TreeContext.proof.length === 0) {
-            name = "[] \u2192 []";
+        if (TreeContext.proof.length === 1) {
+            name = "One-Step Proof";
         } else {
             name =
                 TreeContext.proof[0].tree.toString() +
-                "\u2192" +
+                " PROVES " +
                 TreeContext.getLastProofStep().tree.toString();
         }
         data = TreeContext.proof;

@@ -260,6 +260,7 @@ export class AEGTree {
 
     /**
      * Returns a string representation of this AEGTree.
+     *
      * @returns Structured ordering of all children in this AEGTree in string form.
      */
     public toString(): string {
