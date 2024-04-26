@@ -117,7 +117,6 @@ To perform this locally in a terminal, run the following:
 ```bash
 npm run aegtest
 ```
-</details>
 
 ## Root Files and Folders Overview
 ```
@@ -156,3 +155,5 @@ npm run aegtest
 /vite.config.js : Vite build system configuration.
 
 ```
+
+</details>
