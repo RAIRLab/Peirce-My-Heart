@@ -12,11 +12,11 @@ about section works just as well.
 
 ...that's it! Get proving!
 
-<details>
+## Development 
 
 <summary> Developer Details! </summary>
 
-## Development 
+<details>
 
 **All listed commands should be run in the project root (Peirce-My-Heart)**
 
@@ -119,7 +119,7 @@ npm run aegtest
 ```
 </details>
 
-### Root Files and Folders Overview
+## Root Files and Folders Overview
 ```
 /.github/ : The code for github workflows this project uses, used for automatically deploying.
 
