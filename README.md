@@ -7,16 +7,16 @@ it allows users to construct and prove theorems using Alpha Existential Graphs.
 
 ## How to Run
 
-Click [this link](rairlab.github.io/Peirce-My-Heart/) to access the application! Or under the about
-section!
+Click [this link](rairlab.github.io/Peirce-My-Heart/) to access the application! The link under the 
+about section works just as well.
 
-...that's it!
+...that's it! Get proving!
 
 <details>
 
-<summary>Developer Details!</summary>
+<summary> Developer Details! </summary>
 
-### Development 
+## Development 
 
 **All listed commands should be run in the project root (Peirce-My-Heart)**
 
