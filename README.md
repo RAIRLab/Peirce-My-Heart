@@ -14,9 +14,9 @@ about section works just as well.
 
 ## Development 
 
-<summary> Developer Details! </summary>
-
 <details>
+
+<summary> Developer Details! </summary>
 
 **All listed commands should be run in the project root (Peirce-My-Heart)**
 
