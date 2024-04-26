@@ -3,9 +3,16 @@
 [![Code Style: Google](https://img.shields.io/badge/code%20style-google-blueviolet.svg)](https://github.com/google/gts)
 
 PeirceMyHeart is a web application for modeling Charles Peirce's Alpha Existential Graph System,
-it allows users to construct and prove theorems using Alpha Existential Graphs. 
+it allows users to construct and prove theorems using Alpha Existential Graphs.
 
-## Development
+## How to Run
+
+Click [this link](rairlab.github.io/Peirce-My-Heart/) to access the application! Or under the about
+section!
+
+...that's it!
+
+## Development <details>
 
 **All listed commands should be run in the project root (Peirce-My-Heart)**
 
@@ -106,6 +113,7 @@ To perform this locally in a terminal, run the following:
 ```bash
 npm run aegtest
 ```
+</details>
 
 ### Root Files and Folders Overview
 ```
