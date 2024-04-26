@@ -7,8 +7,7 @@ it allows users to construct and prove theorems using Alpha Existential Graphs.
 
 ## How to Run
 
-Click [this link](rairlab.github.io/Peirce-My-Heart/) to access the application! The link under the 
-about section works just as well.
+Click [this link](https://rairlab.github.io/Peirce-My-Heart/) to access the application!
 
 ...that's it! Get proving!
 
