@@ -12,7 +12,11 @@ section!
 
 ...that's it!
 
-## Development <details>
+<details>
+
+<summary>Developer Details!</summary>
+
+### Development 
 
 **All listed commands should be run in the project root (Peirce-My-Heart)**
 
