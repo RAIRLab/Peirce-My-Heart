@@ -169,7 +169,7 @@ function toAtom(atomData: atomObj): AtomNode {
 /**
  * Creates and returns the json string of the given AEG Tree object.
  *  Uses tab characters as delimiters.
- * 
+ *
  * @param treeData An AEG Tree object.
  * @returns json string of treeData.
  */
@@ -185,7 +185,7 @@ export async function saveMode(): Promise<void> {
     let data: AEGTree | ProofModeNode[];
 
     if (TreeContext.modeState === "Draw") {
-        name = TreeContext.tree.toString()
+        name = TreeContext.tree.toString();
         data = TreeContext.tree;
     } else {
         if (TreeContext.proof.length === 1) {
@@ -207,12 +207,12 @@ export async function saveMode(): Promise<void> {
                 excludeAcceptAllOption: true,
                 suggestedName: name,
                 startIn: "downloads",
-                types: [{accept: {"text/json": [".json"]}}]
+                types: [{accept: {"text/json": [".json"]}}],
             });
             saveFile(saveHandle, data);
         } else {
             //Fallback to immediate download if showSaveFilePicker is not supported.
-            let blob = new Blob([aegJsonString(data)], {type: "text/json"});
+            const blob = new Blob([aegJsonString(data)], {type: "text/json"});
             FileSaver(blob, name + ".json");
         }
     } catch (error) {
@@ -256,14 +256,13 @@ function readFile(file: File) {
  * Calls the appropriate methods to load files and convert them to equivalent AEGTrees.
  */
 export async function loadMode(): Promise<void> {
-
     try {
-        if("showOpenFilePicker" in window) {
+        if ("showOpenFilePicker" in window) {
             const [fileHandle] = await window.showOpenFilePicker({
                 excludeAcceptAllOption: true,
                 multiple: false,
                 startIn: "downloads",
-                types: [{accept: {"text/json": [".json"]}}]
+                types: [{accept: {"text/json": [".json"]}}],
             });
             const file = await fileHandle.getFile();
             readFile(file);

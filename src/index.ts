@@ -194,7 +194,6 @@ function setTool(state: Tool): void {
     }
 }
 
-
 /**
  * Handles CTRL+Z undo operations according to whether the program is in Draw or Proof Mode.
  */
