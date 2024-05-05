@@ -5,7 +5,7 @@
  * @author Anusha Tiwari
  */
 
-import {aegStringify} from "../index";
+import {aegJsonString} from "../index";
 import {AEGTree} from "../AEG/AEGTree";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
@@ -174,7 +174,7 @@ export function redrawTree(tree: AEGTree, color?: string): void {
     cutDisplay.innerHTML = tree.toString();
     cleanCanvas();
     redrawCut(tree.sheet, color);
-    window.treeString = aegStringify(tree);
+    window.treeString = aegJsonString(tree);
 }
 
 /**

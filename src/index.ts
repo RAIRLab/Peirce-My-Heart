@@ -41,6 +41,9 @@ import * as ErasureTool from "./ProofTools/ErasureTool";
 import * as ProofResizeTool from "./ProofTools/ProofResizeTool";
 import * as PasteInProof from "./ProofTools/PasteInProof";
 
+//Cross-browser file saving library.
+import FileSaver from "file-saver";
+
 //Setting up canvas...
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
 canvas.width = window.innerWidth;
@@ -75,11 +78,11 @@ let hasMouseIn = true;
 //Global window exports.
 //TODO: move these under the global import
 window.tree = TreeContext.tree;
-window.treeString = aegStringify(window.tree);
+window.treeString = aegJsonString(window.tree);
 window.atomTool = Tool.atomTool;
 window.cutTool = Tool.cutTool;
 window.dragTool = Tool.dragTool;
-window.aegStringify = aegStringify;
+window.aegJsonString = aegJsonString;
 window.saveMode = saveMode;
 window.loadMode = loadMode;
 window.drawMoveSingleTool = Tool.drawMoveSingleTool;
@@ -115,7 +118,7 @@ declare global {
         dragTool: Tool;
         saveMode: () => void;
         loadMode: () => void;
-        aegStringify: (treeData: AEGTree | ProofModeNode[]) => string;
+        aegJsonString: (treeData: AEGTree | ProofModeNode[]) => string;
         drawMoveSingleTool: Tool;
         drawMoveMultiTool: Tool;
         copySingleTool: Tool;
@@ -196,12 +199,13 @@ function setTool(state: Tool): void {
     }
 }
 /**
- * Creates and returns the stringification of the incoming data. Uses tab characters as delimiters.
- *
- * @param treeData Incoming data.
- * @returns Stringification of treeData.
+ * Creates and returns the json string of the given AEG Tree object.
+ *  Uses tab characters as delimiters.
+ * 
+ * @param treeData An AEG Tree object.
+ * @returns json string of treeData.
  */
-export function aegStringify(treeData: AEGTree | ProofModeNode[]): string {
+export function aegJsonString(treeData: AEGTree | ProofModeNode[]): string {
     return JSON.stringify(treeData, null, "\t");
 }
 
@@ -213,7 +217,7 @@ async function saveMode(): Promise<void> {
     let data: AEGTree | ProofModeNode[];
 
     if (TreeContext.modeState === "Draw") {
-        name = "AEG Tree";
+        name = TreeContext.tree.toString()
         data = TreeContext.tree;
     } else {
         if (TreeContext.proof.length === 1) {
@@ -235,22 +239,11 @@ async function saveMode(): Promise<void> {
                 excludeAcceptAllOption: true,
                 suggestedName: name,
                 startIn: "downloads",
-                types: [
-                    {
-                        description: "JSON Files",
-                        accept: {
-                            "text/json": [".json"],
-                        },
-                    },
-                ],
+                types: [{accept: {"text/json": [".json"]}}]
             });
             saveFile(saveHandle, data);
         } else {
-            //Quick Download...
-            const f = document.createElement("a");
-            f.href = aegStringify(data);
-            f.download = name + ".json";
-            f.click();
+            FileSaver(aegJsonString(data), name + ".json");
         }
     } catch (error) {
         //Catch error but do nothing. Discussed in Issue #247.
