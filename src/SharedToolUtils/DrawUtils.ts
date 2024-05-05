@@ -5,7 +5,7 @@
  * @author Anusha Tiwari
  */
 
-import {aegJsonString} from "../index";
+import {aegJsonString} from "../AEG-IO";
 import {AEGTree} from "../AEG/AEGTree";
 import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
