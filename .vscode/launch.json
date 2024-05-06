@@ -5,19 +5,26 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "msedge",
-            "name": "Edge Vite Debug",
-            "request": "launch",
-            "url": "http://localhost:5173/",
-            "webRoot": "${workspaceFolder}/src"
-        },
-        {
             "type": "chrome",
             "request": "launch",
             "name": "Chrome Vite Debug",
             "url": "http://localhost:5173/",
             "webRoot": "${workspaceRoot}/src",
             //"sourceMaps": true,
-        }
+        },
+        {
+            "type": "msedge",
+            "request": "launch",
+            "name": "Edge Vite Debug",
+            "url": "http://localhost:5173/",
+            "webRoot": "${workspaceFolder}/src"
+        },
+        {
+            "type": "firefox",
+            "request": "launch",
+            "name": "Firefox Vite Debug",
+            "url": "http://localhost:5173/",
+            "webRoot": "${workspaceFolder}/src"
+        },
     ]
 }
