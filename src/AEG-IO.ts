@@ -153,7 +153,7 @@ function toCut(cutData: cutObj): CutNode {
 }
 
 /**
- * Parses the incoming AtomObject and returns and equivalent AtomNode.
+ * Parses the incoming AtomObject and returns an equivalent AtomNode.
  *
  * @param atomData Incoming AtomObject.
  * @returns AtomNode equivalent of atomData.
@@ -168,7 +168,7 @@ function toAtom(atomData: atomObj): AtomNode {
 
 /**
  * Creates and returns the json string of the given AEG Tree object.
- *  Uses tab characters as delimiters.
+ * Uses tab characters as delimiters.
  *
  * @param treeData An AEG Tree object.
  * @returns json string of treeData.
