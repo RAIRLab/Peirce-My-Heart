@@ -1,6 +1,7 @@
 {
     "recommendations": [
         "dbaeumer.vscode-eslint",
+        "firefox-devtools.vscode-firefox-debug",
         "streetsidesoftware.code-spell-checker"
     ]
 }

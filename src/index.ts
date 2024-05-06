@@ -8,10 +8,8 @@
  */
 
 import {AEGTree} from "./AEG/AEGTree";
-import {appendStep} from "./ProofHistory/ProofHistory";
-import {loadFile, saveFile} from "./AEG-IO";
+import {loadMode, saveMode, aegJsonString} from "./AEG-IO";
 import {ProofModeNode} from "./ProofHistory/ProofModeNode";
-import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 import {toggleHandler} from "./ToggleModes";
 import {Tool, TreeContext} from "./TreeContext";
 
@@ -75,11 +73,11 @@ let hasMouseIn = true;
 //Global window exports.
 //TODO: move these under the global import
 window.tree = TreeContext.tree;
-window.treeString = aegStringify(window.tree);
+window.treeString = aegJsonString(window.tree);
 window.atomTool = Tool.atomTool;
 window.cutTool = Tool.cutTool;
 window.dragTool = Tool.dragTool;
-window.aegStringify = aegStringify;
+window.aegJsonString = aegJsonString;
 window.saveMode = saveMode;
 window.loadMode = loadMode;
 window.drawMoveSingleTool = Tool.drawMoveSingleTool;
@@ -115,7 +113,7 @@ declare global {
         dragTool: Tool;
         saveMode: () => void;
         loadMode: () => void;
-        aegStringify: (treeData: AEGTree | ProofModeNode[]) => string;
+        aegJsonString: (treeData: AEGTree | ProofModeNode[]) => string;
         drawMoveSingleTool: Tool;
         drawMoveMultiTool: Tool;
         copySingleTool: Tool;
@@ -193,121 +191,6 @@ function setTool(state: Tool): void {
         case Tool.doubleCutInsertionTool:
             cutTools.style.display = "block";
             break;
-    }
-}
-/**
- * Creates and returns the stringification of the incoming data. Uses tab characters as delimiters.
- *
- * @param treeData Incoming data.
- * @returns Stringification of treeData.
- */
-export function aegStringify(treeData: AEGTree | ProofModeNode[]): string {
-    return JSON.stringify(treeData, null, "\t");
-}
-
-/**
- * Calls appropriate methods to save the current AEGTree as a file.
- */
-async function saveMode(): Promise<void> {
-    let name: string;
-    let data: AEGTree | ProofModeNode[];
-
-    if (TreeContext.modeState === "Draw") {
-        name = "AEG Tree";
-        data = TreeContext.tree;
-    } else {
-        if (TreeContext.proof.length === 1) {
-            name = "One-Step Proof";
-        } else {
-            name =
-                TreeContext.proof[0].tree.toString() +
-                " PROVES " +
-                TreeContext.getLastProofStep().tree.toString();
-        }
-        data = TreeContext.proof;
-    }
-
-    //Errors caused by file handler or HTML download element should not be displayed.
-    try {
-        //Slow Download...
-        if ("showSaveFilePicker" in window) {
-            const saveHandle = await window.showSaveFilePicker({
-                excludeAcceptAllOption: true,
-                suggestedName: name,
-                startIn: "downloads",
-                types: [
-                    {
-                        description: "JSON Files",
-                        accept: {
-                            "text/json": [".json"],
-                        },
-                    },
-                ],
-            });
-            saveFile(saveHandle, data);
-        } else {
-            //Quick Download...
-            const f = document.createElement("a");
-            f.href = aegStringify(data);
-            f.download = name + ".json";
-            f.click();
-        }
-    } catch (error) {
-        //Catch error but do nothing. Discussed in Issue #247.
-    }
-}
-
-/**
- * Calls the appropriate methods to load files and convert them to equivalent AEGTrees.
- */
-async function loadMode(): Promise<void> {
-    try {
-        const [fileHandle] = await window.showOpenFilePicker({
-            excludeAcceptAllOption: true,
-            multiple: false,
-            startIn: "downloads",
-            types: [
-                {
-                    description: "JSON Files",
-                    accept: {
-                        "text/json": [".json"],
-                    },
-                },
-            ],
-        });
-
-        const file = await fileHandle.getFile();
-        const reader = new FileReader();
-        reader.addEventListener("load", () => {
-            const aegData = reader.result;
-            if (typeof aegData === "string") {
-                const loadData = loadFile(TreeContext.modeState, aegData);
-                if (TreeContext.modeState === "Draw") {
-                    //Loads data.
-                    TreeContext.tree = loadData as AEGTree;
-                    //Redraws tree which is now the parsed loadData.
-                    redrawTree(TreeContext.tree);
-                } else if (TreeContext.modeState === "Proof") {
-                    //Clears current proof.
-                    TreeContext.clearProof();
-                    //Loads data for the new proof.
-                    TreeContext.proof = loadData as ProofModeNode[];
-                    //Removes default start step.
-                    document.getElementById("Row: 1")?.remove();
-                    //Adds button for each step of the loaded proof to the history bar.
-                    for (let i = 0; i < TreeContext.proof.length; i++) {
-                        appendStep(TreeContext.proof[i], i + 1);
-                    }
-                    TreeContext.currentProofStep = TreeContext.proof[TreeContext.proof.length - 1];
-                    redrawProof();
-                }
-            } else {
-                console.log("Loading failed because reading the file was unsuccessful.");
-            }
-        });
-        reader.readAsText(file);
-    } catch (error) {
-        //Do nothing.
     }
 }
 
