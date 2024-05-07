@@ -18,8 +18,7 @@ import {TreeContext} from "../TreeContext";
 //Constants related to handling identifier images.
 const numberOfLegalIdentifiers = 52;
 const numberOfUppercaseLegalIdentifiers = 26;
-const desiredImageWidth = 20;
-const desiredImageHeight = 20;
+const imageDownsizeScalar = 0.5;
 
 //Maps related to handling identifier images.
 const letterMap: string[] = [];
@@ -111,7 +110,7 @@ export async function loadIdentifierImagesMap(): Promise<void> {
     await loadIntegerToCharMap();
 
     for (let i = 0; i < numberOfLegalIdentifiers; i++) {
-        identifierImagesMap[letterMap[i]] = new Image(desiredImageWidth, desiredImageHeight);
+        identifierImagesMap[letterMap[i]] = new Image();
         if (i < numberOfUppercaseLegalIdentifiers) {
             identifierImagesMap[letterMap[i]].src = (
                 await fetch(pathToAtomImagesFolder + letterMap[i] + ".png")
@@ -122,6 +121,11 @@ export async function loadIdentifierImagesMap(): Promise<void> {
             ).url;
         }
     }
+}
+
+export function getImageFromChar(incomingChar: string): HTMLImageElement {
+    console.log("returning " + identifierImagesMap[incomingChar].src + " in getImageFromChar");
+    return identifierImagesMap[incomingChar];
 }
 
 /**
@@ -169,19 +173,35 @@ export function drawAtom(incomingAtom: AtomNode, color: string, currentAtom: boo
             ")"
     );
 
-    ctx.drawImage(
-        identifierImagesMap[incomingAtom.identifier],
+    const currentElement: HTMLImageElement = identifierImagesMap[incomingAtom.identifier];
+
+    /*
+    ctx.fillStyle = color;
+    ctx.fillRect(
         incomingAtom.origin.x + offset.x,
-        incomingAtom.origin.y + offset.y
+        incomingAtom.origin.y + offset.y,
+        currentElement.width * imageDownsizeScalar,
+        currentElement.height * imageDownsizeScalar
     );
+    */
+    //currently filling the rectangle with the placed color. if we can get the canvas color,
+    //this might work?
+
+    ctx.drawImage(
+        currentElement,
+        incomingAtom.origin.x + offset.x,
+        incomingAtom.origin.y + offset.y,
+        currentElement.width * imageDownsizeScalar,
+        currentElement.height * imageDownsizeScalar
+    );
+
     if (atomCheckBoxes.checked || (atomCheckBox.checked && currentAtom)) {
-        const atomMetrics: TextMetrics = ctx.measureText(incomingAtom.identifier);
         ctx.beginPath();
         ctx.rect(
-            incomingAtom.origin.x + offset.x,
-            incomingAtom.origin.y + offset.y + atomMetrics.actualBoundingBoxAscent,
-            incomingAtom.width,
-            incomingAtom.height
+            incomingAtom.origin.x * (currentElement.width + offset.x),
+            incomingAtom.origin.y * (currentElement.height + offset.y),
+            currentElement.width,
+            currentElement.height
         );
         ctx.stroke();
     }

@@ -136,6 +136,7 @@ function createAtom(identifier: string, origin: Point): AtomNode {
         atomMetrics.width,
         atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
     );
+    //edit this to properly reflect image sizes. import something from DrawUtils
 }
 
 /**
