@@ -8,7 +8,7 @@
  */
 
 import {AEGTree} from "./AEG/AEGTree";
-import {loadAtomImagesMap} from "./SharedToolUtils/DrawUtils";
+import {loadIdentifierImagesMap} from "./SharedToolUtils/DrawUtils";
 import {loadMode, saveMode, aegJsonString} from "./AEG-IO";
 import {ProofModeNode} from "./ProofHistory/ProofModeNode";
 import {toggleHandler} from "./ToggleModes";
@@ -141,7 +141,7 @@ declare global {
     }
 }
 
-loadAtomImagesMap();
+loadIdentifierImagesMap();
 
 //Add no-highlight class only when mouse is pressed on a div to ensure that elements in the div are
 //not highlighted any other time

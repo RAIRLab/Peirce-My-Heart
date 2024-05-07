@@ -15,11 +15,13 @@ import {legalColor, placedColor} from "../Themes";
 import {Point} from "../AEG/Point";
 import {TreeContext} from "../TreeContext";
 
+//Constants related to handling identifier images.
 const numberOfLegalIdentifiers = 52;
 const numberOfUppercaseLegalIdentifiers = 26;
 const desiredImageWidth = 20;
 const desiredImageHeight = 20;
 
+//Maps related to handling identifier images.
 const letterMap: string[] = [];
 const identifierImagesMap: {[id: string]: HTMLImageElement} = {};
 
@@ -44,7 +46,10 @@ atomCheckBoxes.addEventListener("input", checkBoxRedraw);
 
 const pathToAtomImagesFolder = "./atoms/";
 
-async function loadCharToIntegerMap(): Promise<void> {
+/**
+ * Loads each uppercase and lowercase letter of the English alphabet into an array.
+ */
+async function loadIntegerToCharMap(): Promise<void> {
     letterMap[0] = "A";
     letterMap[1] = "B";
     letterMap[2] = "C";
@@ -97,11 +102,13 @@ async function loadCharToIntegerMap(): Promise<void> {
     letterMap[49] = "x";
     letterMap[50] = "y";
     letterMap[51] = "z";
-    console.log("Loaded letterMap successfully.");
 }
 
-export async function loadAtomImagesMap(): Promise<void> {
-    await loadCharToIntegerMap();
+/**
+ * Loads each uppercase and lowercase identifier image into an array.
+ */
+export async function loadIdentifierImagesMap(): Promise<void> {
+    await loadIntegerToCharMap();
 
     for (let i = 0; i < numberOfLegalIdentifiers; i++) {
         identifierImagesMap[letterMap[i]] = new Image(desiredImageWidth, desiredImageHeight);
@@ -115,7 +122,6 @@ export async function loadAtomImagesMap(): Promise<void> {
             ).url;
         }
     }
-    console.log("Successfully loaded all images into map in index.ts.");
 }
 
 /**
@@ -145,50 +151,40 @@ export function drawCut(thisCut: CutNode, color: string): void {
 
 /**
  * Draws the incoming AtomNode as the incoming color string.
- * If the incoming flag is true, which happens when the checkbox for drawing AtomNodes' bounding boxes is checked,
+ * If the incoming boolean is true, which happens when the checkbox for drawing AtomNodes' bounding boxes is checked,
  * Then the incoming AtomNode's bounding box is drawn as well.
  *
- * @param thisAtom Incoming AtomNode.
+ * @param incomingAtom Incoming AtomNode.
  * @param color Incoming color string.
- * @param currentAtom Incoming flag.
+ * @param currentAtom Incoming boolean.
  */
-export function drawAtom(thisAtom: AtomNode, color: string, currentAtom: Boolean): void {
-    /*
-    ctx.textBaseline = "bottom";
-    const atomMetrics: TextMetrics = ctx.measureText(thisAtom.identifier);
-    ctx.fillStyle = color;
-    ctx.strokeStyle = color;
-    ctx.beginPath();
-    ctx.fillText(thisAtom.identifier, thisAtom.origin.x + offset.x, thisAtom.origin.y + offset.y);
-    if (atomCheckBoxes.checked || (atomCheckBox.checked && currentAtom)) {
-        ctx.rect(
-            thisAtom.origin.x + offset.x,
-            thisAtom.origin.y + offset.y - atomMetrics.actualBoundingBoxAscent,
-            thisAtom.width,
-            thisAtom.height
-        );
-    }
-    ctx.stroke();
-    */
-    //await drawAtomAsImage(thisAtom);
-}
-
-function drawAtomAsImage(incomingAtom: AtomNode): void {
+export function drawAtom(incomingAtom: AtomNode, color: string, currentAtom: boolean): void {
     console.log(
         "drawing " +
             incomingAtom.identifier +
             " at (" +
-            incomingAtom.origin.x +
+            (incomingAtom.origin.x + offset.x) +
             ", " +
-            incomingAtom.origin.y +
+            (incomingAtom.origin.y + offset.y) +
             ")"
     );
 
     ctx.drawImage(
         identifierImagesMap[incomingAtom.identifier],
-        incomingAtom.origin.x,
-        incomingAtom.origin.y
+        incomingAtom.origin.x + offset.x,
+        incomingAtom.origin.y + offset.y
     );
+    if (atomCheckBoxes.checked || (atomCheckBox.checked && currentAtom)) {
+        const atomMetrics: TextMetrics = ctx.measureText(incomingAtom.identifier);
+        ctx.beginPath();
+        ctx.rect(
+            incomingAtom.origin.x + offset.x,
+            incomingAtom.origin.y + offset.y + atomMetrics.actualBoundingBoxAscent,
+            incomingAtom.width,
+            incomingAtom.height
+        );
+        ctx.stroke();
+    }
 }
 
 /**
@@ -317,9 +313,8 @@ function redrawCut(incomingNode: CutNode, color?: string): void {
  *
  * @param incomingNode Incoming AtomNode.
  */
-export async function redrawAtom(incomingNode: AtomNode): Promise<void> {
+export function redrawAtom(incomingNode: AtomNode): void {
     drawAtom(incomingNode, placedColor(), false);
-    await drawAtomAsImage(incomingNode);
 }
 
 /**
