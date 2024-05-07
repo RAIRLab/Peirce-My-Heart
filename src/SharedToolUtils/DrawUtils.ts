@@ -15,6 +15,14 @@ import {legalColor, placedColor} from "../Themes";
 import {Point} from "../AEG/Point";
 import {TreeContext} from "../TreeContext";
 
+const numberOfLegalIdentifiers = 52;
+const numberOfUppercaseLegalIdentifiers = 26;
+const desiredImageWidth = 20;
+const desiredImageHeight = 20;
+
+const letterMap: string[] = [];
+const identifierImagesMap: {[id: string]: HTMLImageElement} = {};
+
 //Setting up Canvas...
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
 const res: CanvasRenderingContext2D | null = canvas.getContext("2d");
@@ -33,6 +41,82 @@ const proofString = <HTMLParagraphElement>document.getElementById("proofString")
 const atomCheckBox = <HTMLInputElement>document.getElementById("atomBox");
 const atomCheckBoxes = <HTMLInputElement>document.getElementById("atomBoxes");
 atomCheckBoxes.addEventListener("input", checkBoxRedraw);
+
+const pathToAtomImagesFolder = "./atoms/";
+
+async function loadCharToIntegerMap(): Promise<void> {
+    letterMap[0] = "A";
+    letterMap[1] = "B";
+    letterMap[2] = "C";
+    letterMap[3] = "D";
+    letterMap[4] = "E";
+    letterMap[5] = "F";
+    letterMap[6] = "G";
+    letterMap[7] = "H";
+    letterMap[8] = "I";
+    letterMap[9] = "J";
+    letterMap[10] = "K";
+    letterMap[11] = "L";
+    letterMap[12] = "M";
+    letterMap[13] = "N";
+    letterMap[14] = "O";
+    letterMap[15] = "P";
+    letterMap[16] = "Q";
+    letterMap[17] = "R";
+    letterMap[18] = "S";
+    letterMap[19] = "T";
+    letterMap[20] = "U";
+    letterMap[21] = "V";
+    letterMap[22] = "W";
+    letterMap[23] = "X";
+    letterMap[24] = "Y";
+    letterMap[25] = "Z";
+    letterMap[26] = "a";
+    letterMap[27] = "b";
+    letterMap[28] = "c";
+    letterMap[29] = "d";
+    letterMap[30] = "e";
+    letterMap[31] = "f";
+    letterMap[32] = "g";
+    letterMap[33] = "h";
+    letterMap[34] = "i";
+    letterMap[35] = "j";
+    letterMap[36] = "k";
+    letterMap[37] = "l";
+    letterMap[38] = "m";
+    letterMap[39] = "n";
+    letterMap[40] = "o";
+    letterMap[41] = "p";
+    letterMap[42] = "q";
+    letterMap[43] = "r";
+    letterMap[44] = "s";
+    letterMap[45] = "t";
+    letterMap[46] = "u";
+    letterMap[47] = "v";
+    letterMap[48] = "w";
+    letterMap[49] = "x";
+    letterMap[50] = "y";
+    letterMap[51] = "z";
+    console.log("Loaded letterMap successfully.");
+}
+
+export async function loadAtomImagesMap(): Promise<void> {
+    await loadCharToIntegerMap();
+
+    for (let i = 0; i < numberOfLegalIdentifiers; i++) {
+        identifierImagesMap[letterMap[i]] = new Image(desiredImageWidth, desiredImageHeight);
+        if (i < numberOfUppercaseLegalIdentifiers) {
+            identifierImagesMap[letterMap[i]].src = (
+                await fetch(pathToAtomImagesFolder + letterMap[i] + ".png")
+            ).url;
+        } else {
+            identifierImagesMap[letterMap[i]].src = (
+                await fetch(pathToAtomImagesFolder + letterMap[i] + "_.png")
+            ).url;
+        }
+    }
+    console.log("Successfully loaded all images into map in index.ts.");
+}
 
 /**
  * Draws the incoming CutNode on canvas as the incoming color string.
@@ -69,6 +153,7 @@ export function drawCut(thisCut: CutNode, color: string): void {
  * @param currentAtom Incoming flag.
  */
 export function drawAtom(thisAtom: AtomNode, color: string, currentAtom: Boolean): void {
+    /*
     ctx.textBaseline = "bottom";
     const atomMetrics: TextMetrics = ctx.measureText(thisAtom.identifier);
     ctx.fillStyle = color;
@@ -84,6 +169,26 @@ export function drawAtom(thisAtom: AtomNode, color: string, currentAtom: Boolean
         );
     }
     ctx.stroke();
+    */
+    //await drawAtomAsImage(thisAtom);
+}
+
+function drawAtomAsImage(incomingAtom: AtomNode): void {
+    console.log(
+        "drawing " +
+            incomingAtom.identifier +
+            " at (" +
+            incomingAtom.origin.x +
+            ", " +
+            incomingAtom.origin.y +
+            ")"
+    );
+
+    ctx.drawImage(
+        identifierImagesMap[incomingAtom.identifier],
+        incomingAtom.origin.x,
+        incomingAtom.origin.y
+    );
 }
 
 /**
@@ -212,8 +317,9 @@ function redrawCut(incomingNode: CutNode, color?: string): void {
  *
  * @param incomingNode Incoming AtomNode.
  */
-export function redrawAtom(incomingNode: AtomNode): void {
+export async function redrawAtom(incomingNode: AtomNode): Promise<void> {
     drawAtom(incomingNode, placedColor(), false);
+    await drawAtomAsImage(incomingNode);
 }
 
 /**
