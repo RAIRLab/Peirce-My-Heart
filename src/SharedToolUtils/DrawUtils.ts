@@ -191,12 +191,15 @@ export function drawAtom(incomingAtom: AtomNode, color: string, currentAtom: boo
     //this may have been causing problems because i was drawing the boundary boxes very large
     //before lol try this again
 
+    const desiredWidth: number = currentElement.width * imageDownsizeScalar;
+    const desiredHeight: number = currentElement.height * imageDownsizeScalar;
+
     ctx.drawImage(
         currentElement,
         incomingAtom.origin.x + offset.x,
         incomingAtom.origin.y + offset.y,
-        currentElement.width * imageDownsizeScalar,
-        currentElement.height * imageDownsizeScalar
+        desiredWidth,
+        desiredHeight
     );
 
     if (atomCheckBoxes.checked || (atomCheckBox.checked && currentAtom)) {
@@ -204,8 +207,8 @@ export function drawAtom(incomingAtom: AtomNode, color: string, currentAtom: boo
         ctx.rect(
             incomingAtom.origin.x + offset.x,
             incomingAtom.origin.y + offset.y,
-            currentElement.width * imageDownsizeScalar,
-            currentElement.height * imageDownsizeScalar
+            desiredWidth,
+            desiredHeight
         );
         ctx.stroke();
     }

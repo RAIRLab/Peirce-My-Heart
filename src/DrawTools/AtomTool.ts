@@ -48,7 +48,7 @@ export function atomKeyPress(event: KeyboardEvent): void {
     const regex = new RegExp(/^[A-Za-z]$/);
     if (regex.test(event.key)) {
         if (currentAtom === undefined) {
-            currentAtom = createAtom("A", new Point(0, 0));
+            currentAtom = createAtom(event.key, new Point(0, 0));
         } else {
             currentAtom = createAtom(
                 event.key,
@@ -144,13 +144,10 @@ export function atomMouseOut(): void {
 function createAtom(identifier: string, origin: Point): AtomNode {
     atomDisplay.innerHTML = identifier;
     const widthAndHeight: Point = getImageWidthAndHeightFromChar(identifier);
+    const width: number = widthAndHeight.x;
+    const height: number = widthAndHeight.y;
 
-    return new AtomNode(
-        identifier,
-        new Point(origin.x, origin.y),
-        widthAndHeight.x,
-        widthAndHeight.y
-    );
+    return new AtomNode(identifier, new Point(origin.x, origin.y), width, height);
 }
 
 /**
