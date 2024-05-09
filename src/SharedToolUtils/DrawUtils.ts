@@ -96,7 +96,6 @@ export function drawAtom(thisAtom: AtomNode, color: string, currentAtom: Boolean
  * @param color Incoming color string.
  */
 export function drawGuidelines(original: Point, current: Point, color: string): void {
-    console.log("Drawing guidelines");
     ctx.beginPath();
     ctx.strokeStyle = color;
     const dx: number = original.x - current.x;
