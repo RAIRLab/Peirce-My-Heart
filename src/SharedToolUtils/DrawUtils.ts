@@ -96,11 +96,12 @@ export function drawAtom(thisAtom: AtomNode, color: string, currentAtom: Boolean
  * @param color Incoming color string.
  */
 export function drawGuidelines(original: Point, current: Point, color: string): void {
+    console.log("Drawing guidelines");
     ctx.beginPath();
     ctx.strokeStyle = color;
-    const dx: number = original.x - current.x + offset.x;
-    const dy: number = original.y - current.y + offset.y;
-    ctx.rect(original.x, original.y, -dx, -dy);
+    const dx: number = original.x - current.x;
+    const dy: number = original.y - current.y;
+    ctx.rect(original.x + offset.x, original.y + offset.y, -dx, -dy);
     ctx.stroke();
 }
 
