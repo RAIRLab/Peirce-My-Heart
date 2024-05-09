@@ -71,6 +71,8 @@ let hasMouseDown = false;
 //True if the user's mouse is down. Assumed to be in at the start.
 let hasMouseIn = true;
 
+loadIdentifierImagesMap();
+
 //Global window exports.
 //TODO: move these under the global import
 window.tree = TreeContext.tree;
@@ -140,8 +142,6 @@ declare global {
         toggleHandler: () => void;
     }
 }
-
-loadIdentifierImagesMap();
 
 //Add no-highlight class only when mouse is pressed on a div to ensure that elements in the div are
 //not highlighted any other time

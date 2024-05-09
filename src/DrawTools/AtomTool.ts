@@ -10,7 +10,7 @@
  */
 
 import {AtomNode} from "../AEG/AtomNode";
-import {changeCursorStyle} from "../SharedToolUtils/DrawUtils";
+import {changeCursorStyle, getImageWidthAndHeightFromChar} from "../SharedToolUtils/DrawUtils";
 import {drawAtom} from "../SharedToolUtils/DrawUtils";
 import {DrawModeMove} from "../DrawHistory/DrawModeNode";
 import {illegalColor, legalColor} from "../Themes";
@@ -25,7 +25,6 @@ const res: CanvasRenderingContext2D | null = canvas.getContext("2d");
 if (res === null) {
     throw Error("2d rendering context not supported.");
 }
-const ctx: CanvasRenderingContext2D = res;
 
 //Letter display next to "Current Atom:" in Draw Mode's Atom Tool toolbar.
 const atomDisplay = <HTMLParagraphElement>document.getElementById("atomDisplay");
@@ -37,7 +36,7 @@ let wasOut: boolean;
 let hasMouseDown: boolean;
 
 //AtomNode we are creating. Defaults to A at position (0, 0) on canvas.
-let currentAtom: AtomNode = createAtom("A", new Point(0, 0));
+let currentAtom: AtomNode;
 
 /**
  * Checks to see if the key from the incoming KeyboardEvent is in the Latin alphabet.
@@ -48,7 +47,14 @@ let currentAtom: AtomNode = createAtom("A", new Point(0, 0));
 export function atomKeyPress(event: KeyboardEvent): void {
     const regex = new RegExp(/^[A-Za-z]$/);
     if (regex.test(event.key)) {
-        currentAtom = createAtom(event.key, new Point(currentAtom.origin.x, currentAtom.origin.y));
+        if (currentAtom === undefined) {
+            currentAtom = createAtom("A", new Point(0, 0));
+        } else {
+            currentAtom = createAtom(
+                event.key,
+                new Point(currentAtom.origin.x, currentAtom.origin.y)
+            );
+        }
 
         //If currentAtom is not the default then call determineDrawColor().
         if (currentAtom.origin.x !== 0 && currentAtom.origin.y !== 0 && hasMouseDown) {
@@ -64,13 +70,15 @@ export function atomKeyPress(event: KeyboardEvent): void {
  * @param event Incoming MouseEvent.
  */
 export function atomMouseDown(event: MouseEvent): void {
-    wasOut = false;
-    hasMouseDown = true;
-    currentAtom = createAtom(
-        currentAtom.identifier,
-        new Point(event.clientX - offset.x, event.clientY - offset.y)
-    );
-    determineDrawColor();
+    if (currentAtom !== undefined) {
+        wasOut = false;
+        hasMouseDown = true;
+        currentAtom = createAtom(
+            currentAtom.identifier,
+            new Point(event.clientX - offset.x, event.clientY - offset.y)
+        );
+        determineDrawColor();
+    }
 }
 
 /**
@@ -80,11 +88,13 @@ export function atomMouseDown(event: MouseEvent): void {
  * @param event Incoming MouseEvent.
  */
 export function atomMouseMove(event: MouseEvent): void {
-    currentAtom = createAtom(
-        currentAtom.identifier,
-        new Point(event.clientX - offset.x, event.clientY - offset.y)
-    );
-    determineDrawColor();
+    if (currentAtom !== undefined) {
+        currentAtom = createAtom(
+            currentAtom.identifier,
+            new Point(event.clientX - offset.x, event.clientY - offset.y)
+        );
+        determineDrawColor();
+    }
 }
 
 /**
@@ -94,17 +104,19 @@ export function atomMouseMove(event: MouseEvent): void {
  * @param event Incoming MouseEvent.
  */
 export function atomMouseUp(event: MouseEvent): void {
-    changeCursorStyle("cursor: default");
-    currentAtom = createAtom(
-        currentAtom.identifier,
-        new Point(event.clientX - offset.x, event.clientY - offset.y)
-    );
-    if (TreeContext.tree.canInsert(currentAtom) && !wasOut) {
-        TreeContext.tree.insert(currentAtom);
-        TreeContext.pushToDrawStack(DrawModeMove.DRAW_ATOM);
+    if (currentAtom !== undefined) {
+        changeCursorStyle("cursor: default");
+        currentAtom = createAtom(
+            currentAtom.identifier,
+            new Point(event.clientX - offset.x, event.clientY - offset.y)
+        );
+        if (TreeContext.tree.canInsert(currentAtom) && !wasOut) {
+            TreeContext.tree.insert(currentAtom);
+            TreeContext.pushToDrawStack(DrawModeMove.DRAW_ATOM);
+        }
+        redrawTree(TreeContext.tree);
+        hasMouseDown = false;
     }
-    redrawTree(TreeContext.tree);
-    hasMouseDown = false;
 }
 
 /**
@@ -112,9 +124,11 @@ export function atomMouseUp(event: MouseEvent): void {
  * Then redraws the Draw Mode AEGtree.
  */
 export function atomMouseOut(): void {
-    changeCursorStyle("cursor: default");
-    wasOut = true;
-    redrawTree(TreeContext.tree);
+    if (currentAtom !== undefined) {
+        changeCursorStyle("cursor: default");
+        wasOut = true;
+        redrawTree(TreeContext.tree);
+    }
 }
 
 /**
@@ -129,14 +143,14 @@ export function atomMouseOut(): void {
  */
 function createAtom(identifier: string, origin: Point): AtomNode {
     atomDisplay.innerHTML = identifier;
-    const atomMetrics: TextMetrics = ctx.measureText(identifier);
+    const widthAndHeight: Point = getImageWidthAndHeightFromChar(identifier);
+
     return new AtomNode(
         identifier,
         new Point(origin.x, origin.y),
-        atomMetrics.width,
-        atomMetrics.fontBoundingBoxDescent + atomMetrics.actualBoundingBoxAscent
+        widthAndHeight.x,
+        widthAndHeight.y
     );
-    //edit this to properly reflect image sizes. import something from DrawUtils
 }
 
 /**

@@ -123,9 +123,11 @@ export async function loadIdentifierImagesMap(): Promise<void> {
     }
 }
 
-export function getImageFromChar(incomingChar: string): HTMLImageElement {
-    console.log("returning " + identifierImagesMap[incomingChar].src + " in getImageFromChar");
-    return identifierImagesMap[incomingChar];
+export function getImageWidthAndHeightFromChar(incomingChar: string): Point {
+    return new Point(
+        identifierImagesMap[incomingChar].width * imageDownsizeScalar,
+        identifierImagesMap[incomingChar].height * imageDownsizeScalar
+    );
 }
 
 /**
@@ -186,6 +188,8 @@ export function drawAtom(incomingAtom: AtomNode, color: string, currentAtom: boo
     */
     //currently filling the rectangle with the placed color. if we can get the canvas color,
     //this might work?
+    //this may have been causing problems because i was drawing the boundary boxes very large
+    //before lol try this again
 
     ctx.drawImage(
         currentElement,
@@ -198,10 +202,10 @@ export function drawAtom(incomingAtom: AtomNode, color: string, currentAtom: boo
     if (atomCheckBoxes.checked || (atomCheckBox.checked && currentAtom)) {
         ctx.beginPath();
         ctx.rect(
-            incomingAtom.origin.x * (currentElement.width + offset.x),
-            incomingAtom.origin.y * (currentElement.height + offset.y),
-            currentElement.width,
-            currentElement.height
+            incomingAtom.origin.x + offset.x,
+            incomingAtom.origin.y + offset.y,
+            currentElement.width * imageDownsizeScalar,
+            currentElement.height * imageDownsizeScalar
         );
         ctx.stroke();
     }
