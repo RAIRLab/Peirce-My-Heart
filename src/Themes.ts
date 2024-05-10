@@ -25,7 +25,7 @@ let placedColorStr: string = cssVar("--canvas-items");
  * @param varName Variable from a CSS Style Sheet.
  * @returns Property value of varName in string form.
  */
-function cssVar(varName: string): string {
+export function cssVar(varName: string): string {
     return getComputedStyle(document.body).getPropertyValue(varName);
 }
 

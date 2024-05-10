@@ -11,7 +11,7 @@ import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {Ellipse} from "../AEG/Ellipse";
 import {offset} from "./DragTool";
-import {legalColor, placedColor} from "../Themes";
+import {cssVar, legalColor, placedColor} from "../Themes";
 import {Point} from "../AEG/Point";
 import {TreeContext} from "../TreeContext";
 
@@ -55,7 +55,14 @@ export function drawCut(thisCut: CutNode, color: string): void {
             0,
             2 * Math.PI
         );
+        ctx.globalCompositeOperation = "destination-over";
         ctx.stroke();
+        ctx.fillStyle =
+            TreeContext.tree.getLevel(thisCut) % 2 === 0
+                ? cssVar("--canvas-odd-bg")
+                : cssVar("--canvas-bg");
+        ctx.fill();
+        ctx.globalCompositeOperation = "source-over";
     }
 }
 
@@ -203,7 +210,14 @@ function redrawCut(incomingNode: CutNode, color?: string): void {
             0,
             2 * Math.PI
         );
+        ctx.globalCompositeOperation = "destination-over";
         ctx.stroke();
+        ctx.fillStyle =
+            TreeContext.tree.getLevel(incomingNode) % 2 === 0
+                ? cssVar("--canvas-odd-bg")
+                : cssVar("--canvas-bg");
+        ctx.fill();
+        ctx.globalCompositeOperation = "source-over";
     }
 }
 

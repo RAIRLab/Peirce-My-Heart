@@ -6,6 +6,7 @@
     --global-background : #ffffff;
     --p-text : #000000;
     --canvas-bg : #ffffff;
+    --canvas-odd-bg : #c3c3c3;
     --canvas-items : #000000;
     --good-placement : #00FF00;
     --bad-placement : #FF0000;
@@ -33,6 +34,7 @@
     --global-background : #000000;
     --p-text : var(--dark-highlights);
     --canvas-bg : #000000;
+    --canvas-odd-bg : #6b6b6b;
     --canvas-items : var(--dark-highlights);
     --good-placement : #00ff00;
     --bad-placement : #ff0000;
@@ -59,6 +61,7 @@ https://davidmathlogic.com/colorblind/#%23000000-%23E69F00-%2356B4E9-%23009E73-%
     --global-background : #ffffff;
     --p-text : #000000;
     --canvas-bg : #ffffff;
+    --canvas-odd-bg : #c3c3c3;
     --canvas-items : #000000;
     --good-placement : #009E73;
     --bad-placement : #D55E00;
@@ -84,6 +87,7 @@ https://davidmathlogic.com/colorblind/#%23000000-%23E69F00-%2356B4E9-%23009E73-%
     --global-background : #000000;
     --p-text : var(--dark-highlights);
     --canvas-bg : #000000;
+    --canvas-odd-bg : #6b6b6b;
     --canvas-items : var(--dark-highlights);
     --good-placement : #009E73;
     --bad-placement : #D55E00;
