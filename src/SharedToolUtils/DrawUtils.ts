@@ -56,13 +56,13 @@ export function drawCut(thisCut: CutNode, color: string): void {
             2 * Math.PI
         );
         ctx.globalCompositeOperation = "destination-over";
-        ctx.stroke();
         ctx.fillStyle =
             TreeContext.tree.getLevel(thisCut) % 2 === 0
                 ? cssVar("--canvas-odd-bg")
                 : cssVar("--canvas-bg");
         ctx.fill();
         ctx.globalCompositeOperation = "source-over";
+        ctx.stroke();
     }
 }
 
@@ -211,13 +211,13 @@ function redrawCut(incomingNode: CutNode, color?: string): void {
             2 * Math.PI
         );
         ctx.globalCompositeOperation = "destination-over";
-        ctx.stroke();
         ctx.fillStyle =
             TreeContext.tree.getLevel(incomingNode) % 2 === 0
                 ? cssVar("--canvas-odd-bg")
                 : cssVar("--canvas-bg");
         ctx.fill();
         ctx.globalCompositeOperation = "source-over";
+        ctx.stroke();
     }
 }
 
