@@ -204,9 +204,12 @@ function redrawCut(incomingNode: CutNode, color?: string): void {
             2 * Math.PI
         );
         ctx.globalCompositeOperation = "destination-over";
+
         ctx.fillStyle =
-            TreeContext.tree.getLevel(incomingNode) % 2 === 0 ||
-            TreeContext.getLastProofStep().tree.getLevel(incomingNode) % 2 === 0
+            (TreeContext.modeState === "Draw" &&
+                TreeContext.tree.getLevel(incomingNode) % 2 === 0) ||
+            (TreeContext.modeState === "Proof" &&
+                TreeContext.currentProofStep!.tree.getLevel(incomingNode) % 2 === 0)
                 ? cssVar("--canvas-odd-bg")
                 : cssVar("--canvas-bg");
         ctx.fill();
