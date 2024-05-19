@@ -19,7 +19,6 @@ import {
     determineDirection,
     drawCut,
     redrawProof,
-    redrawTree,
 } from "../SharedToolUtils/DrawUtils";
 import {CutNode} from "../AEG/CutNode";
 import {ellipseLargeEnough, resizeCut} from "../SharedToolUtils/EditModeUtils";
@@ -94,7 +93,7 @@ export function proofResizeMouseMove(event: MouseEvent): void {
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = resizeCut(currentNode, moveDifference, direction);
             if (tempCut.ellipse !== null) {
-                redrawTree(currentProofTree);
+                redrawProof();
                 const color = isValid(tempCut) ? legalColor() : illegalColor();
                 drawCut(tempCut, color);
                 determineAndChangeCursorStyle(color, "cursor: crosshair", "cursor: no-drop");

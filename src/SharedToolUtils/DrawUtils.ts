@@ -11,7 +11,7 @@ import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {Ellipse} from "../AEG/Ellipse";
 import {offset} from "./DragTool";
-import {legalColor, placedColor} from "../Themes";
+import {cssVar, legalColor, placedColor} from "../Themes";
 import {Point} from "../AEG/Point";
 import {TreeContext} from "../TreeContext";
 
@@ -184,7 +184,7 @@ export function redrawTree(tree: AEGTree, color?: string): void {
  * @param color Incoming color string. Defaults to the color of a valid placement if not passed in.
  */
 function redrawCut(incomingNode: CutNode, color?: string): void {
-    for (let i = 0; incomingNode.children.length > i; i++) {
+    for (let i = 0; i < incomingNode.children.length; i++) {
         if (incomingNode.children[i] instanceof AtomNode) {
             redrawAtom(<AtomNode>incomingNode.children[i]);
         } else {
@@ -203,6 +203,17 @@ function redrawCut(incomingNode: CutNode, color?: string): void {
             0,
             2 * Math.PI
         );
+        ctx.globalCompositeOperation = "destination-over";
+
+        ctx.fillStyle =
+            (TreeContext.modeState === "Draw" &&
+                TreeContext.tree.getLevel(incomingNode) % 2 === 0) ||
+            (TreeContext.modeState === "Proof" &&
+                TreeContext.currentProofStep!.tree.getLevel(incomingNode) % 2 === 0)
+                ? cssVar("--canvas-odd-bg")
+                : cssVar("--canvas-bg");
+        ctx.fill();
+        ctx.globalCompositeOperation = "source-over";
         ctx.stroke();
     }
 }
