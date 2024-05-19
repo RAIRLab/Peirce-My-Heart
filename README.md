@@ -1,9 +1,15 @@
 # PeirceMyHeart
 
 [![Code Style: Google](https://img.shields.io/badge/code%20style-google-blueviolet.svg)](https://github.com/google/gts)
+![](https://img.shields.io/github/actions/workflow/status/RAIRLab/Peirce-My-Heart/buildAndDeploy.yml)
+![](https://img.shields.io/github/repo-size/RAIRLab/Peirce-My-Heart)
+
 
 PeirceMyHeart is a web application for modeling Charles Peirce's Alpha Existential Graph System,
 it allows users to construct and prove theorems using Alpha Existential Graphs.
+
+PeirceMyHeart currently works on and is tested aginst Google Chrome and Microsoft Edge. 
+We are in the process of adding Firefox support, most features work on Firefox but there are still some bugs. 
 
 ## How to Run
 
