@@ -8,6 +8,7 @@
  */
 
 import {AEGTree} from "./AEG/AEGTree";
+import {loadIdentifierImagesMap} from "./SharedToolUtils/DrawUtils";
 import {loadMode, saveMode, aegJsonString} from "./AEG-IO";
 import {ProofModeNode} from "./ProofHistory/ProofModeNode";
 import {toggleHandler} from "./ToggleModes";
@@ -69,6 +70,8 @@ let hasMouseDown = false;
 
 //True if the user's mouse is down. Assumed to be in at the start.
 let hasMouseIn = true;
+
+loadIdentifierImagesMap();
 
 //Global window exports.
 //TODO: move these under the global import

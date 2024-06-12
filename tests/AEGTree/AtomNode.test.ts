@@ -8,7 +8,7 @@ import {describe, expect, test} from "vitest";
 import {AtomNode} from "../../src/AEG/AtomNode";
 import {Point} from "../../src/AEG/Point";
 
-const atom: AtomNode = new AtomNode("A", new Point(0, 10), 10, 10);
+const atom: AtomNode = new AtomNode("A", new Point(0, 0), 10, 10);
 
 describe("AtomNode constructor soliloquy:", () => {
     const pt: Point = new Point(0, 0);
@@ -32,7 +32,7 @@ describe("AtomNode constructor soliloquy:", () => {
 
     test("AtomNode construction with identifier A and Rectangle with TL vertex (0, 10) and {h, w} = 10 should produce accurate apt results.", () => {
         expect(atom.identifier).toBe("A");
-        expect(atom.origin).toStrictEqual(new Point(0, 10));
+        expect(atom.origin).toStrictEqual(new Point(0, 0));
         expect(atom.width).toBe(10);
         expect(atom.height).toBe(10);
     });

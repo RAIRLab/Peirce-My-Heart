@@ -116,7 +116,7 @@ describe("AEGTree remove soliloquy:", () => {
     });
 
     test("Removing a child of the tree one level deep should be successful.", () => {
-        tree.insert(new AtomNode("A", new Point(0, 4), 3, 3));
+        tree.insert(new AtomNode("A", new Point(0, 0), 3, 3));
         expect(tree.remove(new Point(2, 2))).toBeTruthy();
     });
 
@@ -145,8 +145,8 @@ describe("AEGTree clear soliloquy:", () => {
 
     const tree2: AEGTree = new AEGTree();
 
-    tree2.insert(new AtomNode("C", origin, 2, 2));
-    tree2.insert(new AtomNode("P", new Point(origin.x + 5, origin.y + 5), 3, 3));
+    tree2.insert(new AtomNode("C", origin, 1, 1));
+    tree2.insert(new AtomNode("P", new Point(origin.x + 4, origin.y + 4), 1, 1));
     tree2.insert(new CutNode(testEllipse));
 
     test("AEGTree with several children should have no children after clear call.", () => {

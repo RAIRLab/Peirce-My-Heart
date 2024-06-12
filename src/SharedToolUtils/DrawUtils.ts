@@ -15,6 +15,15 @@ import {legalColor, placedColor} from "../Themes";
 import {Point} from "../AEG/Point";
 import {TreeContext} from "../TreeContext";
 
+//Constants related to handling identifier images.
+const numberOfLegalIdentifiers = 52;
+const numberOfUppercaseLegalIdentifiers = 26;
+const imageDownsizeScalar = 0.5;
+
+//Maps related to handling identifier images.
+const letterMap: string[] = [];
+const identifierImagesMap: {[id: string]: HTMLImageElement} = {};
+
 //Setting up Canvas...
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
 const res: CanvasRenderingContext2D | null = canvas.getContext("2d");
@@ -33,6 +42,93 @@ const proofString = <HTMLParagraphElement>document.getElementById("proofString")
 const atomCheckBox = <HTMLInputElement>document.getElementById("atomBox");
 const atomCheckBoxes = <HTMLInputElement>document.getElementById("atomBoxes");
 atomCheckBoxes.addEventListener("input", checkBoxRedraw);
+
+const pathToAtomImagesFolder = "./atoms/";
+
+/**
+ * Loads each uppercase and lowercase letter of the English alphabet into an array.
+ */
+async function loadIntegerToCharMap(): Promise<void> {
+    letterMap[0] = "A";
+    letterMap[1] = "B";
+    letterMap[2] = "C";
+    letterMap[3] = "D";
+    letterMap[4] = "E";
+    letterMap[5] = "F";
+    letterMap[6] = "G";
+    letterMap[7] = "H";
+    letterMap[8] = "I";
+    letterMap[9] = "J";
+    letterMap[10] = "K";
+    letterMap[11] = "L";
+    letterMap[12] = "M";
+    letterMap[13] = "N";
+    letterMap[14] = "O";
+    letterMap[15] = "P";
+    letterMap[16] = "Q";
+    letterMap[17] = "R";
+    letterMap[18] = "S";
+    letterMap[19] = "T";
+    letterMap[20] = "U";
+    letterMap[21] = "V";
+    letterMap[22] = "W";
+    letterMap[23] = "X";
+    letterMap[24] = "Y";
+    letterMap[25] = "Z";
+    letterMap[26] = "a";
+    letterMap[27] = "b";
+    letterMap[28] = "c";
+    letterMap[29] = "d";
+    letterMap[30] = "e";
+    letterMap[31] = "f";
+    letterMap[32] = "g";
+    letterMap[33] = "h";
+    letterMap[34] = "i";
+    letterMap[35] = "j";
+    letterMap[36] = "k";
+    letterMap[37] = "l";
+    letterMap[38] = "m";
+    letterMap[39] = "n";
+    letterMap[40] = "o";
+    letterMap[41] = "p";
+    letterMap[42] = "q";
+    letterMap[43] = "r";
+    letterMap[44] = "s";
+    letterMap[45] = "t";
+    letterMap[46] = "u";
+    letterMap[47] = "v";
+    letterMap[48] = "w";
+    letterMap[49] = "x";
+    letterMap[50] = "y";
+    letterMap[51] = "z";
+}
+
+/**
+ * Loads each uppercase and lowercase identifier image into an array.
+ */
+export async function loadIdentifierImagesMap(): Promise<void> {
+    await loadIntegerToCharMap();
+
+    for (let i = 0; i < numberOfLegalIdentifiers; i++) {
+        identifierImagesMap[letterMap[i]] = new Image();
+        if (i < numberOfUppercaseLegalIdentifiers) {
+            identifierImagesMap[letterMap[i]].src = (
+                await fetch(pathToAtomImagesFolder + letterMap[i] + ".png")
+            ).url;
+        } else {
+            identifierImagesMap[letterMap[i]].src = (
+                await fetch(pathToAtomImagesFolder + letterMap[i] + "_.png")
+            ).url;
+        }
+    }
+}
+
+export function getImageWidthAndHeightFromChar(incomingChar: string): Point {
+    return new Point(
+        identifierImagesMap[incomingChar].width * imageDownsizeScalar,
+        identifierImagesMap[incomingChar].height * imageDownsizeScalar
+    );
+}
 
 /**
  * Draws the incoming CutNode on canvas as the incoming color string.
@@ -61,29 +157,61 @@ export function drawCut(thisCut: CutNode, color: string): void {
 
 /**
  * Draws the incoming AtomNode as the incoming color string.
- * If the incoming flag is true, which happens when the checkbox for drawing AtomNodes' bounding boxes is checked,
+ * If the incoming boolean is true, which happens when the checkbox for drawing AtomNodes' bounding boxes is checked,
  * Then the incoming AtomNode's bounding box is drawn as well.
  *
- * @param thisAtom Incoming AtomNode.
+ * @param incomingAtom Incoming AtomNode.
  * @param color Incoming color string.
- * @param currentAtom Incoming flag.
+ * @param currentAtom Incoming boolean.
  */
-export function drawAtom(thisAtom: AtomNode, color: string, currentAtom: Boolean): void {
-    ctx.textBaseline = "bottom";
-    const atomMetrics: TextMetrics = ctx.measureText(thisAtom.identifier);
+export function drawAtom(incomingAtom: AtomNode, color: string, currentAtom: boolean): void {
+    console.log(
+        "drawing " +
+            incomingAtom.identifier +
+            " at (" +
+            (incomingAtom.origin.x + offset.x) +
+            ", " +
+            (incomingAtom.origin.y + offset.y) +
+            ")"
+    );
+
+    const currentElement: HTMLImageElement = identifierImagesMap[incomingAtom.identifier];
+
+    /*
     ctx.fillStyle = color;
-    ctx.strokeStyle = color;
-    ctx.beginPath();
-    ctx.fillText(thisAtom.identifier, thisAtom.origin.x + offset.x, thisAtom.origin.y + offset.y);
+    ctx.fillRect(
+        incomingAtom.origin.x + offset.x,
+        incomingAtom.origin.y + offset.y,
+        currentElement.width * imageDownsizeScalar,
+        currentElement.height * imageDownsizeScalar
+    );
+    */
+    //currently filling the rectangle with the placed color. if we can get the canvas color,
+    //this might work?
+    //this may have been causing problems because i was drawing the boundary boxes very large
+    //before lol try this again
+
+    const desiredWidth: number = currentElement.width * imageDownsizeScalar;
+    const desiredHeight: number = currentElement.height * imageDownsizeScalar;
+
+    ctx.drawImage(
+        currentElement,
+        incomingAtom.origin.x + offset.x,
+        incomingAtom.origin.y + offset.y,
+        desiredWidth,
+        desiredHeight
+    );
+
     if (atomCheckBoxes.checked || (atomCheckBox.checked && currentAtom)) {
+        ctx.beginPath();
         ctx.rect(
-            thisAtom.origin.x + offset.x,
-            thisAtom.origin.y + offset.y - atomMetrics.actualBoundingBoxAscent,
-            thisAtom.width,
-            thisAtom.height
+            incomingAtom.origin.x + offset.x,
+            incomingAtom.origin.y + offset.y,
+            desiredWidth,
+            desiredHeight
         );
+        ctx.stroke();
     }
-    ctx.stroke();
 }
 
 /**

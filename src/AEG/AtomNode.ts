@@ -157,7 +157,7 @@ export class AtomNode {
      */
     public calcRect(): Rectangle {
         return new Rectangle(
-            new Point(this.internalOrigin.x, this.internalOrigin.y - this.internalHeight),
+            new Point(this.internalOrigin.x, this.internalOrigin.y),
             this.internalWidth,
             this.internalHeight
         );
