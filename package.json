@@ -38,10 +38,10 @@
     "@types/node": "20.14.10",
     "@types/wicg-file-system-access": "^2023.10.5",
     "gts": "^5.3.1",
-    "typedoc": "^0.26.3",
+    "typedoc": "^0.26.4",
     "typescript": "~5.5.3",
     "vite": "^5.3.3",
-    "vitest": "^1.6.0"
+    "vitest": "^2.0.2"
   },
   "dependencies": {
     "file-saver": "^2.0.5",
