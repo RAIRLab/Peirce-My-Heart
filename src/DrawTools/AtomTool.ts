@@ -35,7 +35,7 @@ let wasOut: boolean;
 //True if the mouse button is currently down.
 let hasMouseDown: boolean;
 
-//AtomNode we are creating. Defaults to A at position (0, 0) on canvas.
+//AtomNode we are creating.
 let currentAtom: AtomNode;
 
 /**

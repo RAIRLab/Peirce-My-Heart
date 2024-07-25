@@ -8,7 +8,7 @@
  */
 
 import {AEGTree} from "./AEG/AEGTree";
-import {loadIdentifierImagesMap} from "./SharedToolUtils/DrawUtils";
+import {loadIdentifierImagesMap, redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 import {loadMode, saveMode, aegJsonString} from "./AEG-IO";
 import {ProofModeNode} from "./ProofHistory/ProofModeNode";
 import {toggleHandler} from "./ToggleModes";
@@ -599,6 +599,11 @@ function mouseOutHandler(): void {
 function resizeHandler(): void {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    if (TreeContext.modeState === "Draw") {
+        redrawTree(TreeContext.tree);
+    } else {
+        redrawProof();
+    }
 }
 
 window.onresize = resizeHandler;
