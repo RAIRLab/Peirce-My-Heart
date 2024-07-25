@@ -2,7 +2,7 @@
  * @author James Oswald
  */
 
-[data-theme="Light-Wireframe"] {
+:root {
     --global-background : #ffffff;
     --p-text : #000000;
     --canvas-bg : #ffffff;
