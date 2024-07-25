@@ -12,6 +12,15 @@ import {TreeContext} from "./TreeContext";
 //Next to the save button.
 const themeSelector: HTMLSelectElement = <HTMLSelectElement>document.getElementById("theme-select");
 
+//Background color shared among all dark themes.
+const darkThemeBackgroundColor = "#000000";
+
+//Good placement color shared among all colorblind themes.
+const colorblindGoodPlacementColor = "#009E73";
+
+//Bad placement color shared among all colorblind themes.
+const colorblindBadPlacementColor = "#D55E00";
+
 //Initialize the theme-change library.
 themeChange();
 
@@ -85,4 +94,25 @@ export function legalColor(): string {
  */
 export function placedColor(): string {
     return placedColorStr;
+}
+
+/**
+ * Determines whether the canvas is currently in a dark theme.
+ *
+ * @returns True if the canvas is in a dark theme.
+ */
+export function isDarkTheme(): boolean {
+    return cssVar("--global-background") === darkThemeBackgroundColor;
+}
+
+/**
+ * Determines whether the canvas is currently in a colorblind theme.
+ *
+ * @returns True if the canvas is in a colorblind theme.
+ */
+export function isColorblindTheme(): boolean {
+    return (
+        cssVar("--good-placement") === colorblindGoodPlacementColor &&
+        cssVar("--bad-placement") === colorblindBadPlacementColor
+    );
 }

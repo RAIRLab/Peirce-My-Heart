@@ -11,7 +11,7 @@ import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {Ellipse} from "../AEG/Ellipse";
 import {offset} from "./DragTool";
-import {cssVar, legalColor, placedColor} from "../Themes";
+import {cssVar, isColorblindTheme, isDarkTheme, legalColor, placedColor} from "../Themes";
 import {Point} from "../AEG/Point";
 import {TreeContext} from "../TreeContext";
 
@@ -22,7 +22,16 @@ const imageDownsizeScalar = 0.5;
 
 //Maps related to handling identifier images.
 const letterMap: string[] = [];
-const identifierImagesMap: {[id: string]: HTMLImageElement} = {};
+const placementTypeToFileExtensionMap: string[] = [];
+
+const lightIdentifierImagesMap: {[id: string]: HTMLImageElement} = {};
+const darkIdentifierImagesMap: {[id: string]: HTMLImageElement} = {};
+const nonColorblindGoodPlacementImagesMap: {[id: string]: HTMLImageElement} = {};
+const nonColorblindBadPlacementImagesMap: {[id: string]: HTMLImageElement} = {};
+const colorblindGoodPlacementImagesMap: {[id: string]: HTMLImageElement} = {};
+const colorblindBadPlacementImagesMap: {[id: string]: HTMLImageElement} = {};
+
+const mapOfImageMaps: {[id: string]: HTMLImageElement}[] = [];
 
 //Setting up Canvas...
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -104,29 +113,68 @@ async function loadIntegerToCharMap(): Promise<void> {
 }
 
 /**
+ * Loads each image map into an array.
+ */
+async function loadMapOfImageMaps(): Promise<void> {
+    mapOfImageMaps[0] = lightIdentifierImagesMap;
+    mapOfImageMaps[1] = darkIdentifierImagesMap;
+    mapOfImageMaps[2] = nonColorblindBadPlacementImagesMap;
+    mapOfImageMaps[3] = nonColorblindGoodPlacementImagesMap;
+    mapOfImageMaps[4] = colorblindBadPlacementImagesMap;
+    mapOfImageMaps[5] = colorblindGoodPlacementImagesMap;
+}
+
+/**
+ * Loads each file extension into an array, whose indices correspond with mapOfImageMaps'.
+ */
+async function loadPlacementTypeMap(): Promise<void> {
+    placementTypeToFileExtensionMap[0] = ".png";
+    placementTypeToFileExtensionMap[1] = "d.png";
+    placementTypeToFileExtensionMap[2] = "nb.png";
+    placementTypeToFileExtensionMap[3] = "ng.png";
+    placementTypeToFileExtensionMap[4] = "cb.png";
+    placementTypeToFileExtensionMap[5] = "cg.png";
+}
+
+/**
  * Loads each uppercase and lowercase identifier image into an array.
  */
 export async function loadIdentifierImagesMap(): Promise<void> {
     await loadIntegerToCharMap();
+    await loadMapOfImageMaps();
+    await loadPlacementTypeMap();
+
+    let currentLetter: string;
+    let currentPath: string;
 
     for (let i = 0; i < numberOfLegalIdentifiers; i++) {
-        identifierImagesMap[letterMap[i]] = new Image();
-        if (i < numberOfUppercaseLegalIdentifiers) {
-            identifierImagesMap[letterMap[i]].src = (
-                await fetch(pathToAtomImagesFolder + letterMap[i] + ".png")
-            ).url;
-        } else {
-            identifierImagesMap[letterMap[i]].src = (
-                await fetch(pathToAtomImagesFolder + letterMap[i] + "_.png")
+        currentLetter = letterMap[i];
+        currentPath = pathToAtomImagesFolder + currentLetter;
+        if (i >= numberOfUppercaseLegalIdentifiers) {
+            currentPath += "_";
+        }
+
+        for (let j = 0; j < mapOfImageMaps.length; j++) {
+            mapOfImageMaps[j][currentLetter] = new Image();
+            mapOfImageMaps[j][currentLetter].src = (
+                await fetch(currentPath + placementTypeToFileExtensionMap[j])
             ).url;
         }
     }
 }
 
+/**
+ * Determines the actual width and height of the image corresponding to the incoming char string.
+ * Since different identifier image types differ only in color content,
+ * we can use lightIdentifierImagesMap to measure them all equally.
+ *
+ * @param incomingChar Incoming char string.
+ * @returns Actual width and height of the image corresponding to incomingChar.
+ */
 export function getImageWidthAndHeightFromChar(incomingChar: string): Point {
     return new Point(
-        identifierImagesMap[incomingChar].width * imageDownsizeScalar,
-        identifierImagesMap[incomingChar].height * imageDownsizeScalar
+        lightIdentifierImagesMap[incomingChar].width * imageDownsizeScalar,
+        lightIdentifierImagesMap[incomingChar].height * imageDownsizeScalar
     );
 }
 
@@ -165,31 +213,28 @@ export function drawCut(thisCut: CutNode, color: string): void {
  * @param currentAtom Incoming boolean.
  */
 export function drawAtom(incomingAtom: AtomNode, color: string, currentAtom: boolean): void {
-    console.log(
-        "drawing " +
-            incomingAtom.identifier +
-            " at (" +
-            (incomingAtom.origin.x + offset.x) +
-            ", " +
-            (incomingAtom.origin.y + offset.y) +
-            ")"
-    );
+    let currentElement: HTMLImageElement;
+    const currentIdentifier = incomingAtom.identifier;
 
-    const currentElement: HTMLImageElement = identifierImagesMap[incomingAtom.identifier];
-
-    /*
-    ctx.fillStyle = color;
-    ctx.fillRect(
-        incomingAtom.origin.x + offset.x,
-        incomingAtom.origin.y + offset.y,
-        currentElement.width * imageDownsizeScalar,
-        currentElement.height * imageDownsizeScalar
-    );
-    */
-    //currently filling the rectangle with the placed color. if we can get the canvas color,
-    //this might work?
-    //this may have been causing problems because i was drawing the boundary boxes very large
-    //before lol try this again
+    if (color === placedColor()) {
+        if (isDarkTheme()) {
+            currentElement = darkIdentifierImagesMap[currentIdentifier];
+        } else {
+            currentElement = lightIdentifierImagesMap[currentIdentifier];
+        }
+    } else if (color === legalColor()) {
+        if (isColorblindTheme()) {
+            currentElement = colorblindGoodPlacementImagesMap[currentIdentifier];
+        } else {
+            currentElement = nonColorblindGoodPlacementImagesMap[currentIdentifier];
+        }
+    } else {
+        if (isColorblindTheme()) {
+            currentElement = colorblindBadPlacementImagesMap[currentIdentifier];
+        } else {
+            currentElement = nonColorblindBadPlacementImagesMap[currentIdentifier];
+        }
+    }
 
     const desiredWidth: number = currentElement.width * imageDownsizeScalar;
     const desiredHeight: number = currentElement.height * imageDownsizeScalar;
@@ -203,6 +248,8 @@ export function drawAtom(incomingAtom: AtomNode, color: string, currentAtom: boo
     );
 
     if (atomCheckBoxes.checked || (atomCheckBox.checked && currentAtom)) {
+        ctx.fillStyle = color;
+        ctx.strokeStyle = color;
         ctx.beginPath();
         ctx.rect(
             incomingAtom.origin.x + offset.x,
