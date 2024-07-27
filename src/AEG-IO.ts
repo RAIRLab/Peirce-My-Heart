@@ -4,13 +4,11 @@
  * @author Anusha Tiwari
  */
 
-
 import {registerSchema, validate} from "@hyperjump/json-schema";
 
 import {TreeContext} from "./TreeContext";
 import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 import {appendStep} from "./ProofHistory/ProofHistory";
-
 
 import {AEGTree} from "./AEG/AEGTree";
 import {AtomNode} from "./AEG/AtomNode";
@@ -66,7 +64,7 @@ interface proofNodeObj {
  * The save data will either be an AEGTree from Draw Mode or a series of ProofModeNodes from Proof Mode.
  *
  * @param handle Incoming FileSystemFileHandle.
- * @param aegData Incoming save data.
+ * @param saveData Incoming save data.
  */
 export async function saveFile(
     handle: FileSystemFileHandle,
@@ -244,20 +242,20 @@ export async function saveMode(): Promise<void> {
 
 function readFile(file: File) {
     const reader = new FileReader();
-    reader.addEventListener("load", () => {
+    reader.addEventListener("load", async () => {
         const aegData = reader.result;
         if (typeof aegData === "string") {
             const loadData = loadFile(TreeContext.modeState, aegData);
             if (TreeContext.modeState === "Draw") {
                 //Loads data.
-                TreeContext.tree = loadData as AEGTree;
+                TreeContext.tree = (await loadData) as AEGTree;
                 //Redraws tree which is now the parsed loadData.
                 redrawTree(TreeContext.tree);
             } else if (TreeContext.modeState === "Proof") {
                 //Clears current proof.
                 TreeContext.clearProof();
                 //Loads data for the new proof.
-                TreeContext.proof = loadData as ProofModeNode[];
+                TreeContext.proof = (await loadData) as ProofModeNode[];
                 //Removes default start step.
                 document.getElementById("Row: 1")?.remove();
                 //Adds button for each step of the loaded proof to the history bar.

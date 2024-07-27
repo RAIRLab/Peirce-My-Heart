@@ -229,8 +229,8 @@ function edgesIntersect(rect1: Rectangle, rect2: Rectangle): boolean {
  * Checks whether the incoming Point is inside the incoming Rectangle.
  *
  * @param rect Incoming Rectangle.
- * @param otherPoint Incoming Point.
- * @returns True, if otherPoint is contained within rect.
+ * @param point Incoming Point.
+ * @returns True, if point is contained within rect.
  */
 export function pointInRect(rect: Rectangle, point: Point): boolean {
     const rectCorners = rect.getCorners();
@@ -248,7 +248,7 @@ export function pointInRect(rect: Rectangle, point: Point): boolean {
  * Calculates and returns the signed distance of the incoming Point with respect to the incoming Ellipse.
  *
  * @param ellipse Incoming Ellipse.
- * @param otherPoint Incoming Point.
+ * @param point Incoming Point.
  *
  * @returns 0, if point is on ellipse.
  * @returns < 0 if point is completely within ellipse.
