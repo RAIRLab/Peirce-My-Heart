@@ -32,8 +32,8 @@ export class Point {
 
     /**
      * Sets this Point's coordinates according to the incoming coordinates.
-     * @param xCoord Incoming x-coordinate.
-     * @param yCoord Incoming y-coordinate.
+     * @param coordX Incoming x-coordinate.
+     * @param coordY Incoming y-coordinate.
      * @throws Error on receiving NaN or Infinity values as coordinates.
      */
     public set(coordX: number, coordY: number): void {

@@ -33,7 +33,7 @@ const proofHistoryBar = <HTMLParagraphElement>document.getElementById("proofHist
  * Caches the states of AEGs and tools for both Draw and Proof Mode.
  * Updates button visibility accordingly.
  */
-export function toggleHandler(): void {
+export async function toggleHandler(): Promise<void> {
     //Toggle drawMode since we have switched modes.
     drawMode = !drawMode;
     if (drawMode) {
@@ -52,7 +52,7 @@ export function toggleHandler(): void {
         //Load our saved Draw Mode tree and tool states.
         let loadedAEG: AEGTree | null = null;
         if (drawCachedAEG !== null) {
-            loadedAEG = loadFile(TreeContext.modeState, drawCachedAEG) as AEGTree | null;
+            loadedAEG = (await loadFile(TreeContext.modeState, drawCachedAEG)) as AEGTree | null;
         }
         if (loadedAEG !== null) {
             TreeContext.tree.sheet = loadedAEG.sheet;
@@ -81,7 +81,9 @@ export function toggleHandler(): void {
         //Load our proof structure and tool state.
         let loadedProof: ProofModeNode[] | null = null;
         if (proofCachedAEG !== null) {
-            loadedProof = loadFile(TreeContext.modeState, proofCachedAEG) as ProofModeNode[] | null;
+            loadedProof = (await loadFile(TreeContext.modeState, proofCachedAEG)) as
+                | ProofModeNode[]
+                | null;
         }
         if (loadedProof !== null) {
             TreeContext.proof = loadedProof;

@@ -22,7 +22,7 @@ const modeElm: HTMLSelectElement = <HTMLSelectElement>document.getElementById("m
  *
  * @param tree Incoming AEGTree.
  * @param incomingNode Incoming CutNode.
- * @param change Incoming Point.
+ * @param difference Incoming Point.
  * @returns True f all nodes are able to be inserted after being offset by difference.
  */
 export function validateChildren(tree: AEGTree, incomingNode: CutNode, difference: Point): boolean {

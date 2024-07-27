@@ -1,0 +1,17 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://rairlab.github.io/Peirce-My-Heart/DrawSchema.json",
+    "title": "Draw Mode AEG",
+    "description": "Alpha Existential Graphs downloaded from Draw Mode",
+    "type": "object",
+    "properties": {
+        "sheet": {
+            "description": "The Sheet of Assertion",
+            "type": "sheetObj"
+        },
+        "children":  {
+            "description": "T"
+        }
+    },
+    "required": ["sheetObj"]
+}

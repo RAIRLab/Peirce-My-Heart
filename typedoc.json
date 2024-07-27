@@ -6,8 +6,9 @@
     //Update this with all Library Classes used
     "entryPoints": [
         "src/AEG",
+        "src/DrawHistory",
         "src/DrawTools",
-        "src/Proof",
+        "src/ProofHistory",
         "src/ProofTools",
         "src/SharedToolUtils",
         "src/AEG-IO.ts",

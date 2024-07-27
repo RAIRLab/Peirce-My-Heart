@@ -66,7 +66,7 @@ export class Rectangle {
 
     /**
      * Checks whether the incoming Point is inside this Rectangle.
-     * @param otherPoint Point that may be inside this Rectangle.
+     * @param point Point that may be inside this Rectangle.
      */
     public containsPoint(point: Point): boolean {
         return pointInRect(this, point);
