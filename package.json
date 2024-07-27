@@ -43,6 +43,7 @@
     "vitest": "^1.5.0"
   },
   "dependencies": {
+    "@hyperjump/json-schema": "^1.9.5",
     "fork-awesome": "^1.2.0",
     "theme-change": "^2.5.0"
   }

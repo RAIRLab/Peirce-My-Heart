@@ -7,8 +7,7 @@
     "properties": {
         "sheet": {
             "description": "The Sheet of Assertion",
-            "type": "sheetObj",
-            "exclusiveMinimum": 0
+            "type": "sheetObj"
         },
         "children":  {
             "description": "T"

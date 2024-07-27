@@ -4,6 +4,8 @@
  * @author Anusha Tiwari
  */
 
+import {registerSchema, validate} from "@hyperjump/json-schema";
+
 import {AEGTree} from "./AEG/AEGTree";
 import {AtomNode} from "./AEG/AtomNode";
 import {CutNode} from "./AEG/CutNode";
@@ -76,8 +78,26 @@ export async function saveFile(
  * @param fileData Incoming data read from a file.
  * @returns AEGTree representation of fileData if in Draw Mode. Otherwise, a series of ProofModeNodes.
  */
-export function loadFile(mode: "Draw" | "Proof", fileData: string): AEGTree | ProofModeNode[] {
+export async function loadFile(
+    mode: "Draw" | "Proof",
+    fileData: string
+): Promise<AEGTree | ProofModeNode[]> {
+    const pmhSchema = "https://rairlab.github.io/Peirce-My-Heart/DrawSchema.json";
+
+    registerSchema(
+        {$schema: "https://json-schema.org/draft/2020-12/schema", type: "string"},
+        pmhSchema
+    );
+
     const data = JSON.parse(fileData);
+
+    const isValid = await validate(pmhSchema, data);
+
+    if (isValid.valid) {
+        console.log("COMPLETELY VALID");
+    } else {
+        console.log("COMPLETELY INVALID");
+    }
 
     if (mode === "Draw") {
         const childData: (atomObj | cutObj)[] = (data as sheetObj).internalSheet.internalChildren;
