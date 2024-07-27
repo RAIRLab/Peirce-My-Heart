@@ -57,59 +57,14 @@ const pathToAtomImagesFolder = "./atoms/";
 /**
  * Loads each uppercase and lowercase letter of the English alphabet into an array.
  */
-async function loadIntegerToCharMap(): Promise<void> {
-    letterMap[0] = "A";
-    letterMap[1] = "B";
-    letterMap[2] = "C";
-    letterMap[3] = "D";
-    letterMap[4] = "E";
-    letterMap[5] = "F";
-    letterMap[6] = "G";
-    letterMap[7] = "H";
-    letterMap[8] = "I";
-    letterMap[9] = "J";
-    letterMap[10] = "K";
-    letterMap[11] = "L";
-    letterMap[12] = "M";
-    letterMap[13] = "N";
-    letterMap[14] = "O";
-    letterMap[15] = "P";
-    letterMap[16] = "Q";
-    letterMap[17] = "R";
-    letterMap[18] = "S";
-    letterMap[19] = "T";
-    letterMap[20] = "U";
-    letterMap[21] = "V";
-    letterMap[22] = "W";
-    letterMap[23] = "X";
-    letterMap[24] = "Y";
-    letterMap[25] = "Z";
-    letterMap[26] = "a";
-    letterMap[27] = "b";
-    letterMap[28] = "c";
-    letterMap[29] = "d";
-    letterMap[30] = "e";
-    letterMap[31] = "f";
-    letterMap[32] = "g";
-    letterMap[33] = "h";
-    letterMap[34] = "i";
-    letterMap[35] = "j";
-    letterMap[36] = "k";
-    letterMap[37] = "l";
-    letterMap[38] = "m";
-    letterMap[39] = "n";
-    letterMap[40] = "o";
-    letterMap[41] = "p";
-    letterMap[42] = "q";
-    letterMap[43] = "r";
-    letterMap[44] = "s";
-    letterMap[45] = "t";
-    letterMap[46] = "u";
-    letterMap[47] = "v";
-    letterMap[48] = "w";
-    letterMap[49] = "x";
-    letterMap[50] = "y";
-    letterMap[51] = "z";
+async function loadLetterMap(): Promise<void> {
+    for (let i = 0; i < numberOfLegalIdentifiers; i++) {
+        if (i < numberOfUppercaseLegalIdentifiers) {
+            letterMap.push(String.fromCharCode(65 + i));
+        } else {
+            letterMap.push(String.fromCharCode(97 + (numberOfLegalIdentifiers - i - 1)));
+        }
+    }
 }
 
 /**
@@ -140,7 +95,7 @@ async function loadPlacementTypeMap(): Promise<void> {
  * Loads each uppercase and lowercase identifier image into an array.
  */
 export async function loadIdentifierImagesMap(): Promise<void> {
-    await loadIntegerToCharMap();
+    await loadLetterMap();
     await loadMapOfImageMaps();
     await loadPlacementTypeMap();
 

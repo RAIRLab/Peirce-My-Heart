@@ -36,7 +36,7 @@ let wasOut: boolean;
 let hasMouseDown: boolean;
 
 //AtomNode we are creating.
-let currentAtom: AtomNode;
+let currentAtom: AtomNode = setDefaultAtom();
 
 /**
  * Checks to see if the key from the incoming KeyboardEvent is in the Latin alphabet.
@@ -47,14 +47,7 @@ let currentAtom: AtomNode;
 export function atomKeyPress(event: KeyboardEvent): void {
     const regex = new RegExp(/^[A-Za-z]$/);
     if (regex.test(event.key)) {
-        if (currentAtom === undefined) {
-            currentAtom = createAtom(event.key, new Point(0, 0));
-        } else {
-            currentAtom = createAtom(
-                event.key,
-                new Point(currentAtom.origin.x, currentAtom.origin.y)
-            );
-        }
+        currentAtom = createAtom(event.key, new Point(currentAtom.origin.x, currentAtom.origin.y));
 
         //If currentAtom is not the default then call determineDrawColor().
         if (currentAtom.origin.x !== 0 && currentAtom.origin.y !== 0 && hasMouseDown) {
@@ -133,13 +126,11 @@ export function atomMouseOut(): void {
 
 /**
  * Constructs a new AtomNode at the incoming Point.
- * This AtomNode is created with the incoming string as an identifier and a width
- * and height retrieved from the font's text metrics.
+ * This AtomNode is created with the incoming string at the incoming Point.
  *
  * @param identifier Incoming string.
  * @param origin Incoming Point.
- * @returns AtomNode at origin with identifier as its letter and appropriate width
- * and height depending on font.
+ * @returns AtomNode at origin with identifier as its letter.
  */
 function createAtom(identifier: string, origin: Point): AtomNode {
     atomDisplay.innerHTML = identifier;
@@ -148,6 +139,16 @@ function createAtom(identifier: string, origin: Point): AtomNode {
     const height: number = widthAndHeight.y;
 
     return new AtomNode(identifier, new Point(origin.x, origin.y), width, height);
+}
+
+/**
+ * Creates and returns a default atom.
+ *
+ * @returns Atom with identifier A at (0, 0).
+ */
+function setDefaultAtom(): AtomNode {
+    atomDisplay.innerHTML = "A";
+    return new AtomNode("A", new Point(0, 0), 0, 0);
 }
 
 /**
