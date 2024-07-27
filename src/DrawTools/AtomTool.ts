@@ -138,7 +138,7 @@ function createAtom(identifier: string, origin: Point): AtomNode {
     const width: number = widthAndHeight.x;
     const height: number = widthAndHeight.y;
 
-    return new AtomNode(identifier, new Point(origin.x, origin.y), width, height);
+    return new AtomNode(identifier, new Point(origin.x, origin.y - height), width, height);
 }
 
 /**
