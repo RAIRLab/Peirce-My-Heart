@@ -233,7 +233,7 @@ describe("CutNode remove soliloquy:", () => {
     });
 
     test("Removing a child of the Sheet of Assertion should be successful.", () => {
-        sheetNode.child = new AtomNode("H", new Point(0, 4), 3, 3);
+        sheetNode.child = new AtomNode("H", new Point(0, 0), 3, 3);
         expect(sheetNode.remove(new Point(2, 2))).toBeTruthy();
         expect(sheetNode.children.length).toBe(0);
     });
@@ -243,7 +243,7 @@ describe("CutNode remove soliloquy:", () => {
     });
 
     test("Removing an AtomNode one level deep should be successful.", () => {
-        cNode.child = new AtomNode("A", new Point(4, 6), 2, 2);
+        cNode.child = new AtomNode("A", new Point(4, 4), 2, 2);
         expect(cNode.remove(testCenter)).toBeTruthy();
         expect(cNode.children.length).toBe(0);
     });
@@ -261,7 +261,7 @@ describe("CutNode remove soliloquy:", () => {
     });
 
     test("Removing a CutNode with children two cut levels deep should be successful.", () => {
-        const dee: AtomNode = new AtomNode("D", new Point(4, 6), 2, 2);
+        const dee: AtomNode = new AtomNode("D", new Point(4, 4), 2, 2);
         const childCut: CutNode = new CutNode(new Ellipse(testCenter, 4, 4));
         childCut.child = dee;
 
@@ -272,7 +272,7 @@ describe("CutNode remove soliloquy:", () => {
     });
 
     test("Removing a CutNode with children several levels deep should be successful.", () => {
-        const ell: AtomNode = new AtomNode("L", new Point(4, 6), 1.5, 1.5);
+        const ell: AtomNode = new AtomNode("L", new Point(4, 4), 1.5, 1.5);
         const childCutThreeDeep: CutNode = new CutNode(new Ellipse(testCenter, 2, 2));
         const childCutTwoDeep: CutNode = new CutNode(new Ellipse(testCenter, 3, 3));
         const childCutOneDeep: CutNode = new CutNode(new Ellipse(testCenter, 4, 4));

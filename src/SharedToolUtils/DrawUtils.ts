@@ -11,9 +11,27 @@ import {AtomNode} from "../AEG/AtomNode";
 import {CutNode} from "../AEG/CutNode";
 import {Ellipse} from "../AEG/Ellipse";
 import {offset} from "./DragTool";
-import {cssVar, legalColor, placedColor} from "../Themes";
+import {cssVar, isColorblindTheme, isDarkTheme, legalColor, placedColor} from "../Themes";
 import {Point} from "../AEG/Point";
 import {TreeContext} from "../TreeContext";
+
+//Constants related to handling identifier images.
+const numberOfLegalIdentifiers = 52;
+const numberOfUppercaseLegalIdentifiers = 26;
+const imageDownsizeScalar = 0.5;
+
+//Maps related to handling identifier images.
+const letterMap: string[] = [];
+const placementTypeToFileExtensionMap: string[] = [];
+
+const lightIdentifierImagesMap: {[id: string]: HTMLImageElement} = {};
+const darkIdentifierImagesMap: {[id: string]: HTMLImageElement} = {};
+const nonColorblindGoodPlacementImagesMap: {[id: string]: HTMLImageElement} = {};
+const nonColorblindBadPlacementImagesMap: {[id: string]: HTMLImageElement} = {};
+const colorblindGoodPlacementImagesMap: {[id: string]: HTMLImageElement} = {};
+const colorblindBadPlacementImagesMap: {[id: string]: HTMLImageElement} = {};
+
+const mapOfImageMaps: {[id: string]: HTMLImageElement}[] = [];
 
 //Setting up Canvas...
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
@@ -33,6 +51,87 @@ const proofString = <HTMLParagraphElement>document.getElementById("proofString")
 const atomCheckBox = <HTMLInputElement>document.getElementById("atomBox");
 const atomCheckBoxes = <HTMLInputElement>document.getElementById("atomBoxes");
 atomCheckBoxes.addEventListener("input", checkBoxRedraw);
+
+const pathToAtomImagesFolder = "./atoms/";
+
+/**
+ * Loads each uppercase and lowercase letter of the English alphabet into an array.
+ */
+async function loadLetterMap(): Promise<void> {
+    for (let i = 0; i < numberOfLegalIdentifiers; i++) {
+        if (i < numberOfUppercaseLegalIdentifiers) {
+            letterMap.push(String.fromCharCode(65 + i));
+        } else {
+            letterMap.push(String.fromCharCode(97 + (numberOfLegalIdentifiers - i - 1)));
+        }
+    }
+}
+
+/**
+ * Loads each image map into an array.
+ */
+async function loadMapOfImageMaps(): Promise<void> {
+    mapOfImageMaps[0] = lightIdentifierImagesMap;
+    mapOfImageMaps[1] = darkIdentifierImagesMap;
+    mapOfImageMaps[2] = nonColorblindBadPlacementImagesMap;
+    mapOfImageMaps[3] = nonColorblindGoodPlacementImagesMap;
+    mapOfImageMaps[4] = colorblindBadPlacementImagesMap;
+    mapOfImageMaps[5] = colorblindGoodPlacementImagesMap;
+}
+
+/**
+ * Loads each file extension into an array, whose indices correspond with mapOfImageMaps'.
+ */
+async function loadPlacementTypeMap(): Promise<void> {
+    placementTypeToFileExtensionMap[0] = ".png";
+    placementTypeToFileExtensionMap[1] = "d.png";
+    placementTypeToFileExtensionMap[2] = "nb.png";
+    placementTypeToFileExtensionMap[3] = "ng.png";
+    placementTypeToFileExtensionMap[4] = "cb.png";
+    placementTypeToFileExtensionMap[5] = "cg.png";
+}
+
+/**
+ * Loads each uppercase and lowercase identifier image into an array.
+ */
+export async function loadIdentifierImagesMap(): Promise<void> {
+    await loadLetterMap();
+    await loadMapOfImageMaps();
+    await loadPlacementTypeMap();
+
+    let currentLetter: string;
+    let currentPath: string;
+
+    for (let i = 0; i < numberOfLegalIdentifiers; i++) {
+        currentLetter = letterMap[i];
+        currentPath = pathToAtomImagesFolder + currentLetter;
+        if (i >= numberOfUppercaseLegalIdentifiers) {
+            currentPath += "_";
+        }
+
+        for (let j = 0; j < mapOfImageMaps.length; j++) {
+            mapOfImageMaps[j][currentLetter] = new Image();
+            mapOfImageMaps[j][currentLetter].src = (
+                await fetch(currentPath + placementTypeToFileExtensionMap[j])
+            ).url;
+        }
+    }
+}
+
+/**
+ * Determines the actual width and height of the image corresponding to the incoming char string.
+ * Since different identifier image types differ only in color content,
+ * we can use lightIdentifierImagesMap to measure them all equally.
+ *
+ * @param incomingChar Incoming char string.
+ * @returns Actual width and height of the image corresponding to incomingChar.
+ */
+export function getImageWidthAndHeightFromChar(incomingChar: string): Point {
+    return new Point(
+        lightIdentifierImagesMap[incomingChar].width * imageDownsizeScalar,
+        lightIdentifierImagesMap[incomingChar].height * imageDownsizeScalar
+    );
+}
 
 /**
  * Draws the incoming CutNode on canvas as the incoming color string.
@@ -61,29 +160,60 @@ export function drawCut(thisCut: CutNode, color: string): void {
 
 /**
  * Draws the incoming AtomNode as the incoming color string.
- * If the incoming flag is true, which happens when the checkbox for drawing AtomNodes' bounding boxes is checked,
+ * If the incoming boolean is true, which happens when the checkbox for drawing AtomNodes' bounding boxes is checked,
  * Then the incoming AtomNode's bounding box is drawn as well.
  *
- * @param thisAtom Incoming AtomNode.
+ * @param incomingAtom Incoming AtomNode.
  * @param color Incoming color string.
- * @param currentAtom Incoming flag.
+ * @param currentAtom Incoming boolean.
  */
-export function drawAtom(thisAtom: AtomNode, color: string, currentAtom: Boolean): void {
-    ctx.textBaseline = "bottom";
-    const atomMetrics: TextMetrics = ctx.measureText(thisAtom.identifier);
-    ctx.fillStyle = color;
-    ctx.strokeStyle = color;
-    ctx.beginPath();
-    ctx.fillText(thisAtom.identifier, thisAtom.origin.x + offset.x, thisAtom.origin.y + offset.y);
-    if (atomCheckBoxes.checked || (atomCheckBox.checked && currentAtom)) {
-        ctx.rect(
-            thisAtom.origin.x + offset.x,
-            thisAtom.origin.y + offset.y - atomMetrics.actualBoundingBoxAscent,
-            thisAtom.width,
-            thisAtom.height
-        );
+export function drawAtom(incomingAtom: AtomNode, color: string, currentAtom: boolean): void {
+    let currentElement: HTMLImageElement;
+    const currentIdentifier = incomingAtom.identifier;
+
+    if (color === placedColor()) {
+        if (isDarkTheme()) {
+            currentElement = darkIdentifierImagesMap[currentIdentifier];
+        } else {
+            currentElement = lightIdentifierImagesMap[currentIdentifier];
+        }
+    } else if (color === legalColor()) {
+        if (isColorblindTheme()) {
+            currentElement = colorblindGoodPlacementImagesMap[currentIdentifier];
+        } else {
+            currentElement = nonColorblindGoodPlacementImagesMap[currentIdentifier];
+        }
+    } else {
+        if (isColorblindTheme()) {
+            currentElement = colorblindBadPlacementImagesMap[currentIdentifier];
+        } else {
+            currentElement = nonColorblindBadPlacementImagesMap[currentIdentifier];
+        }
     }
-    ctx.stroke();
+
+    const desiredWidth: number = currentElement.width * imageDownsizeScalar;
+    const desiredHeight: number = currentElement.height * imageDownsizeScalar;
+
+    ctx.drawImage(
+        currentElement,
+        incomingAtom.origin.x + offset.x,
+        incomingAtom.origin.y + offset.y,
+        desiredWidth,
+        desiredHeight
+    );
+
+    if (atomCheckBoxes.checked || (atomCheckBox.checked && currentAtom)) {
+        ctx.fillStyle = color;
+        ctx.strokeStyle = color;
+        ctx.beginPath();
+        ctx.rect(
+            incomingAtom.origin.x + offset.x,
+            incomingAtom.origin.y + offset.y,
+            desiredWidth,
+            desiredHeight
+        );
+        ctx.stroke();
+    }
 }
 
 /**
