@@ -47,7 +47,10 @@ let currentAtom: AtomNode = setDefaultAtom();
 export function atomKeyPress(event: KeyboardEvent): void {
     const regex = new RegExp(/^[A-Za-z]$/);
     if (regex.test(event.key)) {
-        currentAtom = createAtom(event.key, new Point(currentAtom.origin.x, currentAtom.origin.y));
+        currentAtom = createAtom(
+            event.key,
+            new Point(currentAtom.origin.x, currentAtom.origin.y + currentAtom.height)
+        );
 
         //If currentAtom is not the default then call determineDrawColor().
         if (currentAtom.origin.x !== 0 && currentAtom.origin.y !== 0 && hasMouseDown) {
