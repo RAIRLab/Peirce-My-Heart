@@ -196,15 +196,6 @@ function setTool(state: Tool): void {
             break;
     }
 }
-/**
- * Creates and returns the stringification of the incoming data. Uses tab characters as delimiters.
- *
- * @param treeData Incoming data.
- * @returns Stringification of treeData.
- */
-export function aegStringify(treeData: AEGTree | ProofModeNode[]): string {
-    return JSON.stringify(treeData, null, "\t");
-}
 
 /**
  * Handles CTRL+Z undo operations according to whether the program is in Draw or Proof Mode.
