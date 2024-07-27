@@ -70,7 +70,7 @@ export function proofMoveSingleMouseDown(event: MouseEvent): void {
         }
         legalNode = true;
 
-        redrawTree(currentProofTree);
+        redrawTree(TreeContext.currentProofStep!.tree);
         if (currentNode instanceof AtomNode) {
             drawAtom(currentNode, legalColor(), true);
         } else {
@@ -94,7 +94,7 @@ export function proofMoveSingleMouseMove(event: MouseEvent): void {
             event.y - startingPoint.y
         );
 
-        redrawTree(currentProofTree);
+        redrawTree(TreeContext.currentProofStep!.tree);
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = alterCut(currentNode, moveDifference);
             const color = isMoveLegal(currentProofTree, tempCut) ? legalColor() : illegalColor();

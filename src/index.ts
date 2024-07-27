@@ -8,10 +8,9 @@
  */
 
 import {AEGTree} from "./AEG/AEGTree";
-import {appendStep} from "./ProofHistory/ProofHistory";
-import {loadFile, saveFile} from "./AEG-IO";
+import {loadIdentifierImagesMap, redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
+import {loadMode, saveMode, aegJsonString} from "./AEG-IO";
 import {ProofModeNode} from "./ProofHistory/ProofModeNode";
-import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
 import {toggleHandler} from "./ToggleModes";
 import {Tool, TreeContext} from "./TreeContext";
 
@@ -72,14 +71,16 @@ let hasMouseDown = false;
 //True if the user's mouse is down. Assumed to be in at the start.
 let hasMouseIn = true;
 
+loadIdentifierImagesMap();
+
 //Global window exports.
 //TODO: move these under the global import
 window.tree = TreeContext.tree;
-window.treeString = aegStringify(window.tree);
+window.treeString = aegJsonString(window.tree);
 window.atomTool = Tool.atomTool;
 window.cutTool = Tool.cutTool;
 window.dragTool = Tool.dragTool;
-window.aegStringify = aegStringify;
+window.aegJsonString = aegJsonString;
 window.saveMode = saveMode;
 window.loadMode = loadMode;
 window.drawMoveSingleTool = Tool.drawMoveSingleTool;
@@ -115,7 +116,7 @@ declare global {
         dragTool: Tool;
         saveMode: () => void;
         loadMode: () => void;
-        aegStringify: (treeData: AEGTree | ProofModeNode[]) => string;
+        aegJsonString: (treeData: AEGTree | ProofModeNode[]) => string;
         drawMoveSingleTool: Tool;
         drawMoveMultiTool: Tool;
         copySingleTool: Tool;
@@ -713,6 +714,11 @@ function mouseOutHandler(): void {
 function resizeHandler(): void {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    if (TreeContext.modeState === "Draw") {
+        redrawTree(TreeContext.tree);
+    } else {
+        redrawProof();
+    }
 }
 
 window.onresize = resizeHandler;

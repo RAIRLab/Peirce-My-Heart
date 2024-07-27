@@ -4,7 +4,13 @@
  * @author Anusha Tiwari
  */
 
+
 import {registerSchema, validate} from "@hyperjump/json-schema";
+
+import {TreeContext} from "./TreeContext";
+import {redrawProof, redrawTree} from "./SharedToolUtils/DrawUtils";
+import {appendStep} from "./ProofHistory/ProofHistory";
+
 
 import {AEGTree} from "./AEG/AEGTree";
 import {AtomNode} from "./AEG/AtomNode";
@@ -12,6 +18,9 @@ import {CutNode} from "./AEG/CutNode";
 import {Ellipse} from "./AEG/Ellipse";
 import {Point} from "./AEG/Point";
 import {ProofModeMove, ProofModeNode} from "./ProofHistory/ProofModeNode";
+
+//Cross-browser file saving library.
+import FileSaver from "file-saver";
 
 /**
  * Describes The Sheet of Assertion in JSON files.
@@ -166,7 +175,7 @@ function toCut(cutData: cutObj): CutNode {
 }
 
 /**
- * Parses the incoming AtomObject and returns and equivalent AtomNode.
+ * Parses the incoming AtomObject and returns an equivalent AtomNode.
  *
  * @param atomData Incoming AtomObject.
  * @returns AtomNode equivalent of atomData.
@@ -177,4 +186,119 @@ function toAtom(atomData: atomObj): AtomNode {
     const origin: Point = new Point(atomData.internalOrigin.x, atomData.internalOrigin.y);
 
     return new AtomNode(identifier, origin, atomData.internalWidth, atomData.internalHeight);
+}
+
+/**
+ * Creates and returns the json string of the given AEG Tree object.
+ * Uses tab characters as delimiters.
+ *
+ * @param treeData An AEG Tree object.
+ * @returns json string of treeData.
+ */
+export function aegJsonString(treeData: AEGTree | ProofModeNode[]): string {
+    return JSON.stringify(treeData, null, "\t");
+}
+
+/**
+ * Calls appropriate methods to save the current AEGTree as a file.
+ */
+export async function saveMode(): Promise<void> {
+    let name: string;
+    let data: AEGTree | ProofModeNode[];
+
+    if (TreeContext.modeState === "Draw") {
+        name = TreeContext.tree.toString();
+        data = TreeContext.tree;
+    } else {
+        if (TreeContext.proof.length === 1) {
+            name = "One-Step Proof";
+        } else {
+            name =
+                TreeContext.proof[0].tree.toString() +
+                " PROVES " +
+                TreeContext.getLastProofStep().tree.toString();
+        }
+        data = TreeContext.proof;
+    }
+
+    //Errors caused by file handler or HTML download element should not be displayed.
+    try {
+        //Dialog based download
+        if ("showSaveFilePicker" in window) {
+            const saveHandle = await window.showSaveFilePicker({
+                excludeAcceptAllOption: true,
+                suggestedName: name,
+                startIn: "downloads",
+                types: [{accept: {"text/json": [".json"]}}],
+            });
+            saveFile(saveHandle, data);
+        } else {
+            //Fallback to immediate download if showSaveFilePicker is not supported.
+            const blob = new Blob([aegJsonString(data)], {type: "text/json"});
+            FileSaver(blob, name + ".json");
+        }
+    } catch (error) {
+        //Catch error but do nothing. Discussed in Issue #247.
+    }
+}
+
+function readFile(file: File) {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+        const aegData = reader.result;
+        if (typeof aegData === "string") {
+            const loadData = loadFile(TreeContext.modeState, aegData);
+            if (TreeContext.modeState === "Draw") {
+                //Loads data.
+                TreeContext.tree = loadData as AEGTree;
+                //Redraws tree which is now the parsed loadData.
+                redrawTree(TreeContext.tree);
+            } else if (TreeContext.modeState === "Proof") {
+                //Clears current proof.
+                TreeContext.clearProof();
+                //Loads data for the new proof.
+                TreeContext.proof = loadData as ProofModeNode[];
+                //Removes default start step.
+                document.getElementById("Row: 1")?.remove();
+                //Adds button for each step of the loaded proof to the history bar.
+                for (let i = 0; i < TreeContext.proof.length; i++) {
+                    appendStep(TreeContext.proof[i], i + 1);
+                }
+                TreeContext.currentProofStep = TreeContext.proof[TreeContext.proof.length - 1];
+                redrawProof();
+            }
+        } else {
+            console.log("Loading failed because reading the file was unsuccessful.");
+        }
+    });
+    reader.readAsText(file);
+}
+
+/**
+ * Calls the appropriate methods to load files and convert them to equivalent AEGTrees.
+ */
+export async function loadMode(): Promise<void> {
+    try {
+        if ("showOpenFilePicker" in window) {
+            const [fileHandle] = await window.showOpenFilePicker({
+                excludeAcceptAllOption: true,
+                multiple: false,
+                startIn: "downloads",
+                types: [{accept: {"text/json": [".json"]}}],
+            });
+            const file = await fileHandle.getFile();
+            readFile(file);
+        } else {
+            const fileInput = document.createElement("input");
+            fileInput.type = "file";
+            fileInput.accept = ".json";
+            fileInput.addEventListener("change", () => {
+                const file = fileInput.files?.item(0);
+                readFile(file!);
+            });
+            fileInput.click();
+        }
+    } catch (error) {
+        //Do nothing.
+    }
 }

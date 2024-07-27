@@ -61,7 +61,7 @@ export function proofMoveMultiMouseDown(event: MouseEvent): void {
             currentParent.remove(startingPoint);
         }
         legalNode = true;
-        redrawTree(currentProofTree);
+        redrawTree(TreeContext.currentProofStep!.tree);
         highlightNode(currentNode, legalColor());
     } else {
         legalNode = false;
@@ -84,7 +84,7 @@ export function proofMoveMultiMouseMove(event: MouseEvent): void {
             event.y - startingPoint.y
         );
 
-        redrawTree(currentProofTree);
+        redrawTree(TreeContext.currentProofStep!.tree);
         if (currentNode instanceof CutNode) {
             const tempCut: CutNode = alterCutChildren(currentNode, moveDifference);
             const color = isMoveLegal(currentProofTree, tempCut) ? legalColor() : illegalColor();
